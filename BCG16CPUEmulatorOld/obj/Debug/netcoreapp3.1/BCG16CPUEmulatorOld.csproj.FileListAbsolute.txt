@@ -1,5 +1,0 @@
-C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\BCG16CPUEmulatorOld\obj\Debug\netcoreapp3.1\BCG16CPUEmulatorOld.csproj.AssemblyReference.cache
-C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\BCG16CPUEmulatorOld\obj\Debug\netcoreapp3.1\BCG16CPUEmulatorOld.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\BCG16CPUEmulatorOld\obj\Debug\netcoreapp3.1\BCG16CPUEmulatorOld.AssemblyInfoInputs.cache
-C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\BCG16CPUEmulatorOld\obj\Debug\netcoreapp3.1\BCG16CPUEmulatorOld.AssemblyInfo.cs
-C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\BCG16CPUEmulatorOld\obj\Debug\netcoreapp3.1\BCG16CPUEmulatorOld.csproj.CoreCompileInputs.cache
