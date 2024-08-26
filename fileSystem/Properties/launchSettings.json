@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "filesystem": {
+      "commandName": "Project",
+      "workingDirectory": "./",
+      "commandLineArgs": "./floppy.bin ./hdd.bin"
+    }
+  }
+}

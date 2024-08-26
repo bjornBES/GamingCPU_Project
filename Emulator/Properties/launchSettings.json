@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "emulator": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "./a.out"
+    }
+  }
+}

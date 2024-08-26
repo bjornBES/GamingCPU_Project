@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Compiler": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL"
+    },
+    "Test Compiler": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL -s 0x0 -e -o .\\CPU\\src\\ACL\\CCLOutput.acl"
+    }
+  }
+}

@@ -1,0 +1,159 @@
+$variabel_segment = 0x000E
+
+; dword*    reg0    = 0x000E:3104
+$reg0_offset = 0x3104
+
+; byte index            [BPX - 5]
+; byte argument size    [BPX - 6]
+; byte[] args           [BPX - argument size]
+Interrupts:
+    push    BPX
+    pushr
+
+    push    H
+    push    L
+
+    mov     HL,         long @_BIOSFunctions
+
+    mov     BL,         [BPX + 1]
+    mov     DS,         H
+    sez     S                             ; setting the S register to 0
+ NOT_TRUE:
+
+    mov     AL,         [DS:S]            ; 0x0001:0000
+    add     S,          6                 ; adding 6 bytes to skip the index
+    cmp     AL,         BL
+    jne     [NOT_TRUE]
+
+    pop     L
+    pop     H
+
+    inc     S
+
+    mov     dword HL,   [DS:S]            ; moving the address into HL
+
+    ; loading the arguments over to interrupt function
+    push    BPX
+    mov     AL,         [BPX + 2]         ; moving the argument size into AL
+ Load_Args:
+    
+    mov     AH,         [BPX]             ; moving a byte
+    inc     BPX                           ; inc BPX
+    inc     AL                            ; inc AL
+    push    AH                            ; pushing the byte
+
+    test    AL                            ; testing AL
+    jnz     [Load_Args]                   ; AL != 0 jump 
+    pop     BPX                           ; poping BPX off the stack
+
+    call    [HL]                          ; calling the function
+
+    popr
+    pop     BPX
+
+;
+; byte index            [BPX - 5]
+; 
+; return: A
+;
+; Description:
+; this will return the address located at the interrupt index
+;
+; int FindInterruptAddress(byte index)
+FindInterruptAddress:
+   push     BPX
+   mov      BPX,        SPX
+   pushr
+
+   push     DS
+
+   mov      HL,      @_BIOSFunctions - 4  ; moving the address of _BIOSFunctions into HL with an offset
+   mov      AH,      [BPX - 5]            ; getting the index from arguemnts
+ GetToAddress:                            ; getting the address using the index
+   add      HL,      4                    ; inc the HL register
+   mov      AL,      [HL]                 ; getting the index
+   cmp      AL,      AH
+   jne      [GetToAddress]
+   ; not we have the interrupt section
+   add      HL,      2                    ; adding 2 to HL to get the address
+   mov      R1,      word [HL]            ; moving the address into R1
+
+   pop      DS
+   popr
+
+   mov      A,       R1                   ; setting the return value
+   pop      BPX
+   ret      1
+
+;
+; InterruptData* PinterruptData  [BPX - 5] as a pointer
+; byte index                     [BPX - 8]
+; 
+; Description:
+; this will return a InterruptData pointer
+;
+; void FindInterruptAddress(InterruptData* PinterruptData, byte index)
+FindInterruptAddress:
+   push     BPX
+   mov      BPX,        SPX
+   pushr
+
+   push     DS
+
+   mov      HL,      tbyte [BPX - 5]      ; getting the address of the InterruptData
+   mov      DS,      H                    ; segment
+   mov      B,       L                    ; offset
+
+   mov      HL,      @_BIOSFunctions - 4  ; moving the address of _BIOSFunctions into HL with an offset
+   mov      AH,      [BPX - 8]            ; getting the index from arguemnts
+ GetToAddress:                            ; getting the address using the index
+   add      HL,      4                    ; inc the HL register
+   mov      AL,      [HL]                 ; getting the index
+   cmp      AL,      AH
+   jne      [GetToAddress]
+   ; not we have the interrupt section
+
+   mov      [DS:B],  dword [HL]           ; moving the data
+
+   pop      DS
+   popr
+   pop      BPX
+   ret      4
+
+; Description:
+; Will store the DS and B registers into reg0
+StoreDSB:
+   push     H
+   push     L
+
+   mov      H,       %variabel_segment
+   mov      L,       %reg0_offset
+
+   mov      [HL],    DS
+   add      HL,      2
+   mov      [HL],    B
+
+   pop      L
+   pop      H
+   retz
+
+; Description:
+; Will load the DS and B registers from reg0
+LoadDSB:
+   push     H
+   push     L
+
+   mov      DS,      [HL]
+   add      HL,      2
+   mov      B,       [HL]
+
+   pop      L
+   pop      H
+   retz
+
+.struct InterruptData
+    interruptIndex    .resbyte
+    interruptArguemntSize   .resbyte
+    interruptFunctionAddress   .resword
+.EndStruct
+

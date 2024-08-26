@@ -1,0 +1,12 @@
+.dword @_BIOSFunctions  ; making a ref here for the CPU
+
+; ------------------- ;
+;   BIOS function     ;
+; ------------------- ;
+
+_BIOSFunctions:
+
+.db 0                   ; interrupt function index
+.db 1                   ; arguemnt size
+.dw @CharOut            ; function address ref
+

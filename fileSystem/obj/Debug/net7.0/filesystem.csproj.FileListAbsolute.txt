@@ -1,0 +1,15 @@
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\Build\filesystem.exe
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\Build\filesystem.deps.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\Build\filesystem.runtimeconfig.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\Build\filesystem.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\Build\filesystem.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.csproj.AssemblyReference.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.AssemblyInfoInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.AssemblyInfo.cs
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.csproj.CoreCompileInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\refint\filesystem.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\filesystem.genruntimeconfig.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\fileSystem\obj\Debug\net7.0\ref\filesystem.dll

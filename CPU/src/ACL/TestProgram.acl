@@ -1,0 +1,23 @@
+.SETCPU "BCG1684"
+
+.section TEXT
+
+L_HEADER:
+
+; call    [_BIOSStart]
+mov     A,      0x55AA
+mov     HL,     far @L_HEADER
+mov     HL,     long @L_HEADER
+mov     HL,     @L_HEADER
+mov     HL,     near @L_HEADER
+
+mov     AX,     0
+
+jmp     $
+
+.dd     $$
+.dd     $$ - $
+
+Start:
+
+; .includeil "./BIOS/BIOS.acl"

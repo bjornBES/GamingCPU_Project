@@ -1,0 +1,28 @@
+{
+  "profiles": {
+    "Assembler": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/TestProgram.acl",
+      "nativeDebugging": true
+    },
+    "Assembler Debug": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/TestProgram.acl -d 5 -df ./error.txt",
+      "nativeDebugging": true
+    },
+    "Assembl BIOS": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/BIOS/BIOS.acl -o ./BIOS.bin",
+      "nativeDebugging": true
+    },
+    "Assembler with compiler": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/TestProgram.acl -o ./CPU/src/bin/TestProgram.bin",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,0 +1,177 @@
+.section TEXT
+.org 0x0
+
+_000001: ; const pointer VRAM = 0xB10000 : public
+	mov HL, 0xb10000
+	; _VRAM with 3 bytes
+	mov DS, 0x00ef
+	mov	tbyte [DS:0x8000], HL
+
+_000002: ; tbyte VRAM_index = 0 : public
+	mov AX, 0x0
+	; _VRAM_index with 3 bytes
+	mov	tbyte [DS:0x8003], AX
+
+_000004: ; void Test(pointer str)
+	; _str with 3 bytes
+_Test:
+	push bp
+	pushr
+
+_000006: ; end Test
+	_END_Test:
+	popr
+	pop bp
+	ret 3
+
+_000008: ; void COut(char c, byte color, byte a) : public
+	; _c with 1 bytes
+	; _color with 1 bytes
+	; _a with 1 bytes
+.global _COut:
+	push bp
+	pushr
+
+_000009: ;     byte flags = 0x20
+	mov AX, 0x20
+	; _flags with 1 bytes
+	mov	byte [DS:0x8006], AX
+
+_000013: ; end COut
+	_END_COut:
+	popr
+	pop bp
+	; _flags at DS:0x8006
+	mov byte [DS:0x8006], 0
+	ret 6
+
+_000015: ; void main(byte BootDisk) : public
+	; _BootDisk with 1 bytes
+.global _main:
+	push bp
+	pushr
+
+_00001a: ;     string s = "HELLO"
+	; _s with 5 bytes
+	mov	 [DS:0x8006], @_str_0000
+
+_00001c: ;     Test(s)
+	mov tbyte ABX, [DS:0x8006]
+	pusha ABX
+	call [_Test]
+
+_00001e: ;     byte value = 0xFF
+	mov AX, 0xff
+	; _value with 1 bytes
+	mov	byte [DS:0x800b], AX
+
+_00001f: ;     COut('A', 0x00, 0x00)
+	mov AX, 0x0
+	pusha AX
+	mov AX, 0x0
+	pusha AX
+	mov AX, 0x41
+	pusha AX
+	call [_COut]
+
+_000020: ;     COut('A', 0x00, value)
+	sez AX
+	mov byte AL, [DS:0x800b]
+	pusha AX
+	mov AX, 0x0
+	pusha AX
+	mov AX, 0x41
+	pusha AX
+	call [_COut]
+
+_000021: ;     COut('A', 0x1000, value)
+	sez AX
+	mov byte AL, [DS:0x800b]
+	pusha AX
+	mov AX, 0x1000
+	pusha AX
+	mov AX, 0x41
+	pusha AX
+	call [_COut]
+
+_000023: ;     pointer P_value = &value
+	mov tbyte ABX, 0xef800b
+	; _P_value with 3 bytes
+	mov	tbyte [DS:0x800c], ABX
+
+_000025: ;     *P_value = 0x10
+	mov AX, 0x10
+	mov tbyte HL, [DS:0x800c]
+	mov byte [HL], AX
+
+_000026: ;     *P_value = (0x10 + 0x20 * 5)
+	mov ABX, 0x5
+	push tbyte ABX
+
+	mov ABX, 0x20
+	push tbyte ABX
+
+	pop ABX
+	pop HL
+	mul ABX, HL
+	push ABX
+
+	mov ABX, 0x10
+	push tbyte ABX
+
+	pop ABX
+	pop HL
+	add ABX, HL
+	push ABX
+
+	pop ABX
+	mov tbyte HL, [DS:0x800c]
+	mov byte [HL], ABX
+
+_000028: ;     *0x1000 = value
+	mov byte AL, [DS:0x800b]
+	mov [0x1000], AL
+
+_000029: ;     *0x1001 = (0x10 + 0x20)
+	mov ABX, 0x20
+	push tbyte ABX
+
+	mov ABX, 0x10
+	push tbyte ABX
+
+	pop ABX
+	pop HL
+	add ABX, HL
+	push ABX
+
+	pop ABX
+	mov [0x1001], ABX
+
+_00002c: ;     return 0
+	mov AX, 0x0
+	pop AX
+	mov R1, AX
+	jmp [_END_main]
+
+_00002d: ; end main
+	mov R1, 0
+	_END_main:
+	popr
+	pop bp
+	; _s at DS:0x8006
+	mov  [DS:0x8006], 0
+	; _value at DS:0x800b
+	mov byte [DS:0x800b], 0
+	; _P_value at DS:0x800c
+	mov tbyte [DS:0x800c], 0
+	ret 2
+
+.section DATA
+
+.section RDATA
+_str_0000:
+.db "HELLO",0
+
+.section BSS
+
+.org 0x0

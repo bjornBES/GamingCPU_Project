@@ -1,0 +1,10 @@
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\bin\Debug\netcoreapp3.1\ConsoleGameEngine.deps.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\bin\Debug\netcoreapp3.1\ConsoleGameEngine.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\bin\Debug\netcoreapp3.1\ConsoleGameEngine.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\obj\Debug\netcoreapp3.1\ConsoleGameEngine.csproj.AssemblyReference.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\obj\Debug\netcoreapp3.1\ConsoleGameEngine.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\obj\Debug\netcoreapp3.1\ConsoleGameEngine.AssemblyInfoInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\obj\Debug\netcoreapp3.1\ConsoleGameEngine.AssemblyInfo.cs
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\obj\Debug\netcoreapp3.1\ConsoleGameEngine.csproj.CoreCompileInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\obj\Debug\netcoreapp3.1\ConsoleGameEngine.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\ConsoleGameEngine\obj\Debug\netcoreapp3.1\ConsoleGameEngine.pdb

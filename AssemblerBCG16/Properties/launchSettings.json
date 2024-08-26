@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "AssemblerBCG16": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/TestProgram.acl -o ./CPU/src/ACL/bin/TestProgram.o"
+    },
+    "Assemble BIOS": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/BIOS/BIOS.acl -o ./BIOSBin/OBJ/BIOS.o"
+    }
+  }
+}

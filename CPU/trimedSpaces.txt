@@ -1,0 +1,32 @@
+A:  (AH + AL)   16  bit general purpose register
+B:  (BH + BL)   16  bit general purpose register
+AB:             32  bit general purpose register The AB register is the A register and the B register combined where A is the high part and B is the low part
+C:  (CH + CL)   16  bit general purpose register
+D:  (CH + DL)   16  bit general purpose register
+CD:             32  bit general purpose register The CD register is the C register and the D register combined where C is the high part and D is the low part
+HL: (H + L)     32  bit general purpose address register The HL register is a combination of the H and L registers
+X:  (XH + XL)   16  bit index register
+Y:  (YH + YL)   16  bit index register
+PC: (PCH + PCL) 32  bit progarm counter The (P)rogram (C)ounter will start at address 0 and increase thorough the progarm
+FA:             32  bit float register
+FB:             32  bit float register The float registers all use the IEEE 754 standard 
+SP:
+BP:
+MB:             4   bit memory bank register
+Flags:          16: bit (F)lags register
+0x0001: zero    flag
+0x0002: equals  flag
+0x0004: signed
+0x0008: carry
+0x0010: overflow
+0x0020: less
+0x0040: 
+0x0080: 
+0x0100: erorr
+0x0200: interrupt enable
+0x0400: 
+0x0800: 
+0x1000: 
+0x2000: 
+0x4000: 
+0x8000: 

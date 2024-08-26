@@ -1,0 +1,10 @@
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\bin\Debug\netcoreapp3.1\HexLibrary.deps.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\bin\Debug\netcoreapp3.1\HexLibrary.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\bin\Debug\netcoreapp3.1\HexLibrary.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\netcoreapp3.1\HexLibrary.csproj.AssemblyReference.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\netcoreapp3.1\HexLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\netcoreapp3.1\HexLibrary.AssemblyInfoInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\netcoreapp3.1\HexLibrary.AssemblyInfo.cs
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\netcoreapp3.1\HexLibrary.csproj.CoreCompileInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\netcoreapp3.1\HexLibrary.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\netcoreapp3.1\HexLibrary.pdb

@@ -1,0 +1,28 @@
+
+;
+; CharInfo* PcharInfo   [BP - 5]
+;
+; void ACharOut(CharInfo* PcharInfo)
+.global ACharOut:
+    push        BP 
+    mov         BP,     SP
+    pushr
+
+    mov         HL,     word [BP - 5]
+
+    mov         A,      word [HL]           ; getting the ascii_char and color_data from the CharInfo
+
+    push        AH                          ; pushing the ascii_char as the first argument
+    push        AL                          ; pushing the color_data as the 2nd argument
+
+    call        [CharOut]
+    
+    popr
+    pop         BP 
+
+    ret         CharInfo.sizeof
+
+.struct CharInfo
+    ascii_char .resbyte
+    color_data .resbyte
+.EndStruct

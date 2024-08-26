@@ -1,0 +1,2812 @@
+INCLUDE HEADER
+INCIN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\bin\BIOS.o
+INCIN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\bin\IOFunctions.o
+INCIN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\bin\Filesystem.o
+INCIN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\bin\BIOS_Functions.o
+INCIN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\bin\Functions.o
+INCIN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\bin\BIOS_Interrupt_Functions.o
+
+
+SECTION HEADER
+_TEXT 0x0 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\TestProgram.acl
+_DATA 0x30a C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\BIOS.acl
+
+
+STRUCT HEADER
+CharInfo res 2 {ascii_char res 1,color_data res 1}
+InterruptData res 4 {interruptIndex res 1,interruptArguemntSize res 1,interruptFunctionAddress res 2}
+
+
+SYMBOLS HEADER
+_REF_ LABEL L_HEADER,False [0x0] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\TestProgram.acl
+_REF_ LABEL Start,False [0x2c] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\TestProgram.acl
+_REF_ LABEL _BIOSStart,True [0x0] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\BIOS.acl
+_REF_ LABEL CharOut,True [0x17] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\IOFunctions.acl
+_REF_ LABEL Read_sector,True [0x95] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\IOFunctions.acl
+_REF_ LABEL Write_sector,True [0xcf] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\IOFunctions.acl
+_REF_ LABEL Read_Data,False [0x106] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_REF_ LABEL WaitForData,False [0x153] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_REF_ LABEL ReadDataLoop,False [0x163] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_REF_ LABEL Write_Data,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_REF_ LABEL Seek,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_REF_ LABEL Recalibrate,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_REF_ LABEL ACharOut,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\BIOS_Functions.acl
+_REF_ LABEL Interrupts,False [0x1a5] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL NOT_TRUE,False [0x1c5] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL Load_Args,False [0x1f3] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL FindInterruptAddress,False [0x21a] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL GetToAddress,False [0x232] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL FindInterruptAddress,False [0x268] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL GetToAddress,False [0x28e] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL StoreDSB,False [0x2b8] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL LoadDSB,False [0x2e5] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_REF_ LABEL _BIOSFunctions,False [0x30a] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\BIOS_Interrupt_Functions.acl
+
+
+RDATA HEADER
+
+
+DATA HEADER
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _BIOSFunctions,False [0x30a] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\BIOS_Interrupt_Functions.acl
+_NEWLINE_
+_NEWLINE_
+00
+_NEWLINE_
+01
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+
+
+BSS HEADER
+
+
+TEXT HEADER
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\TestProgram.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL L_HEADER,False [0x0] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\TestProgram.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_call [_BIOSStart]
+_SET_ BPX 0
+_SET_ SPX 0
+_SET_ BPX 0
+_SET_ SPX 2
+0a
+04
+00
+SL__BIOSStart
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_DEL_mov A, 0x55AA
+_SET_ BPX 0
+_SET_ SPX 2
+_SET_ BPX 0
+_SET_ SPX 2
+01
+05
+01
+00
+55
+AA
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_DEL_mov HL, far @L_HEADER
+_SET_ BPX 0
+_SET_ SPX 2
+_SET_ BPX 0
+_SET_ SPX 2
+03
+05
+09
+04
+FL_L_HEADER
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_DEL_mov HL, long @L_HEADER
+_SET_ BPX 0
+_SET_ SPX 2
+_SET_ BPX 0
+_SET_ SPX 2
+03
+05
+08
+04
+LL_L_HEADER
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_DEL_mov HL, @L_HEADER
+_SET_ BPX 0
+_SET_ SPX 2
+_SET_ BPX 0
+_SET_ SPX 2
+03
+05
+04
+04
+SL_L_HEADER
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_DEL_mov HL, near @L_HEADER
+_SET_ BPX 0
+_SET_ SPX 2
+_SET_ BPX 0
+_SET_ SPX 2
+03
+05
+00
+04
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_NEWLINE_
+_DEL_jmp $
+_SET_ BPX 0
+_SET_ SPX 2
+_SET_ BPX 0
+_SET_ SPX 2
+10
+04
+00
+_SCA_
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+BI
+NE
+XP
+R 
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Start,False [0x2c] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\TestProgram.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_OFF_ 00
+_NEWLINE_
+_REF_ LABEL _BIOSStart,True [0x0] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\BIOS.acl
+_NEWLINE_
+_DEL_sez B
+_SET_ BPX 0
+_SET_ SPX 2
+_SET_ BPX 0
+_SET_ SPX 2
+0d
+05
+00
+01
+_SET_ BPX 0
+_SET_ SPX 2
+_NEWLINE_
+_DEL_push BL
+_SET_ BPX 0
+_SET_ SPX 3
+_SET_ BPX 0
+_SET_ SPX 3
+05
+05
+00
+21
+_SET_ BPX 0
+_SET_ SPX 3
+_NEWLINE_
+_NEWLINE_
+_DEL_mov AL, 'H'
+_SET_ BPX 0
+_SET_ SPX 3
+_SET_ BPX 0
+_SET_ SPX 3
+00
+05
+00
+20
+48
+_SET_ BPX 0
+_SET_ SPX 3
+_NEWLINE_
+_DEL_push AL
+_SET_ BPX 0
+_SET_ SPX 4
+_SET_ BPX 0
+_SET_ SPX 4
+05
+05
+00
+20
+_SET_ BPX 0
+_SET_ SPX 4
+_NEWLINE_
+_NEWLINE_
+_DEL_call [CharOut]
+_SET_ BPX 0
+_SET_ SPX 4
+_SET_ BPX 0
+_SET_ SPX 6
+0a
+04
+00
+SL_CharOut
+_SET_ BPX 0
+_SET_ SPX 6
+_NEWLINE_
+_DEL_jmp [$]
+_SET_ BPX 0
+_SET_ SPX 6
+_SET_ BPX 0
+_SET_ SPX 6
+10
+04
+00
+_SCA_
+_SET_ BPX 0
+_SET_ SPX 6
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL CharOut,True [0x17] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\IOFunctions.acl
+_NEWLINE_
+_DEL_push BP
+_SET_ BPX 0
+_SET_ SPX 7
+_SET_ BPX 0
+_SET_ SPX 7
+05
+05
+00
+18
+_SET_ BPX 0
+_SET_ SPX 7
+_NEWLINE_
+_DEL_mov BP, SP
+_SET_ BPX 7
+_SET_ SPX 7
+_SET_ BPX 7
+_SET_ SPX 7
+00
+05
+05
+18
+38
+_SET_ BPX 7
+_SET_ SPX 7
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX 7
+_SET_ SPX 7
+_SET_ BPX 7
+_SET_ SPX 7
+fb
+00
+00
+_SET_ BPX 7
+_SET_ SPX 7
+_NEWLINE_
+_DEL_push DS
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+05
+05
+00
+25
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_mov AL, [BP - 5]
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+00
+05
+04
+20
+BINEXPRWR - I_5 R_BP
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_mov AH, [BP - 6]
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+00
+05
+04
+20
+BINEXPRWR - I_6 R_BP
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_mov DS, 0x000E
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+01
+05
+01
+25
+00
+0E
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_mov B, 0x3100
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+01
+05
+01
+01
+31
+00
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_mov C, [DS:B]
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+01
+05
+0f
+02
+01
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_DEL_add B, 2
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+30
+05
+01
+01
+00
+02
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_mov D, [HL]
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+01
+05
+06
+03
+04
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_add B, 2
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+30
+05
+01
+01
+00
+02
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_sez HL
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+0d
+05
+00
+04
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_DEL_mov [DS:B], 0x00098100
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+00
+0f
+03
+01
+00
+09
+81
+00
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_add [DS:B], dword C
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+30
+0f
+05
+01
+02
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_DEL_mov HL, dword D
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+03
+05
+05
+04
+03
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_mul HL, dword %height
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+32
+05
+00
+04
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_DEL_add HL, [DS:B]
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+30
+05
+0f
+04
+01
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_DEL_mov byte [HL], 0x10
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+03
+06
+03
+04
+00
+00
+00
+10
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_mov byte [HL], AL
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+03
+06
+05
+04
+20
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_DEL_mov byte [HL], AH
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 9
+03
+06
+05
+04
+10
+_SET_ BPX 7
+_SET_ SPX 9
+_NEWLINE_
+_NEWLINE_
+_DEL_pop DS
+_SET_ BPX 7
+_SET_ SPX 9
+_SET_ BPX 7
+_SET_ SPX 7
+07
+05
+00
+25
+_SET_ BPX 7
+_SET_ SPX 7
+_NEWLINE_
+_DEL_popr
+_SET_ BPX 7
+_SET_ SPX 7
+_SET_ BPX 7
+_SET_ SPX 7
+fc
+00
+00
+_SET_ BPX 7
+_SET_ SPX 7
+_NEWLINE_
+_DEL_pop BP
+_SET_ BPX 7
+_SET_ SPX 7
+_SET_ BPX 7
+_SET_ SPX 6
+06
+05
+00
+18
+_SET_ BPX 7
+_SET_ SPX 6
+_NEWLINE_
+_DEL_ret 2
+_SET_ BPX 7
+_SET_ SPX 6
+_SET_ BPX 7
+_SET_ SPX 2
+0b
+00
+00
+02
+_SET_ BPX 7
+_SET_ SPX 2
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Read_sector,True [0x95] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\IOFunctions.acl
+_NEWLINE_
+_DEL_push BP
+_SET_ BPX 7
+_SET_ SPX 3
+_SET_ BPX 7
+_SET_ SPX 3
+05
+05
+00
+18
+_SET_ BPX 7
+_SET_ SPX 3
+_NEWLINE_
+_DEL_mov BP, SP
+_SET_ BPX 3
+_SET_ SPX 3
+_SET_ BPX 3
+_SET_ SPX 3
+00
+05
+05
+18
+38
+_SET_ BPX 3
+_SET_ SPX 3
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX 3
+_SET_ SPX 3
+_SET_ BPX 3
+_SET_ SPX 3
+fb
+00
+00
+_SET_ BPX 3
+_SET_ SPX 3
+_NEWLINE_
+_DEL_push DS
+_SET_ BPX 3
+_SET_ SPX 5
+_SET_ BPX 3
+_SET_ SPX 5
+05
+05
+00
+25
+_SET_ BPX 3
+_SET_ SPX 5
+_NEWLINE_
+_DEL_push ES
+_SET_ BPX 3
+_SET_ SPX 7
+_SET_ BPX 3
+_SET_ SPX 7
+05
+05
+00
+35
+_SET_ BPX 3
+_SET_ SPX 7
+_NEWLINE_
+_DEL_push R1
+_SET_ BPX 3
+_SET_ SPX 9
+_SET_ BPX 3
+_SET_ SPX 9
+05
+05
+00
+0a
+_SET_ BPX 3
+_SET_ SPX 9
+_NEWLINE_
+_DEL_push R2
+_SET_ BPX 3
+_SET_ SPX 11
+_SET_ BPX 3
+_SET_ SPX 11
+05
+05
+00
+1a
+_SET_ BPX 3
+_SET_ SPX 11
+_NEWLINE_
+_NEWLINE_
+_DEL_call [Read_Data]
+_SET_ BPX 3
+_SET_ SPX 11
+_SET_ BPX 3
+_SET_ SPX 13
+0a
+04
+00
+SL_Read_Data
+_SET_ BPX 3
+_SET_ SPX 13
+_NEWLINE_
+_NEWLINE_
+_DEL_pop R2
+_SET_ BPX 3
+_SET_ SPX 13
+_SET_ BPX 3
+_SET_ SPX 11
+07
+05
+00
+1a
+_SET_ BPX 3
+_SET_ SPX 11
+_NEWLINE_
+_DEL_pop R1
+_SET_ BPX 3
+_SET_ SPX 11
+_SET_ BPX 3
+_SET_ SPX 9
+07
+05
+00
+0a
+_SET_ BPX 3
+_SET_ SPX 9
+_NEWLINE_
+_DEL_pop ES
+_SET_ BPX 3
+_SET_ SPX 9
+_SET_ BPX 3
+_SET_ SPX 7
+07
+05
+00
+35
+_SET_ BPX 3
+_SET_ SPX 7
+_NEWLINE_
+_DEL_pop DS
+_SET_ BPX 3
+_SET_ SPX 7
+_SET_ BPX 3
+_SET_ SPX 5
+07
+05
+00
+25
+_SET_ BPX 3
+_SET_ SPX 5
+_NEWLINE_
+_DEL_popr
+_SET_ BPX 3
+_SET_ SPX 5
+_SET_ BPX 3
+_SET_ SPX 5
+fc
+00
+00
+_SET_ BPX 3
+_SET_ SPX 5
+_NEWLINE_
+_DEL_pop BP
+_SET_ BPX 3
+_SET_ SPX 5
+_SET_ BPX 3
+_SET_ SPX 4
+06
+05
+00
+18
+_SET_ BPX 3
+_SET_ SPX 4
+_NEWLINE_
+_DEL_ret 9
+_SET_ BPX 3
+_SET_ SPX 4
+_SET_ BPX 3
+_SET_ SPX -7
+0b
+00
+00
+09
+_SET_ BPX 3
+_SET_ SPX -7
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Write_sector,True [0xcf] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\IOFunctions.acl
+_NEWLINE_
+_DEL_push BP
+_SET_ BPX 3
+_SET_ SPX -6
+_SET_ BPX 3
+_SET_ SPX -6
+05
+05
+00
+18
+_SET_ BPX 3
+_SET_ SPX -6
+_NEWLINE_
+_DEL_mov BP, SP
+_SET_ BPX -6
+_SET_ SPX -6
+_SET_ BPX -6
+_SET_ SPX -6
+00
+05
+05
+18
+38
+_SET_ BPX -6
+_SET_ SPX -6
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX -6
+_SET_ SPX -6
+_SET_ BPX -6
+_SET_ SPX -6
+fb
+00
+00
+_SET_ BPX -6
+_SET_ SPX -6
+_NEWLINE_
+_DEL_push DS
+_SET_ BPX -6
+_SET_ SPX -4
+_SET_ BPX -6
+_SET_ SPX -4
+05
+05
+00
+25
+_SET_ BPX -6
+_SET_ SPX -4
+_NEWLINE_
+_DEL_push ES
+_SET_ BPX -6
+_SET_ SPX -2
+_SET_ BPX -6
+_SET_ SPX -2
+05
+05
+00
+35
+_SET_ BPX -6
+_SET_ SPX -2
+_NEWLINE_
+_DEL_push R1
+_SET_ BPX -6
+_SET_ SPX 0
+_SET_ BPX -6
+_SET_ SPX 0
+05
+05
+00
+0a
+_SET_ BPX -6
+_SET_ SPX 0
+_NEWLINE_
+_DEL_push R2
+_SET_ BPX -6
+_SET_ SPX 2
+_SET_ BPX -6
+_SET_ SPX 2
+05
+05
+00
+1a
+_SET_ BPX -6
+_SET_ SPX 2
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_pop R2
+_SET_ BPX -6
+_SET_ SPX 2
+_SET_ BPX -6
+_SET_ SPX 0
+07
+05
+00
+1a
+_SET_ BPX -6
+_SET_ SPX 0
+_NEWLINE_
+_DEL_pop R1
+_SET_ BPX -6
+_SET_ SPX 0
+_SET_ BPX -6
+_SET_ SPX -2
+07
+05
+00
+0a
+_SET_ BPX -6
+_SET_ SPX -2
+_NEWLINE_
+_DEL_pop ES
+_SET_ BPX -6
+_SET_ SPX -2
+_SET_ BPX -6
+_SET_ SPX -4
+07
+05
+00
+35
+_SET_ BPX -6
+_SET_ SPX -4
+_NEWLINE_
+_DEL_pop DS
+_SET_ BPX -6
+_SET_ SPX -4
+_SET_ BPX -6
+_SET_ SPX -6
+07
+05
+00
+25
+_SET_ BPX -6
+_SET_ SPX -6
+_NEWLINE_
+_DEL_popr
+_SET_ BPX -6
+_SET_ SPX -6
+_SET_ BPX -6
+_SET_ SPX -6
+fc
+00
+00
+_SET_ BPX -6
+_SET_ SPX -6
+_NEWLINE_
+_DEL_pop BP
+_SET_ BPX -6
+_SET_ SPX -6
+_SET_ BPX -6
+_SET_ SPX -7
+06
+05
+00
+18
+_SET_ BPX -6
+_SET_ SPX -7
+_NEWLINE_
+_DEL_ret 9
+_SET_ BPX -6
+_SET_ SPX -7
+_SET_ BPX -6
+_SET_ SPX -18
+0b
+00
+00
+09
+_SET_ BPX -6
+_SET_ SPX -18
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Read_Data,False [0x106] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_NEWLINE_
+_DEL_push BP
+_SET_ BPX -6
+_SET_ SPX -17
+_SET_ BPX -6
+_SET_ SPX -17
+05
+05
+00
+18
+_SET_ BPX -6
+_SET_ SPX -17
+_NEWLINE_
+_DEL_mov BP, SP
+_SET_ BPX -17
+_SET_ SPX -17
+_SET_ BPX -17
+_SET_ SPX -17
+00
+05
+05
+18
+38
+_SET_ BPX -17
+_SET_ SPX -17
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX -17
+_SET_ SPX -17
+_SET_ BPX -17
+_SET_ SPX -17
+fb
+00
+00
+_SET_ BPX -17
+_SET_ SPX -17
+_NEWLINE_
+_DEL_push DS
+_SET_ BPX -17
+_SET_ SPX -15
+_SET_ BPX -17
+_SET_ SPX -15
+05
+05
+00
+25
+_SET_ BPX -17
+_SET_ SPX -15
+_NEWLINE_
+_DEL_push ES
+_SET_ BPX -17
+_SET_ SPX -13
+_SET_ BPX -17
+_SET_ SPX -13
+05
+05
+00
+35
+_SET_ BPX -17
+_SET_ SPX -13
+_NEWLINE_
+_DEL_push R1
+_SET_ BPX -17
+_SET_ SPX -11
+_SET_ BPX -17
+_SET_ SPX -11
+05
+05
+00
+0a
+_SET_ BPX -17
+_SET_ SPX -11
+_NEWLINE_
+_DEL_push R2
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+05
+05
+00
+1a
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_NEWLINE_
+_DEL_mov AH, [BP - 14]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+00
+05
+04
+20
+BINEXPRWR - I_14 R_BP
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_mov B, [BP - 12]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+01
+05
+04
+01
+BINEXPRWR - I_12 R_BP
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_mov CL, [BP - 11]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+00
+05
+04
+22
+BINEXPRWR - I_11 R_BP
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_mov CH, [BP - 10]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+00
+05
+04
+22
+BINEXPRWR - I_10 R_BP
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_mov DL, [BP - 9]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+00
+05
+04
+23
+BINEXPRWR - I_9 R_BP
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_NEWLINE_
+_DEL_mov AL, 0x06
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+00
+05
+00
+20
+06
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_outb %FDC, AL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+2d
+05
+00
+20
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_NEWLINE_
+_DEL_outb %FDC, AH
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+2d
+05
+00
+10
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_outb %FDC, B
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+2d
+05
+00
+01
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_outb %FDC, CL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+2d
+05
+00
+22
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_outb %FDC, CH
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+2d
+05
+00
+12
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_outb %FDC, DL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+2d
+05
+00
+23
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL WaitForData,False [0x153] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_NEWLINE_
+_DEL_inb %FDC, AL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+2c
+05
+00
+20
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_add AL, 0x80
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+30
+05
+00
+20
+80
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_jz [WaitForData]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+11
+04
+00
+SL_WaitForData
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_NEWLINE_
+_DEL_mov HL, tbyte [BP - 6]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+03
+05
+04
+04
+BINEXPRWR - I_6 R_BP
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ReadDataLoop,False [0x163] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_NEWLINE_
+_DEL_in %FDC, AL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+00
+05
+00
+20
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_mov [HL], AL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+03
+06
+05
+04
+20
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_inc HL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+3d
+05
+00
+04
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_dec DL
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+3e
+05
+00
+23
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_DEL_jnz [ReadDataLoop]
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -9
+12
+04
+00
+SL_ReadDataLoop
+_SET_ BPX -17
+_SET_ SPX -9
+_NEWLINE_
+_NEWLINE_
+_DEL_ret 9
+_SET_ BPX -17
+_SET_ SPX -9
+_SET_ BPX -17
+_SET_ SPX -20
+0b
+00
+00
+09
+_SET_ BPX -17
+_SET_ SPX -20
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Write_Data,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Seek,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Recalibrate,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Filesystem.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ACharOut,True [0x17b] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\BIOS_Functions.acl
+_NEWLINE_
+_DEL_push BP
+_SET_ BPX -17
+_SET_ SPX -19
+_SET_ BPX -17
+_SET_ SPX -19
+05
+05
+00
+18
+_SET_ BPX -17
+_SET_ SPX -19
+_NEWLINE_
+_DEL_mov BP, SP
+_SET_ BPX -19
+_SET_ SPX -19
+_SET_ BPX -19
+_SET_ SPX -19
+00
+05
+05
+18
+38
+_SET_ BPX -19
+_SET_ SPX -19
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX -19
+_SET_ SPX -19
+_SET_ BPX -19
+_SET_ SPX -19
+fb
+00
+00
+_SET_ BPX -19
+_SET_ SPX -19
+_NEWLINE_
+_NEWLINE_
+_DEL_mov HL, word [BP - 5]
+_SET_ BPX -19
+_SET_ SPX -19
+_SET_ BPX -19
+_SET_ SPX -19
+03
+05
+04
+04
+BINEXPRWR - I_5 R_BP
+_SET_ BPX -19
+_SET_ SPX -19
+_NEWLINE_
+_NEWLINE_
+_DEL_mov A, word [HL]
+_SET_ BPX -19
+_SET_ SPX -19
+_SET_ BPX -19
+_SET_ SPX -19
+01
+05
+06
+00
+04
+_SET_ BPX -19
+_SET_ SPX -19
+_NEWLINE_
+_NEWLINE_
+_DEL_push AH
+_SET_ BPX -19
+_SET_ SPX -18
+_SET_ BPX -19
+_SET_ SPX -18
+05
+05
+00
+20
+_SET_ BPX -19
+_SET_ SPX -18
+_NEWLINE_
+_DEL_push AL
+_SET_ BPX -19
+_SET_ SPX -17
+_SET_ BPX -19
+_SET_ SPX -17
+05
+05
+00
+20
+_SET_ BPX -19
+_SET_ SPX -17
+_NEWLINE_
+_NEWLINE_
+_DEL_call [CharOut]
+_SET_ BPX -19
+_SET_ SPX -17
+_SET_ BPX -19
+_SET_ SPX -15
+0a
+04
+00
+SL_CharOut
+_SET_ BPX -19
+_SET_ SPX -15
+_NEWLINE_
+_NEWLINE_
+_DEL_popr
+_SET_ BPX -19
+_SET_ SPX -15
+_SET_ BPX -19
+_SET_ SPX -15
+fc
+00
+00
+_SET_ BPX -19
+_SET_ SPX -15
+_NEWLINE_
+_DEL_pop BP
+_SET_ BPX -19
+_SET_ SPX -15
+_SET_ BPX -19
+_SET_ SPX -16
+06
+05
+00
+18
+_SET_ BPX -19
+_SET_ SPX -16
+_NEWLINE_
+_NEWLINE_
+_DEL_ret CharInfo.sizeof
+_SET_ BPX -19
+_SET_ SPX -16
+_SET_ BPX -19
+_SET_ SPX -37
+0b
+00
+00
+_SSO_CharInfo
+_SET_ BPX -19
+_SET_ SPX -37
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Interrupts,False [0x1a5] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_DEL_push BPX
+_SET_ BPX -19
+_SET_ SPX -35
+_SET_ BPX -19
+_SET_ SPX -35
+05
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -35
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX -19
+_SET_ SPX -35
+_SET_ BPX -19
+_SET_ SPX -35
+fb
+00
+00
+_SET_ BPX -19
+_SET_ SPX -35
+_NEWLINE_
+_NEWLINE_
+_DEL_push H
+_SET_ BPX -19
+_SET_ SPX -33
+_SET_ BPX -19
+_SET_ SPX -33
+05
+05
+00
+14
+_SET_ BPX -19
+_SET_ SPX -33
+_NEWLINE_
+_DEL_push L
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+05
+05
+00
+24
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_NEWLINE_
+_DEL_mov HL, long @_BIOSFunctions
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+03
+05
+08
+04
+LL__BIOSFunctions
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_NEWLINE_
+_DEL_mov BL, [BPX + 1]
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+00
+05
+04
+21
+BINEXPRWR + I_1 R_BPX
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_DEL_mov DS, H
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+01
+05
+05
+25
+14
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_DEL_sez S
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+0d
+05
+00
+05
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_REF_ LABEL NOT_TRUE,False [0x1c5] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_mov AL, [DS:S]
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+00
+05
+0f
+20
+05
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_DEL_add S, 6
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+30
+05
+01
+05
+00
+06
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_DEL_cmp AL, BL
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+04
+05
+05
+20
+21
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_DEL_jne [NOT_TRUE]
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -31
+16
+04
+00
+SL_NOT_TRUE
+_SET_ BPX -19
+_SET_ SPX -31
+_NEWLINE_
+_NEWLINE_
+_DEL_pop L
+_SET_ BPX -19
+_SET_ SPX -31
+_SET_ BPX -19
+_SET_ SPX -33
+07
+05
+00
+24
+_SET_ BPX -19
+_SET_ SPX -33
+_NEWLINE_
+_DEL_pop H
+_SET_ BPX -19
+_SET_ SPX -33
+_SET_ BPX -19
+_SET_ SPX -35
+07
+05
+00
+14
+_SET_ BPX -19
+_SET_ SPX -35
+_NEWLINE_
+_NEWLINE_
+_DEL_inc S
+_SET_ BPX -19
+_SET_ SPX -35
+_SET_ BPX -19
+_SET_ SPX -35
+3d
+05
+00
+05
+_SET_ BPX -19
+_SET_ SPX -35
+_NEWLINE_
+_NEWLINE_
+_DEL_mov dword HL, [DS:S]
+_SET_ BPX -19
+_SET_ SPX -35
+_SET_ BPX -19
+_SET_ SPX -35
+03
+05
+0f
+04
+05
+_SET_ BPX -19
+_SET_ SPX -35
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_push BPX
+_SET_ BPX -19
+_SET_ SPX -33
+_SET_ BPX -19
+_SET_ SPX -33
+05
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -33
+_NEWLINE_
+_DEL_mov AL, [BPX + 2]
+_SET_ BPX -19
+_SET_ SPX -33
+_SET_ BPX -19
+_SET_ SPX -33
+00
+05
+04
+20
+BINEXPRWR + I_2 R_BPX
+_SET_ BPX -19
+_SET_ SPX -33
+_NEWLINE_
+_REF_ LABEL Load_Args,False [0x1f3] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_mov AH, [BPX]
+_SET_ BPX -19
+_SET_ SPX -33
+_SET_ BPX -19
+_SET_ SPX -33
+00
+05
+06
+20
+08
+_SET_ BPX -19
+_SET_ SPX -33
+_NEWLINE_
+_DEL_inc BPX
+_SET_ BPX -19
+_SET_ SPX -33
+_SET_ BPX -19
+_SET_ SPX -33
+3d
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -33
+_NEWLINE_
+_DEL_inc AL
+_SET_ BPX -19
+_SET_ SPX -33
+_SET_ BPX -19
+_SET_ SPX -33
+3d
+05
+00
+20
+_SET_ BPX -19
+_SET_ SPX -33
+_NEWLINE_
+_DEL_push AH
+_SET_ BPX -19
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -32
+05
+05
+00
+20
+_SET_ BPX -19
+_SET_ SPX -32
+_NEWLINE_
+_NEWLINE_
+_DEL_test AL
+_SET_ BPX -19
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -32
+0e
+05
+00
+20
+_SET_ BPX -19
+_SET_ SPX -32
+_NEWLINE_
+_DEL_jnz [Load_Args]
+_SET_ BPX -19
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -32
+12
+04
+00
+SL_Load_Args
+_SET_ BPX -19
+_SET_ SPX -32
+_NEWLINE_
+_DEL_pop BPX
+_SET_ BPX -19
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -34
+07
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -34
+_NEWLINE_
+_NEWLINE_
+_DEL_call [HL]
+_SET_ BPX -19
+_SET_ SPX -34
+_SET_ BPX -19
+_SET_ SPX -32
+0a
+06
+00
+04
+_SET_ BPX -19
+_SET_ SPX -32
+_NEWLINE_
+_NEWLINE_
+_DEL_popr
+_SET_ BPX -19
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -32
+fc
+00
+00
+_SET_ BPX -19
+_SET_ SPX -32
+_NEWLINE_
+_DEL_pop BPX
+_SET_ BPX -19
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -34
+07
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -34
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL FindInterruptAddress,False [0x21a] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_DEL_push BPX
+_SET_ BPX -19
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -32
+05
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -32
+_NEWLINE_
+_DEL_mov BPX, SPX
+_SET_ BPX -32
+_SET_ SPX -32
+_SET_ BPX -32
+_SET_ SPX -32
+01
+05
+05
+08
+28
+_SET_ BPX -32
+_SET_ SPX -32
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX -32
+_SET_ SPX -32
+_SET_ BPX -32
+_SET_ SPX -32
+fb
+00
+00
+_SET_ BPX -32
+_SET_ SPX -32
+_NEWLINE_
+_NEWLINE_
+_DEL_push DS
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+05
+05
+00
+25
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_NEWLINE_
+_DEL_mov HL, @_BIOSFunctions - 4
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+03
+05
+00
+04
+BINEXPR - I_4 SL__BIOSFunctions
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_DEL_mov AH, [BPX - 5]
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+00
+05
+04
+20
+BINEXPRWR - I_5 R_BPX
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_REF_ LABEL GetToAddress,False [0x232] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_DEL_add HL, 4
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+30
+05
+03
+04
+00
+00
+00
+04
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_DEL_mov AL, [HL]
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+00
+05
+06
+20
+04
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_DEL_cmp AL, AH
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+04
+05
+05
+20
+10
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_DEL_jne [GetToAddress]
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+16
+04
+00
+SL_GetToAddress
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_NEWLINE_
+_DEL_add HL, 2
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+30
+05
+03
+04
+00
+00
+00
+02
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_DEL_mov R1, word [HL]
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -30
+01
+05
+06
+0a
+04
+_SET_ BPX -32
+_SET_ SPX -30
+_NEWLINE_
+_NEWLINE_
+_DEL_pop DS
+_SET_ BPX -32
+_SET_ SPX -30
+_SET_ BPX -32
+_SET_ SPX -32
+07
+05
+00
+25
+_SET_ BPX -32
+_SET_ SPX -32
+_NEWLINE_
+_DEL_popr
+_SET_ BPX -32
+_SET_ SPX -32
+_SET_ BPX -32
+_SET_ SPX -32
+fc
+00
+00
+_SET_ BPX -32
+_SET_ SPX -32
+_NEWLINE_
+_NEWLINE_
+_DEL_mov A, R1
+_SET_ BPX -32
+_SET_ SPX -32
+_SET_ BPX -32
+_SET_ SPX -32
+01
+05
+05
+00
+0a
+_SET_ BPX -32
+_SET_ SPX -32
+_NEWLINE_
+_DEL_pop BPX
+_SET_ BPX -32
+_SET_ SPX -32
+_SET_ BPX -19
+_SET_ SPX -34
+07
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -34
+_NEWLINE_
+_DEL_ret 1
+_SET_ BPX -19
+_SET_ SPX -34
+_SET_ BPX -19
+_SET_ SPX -37
+0b
+00
+00
+01
+_SET_ BPX -19
+_SET_ SPX -37
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL FindInterruptAddress,False [0x268] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_DEL_push BPX
+_SET_ BPX -19
+_SET_ SPX -35
+_SET_ BPX -19
+_SET_ SPX -35
+05
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -35
+_NEWLINE_
+_DEL_mov BPX, SPX
+_SET_ BPX -35
+_SET_ SPX -35
+_SET_ BPX -35
+_SET_ SPX -35
+01
+05
+05
+08
+28
+_SET_ BPX -35
+_SET_ SPX -35
+_NEWLINE_
+_DEL_pushr
+_SET_ BPX -35
+_SET_ SPX -35
+_SET_ BPX -35
+_SET_ SPX -35
+fb
+00
+00
+_SET_ BPX -35
+_SET_ SPX -35
+_NEWLINE_
+_NEWLINE_
+_DEL_push DS
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+05
+05
+00
+25
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_NEWLINE_
+_DEL_mov HL, tbyte [BPX - 5]
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+03
+05
+04
+04
+BINEXPRWR - I_5 R_BPX
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_DEL_mov DS, H
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+01
+05
+05
+25
+14
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_DEL_mov B, L
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+01
+05
+05
+01
+24
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_NEWLINE_
+_DEL_mov HL, @_BIOSFunctions - 4
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+03
+05
+00
+04
+BINEXPR - I_4 SL__BIOSFunctions
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_DEL_mov AH, [BPX - 8]
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+00
+05
+04
+20
+BINEXPRWR - I_8 R_BPX
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_REF_ LABEL GetToAddress,False [0x28e] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_DEL_add HL, 4
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+30
+05
+03
+04
+00
+00
+00
+04
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_DEL_mov AL, [HL]
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+00
+05
+06
+20
+04
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_DEL_cmp AL, AH
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+04
+05
+05
+20
+10
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_DEL_jne [GetToAddress]
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+16
+04
+00
+SL_GetToAddress
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_mov [DS:B], dword [HL]
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -33
+01
+0f
+06
+01
+04
+_SET_ BPX -35
+_SET_ SPX -33
+_NEWLINE_
+_NEWLINE_
+_DEL_pop DS
+_SET_ BPX -35
+_SET_ SPX -33
+_SET_ BPX -35
+_SET_ SPX -35
+07
+05
+00
+25
+_SET_ BPX -35
+_SET_ SPX -35
+_NEWLINE_
+_DEL_popr
+_SET_ BPX -35
+_SET_ SPX -35
+_SET_ BPX -35
+_SET_ SPX -35
+fc
+00
+00
+_SET_ BPX -35
+_SET_ SPX -35
+_NEWLINE_
+_DEL_pop BPX
+_SET_ BPX -35
+_SET_ SPX -35
+_SET_ BPX -19
+_SET_ SPX -37
+07
+05
+00
+08
+_SET_ BPX -19
+_SET_ SPX -37
+_NEWLINE_
+_DEL_ret 4
+_SET_ BPX -19
+_SET_ SPX -37
+_SET_ BPX -19
+_SET_ SPX -43
+0b
+00
+00
+04
+_SET_ BPX -19
+_SET_ SPX -43
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL StoreDSB,False [0x2b8] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_DEL_push H
+_SET_ BPX -19
+_SET_ SPX -41
+_SET_ BPX -19
+_SET_ SPX -41
+05
+05
+00
+14
+_SET_ BPX -19
+_SET_ SPX -41
+_NEWLINE_
+_DEL_push L
+_SET_ BPX -19
+_SET_ SPX -39
+_SET_ BPX -19
+_SET_ SPX -39
+05
+05
+00
+24
+_SET_ BPX -19
+_SET_ SPX -39
+_NEWLINE_
+_NEWLINE_
+_DEL_mov H, %variabel_segment
+_SET_ BPX -19
+_SET_ SPX -39
+_SET_ BPX -19
+_SET_ SPX -39
+01
+05
+00
+14
+_SET_ BPX -19
+_SET_ SPX -39
+_NEWLINE_
+_DEL_mov L, %reg0_offset
+_SET_ BPX -19
+_SET_ SPX -39
+_SET_ BPX -19
+_SET_ SPX -39
+01
+05
+00
+24
+_SET_ BPX -19
+_SET_ SPX -39
+_NEWLINE_
+_NEWLINE_
+_DEL_mov [HL], DS
+_SET_ BPX -19
+_SET_ SPX -39
+_SET_ BPX -19
+_SET_ SPX -39
+03
+06
+05
+04
+25
+_SET_ BPX -19
+_SET_ SPX -39
+_NEWLINE_
+_DEL_add HL, 2
+_SET_ BPX -19
+_SET_ SPX -39
+_SET_ BPX -19
+_SET_ SPX -39
+30
+05
+03
+04
+00
+00
+00
+02
+_SET_ BPX -19
+_SET_ SPX -39
+_NEWLINE_
+_DEL_mov [HL], B
+_SET_ BPX -19
+_SET_ SPX -39
+_SET_ BPX -19
+_SET_ SPX -39
+03
+06
+05
+04
+01
+_SET_ BPX -19
+_SET_ SPX -39
+_NEWLINE_
+_NEWLINE_
+_DEL_pop L
+_SET_ BPX -19
+_SET_ SPX -39
+_SET_ BPX -19
+_SET_ SPX -41
+07
+05
+00
+24
+_SET_ BPX -19
+_SET_ SPX -41
+_NEWLINE_
+_DEL_pop H
+_SET_ BPX -19
+_SET_ SPX -41
+_SET_ BPX -19
+_SET_ SPX -43
+07
+05
+00
+14
+_SET_ BPX -19
+_SET_ SPX -43
+_NEWLINE_
+_DEL_retz
+_SET_ BPX -19
+_SET_ SPX -43
+_SET_ BPX -19
+_SET_ SPX -45
+0c
+00
+00
+_SET_ BPX -19
+_SET_ SPX -45
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL LoadDSB,False [0x2e5] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\BIOS\Functions.acl
+_NEWLINE_
+_DEL_push H
+_SET_ BPX -19
+_SET_ SPX -43
+_SET_ BPX -19
+_SET_ SPX -43
+05
+05
+00
+14
+_SET_ BPX -19
+_SET_ SPX -43
+_NEWLINE_
+_DEL_push L
+_SET_ BPX -19
+_SET_ SPX -41
+_SET_ BPX -19
+_SET_ SPX -41
+05
+05
+00
+24
+_SET_ BPX -19
+_SET_ SPX -41
+_NEWLINE_
+_NEWLINE_
+_DEL_mov DS, [HL]
+_SET_ BPX -19
+_SET_ SPX -41
+_SET_ BPX -19
+_SET_ SPX -41
+01
+05
+06
+25
+04
+_SET_ BPX -19
+_SET_ SPX -41
+_NEWLINE_
+_DEL_add HL, 2
+_SET_ BPX -19
+_SET_ SPX -41
+_SET_ BPX -19
+_SET_ SPX -41
+30
+05
+03
+04
+00
+00
+00
+02
+_SET_ BPX -19
+_SET_ SPX -41
+_NEWLINE_
+_DEL_mov B, [HL]
+_SET_ BPX -19
+_SET_ SPX -41
+_SET_ BPX -19
+_SET_ SPX -41
+01
+05
+06
+01
+04
+_SET_ BPX -19
+_SET_ SPX -41
+_NEWLINE_
+_NEWLINE_
+_DEL_pop L
+_SET_ BPX -19
+_SET_ SPX -41
+_SET_ BPX -19
+_SET_ SPX -43
+07
+05
+00
+24
+_SET_ BPX -19
+_SET_ SPX -43
+_NEWLINE_
+_DEL_pop H
+_SET_ BPX -19
+_SET_ SPX -43
+_SET_ BPX -19
+_SET_ SPX -45
+07
+05
+00
+14
+_SET_ BPX -19
+_SET_ SPX -45
+_NEWLINE_
+_DEL_retz
+_SET_ BPX -19
+_SET_ SPX -45
+_SET_ BPX -19
+_SET_ SPX -47
+0c
+00
+00
+_SET_ BPX -19
+_SET_ SPX -47
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_

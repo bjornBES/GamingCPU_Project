@@ -1,0 +1,45 @@
+const pointer VRAM = 0xB10000 : public
+tbyte VRAM_index = 0 : public
+
+void Test(pointer str)
+
+end Test
+
+void COut(char c, byte color, byte a) : public
+    byte flags = 0x20
+
+    // (*VRAM + VRAM_index) = flags
+    // VRAM_index++
+    // (*VRAM + VRAM_index) = color
+    // VRAM_index++
+    // (*VRAM + VRAM_index) = c
+    // VRAM_index++
+    // (*VRAM + VRAM_index) = a
+    // VRAM_index++
+end COut
+
+void main(byte BootDisk) : public
+
+    // *VRAM = 0x10
+    // (*VRAM + 2) = 0x10
+
+    string s = "HELLO"
+
+    Test(s)
+
+    byte value = 0xFF
+    COut('A', 0x00, 0x00)
+    COut('A', 0x00, value)
+    COut('A', 0x1000, value)
+
+    pointer P_value = &value
+
+    *P_value = 0x10
+    *P_value = (0x10 + 0x20 * 5)
+
+    *0x1000 = value
+    *0x1001 = (0x10 + 0x20)
+
+
+    return 0
+end main

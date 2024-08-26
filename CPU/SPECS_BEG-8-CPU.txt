@@ -1,0 +1,265 @@
+# CPU Specifications:
+OVERVIEW
+    Name: BCG-16
+    Clock speed 10 MHz
+    Data bus: 16 bits
+    Address bus: 24/32 bits
+
+    The BCG-16 CPU the a 16 bit CPU.
+
+INSTRUCTION SET:
+    0x00: MOV       destination source      moves a byte or word value from the source into the destination plus an offset
+    0x01: CMP       operand1 operand2       Compare operand1 and operand2 and sets the flags in the flags register
+    0x02: PUSH      source                  Pushs the source onto the stack and increments the SP
+    0x03: POP       destination             Decrements the SP and pops the current value into the destination
+    0x04: CALL      address                 
+    0x05: RET       operand1                
+    0x06: SEZ       destination             Sets the destination to zero
+    0x07: TEST      destination             Tests the destination and sets the flag.
+    
+    0x10: JMP       address                 jumps to the specified address
+    0x11: JZ        address                 jumps to the specified address if the zero flag is set
+    0x12: JNZ       address                 jumps to the specified address if the zero flag is cleared
+    0x13: JS        address                 jumps to the specified address if the signed flag is set
+    0x14: JNS       address                 jumps to the specified address if the signed flag is cleared
+    0x15: JE        address                 jumps to the specified address if the equal flag is set
+    0x16: JNE       address                 jumps to the specified address if the equal flag is cleared
+    0x17: JL        address                 jumps to the specified address if the less flag is set
+    0x18: JG        address                 jumps to the specified address if the less flag is cleared
+    0x19: JLE       address                 jumps to the specified address if the equal flag or the less flag is set
+    0x1A: JGE       address                 jumps to the specified address if the equal flag is set or the less flag is cleared
+    
+    0x2A: SPIIN     port source             Transmiting data using SPI to the slave 
+    0x2B: SPIOUT    port destination        Receiveing data using SPI from the slave
+    0x2C: IN        port destination
+    0x2D: OUT       port source
+
+    0x2E: SEF       flag                    Sets a flag specified by the flag operand
+    0x2F: CLF       flag                    Clears a flag specified by the flag operand
+    0x30: ADD       destination source      Adds the values of the source and the destination and stores the value in destination.
+    0x31: SUB       destination source      Subtracts the values of the source and the destination and stores the value in destination.
+    0x32: MUL       destination source      Multiplies the values of the source and the destination and stores the value in destination.
+    0x33: DIV       destination source      Divides the values of the source and the destination and stores the value in destination.
+    0x34: AND       destination source      Performs a bitwise AND operation between the destination and source and stores the value in destination.
+    0x35: OR        destination source      Performs a bitwise OR operation between the destination and source and stores the value in destination.
+    0x36: NOR       destination source      Performs a bitwise NOR operation between the destination and source and stores the value in destination.
+    0x37: XOR       destination source      Performs a bitwise XOR operation between the destination and source and stores the value in destination.
+    0x38: NOT       destination             Performs a bitwise NOT operation on the destination and stores the value in destination.
+    0x39: SHL       destination operand1    Shifts the bits in the destination to the left by the number of bits specified by operand1. The {SHIFT_FLAG} is the overflowing bit, and the next bit is zero.
+    0x3A: SHR       destination operand1    Shifts the bits in the destination to the right by the number of bits specified by operand1. The {SHIFT_FLAG} is the overflowing bit, and the next bit is zero.
+    0x3B: ROL       destination operand1    Rotates the bits in the destination to the left by the number of bits specified by operand1. The {SHIFT_FLAG} is used as the next bit and the overflowing bit.
+    0x3C: ROR       destination operand1    Rotates the bits in the destination to the right by the number of bits specified by operand1. The {SHIFT_FLAG} is used as the next bit and the overflowing bit.
+    0x3D: INC       destination             Increments the value at the destination by 1.
+    0x3E: DEC       destination             Decrements the value at the destination by 1.
+    0x3F: NEG       destination             Sets/clears the signed bit of the destination.
+    0x40: AVG       destination operand1    Calculates the average of the values at the destination and operand1 and stores the value in destination.
+    0x41: EXP       destination operand1    Raises the value at the destination to the power of the value specified by operand1.
+    0x42: SQRT      destination             Calculates the square root of destination.
+    0x43: RNG       destination             Generates a random number and puts the value into the destination
+    0x44: SEB       source operand1         Sets a bit in the source specified by the operand1
+    0x45: CLB       source operand1         Clears a bit in the source specified by the operand1
+    0x46: TOB       source operand1         Toggles a bit in the source specified by the operand1
+    0x47: MOD       destination source      WIP
+
+    0x50: FADD      destination source      Adds the values of the source and the destination and stores the value in destination.
+    0x51: FSUB      destination source      Subtracts the values of the source and the destination and stores the value in destination.
+    0x52: FMUL      destination source      Multiplies the values of the source and the destination and stores the value in destination.
+    0x53: FDIV      destination source      Divides the values of the source and the destination and stores the value in destination.
+    0x54: FAND      destination source      Performs a bitwise AND operation between the destination and source and stores the value in destination.
+    0x55: FOR       destination source      Performs a bitwise OR operation between the destination and source and stores the value in destination.
+    0x56: FNOR      destination source      Performs a bitwise NOR operation between the destination and source and stores the value in destination.
+    0x57: FXOR      destination source      Performs a bitwise XOR operation between the destination and source and stores the value in destination.
+    0x58: FNOT      destination             Performs a bitwise NOT operation on the destination and stores the value in destination.
+    
+    0x90: MOVW      destination address     moves a word from the specified address to the destination
+    0x91: MOVI      destination address     moves an dword from the specified address to the destination
+    0x92: MOVS      destination address     moves a null terminated string from the specified address to the destination
+    0x93: MOVF      destination immediate   moves a float from the specified immediate to the float register(destination)
+    0x95: CMPSTR    address1 address2       Compares to null terminated strings specified by the addresses and outputs the result in the {equal} flag
+
+    0x9D: DATE      destination             Gets the date and puts it in the destination (more in the DATE AND TIME)
+    0x9E: DELAY     operand1                Sets a delay specified by the operand1 in milliseconds
+    0x9F: TIME      destination             Gets the time and puts it in the destination (more in the DATE AND TIME)
+
+    0xA0: CTA       destination source      Converts the source into acsii and puts the value into the destination 
+    0xA1: CTH       destination source      Converts the source into HEX and puts the value into the destination 
+
+    0xF8: RTI                               returns from an intercept routine.
+    0xF9: NOP                               No operation
+    0xFA: RISERR    error_source            Raises the error flag and sets the A register with the value from error_source
+    0xFB: PUSHR                             Pushes (A B C D X Y H L) on to the stack
+    0xFC: POPR                              Pops (A B C D X Y H L) off the stack
+    0xFD: INT       INTERRUPT_ROUTINE       Generates a interrupt routine (more in the INTERRUPTS)
+    0xFE: BRK       Index                   Generates a software interrupt and the Index will be moved into the X register (more in the INTERRUPTS)
+    0xFF: HALT                              Stops the CPU fully
+
+    Note:
+
+INSTRUCTION LAYOUT:
+    XXXX_XXXX_UUUA_AAAA_UUUB_BBBB
+
+    X = Op code
+    A = argument1
+    B = argument2
+
+    
+ARGUMENT MODE:
+    0x00: immediate byte                    number
+    0x01: immediate word                    number
+    0x02: immediate dword                   number
+    0x03: address                           [address]
+    0x04: register                          register
+    0x05: register address                  [register]
+    0x06: 
+    0x07: 
+    0x08: 
+    0x09: 24 bit address                    long [address]          /32 bit address if it can be done
+    0x0A: float immediate                   (float_number)f
+    0x0B: 
+    0x0C: 32 bit segment address            [register:register]
+    0x0D: 32 bit segment address immediate  [register:immediate]
+    0x1F: None
+
+CPU PINS:
+    IRQ:                interrupt request
+
+INTERRUPTS:
+    interrupts can be triggered be software or hardware specified by the interrupt location port
+
+    SOFTWARE INTERRUPTS:
+    A software interrupt can be generated using the BRK Instruction and will make a {long jump} to 0x010000 in bank 0xF,
+    before jumping the PC, MB and the F(flags register) will be push onto the stack and the {PUSHR} Instruction will also be called.
+
+DATE AND TIME:
+    the date and time format it's bulit up using 4 bytes looking like this in bits.
+    1101_0010 0111_1100 0111_0111 1000_0000
+    DDDD_DMMM-MYYY_YYYY-HHHH_Hmmm-mmmS_SSSS
+
+    D = day
+    M = month
+    Y = year
+    H = hours
+    m = minutes
+    S = second
+
+CACHES:
+    FileDataCache:
+        size:       0xFFFF
+        location:   0xFF0000 - 0xFFFFFF in bank 0
+
+PORTS:
+    The ports is the whey to communicate with outside devices
+    ports are a memory maped IO
+
+    0x01:       PS/2 mouse
+        the mouse is a PS/2 mouse interface that can input (from the mouse) and output (to the mouse)
+    
+    0x02:       PS/2 keyboard
+        the keyboard is a PS/2 keyboard interface that can input (from the keyboard) and output (to the keyboard)
+    
+    0x03-04:    screen (more in Scrren)
+
+    0x08:       (1mb-400p) BOOT Disk
+        this disk 
+    0x09:       floppy disk controller(3,5in 1,44mb)/1,4mb-400p disk (0x17 * 64kb)
+        here the floppy disk is located in the ports.
+        note: the floppy controller is only here if it's connected, else it will be a HDD.        
+
+
+    0x20:   interrupt location port
+        if there is an interrupt this port will show where that interrupt came from. for more info check in the intercepts.txt
+
+Screen
+    The screen is bulit up on 2/4 registers to communicate with the screen
+
+    screen registers
+
+    0x03:   display_data register           R/W
+    0x04:   display_status register         R/W
+    0x05:   
+    0x06:   
+
+    The status register(0x03) is where the status is at, you can write to it and set some settings for it, or
+    you can read from it and look in to what its doing status
+
+    bit 0:  
+    W. echo:    If this is 1 that means that if the keyboard is pressed, 
+                the screen will intercept it and echo it to the screen
+    R. unused:
+
+MEMORY LAYOUT:
+    all cells is in bytes
+    BANK 0x0:
+        [0x000000 - 0x00FFFF]   READ ONLY DATA MIRRORED
+        [0x010000 - 0x0100FF]   Ports
+        [0x010100 - 0x01FFFF]   STACK
+        [0x158900 - 0xEEFFFF]   GENERAL PURPOSE BACKED RAM
+        [0xEF0000 - 0xEFFFFF]   BIOS RESERVED RAM
+        [0xFF0000 - 0xFFFFFF]   FILE DATA CACHE 
+    BANK 0xD:
+        [0xE00000 - 0xE7FFFF]   VARIABLE RAM
+        [0xE80000 - 0xE9FFFF]   BSS
+        [0xEA0000 - 0xEEFFFF]   VARIABLE RAM
+    BANK 0xE:
+        [0x158900 - 0x2911FF]   VIDEO RAM
+    BANK 0xF:
+        [0x010000 - 0xFEFFFF]   PROGRAM ROM
+        [0xFF0000 - 0xFFFFFF]   RESERVED
+        
+    if the {using 32 bit addressing flag is 1}
+        [0x00FFFFFF - 0xFFFFFFFF] GENERAL PURPOSED RAM MIRRORED
+
+REGISTERS:
+    AX: (AH + AL)   16  bit general purpose register
+    BX: (BH + BL)   16  bit general purpose register
+    CX: (CH + CL)   16  bit general purpose register
+    DX: (CH + DL)   16  bit general purpose register
+
+    HL: (H + L)     32  bit general purpose address register
+        The HL register is a combination of the H and L registers
+
+    X:  (XH + XL)   16  bit index register
+    Y:  (YH + YL)   16  bit index register
+
+    S:              16  bit segment register
+    SI:             16  bit segment index register
+
+    PC: (PCH + PCL) 32  bit progarm counter
+        The (P)rogram (C)ounter will start at address 0x8000 and increase thorough the progarm
+
+    AF:             32  bit float register
+    BF:             32  bit float register
+        The float registers all use the IEEE 754 standard 
+
+    SP:
+    BP:
+
+    MB:             4   bit memory bank register
+
+    R1:             16  bit temp register
+    R2:             16  bit temp register
+    R3:             16  bit temp register
+    R4:             16  bit temp register
+
+    F1:             32  bit float register
+    F2:             32  bit float register
+    F3:             32  bit float register
+    F4:             32  bit float register
+
+    Flags:          16: bit (F)lags register
+        0x0001: zero    flag
+        0x0002: equals  flag
+        0x0004: signed
+        0x0008: carry
+        0x0010: overflow
+        0x0020: less
+        0x0040: 
+        0x0080: 
+        0x0100: error
+        0x0200: interrupt enable
+        0x0400: 
+        0x0800: 
+        0x1000: 
+        0x2000: 
+        0x4000: using 32 bit addressing
+        0x8000: HALT
