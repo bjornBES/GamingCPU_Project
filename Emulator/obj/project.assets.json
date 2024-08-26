@@ -215,16 +215,6 @@
           }
         }
       },
-      "Assembler/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
-        "compile": {
-          "bin/placeholder/Assembler.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Assembler.dll": {}
-        }
-      },
       "ConsoleGameEngine/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -459,11 +449,6 @@
         "version.txt"
       ]
     },
-    "Assembler/1.0.0": {
-      "type": "project",
-      "path": "../Assembler/Assembler.csproj",
-      "msbuildProject": "../Assembler/Assembler.csproj"
-    },
     "ConsoleGameEngine/1.0.0": {
       "type": "project",
       "path": "../ConsoleGameEngine/ConsoleGameEngine.csproj",
@@ -477,7 +462,6 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "Assembler >= 1.0.0",
       "ConsoleGameEngine >= 1.0.0",
       "OpenTK >= 4.8.2",
       "OpenTK.Core >= 4.8.2",
@@ -512,9 +496,6 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\Assembler\\Assembler.csproj": {
-              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\Assembler\\Assembler.csproj"
-            },
             "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj": {
               "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj"
             },
