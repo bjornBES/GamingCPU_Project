@@ -10,6 +10,10 @@ namespace HexLibrary
         {
             return Convert.ToString(Convert.ToInt32(value, _base), 16);
         }
+        public static string ToHexString(int value)
+        {
+            return Convert.ToString(value, 16);
+        }
 
         public static string[] SplitHexString(string hexString)
         {
@@ -75,9 +79,15 @@ namespace HexLibrary
         public const string _OPERATORSWS = "+ - * /";
         public const string _OPERATORS = "+-*/";
 
+        public const string _HEXNUMBERUPPER = "0123456789ABCDEF_";
+        public const string _HEXNUMBERLOWER = "0123456789abcdef_";
+
 
         public static bool IsLetter(string expr) => IsPatten(expr, _LETTERS);
         public static bool IsNumber(string expr) => IsPatten(expr, _NUMBERSDEC);
+        public static bool IsHexUpper(string expr) => IsPatten(expr, _HEXNUMBERUPPER);
+        public static bool IsHexLower(string expr) => IsPatten(expr, _HEXNUMBERLOWER);
+        public static bool IsHex(string expr) => IsPatten(expr, _NUMBERSHEX);
 
         static bool IsPatten(string expr, string patten)
         {
@@ -91,18 +101,12 @@ namespace HexLibrary
 
         public static bool ContainsOperators(string expr)
         {
-            return expr.Split(' ').ToList().Find(str =>
+            for (int i = 0; i < expr.Length; i++)
             {
-                bool results = false;
-                _OPERATORSWS.Split(' ').ToList().ForEach(op =>
-                {
-                    if (op == str)
-                    {
-                        results = true;
-                    }
-                });
-                return results;
-            }) != null;
+                if (_OPERATORS.Contains(expr[i]))
+                    return true;
+            }
+            return false;
         }
     }
 
@@ -110,32 +114,17 @@ namespace HexLibrary
     {
         public static byte[] SplitWord(ushort word)
         {
-            return new byte[]
-            {
-            (byte)(word >> 8),         // Upper byte
-            (byte)(word & 0xFF),       // Lower byte
-            };
+            return BitConverter.GetBytes(word);
         }
 
         public static byte[] SplitTByte(uint tbyte)
         {
-            return new byte[]
-            {
-            (byte)((tbyte >> 16) & 0xFF),// Highest byte
-            (byte)((tbyte >> 8) & 0xFF), // Middle byte
-            (byte)(tbyte & 0xFF),       // Lowest byte
-            };
+            return BitConverter.GetBytes(tbyte);
         }
 
         public static byte[] SplitDWord(uint dword)
         {
-            return new byte[]
-            {
-            (byte)((dword >> 24) & 0xFF), // Highest byte
-            (byte)((dword >> 16) & 0xFF), // 3rd byte
-            (byte)((dword >> 8) & 0xFF), // 2nd byte
-            (byte)(dword & 0xFF),       // Lowest byte
-            };
+            return BitConverter.GetBytes(dword);
         }
     }
 }

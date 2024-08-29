@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "BCG16CPUEmulator": {
+      "commandName": "Project",
+      "commandLineArgs": "-i ./a.bin",
+      "workingDirectory": "../"
+    }
+  }
+}

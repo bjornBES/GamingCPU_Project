@@ -14,7 +14,8 @@ using static HexLibrary.StringFunctions;
 
 public class Assembler : AssmeblerErrors
 {
-    string[] m_Src;
+    public string[] m_Src;
+    public string[] m_SrcRaw;
 
     List<Variable> m_variables = new List<Variable>();
     List<Label> m_labels = new List<Label>();
@@ -27,6 +28,11 @@ public class Assembler : AssmeblerErrors
     public List<string> m_output_section = new List<string>();
     public List<string> m_output_structs = new List<string>();
     public List<string> m_output_includedFiles = new List<string>();
+
+    bool IsNear = false;
+    bool IsLong = false;
+    bool IsFar = false;
+    public string m_file;
 
     Section m_section = Section.Text;
 
@@ -43,6 +49,7 @@ public class Assembler : AssmeblerErrors
     bool Going = false;
 
     int m_pc = 0;
+    public int lineNumber = 0;
 
     public static bool m_WriteOut = true;
 
@@ -70,6 +77,7 @@ public class Assembler : AssmeblerErrors
             Going = false;
         }
 
+        m_SrcRaw = src.Split(Environment.NewLine);
 
         src = Regex.Replace(src, @";\s[^\r\n]*(\r?\n)", Environment.NewLine);
         src = Regex.Replace(src, @" +", " ");
@@ -134,29 +142,29 @@ public class Assembler : AssmeblerErrors
 
     void buildMarcos()
     {
-        for (i = 0; i < m_Src.Length; i++)
+        for (lineNumber = 0; lineNumber < m_Src.Length; lineNumber++)
         {
 
-            m_Src[i] = m_Src[i].Trim('\r', '\n');
+            m_Src[lineNumber] = m_Src[lineNumber].Trim('\r', '\n');
 
-            if (string.IsNullOrEmpty(m_Src[i]))
+            if (string.IsNullOrEmpty(m_Src[lineNumber]))
             {
                 continue;
             }
 
             //struct
 
-            if (m_Src[i].StartsWith(".struct"))
+            if (m_Src[lineNumber].StartsWith(".struct"))
             {
                 BuildDirectives();
             }
-            else if (m_Src[i].StartsWith('@'))
+            else if (m_Src[lineNumber].StartsWith('@'))
             {
 
             }
-            else if (m_Src[i].StartsWith(".SETCPU"))
+            else if (m_Src[lineNumber].StartsWith(".SETCPU"))
             {
-                string CPU = m_Src[i].Split(' ')[1].Trim('\"');
+                string CPU = m_Src[lineNumber].Split(' ')[1].Trim('\"');
 
                 CPUType type = (CPUType)Enum.Parse(typeof(CPUType), CPU);
 
@@ -169,9 +177,9 @@ public class Assembler : AssmeblerErrors
                     Registers.regs[registers[i]].m_size = Registers.regs[registers[i]].GetSize();
                 }
             }
-            else if (m_Src[i].StartsWith('$'))
+            else if (m_Src[lineNumber].StartsWith('$'))
             {
-                string[] line = m_Src[i].Split(' ');
+                string[] line = m_Src[lineNumber].Split(' ');
 
                 string name = line[0].Substring(1);
                 if (line[1] == "=")
@@ -191,56 +199,55 @@ public class Assembler : AssmeblerErrors
             //AddLine("BM:\t" + m_Src[i]);
         }
     }
-
-    int i = 0;
     void Assemble()
     {
-        for (i = 0; i < m_Src.Length; i++)
+        for (lineNumber = 0; lineNumber < m_Src.Length; lineNumber++)
         {
-            if (i == 0)
+            m_assembler = this;
+            if (lineNumber == 0)
                 continue;
 
             AddLine("_NEWLINE_");
 
-            m_Src[i] = m_Src[i].Trim('\r', '\n');
-            m_Src[i] = m_Src[i].TrimStart(' ');
-            m_Src[i] = m_Src[i].Trim();
+            m_Src[lineNumber] = m_Src[lineNumber].Trim('\r', '\n');
+            m_Src[lineNumber] = m_Src[lineNumber].TrimStart(' ');
+            m_Src[lineNumber] = m_Src[lineNumber].Trim();
 
-            if (string.IsNullOrEmpty(m_Src[i]))
+            if (string.IsNullOrEmpty(m_Src[lineNumber]))
             {
                 continue;
             }
 
-            if (m_Src[i].EndsWith(':'))
+            if (m_Src[lineNumber].EndsWith(':'))
             {
                 MakeLabel();
             }
-            else if (m_Src[i].Contains(".section"))
+            else if (m_Src[lineNumber].Contains(".section"))
             {
-                string section = m_Src[i].Replace(".section ", "");
+                string section = m_Src[lineNumber].Replace(".section ", "");
                 AddLine($"_{section} {HexPC()} {m_file}", Section.Section);
                 SetSection(section);
             }
-            else if (m_Src[i].StartsWith('.'))
+            else if (m_Src[lineNumber].StartsWith('.'))
             {
-                if (m_Src[i].StartsWith(".struct"))
+                if (m_Src[lineNumber].StartsWith(".struct"))
                 {
-                    while (m_Src[i].StartsWith(".EndStruct") == false)
+                    while (m_Src[lineNumber].StartsWith(".EndStruct") == false)
                     {
-                        i++;
+                        lineNumber++;
                     }
-                    i--;
+                    lineNumber--;
                     continue;
                 }
                 BuildDirectives();
             }
-            else if (m_Src[i].StartsWith('$'))
+            else if (m_Src[lineNumber].StartsWith('$'))
             {
                 continue;
             }
             else
             {
-                string line = m_Src[i].Trim();
+                string line = m_Src[lineNumber].Trim();
                 //m_rev = 0;
                 ParseInstruction(line);
             }
@@ -273,15 +280,26 @@ public class Assembler : AssmeblerErrors
 
     private void BuildDirectives()
     {
-        string line = m_Src[i].Trim().TrimStart('.');
+        string line = m_Src[lineNumber].Trim().TrimStart('.');
         //.DirectiveInstruction arguement1, arguement2 ...
         string Instruction = line.Split(' ', 2)[0].ToLower();
         string PreArguments = line.Split(' ', 2).Last();
         string[] Arguments = PreArguments.Split(", ");
 
-        BuildDirectives(Instruction, Arguments);
+        string[] output = BuildDirectives(Instruction, Arguments, out int size);
+
+        if (output == null)
+        {
+            return;
+        }    
+
+        for (int d = 0; d < output.Length; d++)
+        {
+            AddLine(output[d]);
+            m_pc += size;
+        }
     }
-    private void BuildDirectives(string Instruction, string[] Arguments)
+    private string[] BuildDirectives(string Instruction, string[] Arguments, out int size)
     {
         string data;
         string SizeAlignment = "";
@@ -292,11 +310,31 @@ public class Assembler : AssmeblerErrors
                 m_file = Arguments[0];
                 if (m_DoneFiles.Contains(m_file))
                 {
-                    i = m_Src.Length + 1;
+                    lineNumber = m_Src.Length + 1;
                     break;
                 }
                 AddLine($"_FILE_ \"{Arguments[0]}\"");
                 m_DoneFiles.Add(m_file);
+                break;
+            case "times":
+
+                string line = Arguments[0].Split(".").Last();
+
+                string instr = line.Split(' ').First();
+                string numberS = Arguments[0].Replace(" ." + line, "");
+
+                string[] args = line.Split(' ', 2).Last().Split(',');
+
+                string[] Strresult = BuildDirectives(instr, args, out int _size);
+                string Hexresult = "";
+
+                for (int i = 0; i < Strresult.Length; i++)
+                {
+                    Hexresult += Strresult[i];
+                }
+
+                string timesHex = parseTerm(numberS, "word", out bool split, out _);
+                AddLine($"_TIMES_ {timesHex},{Hexresult}.{_size}");
                 break;
             case "org":
                 string HexOffset = parseTerm(Arguments[0], ref SizeAlignment, out _, out _);
@@ -318,7 +356,7 @@ public class Assembler : AssmeblerErrors
                 string[] savem_src = new string[m_Src.Length];
                 m_Src.CopyTo(savem_src, 0);
 
-                int save_I = i;
+                int save_I = lineNumber;
                 string src = File.ReadAllText($"{FindPath($"./{FileName}", FileIndex)}");
 
                 string Savem_file = m_file;
@@ -333,16 +371,16 @@ public class Assembler : AssmeblerErrors
                 m_file = Savem_file;
 
                 m_Src = savem_src;
-                i = save_I;
+                lineNumber = save_I;
                 Going = SaveGoing;
                 break;
 
             case "res":
 
+                string outputExpr;
                 if (m_getStructSize)
                 {
-                    SizeAlignment = "byte";
-                    string outputExpr = parseTerm(Arguments[0], ref SizeAlignment, out _, out _);
+                    outputExpr = parseTerm(Arguments[0], "byte", out _, out _);
                     int number = Convert.ToInt16(outputExpr, 16);
                     StructSize(number);
                     break;
@@ -356,8 +394,15 @@ public class Assembler : AssmeblerErrors
 
                         m_labels[^1].m_HaveStruct = true;
                         m_labels[^1].m_Struct = result;
-
+                        
                         m_pc += result.m_Size;
+                    }
+                    else if (parseTerm(Arguments[0], "word", out split, out _, out outputExpr))
+                    {
+                        int res = Convert.ToInt16(outputExpr, 16);
+                        m_pc += res;
+
+                        AddLine($"_OFF_ {Convert.ToString(m_pc, 16)}");
                     }
                 }
                 break;
@@ -370,7 +415,13 @@ public class Assembler : AssmeblerErrors
                     StructSize(1);
                     break;
                 }
+                else
+                {
+                    AddLine($"_OFF_ {Convert.ToString(m_pc + 1, 16)}");
+                    m_pc++;
+                }
                 break;
+
             case "resushort":
             case "resw":
             case "resword":
@@ -379,7 +430,13 @@ public class Assembler : AssmeblerErrors
                     StructSize(2);
                     break;
                 }
+                else
+                {
+                    AddLine($"_OFF_ {Convert.ToString(m_pc + 2, 16)}");
+                    m_pc += 2;
+                }
                 break;
+
             case "rest":
             case "restbyte":
                 if (m_getStructSize)
@@ -387,7 +444,13 @@ public class Assembler : AssmeblerErrors
                     StructSize(3);
                     break;
                 }
+                else
+                {
+                    AddLine($"_OFF_ {Convert.ToString(m_pc + 3, 16)}");
+                    m_pc += 3;
+                }
                 break;
+
             case "resint":
             case "resd":
             case "resdword":
@@ -396,6 +459,26 @@ public class Assembler : AssmeblerErrors
                     StructSize(4);
                     break;
                 }
+                else
+                {
+                    AddLine($"_OFF_ {Convert.ToString(m_pc + 4, 16)}");
+                    m_pc += 4;
+                }
+                break;
+
+            case "reslong":
+            case "resq":
+            case "resqword":
+                if (m_getStructSize)
+                {
+                    StructSize(8);
+                    break;
+                }
+                else
+                {
+                    AddLine($"_OFF_ {Convert.ToString(m_pc + 8, 16)}");
+                    m_pc += 8;
+                }
                 break;
 
             case "db":
@@ -403,17 +486,24 @@ public class Assembler : AssmeblerErrors
             case "byte":
                 for (int i = 0; i < Arguments.Length; i++)
                 {
-                    if (Parse(Arguments[i], out ArgumentMode mode, out data))
+                    if (parseTerm(Arguments[i], "byte", out bool DoSplit, out ArgumentMode mode, out data))
                     {
                         string[] output;
 
-                        output = SplitHexString(data);
-
-                        for (int d = 0; d < 1; d++)
+                        if (DoSplit)
                         {
-                            AddLine(output[d]);
-                            m_pc++;
+                            output = SplitHexString(data);
                         }
+                        else
+                        {
+                            output = new string[]
+                            {
+                                data
+                            };
+                        }
+
+                        size = 1;
+                        return output;
                     }
                 }
                 break;
@@ -424,18 +514,24 @@ public class Assembler : AssmeblerErrors
 
                 for (int i = 0; i < Arguments.Length; i++)
                 {
-                    if (Parse(Arguments[i], out ArgumentMode mode, out data))
+                    if (parseTerm(Arguments[i], "word", out bool DoSplit, out ArgumentMode mode, out data))
                     {
                         string[] output;
 
-                        output = SplitHexString(data, 2);
-
-                        for (int d = 0; d < 2; d++)
+                        if (DoSplit)
                         {
-                            AddLine(output[d]);
-                            m_pc++;
-                            m_pc++;
+                            output = SplitHexString(data, 2);
                         }
+                        else
+                        {
+                            output = new string[]
+                            {
+                                data
+                            };
+                        }
+
+                        size = 2;
+                        return output;
                     }
                 }
                 break;
@@ -444,19 +540,24 @@ public class Assembler : AssmeblerErrors
             case "tbyte":
                 for (int i = 0; i < Arguments.Length; i++)
                 {
-                    if (Parse(Arguments[i], out ArgumentMode mode, out data))
+                    if (parseTerm(Arguments[i], "tbyte", out bool DoSplit, out ArgumentMode mode, out data))
                     {
                         string[] output;
 
-                        output = SplitHexString(data, 3);
-
-                        for (int d = 0; d < 3; d++)
+                        if (DoSplit)
                         {
-                            AddLine(output[d]);
-                            m_pc++;
-                            m_pc++;
-                            m_pc++;
+                            output = SplitHexString(data, 3);
                         }
+                        else
+                        {
+                            output = new string[]
+                            {
+                                data
+                            };
+                        }
+
+                        size = 3;
+                        return output;
                     }
                 }
                 break;
@@ -466,61 +567,55 @@ public class Assembler : AssmeblerErrors
             case "dword":
                 for (int i = 0; i < Arguments.Length; i++)
                 {
-                    if (Parse(Arguments[i], out ArgumentMode mode, out data))
+                    if (parseTerm(Arguments[i], "dword", out bool DoSplit, out ArgumentMode mode, out data))
                     {
                         string[] output;
 
-                        output = SplitHexString(data, 4);
-
-                        for (int d = 0; d < 4; d++)
+                        if (DoSplit)
                         {
-                            AddLine(output[d]);
-                            m_pc++;
-                            m_pc++;
-                            m_pc++;
-                            m_pc++;
+                            output = SplitHexString(data, 4);
                         }
+                        else
+                        {
+                            output = new string[]
+                            {
+                                data,
+                                "",
+                                "",
+                                "",
+                            };
+                        }
+
+                        size = 4;
+                        return output;
                     }
                 }
                 break;
-
-            case "str":
-            case "string":
+            case "dq":
+            case "long":
+            case "qword":
                 for (int i = 0; i < Arguments.Length; i++)
                 {
-                    if (Parse(Arguments[i], out ArgumentMode mode, out data))
+                    if (parseTerm(Arguments[i], "qword", out bool DoSplit, out ArgumentMode mode, out data))
                     {
                         string[] output;
 
-                        output = SplitHexString(data, 1);
-
-                        for (int d = 0; d < output.Length; d++)
+                        if (DoSplit)
                         {
-                            AddLine(output[d]);
-                            m_pc++;
+                            output = SplitHexString(data, 8);
                         }
+                        else
+                        {
+                            output = new string[]
+                            {
+                                data
+                            };
+                        }
+
+                        size = 8;
+                        return output;
                     }
                 }
-                break;
-
-            case "strz":
-            case "stringz":
-                for (int i = 0; i < Arguments.Length; i++)
-                {
-                    if (Parse(Arguments[i], out ArgumentMode mode, out data))
-                    {
-                        string[] output;
-
-                        output = SplitHexString(data, 1);
-
-                        for (int d = 0; d < output.Length; d++)
-                        {
-                            AddLine(output[d]);
-                            m_pc++;
-                        }
-                    }
-                }
-                AddLine("00");
                 break;
 
             case "struct":
@@ -532,6 +627,8 @@ public class Assembler : AssmeblerErrors
             default:
                 break;
         }
+        size = 0;
+        return null;
     }
 
     bool IsStruct(string name, out Struct result)
@@ -559,13 +656,13 @@ public class Assembler : AssmeblerErrors
         Struct TempStruct = new Struct();
         TempStruct.m_Name = name;
 
-        i++;
+        lineNumber++;
 
         m_getStructSize = true;
 
-        for (; i < m_Src.Length; i++)
+        for (; lineNumber < m_Src.Length; lineNumber++)
         {
-            string currLine = m_Src[i].Trim();
+            string currLine = m_Src[lineNumber].Trim();
 
             if (currLine == ".EndStruct")
             {
@@ -581,7 +678,7 @@ public class Assembler : AssmeblerErrors
                 string[] argument = instr.Split(' ', 2).Last().Split(' ');
                 instr = instr.Split(' ').First();
 
-                BuildDirectives(instr, argument);
+                BuildDirectives(instr, argument, out _);
 
                 int memberSize = m_structSize - currSize;
 
@@ -640,9 +737,9 @@ public class Assembler : AssmeblerErrors
 
     void MakeLabel()
     {
-        bool IsGlobal = m_Src[i].ToLower().Contains(".global");
+        bool IsGlobal = m_Src[lineNumber].ToLower().Contains(".global");
 
-        string name = m_Src[i].Replace(".global ", "").Trim(':');
+        string name = m_Src[lineNumber].Replace(".global ", "").Trim(':');
         m_labels.ForEach(label =>
         {
             if (label.m_Name == name)
@@ -713,7 +810,7 @@ public class Assembler : AssmeblerErrors
         {
             if (instructionInfo.m_NumberOfOperands != Arguments.Length)
             {
-                E_InvalidInstruction(instruction, m_file, i + 1);
+                E_InvalidInstruction(instruction);
                 return;
             }
         }
@@ -784,11 +881,6 @@ public class Assembler : AssmeblerErrors
         AddLine($"_SET_ BPX {BPX_ref}");
         AddLine($"_SET_ SPX {SPX_ref}");
     }
-
-    bool IsNear = false;
-    bool IsLong = false;
-    bool IsFar = false;
-    private string m_file;
 
     private void ParseArgument(ref Instruction instruction, string[] Arguments, ref List<string> InstrutionBytes, int startingIndex = 0, bool DoWrite = true)
     {
@@ -893,6 +985,18 @@ public class Assembler : AssmeblerErrors
                                 {
                                     SPX_ref += 4;
                                 }
+                            }
+                            else if (registerInfo.m_size == 8)
+                            {
+                                SizeAlignment = "qword";
+                                if (instruction == Instruction.PUSH)
+                                {
+                                    SPX_ref += 8;
+                                }
+                            }
+                            else if (registerInfo.m_size == -1)
+                            {
+                                E_InvalidRegister(registerInfo);
                             }
                         }
 
@@ -1040,11 +1144,25 @@ public class Assembler : AssmeblerErrors
         expr = parseTerm(arg, ref SizeAlignment, out split, out mode);
         return expr != null;
     }
+    string parseTerm(string arg, string SizeAlignment, out bool split, out ArgumentMode mode)
+    {
+        return parseTerm(arg, ref SizeAlignment, out split, out mode);
+    }
+    bool parseTerm(string arg, string SizeAlignment, out bool split, out ArgumentMode mode, out string expr)
+    {
+        expr = parseTerm(arg, ref SizeAlignment, out split, out mode);
+        return expr != null;
+    }
     string parseTerm(string arg, ref string SizeAlignment, out bool split, out ArgumentMode mode)
     {
         Register reg_result;
         string expr;
-        if (arg.Contains("far", StringComparison.OrdinalIgnoreCase))
+        if (Parse(arg, out mode, out expr) && expr.StartsWith("BINEXPR"))
+        {
+            split = false;
+            return expr;
+        }
+        else if (arg.Contains("far", StringComparison.OrdinalIgnoreCase))
         {
             IsFar = true;
 
@@ -1080,9 +1198,40 @@ public class Assembler : AssmeblerErrors
 
             return expr;
         }
-        else if (Parse(arg, out mode, out expr) && expr.StartsWith("BINEXPR"))
+        else if (arg.StartsWith('\"') && arg.EndsWith('\"'))
         {
-            split = false;
+            string data = arg.Trim('"');
+            byte[] bytes = Encoding.ASCII.GetBytes(data);
+
+            expr = "";
+
+            int PaddingSize = 0;
+
+            switch (SizeAlignment)
+            {
+                case "byte":
+                    PaddingSize = 2;
+                    break;
+                case "word":
+                    PaddingSize = 4;
+                    break;
+                case "tbyte":
+                    PaddingSize = 6;
+                    break;
+                case "dword":
+                    PaddingSize = 8;
+                    break;
+                case "qword":
+                    PaddingSize = 16;
+                    break;
+            }
+
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                expr += Convert.ToString(bytes[i], 16).PadLeft(PaddingSize, '0');
+            }
+            mode = ArgumentMode.immediate_byte;
+            split = true;
             return expr;
         }
         else if (Parse(arg, out mode, out expr))
@@ -1359,14 +1508,14 @@ public class Assembler : AssmeblerErrors
             case ArgumentMode.float_immediate:
                 if (CPUType < CPUType.BCG16)
                 {
-                    throw new NotImplementedException();
+                    E_InvalidCPUFeature(CPUType.BCG16);
                 }
                 break;
             case ArgumentMode.far_address:
             case ArgumentMode.immediate_qword:
                 if (CPUType < CPUType.BCG1684)
                 {
-                    throw new NotImplementedException();
+                    E_InvalidCPUFeature(CPUType.BCG1684);
                 }
                 break;
             case ArgumentMode.None:
@@ -1552,11 +1701,14 @@ public class Assembler : AssmeblerErrors
     void AdjustImmediateValue(ref ArgumentMode mode, string SizeAlignment, ref string expr)
     {
         bool Done = false;
-        bool Rdjust = false;
 
         if (string.IsNullOrEmpty(SizeAlignment))
         {
-            if (expr.Length >= 6)
+            if (expr.Length >= 10)
+            {
+                SizeAlignment = "qword";
+            }
+            else if (expr.Length >= 6)
             {
                 SizeAlignment = "dword";
             }
@@ -1572,7 +1724,6 @@ public class Assembler : AssmeblerErrors
             {
                 SizeAlignment = "byte";
             }
-            Rdjust = true;
         }
         while (Done == false)
         {
@@ -1609,7 +1760,21 @@ public class Assembler : AssmeblerErrors
                         continue;
                     }
                 case ArgumentMode.immediate_dword:
-                    AdjustSize(SizeAlignment, ref expr, ref Done, ref mode, ArgumentMode.None, "dword", 8);
+                    AdjustSize(SizeAlignment, ref expr, ref Done, ref mode, ArgumentMode.immediate_qword, "dword", 8);
+                    if (Done)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                case ArgumentMode.immediate_qword:
+                    if (!(CPUType < CPUType.BCG1884))
+                    {
+                        throw new Exception("What the fuck");
+                    }
+                    AdjustSize(SizeAlignment, ref expr, ref Done, ref mode, ArgumentMode.None, "qword", 16);
                     if (Done)
                     {
                         break;
@@ -1745,6 +1910,9 @@ public class Assembler : AssmeblerErrors
                 case 4:
                     mode = ArgumentMode.immediate_dword;
                     break;
+                case 5:
+                    mode = ArgumentMode.immediate_qword;
+                    break;
                 default:
                     mode = ArgumentMode.None;
                     break;
@@ -1875,6 +2043,79 @@ public class Assembler : AssmeblerErrors
 
         _mode = ArgumentMode.None;
 
+        List<string> tokens = new List<string>();
+        for (int i = 0; i < value.Length;)
+        {
+            string buf = "";
+            if (char.IsDigit(value[i]))
+            {
+                while (i < value.Length && char.IsDigit(value[i]))
+                {
+                    buf += value[i];
+                    i++;
+                }
+
+                tokens.Add(buf);
+            }
+            else if (IsLetter(value[i].ToString()))
+            {
+                while (i < value.Length && IsLetter(value[i].ToString()))
+                {
+                    buf += value[i];
+                    i++;
+                }
+
+                tokens.Add(buf);
+            }
+            else if (GetBinProc(value[i].ToString()) != -1)
+            {
+                tokens.Add(value[i].ToString());
+                i++;
+            }
+            else if (value[i] == '@')
+            {
+                buf += value[i++];
+
+                if (IsLetter(value[i].ToString()))
+                {
+                    while (i < value.Length && IsLetter(value[i].ToString()))
+                    {
+                        buf += value[i];
+                        i++;
+                    }
+
+                    tokens.Add(buf);
+                }
+            }
+            else if (value[i] == '(')
+            {
+                i++;
+                tokens.Add("(");
+            }
+            else if (value[i] == ')')
+            {
+                i++;
+                tokens.Add(")");
+            }
+            else if (value[i] == '$' && i + 1 < value.Length && value[i + 1] == '$')
+            {
+                i++;
+                i++;
+                tokens.Add("$$");
+            }
+            else if (value[i] == '$')
+            {
+                i++;
+                tokens.Add("$");
+            }
+            else if (char.IsWhiteSpace(value[i]))
+            {
+                i++;
+            }
+        }
+
+        expr = tokens.ToArray();
+
         for (int i = 0; i < expr.Length; i++)
         {
             ArgumentMode mode;
@@ -1934,13 +2175,21 @@ public class Assembler : AssmeblerErrors
                                 {
                                     SizeAlignment = "dword";
                                 }
+                                else if (registerInfo.m_size == 8)
+                                {
+                                    SizeAlignment = "qword";
+                                }
+                                else if (registerInfo.m_size == -1)
+                                {
+                                    throw new NotImplementedException();
+                                }
                             }
 
                             OutputStack.Push("R_" + _exprOut);
                             ident = "BINEXPRWR";
                         }
 
-                        if (_mode <= ArgumentMode.far_address)
+                        if (_mode != ArgumentMode.register || _mode != ArgumentMode.register_address)
                         {
                             _mode = ArgumentMode.register;
                         }
@@ -1956,7 +2205,7 @@ public class Assembler : AssmeblerErrors
                         {
                             ident = "BINEXPRF";
                         }
-                        if (_mode <= ArgumentMode.immediate_dword && _mode != ArgumentMode.register)
+                        if (_mode != ArgumentMode.register )
                         {
                             _mode = mode;
                         }
@@ -2134,7 +2383,6 @@ public class Assembler : AssmeblerErrors
         }
         switch (section)
         {
-            case Section.Header:
             case Section.Text:
                 m_output.Add(line);
                 break;
@@ -2167,7 +2415,6 @@ public class Assembler : AssmeblerErrors
 public enum Section
 {
     Text,
-    Header,
     Data,
     Rdata,
     Bss,

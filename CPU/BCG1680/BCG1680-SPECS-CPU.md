@@ -155,13 +155,12 @@ note: `all cells is in bytes`
 |Base Address |Size         |Name                           |Description
 |-------------|-------------|-------------------------------|-
 |`0x000_0000` |`0x000_0200` | IO ports                      | this is where the Ports is at
-|`0x000_0200` |`0x002_FE00` | RAM                           | RAM
-|`0x003_0000` |`0x003_3100` | VRAM                          | video ram
-|`0x006_3100` |`0x000_8000` | Char set                      | char set
+|`0x000_0200` |`0x003_FE00` | RAM                           | RAM
+|`0x004_0000` |`0x003_3100` | VRAM                          | video ram
+|`0x007_3100` |`0x000_8000` | Char set                      | char set
 |`0x007_B100` |`0x000_4F00` | RESERVED MEMORY               | this memory should not be used
-|`0x007_0000` |`0x001_0000` | BIOS ROM RESERVED             | this is where the BIOS lifes
 |`0x008_0000` |`0x008_0000` | RAM Banked                    | this is the data/prgram is at but banked
-|`0x010_0000` |`0x0F0_0000` | Unused                        | this is the data/prgram is at
+|`0x010_0000` |`0x0F0_0000` | RAM                           | this is the data/prgram is at
 
 the end is `0xFFFFFF`/`0x1000000`
 

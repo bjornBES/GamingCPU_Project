@@ -3,7 +3,7 @@
     "BCGLinker": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./a.o ./IO.o"
+      "commandLineArgs": "-i ./CPU/src/ACL/bin/TestProgram.o -o ./a.bin -fbin"
     },
     "Link BIOS": {
       "commandName": "Project",
@@ -13,7 +13,7 @@
     "Try link BIOS": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/ACL/bin/TestProgram.o -o ./CPU/src/ACL/bin/TestProgram.bin -f bin -f fbin"
+      "commandLineArgs": "-i ./CPU/src/ACL/bin/TestProgram.o -o ./CPU/src/ACL/bin/TestProgram.bin -f fbin"
     }
   }
 }

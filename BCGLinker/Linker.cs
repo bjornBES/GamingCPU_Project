@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.ExceptionServices;
 using static HexLibrary.HexConverter;
+using static HexLibrary.StringFunctions;
 
 namespace BCGLinker
 {
@@ -152,6 +153,10 @@ namespace BCGLinker
             {
                 m_OutputBin += m_Output[i];
             }
+            if (m_OutputBin.Length % 3 != 0)
+            {
+                m_OutputBin += "\0";
+            }
         }
 
         public void BuildSectionSymbols(string src)
@@ -211,6 +216,7 @@ namespace BCGLinker
             Exit = false;
             if (line == "_NEWLINE_")
             {
+                m_InstrOffset = 0;
                 lineNumber++;
                 return;
             }
@@ -220,13 +226,52 @@ namespace BCGLinker
                 m_CurrFile = file.Trim('"');
                 return;
             }
+            else if (line.StartsWith("_TIMES_"))
+            {
+                string Lineexpr = line.Split(" ", 2).Last();
+                string NumberExpr = Lineexpr.Split(',')[0];
+                string Instr = Lineexpr.Split(",")[1].Split('.')[0];
+
+                string result;
+
+                if (NumberExpr.StartsWith("BINEXPR"))
+                {
+                    string bin_type = line.Split(' ').First();
+                    result = gen_expr(NumberExpr, bin_type);
+
+                }
+                else if(gen_term(NumberExpr, out string[] outputExpr))
+                {
+                    result = "";
+
+                    for (int i = 0; i < outputExpr.Length; i++)
+                    {
+                        result += outputExpr[i];
+                    }
+                }
+                else
+                {
+                    result = "";
+                }
+
+                int times = Convert.ToInt32(result, 16) + 1;
+                int size = int.Parse(line.Split('.').Last());
+
+                string[] ResultStr = SplitHexString(Instr, size);
+
+                for (int a = 0; a < times; a++)
+                {
+                    for (int i = 0; i < ResultStr.Length; i++)
+                    {
+                        AddString(ResultStr[i]);
+                    }
+                }
+            }
             else if (line.StartsWith("_REF_"))
             {
                 string[] s_line = m_src[i].Split(' ');
                 string name;
-                string labelName;
                 bool IsGolbal;
-                int size;
                 string Hex_address;
                 int address;
                 string file;
@@ -386,7 +431,7 @@ namespace BCGLinker
             {
                 string[] address;
 
-                int PCValue = (m_pc - m_InstrOffset) % 513;
+                int PCValue = (m_pc - m_InstrOffset) % 0x200;
 
                 if (line.StartsWith("LL_"))
                 {
@@ -408,6 +453,11 @@ namespace BCGLinker
             {
                 string data = line.Replace("I_", "");
                 expr = SplitHexString(data);
+                return true;
+            }
+            else if (IsHex(line))
+            {
+                expr = SplitHexString(line);
                 return true;
             }
             else if (line.StartsWith("SLSM_"))
@@ -505,6 +555,10 @@ namespace BCGLinker
                     {
                         SolverStack.Push(Convert.ToInt32(fullExpr, 16));
                     }
+                    else
+                    {
+                        SolverStack.Push(Convert.ToInt32(fullExpr, 16));
+                    }
                 }
                 else if (term.StartsWith("R_"))
                 {
@@ -537,7 +591,7 @@ namespace BCGLinker
                                 break;
                             }
 
-                            SolverStack.Push(rsh + lsh);
+                            SolverStack.Push(lsh + rsh);
                             break;
                         case "-":
                             rsh = SolverStack.Pop();
@@ -550,7 +604,7 @@ namespace BCGLinker
                                 //break;
                             }
 
-                            SolverStack.Push(rsh - lsh);
+                            SolverStack.Push(lsh - rsh);
                             break;
                         case "*":
                             rsh = SolverStack.Pop();
@@ -563,7 +617,7 @@ namespace BCGLinker
                                 break;
                             }
 
-                            SolverStack.Push(rsh * lsh);
+                            SolverStack.Push(lsh * lsh);
                             break;
                         case "/":
                             rsh = SolverStack.Pop();
@@ -576,7 +630,7 @@ namespace BCGLinker
                                 break;
                             }
 
-                            SolverStack.Push(rsh / lsh);
+                            SolverStack.Push(lsh / lsh);
                             break;
                         case "&":
                             rsh = SolverStack.Pop();
@@ -589,7 +643,7 @@ namespace BCGLinker
                                 break;
                             }
 
-                            SolverStack.Push(rsh & lsh);
+                            SolverStack.Push(lsh & lsh);
                             break;
                         case "~":
                             rsh = SolverStack.Pop();

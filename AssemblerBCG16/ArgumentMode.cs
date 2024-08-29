@@ -21,7 +21,7 @@ public enum ArgumentMode
     segment_address_immediate = 0x0D,
     segment_immediate_address = 0x0E,
     segment_DS_register = 0x0F,
-
+     
     immediate_qword = 0x1E,
 
     None = 0xFF

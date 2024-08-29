@@ -1,22 +1,12 @@
-.SETCPU "BCG1684"
+.SETCPU "BCG16"
 
 .section TEXT
 
 L_HEADER:
 
-; call    [_BIOSStart]
-mov     A,      0x55AA
-mov     HL,     far @L_HEADER
-mov     HL,     long @L_HEADER
-mov     HL,     @L_HEADER
-mov     HL,     near @L_HEADER
-
-mov     AX,     0
-
-jmp     $
-
-.dd     $$
-.dd     $$ - $
+mov     SS,     0x00
+mov     SP,     0x8000
+push    0x55
 
 Start:
 

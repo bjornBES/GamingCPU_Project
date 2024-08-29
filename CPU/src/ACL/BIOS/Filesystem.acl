@@ -1,4 +1,35 @@
+$DOR    = 0x103
 $FDC    = 0x105
+
+
+$Drive1 = 0x00
+$Drive2 = 0x01
+$Drive3 = 0x02
+$Drive4 = 0x03
+
+.global Initialize:
+    push    BP
+    mov     BP,             SP
+    pushr
+
+    inb     A,              %DOR            ; reading the Digital Output Register
+    or      A,              0x04            ; Set the Reset bit
+    out     A,              %DOR            ; write A back into the Digital Output Register
+
+WaitReset:
+    in      AL,             %DOR
+    add     AL,             0x04
+    jz      [WaitReset]
+
+    push    byte %Drive1
+    call    [Recalibrate]
+
+    outb    0x03,           %DOR
+    outb    0xDF,           %DOR
+
+    out     %Drive1,        %DOR
+
+    ret     0
 
 ; Arguments:
 ; long uint8_t *data        [BP - 6]
@@ -12,40 +43,43 @@ $FDC    = 0x105
 ;
 ; void Read_Data(uint8_t drive, uint16_t cylinder, uint8_t head, uint8_t sector, uint8_t data_length, uint8_t *buffer);
 
-Read_Data:
+.global Read_Data:
     push    BP
-    mov     BP,         SP
+    mov     BP,             SP
     pushr
     push    DS
     push    ES
     push    R1
     push    R2
 
-    mov     AH,         [BP - 14]       ; drive number
-    mov     B,          [BP - 12]       ; track number
-    mov     CL,         [BP - 11]       ; head number
-    mov     CH,         [BP - 10]       ; sector number
-    mov     DL,         [BP - 9]        ; data_length
+    mov     AL,             0x06            ; command code for Read data
+    outb    %FDC,           AL              ; write the command to the FDC command register
 
-    mov     AL,         0x06            ; command code for Read data
-    outb    %FDC,       AL              ; write the command to the FDC command register
+    mov     AH,             [BP - 14]       ; drive number
+    outb    %FDC,           AH
+    
+    mov     B,              [BP - 12]       ; track number
+    outb    %FDC,           B
 
-    outb    %FDC,       AH
-    outb    %FDC,       B
-    outb    %FDC,       CL
-    outb    %FDC,       CH
-    outb    %FDC,       DL
+    mov     AH,             [BP - 11]       ; head number
+    outb    %FDC,           AH
+    
+    mov     AH,             [BP - 10]       ; sector number
+    outb    %FDC,           AH
+    
+    mov     AH,             [BP - 9]        ; data_length
+    outb    %FDC,           AH
 
     WaitForData:
-    inb     %FDC,       AL
-    add     AL,         0x80
+    inb     %FDC,           AL
+    add     AL,             0x80
     jz      [WaitForData]
 
-    mov     HL,         tbyte [BP - 6]  ; data Pointer
+    mov     HL,             tbyte [BP - 6]  ; data Pointer
 
     ReadDataLoop:
-    in      %FDC,       AL
-    mov     [HL],       AL
+    in      %FDC,           AL
+    mov     [HL],           AL
     inc     HL
     dec     DL
     jnz     [ReadDataLoop]
@@ -109,6 +143,24 @@ Read_Data:
 ;
 ; void Recalibrate(uint8_t drive);
 .global Recalibrate:
+    push    BP
+    mov     BP,             SP
+    pushr
+
+    mov     AL,             [BP - 6]
+    shl     AL,             4
+    or      AL,             0x07
+    outb    AL,             %FDC
+
+wait_irq:
+    mov     AL,             [ReceivedIRQ]
+    jz      [wait_irq]
+
+    mov     [ReceivedIRQ],  0    
+
+    popr
+    pop     BP
+    ret     1
 
 ; Sense the interrupt status
 ; Arguments:
@@ -205,3 +257,8 @@ Read_Data:
 ;   - uint8_t value: Value to compare with (INPUT)
 ;   - uint8_t *result: Pointer to buffer where result will be stored (OUTPUT)
 ; void Scan_High_Or_Equal(uint8_t drive, uint16_t cylinder, uint8_t head, uint8_t sector, uint8_t value, uint8_t *result);
+
+FloppyInterruptHandler:
+    mov     [ReceivedIRQ],  1
+
+    rti

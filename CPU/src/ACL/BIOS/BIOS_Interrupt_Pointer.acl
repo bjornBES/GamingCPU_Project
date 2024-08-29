@@ -1,0 +1,5 @@
+
+BIOS_InterruptPointers:
+
+.db 0x01                            ; FDC interrupt byte
+.dword @FloppyInterruptHandler      ; FDC interrupt function pointer

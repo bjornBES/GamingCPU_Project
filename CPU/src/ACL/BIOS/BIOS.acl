@@ -1,7 +1,14 @@
 .section TEXT
 
-.org 0x0
+.SETCPU "BCG16"
+
+.org 0x200
 .global _BIOSStart:
+    pushr
+
+    sez     SS
+    mov     SP,         @Stack
+
     sez     B
     push    BL
 
@@ -9,7 +16,34 @@
     push    AL
     
     call    [CharOut]
+
+    mov     B,          @RAM
+
+    mov     C,          @EndOfBIOS
+    mov     D,          @End - @EndOfBIOS
+
+MoveToRAM_LOOP:
+    mov     [B],        byte [C]
+    inc     B
+    inc     C
+    dec     D
+
+    test    D
+    jnz     [MoveToRAM_LOOP]
+
+    jmp     long [RAM]
+
+EndOfBIOS:
+    mov     A,          CR1
+    or      A,          0x01                ; getting out of the BIOS
+    mov     CR1,        A
+
+    mov     R1,         [DiskNumber]
+    popr
+    mov     DL,         R1
+
     jmp     [$]
+End:
 
 .includeil "./IOFunctions.acl"
 .includeil "./BIOS_Functions.acl"
@@ -18,3 +52,20 @@
 .section DATA
 
 .includeil "./BIOS_Interrupt_Functions.acl"
+
+
+.section BSS
+.org 0xF000
+Stack:
+
+.res 0x400
+
+StackEnd:
+
+DiskNumber:
+.resb
+ReceivedIRQ:
+.resb
+
+.section TEXT
+RAM:

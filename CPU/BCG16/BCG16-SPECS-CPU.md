@@ -10,8 +10,10 @@
   - [Date and Time](#date-and-time)
   - [CPU PINS](#cpu-pins)
   - [INTERRUPTS](#interrupts)
+    - [interrupt table](#interrupt-table)
     - [SOFTWARE INTERRUPTS](#software-interrupts)
-  - [CACHES](#caches)
+  - [Pipelining](#pipelining)
+  - [Caches](#caches)
   - [Screen](#screen)
     - [Writing to the screen](#writing-to-the-screen)
   - [Floating values](#floating-values)
@@ -59,7 +61,7 @@ U = unused
 - 0x06: register address                  [register]
 - 0x07: Near address                      Near [address]      a 8 bit address
 - 0x08: long address                      long [address]      a 24 bit address
-- 0x09:
+- 0x09: Unused
 - 0x0A: float immediate                   float_numberf
 - 0x0B: Unused
 - 0x0C: 32 bit segment address            [register:register]
@@ -81,11 +83,25 @@ U = unused
 
 Interrupts can be triggered by software or hardware specified by the interrupt location port.
 
+### interrupt table
+
+The interrupt table is a list of interrupt entritys that
+
 ### SOFTWARE INTERRUPTS
 
 A software interrupt can be generated using the [BRK](./instructions%20BCG16.md#special-instructions) Instruction and will make a long jump to 0x010000 in bank 0xF, before jumping the PC, MB and the F(flags register) will be push onto the stack and the [PUSHR](./instructions%20BCG16.md#special-instructions) Instruction will also be called.
 
-## CACHES
+## Pipelining
+
+The BCG16 can do 3 stage pipelining like this
+
+|Stage      |Stage1             |Stage2               |Stage3                 |Stage4
+|-----------|-------------------|---------------------|-----------------------|-
+|Opertion1  |Fetch instruction  |instruction Decoding |instruction execution  |Fetch instruction
+|Opertion2  |                   |Fetch instruction    |instruction Decoding   |instruction execution
+|Opertion2  |                   |                     |Fetch instruction      |instruction Decoding
+
+## Caches
 
 ## Screen
 
@@ -155,11 +171,10 @@ note: `all cells is in bytes`
 |Base Address |Size         |Name                           |Description
 |-------------|-------------|-------------------------------|-
 |`0x000_0000` |`0x000_0200` | IO ports                      | this is where the Ports is at
-|`0x000_0200` |`0x002_FE00` | RAM                           | RAM
-|`0x003_0000` |`0x003_3100` | VRAM                          | video ram
-|`0x006_3100` |`0x000_8000` | Char set                      | char set
+|`0x000_0200` |`0x003_FE00` | RAM                           | RAM
+|`0x004_0000` |`0x003_3100` | VRAM                          | video ram
+|`0x007_3100` |`0x000_8000` | Char set                      | char set
 |`0x007_B100` |`0x000_4F00` | RESERVED MEMORY               | this memory should not be used
-|`0x007_0000` |`0x001_0000` | BIOS ROM RESERVED             | this is where the BIOS lifes
 |`0x008_0000` |`0x008_0000` | RAM Banked                    | this is the data/prgram is at but banked
 |`0x010_0000` |`0x0F0_0000` | RAM                           | this is the data/prgram is at
 
@@ -174,15 +189,14 @@ the end is `0xFFFFFF`/`0x1000000`
 
 - ABX:  (A + B)   32  bit general purpose register if the CR0 bit 0x04 is 1
 - CDX:  (C + D)   32  bit general purpose register if the CR0 bit 0x04 is 1
-- HL: (H + L)     32  bit general purpose address register
+- HL:   (H + L)   32  bit general purpose address register
 
 - DS:             16  bit data segment register
 - ES:             16  bit extra data segment register
-- CS:             16  bit code segment register
 - SS:             16  bit stack segment register
 - S:              16  bit segment register
 
-- PC: (PCH + PCL) 32  bit program counter
+- PC:             24  bit program counter
 
 - AF:             32  bit float register
 - BF:             32  bit float register

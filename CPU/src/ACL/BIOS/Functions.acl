@@ -3,11 +3,11 @@ $variabel_segment = 0x000E
 ; dword*    reg0    = 0x000E:3104
 $reg0_offset = 0x3104
 
-; byte index            [BPX - 5]
-; byte argument size    [BPX - 6]
-; byte[] args           [BPX - argument size]
+; byte index            [BP - 5]
+; byte argument size    [BP - 6]
+; byte[] args           [BP - argument size]
 Interrupts:
-    push    BPX
+    push    BP
     pushr
 
     push    H
@@ -15,7 +15,7 @@ Interrupts:
 
     mov     HL,         long @_BIOSFunctions
 
-    mov     BL,         [BPX + 1]
+    mov     BL,         [BP + 1]
     mov     DS,         H
     sez     S                             ; setting the S register to 0
  NOT_TRUE:
@@ -33,26 +33,26 @@ Interrupts:
     mov     dword HL,   [DS:S]            ; moving the address into HL
 
     ; loading the arguments over to interrupt function
-    push    BPX
-    mov     AL,         [BPX + 2]         ; moving the argument size into AL
+    push    BP
+    mov     AL,         [BP + 2]          ; moving the argument size into AL
  Load_Args:
     
-    mov     AH,         [BPX]             ; moving a byte
-    inc     BPX                           ; inc BPX
+    mov     AH,         [BP]              ; moving a byte
+    inc     BP                            ; inc BP
     inc     AL                            ; inc AL
     push    AH                            ; pushing the byte
 
     test    AL                            ; testing AL
     jnz     [Load_Args]                   ; AL != 0 jump 
-    pop     BPX                           ; poping BPX off the stack
+    pop     BP                            ; poping BP off the stack
 
     call    [HL]                          ; calling the function
 
     popr
-    pop     BPX
+    pop     BP
 
 ;
-; byte index            [BPX - 5]
+; byte index            [BP - 5]
 ; 
 ; return: A
 ;
@@ -61,14 +61,14 @@ Interrupts:
 ;
 ; int FindInterruptAddress(byte index)
 FindInterruptAddress:
-   push     BPX
-   mov      BPX,        SPX
+   push     BP
+   mov      BP,         SP
    pushr
 
    push     DS
 
    mov      HL,      @_BIOSFunctions - 4  ; moving the address of _BIOSFunctions into HL with an offset
-   mov      AH,      [BPX - 5]            ; getting the index from arguemnts
+   mov      AH,      [BP - 5]             ; getting the index from arguemnts
  GetToAddress:                            ; getting the address using the index
    add      HL,      4                    ; inc the HL register
    mov      AL,      [HL]                 ; getting the index
@@ -82,30 +82,30 @@ FindInterruptAddress:
    popr
 
    mov      A,       R1                   ; setting the return value
-   pop      BPX
+   pop      BP
    ret      1
 
 ;
-; InterruptData* PinterruptData  [BPX - 5] as a pointer
-; byte index                     [BPX - 8]
+; InterruptData* PinterruptData  [BP - 5] as a pointer
+; byte index                     [BP - 8]
 ; 
 ; Description:
 ; this will return a InterruptData pointer
 ;
 ; void FindInterruptAddress(InterruptData* PinterruptData, byte index)
 FindInterruptAddress:
-   push     BPX
-   mov      BPX,        SPX
+   push     BP
+   mov      BP,         SP
    pushr
 
    push     DS
 
-   mov      HL,      tbyte [BPX - 5]      ; getting the address of the InterruptData
+   mov      HL,      tbyte [BP - 5]       ; getting the address of the InterruptData
    mov      DS,      H                    ; segment
    mov      B,       L                    ; offset
 
    mov      HL,      @_BIOSFunctions - 4  ; moving the address of _BIOSFunctions into HL with an offset
-   mov      AH,      [BPX - 8]            ; getting the index from arguemnts
+   mov      AH,      [BP - 8]             ; getting the index from arguemnts
  GetToAddress:                            ; getting the address using the index
    add      HL,      4                    ; inc the HL register
    mov      AL,      [HL]                 ; getting the index
@@ -117,7 +117,7 @@ FindInterruptAddress:
 
    pop      DS
    popr
-   pop      BPX
+   pop      BP
    ret      4
 
 ; Description:

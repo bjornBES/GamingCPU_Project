@@ -158,7 +158,7 @@ public class RegisterInfo
             CPUType.BCG16 => GetSizeBCG16(),
             CPUType.BCG1680 => GetSizeBCG1680(),
             CPUType.BCG1684 => GetSizeBCG1684(),
-            _ => 0,
+            _ => -1,
         };
     }
 
@@ -194,7 +194,7 @@ public class RegisterInfo
             Register.F => 2,
             Register.FH => 1,
             Register.FL => 1,
-            _ => throw new NotImplementedException(),
+            _ => -1,
         };
     }
     int GetSizeBCG16()
@@ -251,7 +251,7 @@ public class RegisterInfo
             Register.F => 2,
             Register.FH => 1,
             Register.FL => 1,
-            _ => throw new NotImplementedException(),
+            _ => -1,
         };
     }
     int GetSizeBCG1680()
@@ -309,7 +309,7 @@ public class RegisterInfo
             Register.F => 2,
             Register.FH => 1,
             Register.FL => 1,
-            _ => throw new NotImplementedException(),
+            _ => -1,
         };
     }
     int GetSizeBCG1684()
@@ -384,7 +384,7 @@ public class RegisterInfo
             Register.F => 2,
             Register.FH => 1,
             Register.FL => 1,
-            _ => throw new NotImplementedException(),
+            _ => -1,
         };
     }
 

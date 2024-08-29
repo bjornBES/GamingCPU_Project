@@ -1,0 +1,15 @@
+
+.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\TestProgram.acl
+.SETCPU "BCG16"
+
+.section TEXT
+
+L_HEADER:
+
+mov     SS,     0x00
+mov     SP,     0x8000
+push    0x55
+
+Start:
+
+; .includeil "./BIOS/BIOS.acl"

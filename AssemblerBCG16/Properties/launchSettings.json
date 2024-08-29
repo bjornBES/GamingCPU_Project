@@ -8,7 +8,7 @@
     "Assemble BIOS": {
       "commandName": "Project",
       "workingDirectory": "./..",
-      "commandLineArgs": "-i ./CPU/src/ACL/BIOS/BIOS.acl -o ./BIOSBin/OBJ/BIOS.o"
+      "commandLineArgs": "-i ./CPU/src/ACL/BIOS/BIOS.acl -o ./CPU/src/BIOSBin/OBJ/BIOS.o"
     }
   }
 }

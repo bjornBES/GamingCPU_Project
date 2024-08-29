@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace BCGLinker
 {
@@ -103,6 +104,8 @@ namespace BCGLinker
             linker.BuildSrc(FullSrc);
 
             string copyOld = File.ReadAllText(OutputFile, Encoding.Default);
+
+            Thread.Sleep(250);
 
             File.WriteAllText(OutputFile, linker.m_OutputBin, Encoding.Default);
             string contents = File.ReadAllText(OutputFile, Encoding.Default);

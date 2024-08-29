@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "BCG16Emulator/1.0.0": {
+        "dependencies": {
+          "HexLibrary": "1.0.0"
+        },
+        "runtime": {
+          "BCG16Emulator.dll": {}
+        }
+      },
+      "HexLibrary/1.0.0": {
+        "runtime": {
+          "HexLibrary.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "BCG16Emulator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HexLibrary/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
