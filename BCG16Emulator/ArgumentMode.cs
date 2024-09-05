@@ -6,22 +6,30 @@
         immediate_word = 0x01,
         immediate_tbyte = 0x02,
         immediate_dword = 0x03,
-        address = 0x04,
-        register = 0x05,
-        register_address = 0x06,
+        immediate_qword = 0x06,
+        immediate_float = 0x07,
 
-        near_address = 0x07,
-        long_address = 0x08,
-        far_address = 0x09,
-        float_immediate = 0x0A,
+        register = 0x08,
+        register_address = 0x09,
 
-        segment_address = 0x0C,
-        segment_address_immediate = 0x0D,
-        segment_immediate_address = 0x0E,
-        segment_DS_register = 0x0F,
+        near_address = 0x0B,
+        address = 0x0C,
+        long_address = 0x0D,
+        far_address = 0x0E,
+        relative_address = 0x0F,
 
-        immediate_qword = 0x1E,
+        segment_address = 0x10,
+        segment_address_immediate = 0x11,
+        segment_DS_register = 0x12,
+        segment_DS_B = 0x13,
 
-        None = 0xFF
+        register_AL = 0x1A,
+        register_A = 0x1B,
+        register_AX = 0x1C,
+        register_HL = 0x1D,
+        register_address_HL = 0x1E,
+        BP_Offset_Address = 0x1F,
+
+        None = 0xFF,
     }
 }

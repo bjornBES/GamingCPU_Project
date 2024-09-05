@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommonBCGCPU;
+using CommonBCGCPU.Types;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Text;
@@ -8,7 +10,7 @@ namespace BCG16CPUEmulator
     public class BCG16CPU : BCG16CPU_Instructions
     {
         Stack<IPort> PortsIRQ = new Stack<IPort>(256);
-        bool IRQEnable = false;
+        bool IRQEnable;
 
 
         Instruction[] Instructions = new Instruction[3];
@@ -30,6 +32,7 @@ namespace BCG16CPUEmulator
 
         public void ResetCPU()
         {
+            IRQEnable = true;
             Instructions.Initialize();
             ArgumentModes1.Initialize();
             ArgumentModes2.Initialize();
@@ -51,7 +54,7 @@ namespace BCG16CPUEmulator
 
             BP = SP = 0;
 
-            IL = 0;
+            IDTAddressRegister = 0;
 
             R1 = R2 = 0;
 
@@ -79,9 +82,12 @@ namespace BCG16CPUEmulator
             HL[true] = H;
             HL[false] = L;
 
-            while (PortsIRQ.TryPop(out IPort result) == true)
+            if (GetFlag(FI) == true)
             {
-
+                if (PortsIRQ.TryPop(out IPort result) == true)
+                {
+                    ExecutionInterrupt(result);
+                }
             }
 
             ExecuteInstruction(Instructions[0], ArgumentModes1[0], ArgumentModes2[0], ref stage1);
@@ -93,8 +99,17 @@ namespace BCG16CPUEmulator
             TickOpertion(2);
         }
 
+        void ExecutionInterrupt(IPort port)
+        {
+            PushInterrupt();
+        }
+
         void TickOpertion(int Opertion)
         {
+            if (GetFlag(FH) == true)
+            {
+                return;
+            }
             switch (Opertion)
             {
                 case 0:
@@ -109,6 +124,7 @@ namespace BCG16CPUEmulator
                 default:
                     break;
             }
+
         }
 
         void TickStage(ref uint stage, int Opertion)
@@ -137,77 +153,105 @@ namespace BCG16CPUEmulator
                 return;
             }
 
+            argumentOffset = 3;
+
             switch (instruction)
             {
                 case Instruction.MOV:
                     Move(Size._byte, argument1, argument2);
-                    break;
+                    return;
                 case Instruction.MOVW:
                     Move(Size._word, argument1, argument2);
-                    break;
+                    return;
                 case Instruction.MOVT:
                     Move(Size._tbyte, argument1, argument2);
-                    break;
+                    return;
                 case Instruction.MOVD:
                     Move(Size._dword, argument1, argument2);
-                    break;
+                    return;
                 case Instruction.CMP:
-                    break;
+                    Cmp(argument1, argument2);
+                    return;
                 case Instruction.PUSH:
                     Push(argument1);
-                    break;
+                    return;
                 case Instruction.POP:
-                    break;
+                    Pop(Size._byte, argument1);
+                    return;
                 case Instruction.POPW:
-                    break;
+                    Pop(Size._word, argument1);
+                    return;
                 case Instruction.POPT:
-                    break;
+                    Pop(Size._tbyte, argument1);
+                    return;
                 case Instruction.POPD:
-                    break;
+                    Pop(Size._dword, argument1);
+                    return;
                 case Instruction.CALL:
-                    break;
+                    Call(argument1);
+                    return;
                 case Instruction.RET:
-                    break;
+                    Ret(argument1);
+                    return;
                 case Instruction.RETZ:
-                    break;
+                    Ret(0);
+                    return;
                 case Instruction.SEZ:
                     Sez(argument1);
-                    break;
+                    return;
                 case Instruction.TEST:
                     break;
                 case Instruction.JMP:
-                    break;
+                    Jump(argument1);
+                    return;
                 case Instruction.JZ:
-                    break;
+                    JumpC(argument1, FZ, 1);
+                    return;
                 case Instruction.JNZ:
-                    break;
+                    JumpC(argument1, FZ, 0);
+                    return;
                 case Instruction.JS:
-                    break;
+                    JumpC(argument1, FS, 1);
+                    return;
                 case Instruction.JNS:
-                    break;
+                    JumpC(argument1, FS, 0);
+                    return;
                 case Instruction.JE:
-                    break;
+                    JumpC(argument1, FE, 1);
+                    return;
                 case Instruction.JNE:
-                    break;
+                    JumpC(argument1, FE, 0);
+                    return;
                 case Instruction.JL:
-                    break;
+                    JumpC(argument1, FL, 1);
+                    return;
                 case Instruction.JG:
-                    break;
+                    JumpC(argument1, FL, 0);
+                    return;
                 case Instruction.JLE:
-                    break;
+                    if (GetFlag(FL) == true || GetFlag(FE) == true)
+                    {
+                        Jump(argument1);
+                    }
+                    return;
                 case Instruction.JGE:
-                    break;
+                    if (GetFlag(FL) == false || GetFlag(FE) == true)
+                    {
+                        Jump(argument1);
+                    }
+                    return;
                 case Instruction.JNV:
-                    break;
+                    JumpC(argument1, FO, 0);
+                    return;
                 case Instruction.JTZ:
-                    Jump(0);
-                    break;
-                case Instruction.JBA:
-                    break;
+                    Jump((Address)0);
+                    return;
                 case Instruction.INB:
-                    break;
+                    Inb(argument1, argument2);
+                    return;
                 case Instruction.OUTB:
-                    break;
+                    Outb(argument1, argument2);
+                    return;
                 case Instruction.SEF:
                     break;
                 case Instruction.CLF:
@@ -223,7 +267,8 @@ namespace BCG16CPUEmulator
                 case Instruction.AND:
                     break;
                 case Instruction.OR:
-                    break;
+                    Or(argument1, argument2);
+                    return;
                 case Instruction.NOR:
                     break;
                 case Instruction.XOR:
@@ -239,9 +284,11 @@ namespace BCG16CPUEmulator
                 case Instruction.ROR:
                     break;
                 case Instruction.INC:
-                    break;
+                    Inc(argument1);
+                    return;
                 case Instruction.DEC:
-                    break;
+                    Dec(argument1);
+                    return;
                 case Instruction.NEG:
                     break;
                 case Instruction.AVG:
@@ -291,24 +338,31 @@ namespace BCG16CPUEmulator
                 case Instruction.TIME:
                     break;
                 case Instruction.RTI:
-                    break;
-                case Instruction.NOP:
-                    break;
+                    Rti();
+                    return;
                 case Instruction.RISERR:
                     break;
                 case Instruction.PUSHR:
-                    break;
+                    Pushr();
+                    return;
                 case Instruction.POPR:
-                    break;
+                    Popr();
+                    return;
                 case Instruction.INT:
-                    break;
+                    Int(argument1);
+                    return;
                 case Instruction.BRK:
                     break;
                 case Instruction.HALT:
-                    break;
+                    SetFlag(FH, true);
+                    return;
+                case Instruction.NOP:
+                    return;
                 default:
                     break;
             }
+
+            Console.WriteLine($"{instruction} {argument1}, {argument2}");
         }
 
         Instruction DecodeInstruction(out ArgumentMode argument1, out ArgumentMode argument2)

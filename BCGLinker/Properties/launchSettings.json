@@ -8,12 +8,17 @@
     "Link BIOS": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./BIOSBin/OBJ/BIOS.o -o ./BIOSBin/Bin/BIOS.bin"
+      "commandLineArgs": "-i ./CPU/src/BIOSBin/OBJ/BIOS.o -o ./BIOSBin/Bin/BIOS.bin"
     },
     "Try link BIOS": {
       "commandName": "Project",
       "workingDirectory": "../.",
       "commandLineArgs": "-i ./CPU/src/ACL/bin/TestProgram.o -o ./CPU/src/ACL/bin/TestProgram.bin -f fbin"
+    },
+    "Link Bootloader": {
+      "commandName": "Project",
+      "workingDirectory": "../.",
+      "commandLineArgs": "-i ./CPU/src/ACL/bin/Bootloader.o -o ./CPU/src/ACL/bin/Bootloader.bin -f fbin"
     }
   }
 }

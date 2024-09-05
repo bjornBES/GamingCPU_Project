@@ -34,10 +34,9 @@
         JNV = 0x1B,
 
         JTZ = 0x2A,
-        JBA = 0x2B,
 
-        INB = 0x2C,
-        OUTB = 0x2D,
+        INB = 0x60,
+        OUTB = 0x61,
 
         SEF = 0x2E,
         CLF = 0x2F,

@@ -1,4 +1,5 @@
-﻿using BCG16CPUEmulator.Types;
+﻿using CommonBCGCPU.Types;
+using CommonBCGCPU;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,17 +22,13 @@ namespace BCG16CPUEmulator
             m_CPU = new BCG16CPU();
             m_CPU.ConnectBus(this);
 
+
+            m_ports.Add(new TestPort(0));
         }
 
-        public void Load(string bin)
+        public void Load(byte[] bin)
         {
-            Address textSegmentAddress = 0x0000200;
-            for (int i = 0; i < bin.Length; i++)
-            {
-                byte[] test = BitConverter.GetBytes(bin[i]);
-                m_Memory.WriteByte(textSegmentAddress, test[0]);
-                textSegmentAddress += 1;
-            }
+            Array.Copy(bin, 0, m_Memory.Mem, 0x200, bin.Length);
         }
 
         public void Tick()
@@ -57,15 +54,120 @@ namespace BCG16CPUEmulator
 
         void TICK()
         {
+            m_CPU.Tick();
+            
             m_ports.ForEach(p =>
             {
-                if (p.IRQEnable)
+                if (p.m_IRQEnable)
                 {
                     m_CPU.IRQ(p);
                 }
+                p.Tick();
+            });
+        }
+
+        public void Write(Address address, int data)
+        {
+
+            if (address >= 0 && address <= 0x200 - 1)
+            {
+                return;
+            }
+            if ((m_CPU.CR0 & 0x11) == 0x00)
+            {
+                address = address & 0x00FFFF;
+            }
+            else if ((m_CPU.CR0 & 0x01) == 0x01)
+            {
+                address = address & 0x0FFFFF;
+            }
+            else if ((m_CPU.CR0 & 0x11) == 0x11)
+            {
+                address = address & 0xFFFFFF;
+            }
+            else if ((m_CPU.CR0 & 0x10) == 0x10)
+            {
+                address = address & 0xF0FFFF;
+            }
+
+            if (data >= byte.MinValue && data <= byte.MaxValue)
+            {
+                m_Memory.WriteByte(address, (byte)data);
+            }
+        }
+
+        public void OutPort(int Port, byte Data)
+        {
+            if (!(Port >= 0 && Port <= 0x200 - 1))
+            {
+                return;
+            }
+
+            m_ports.ForEach(port =>
+            {
+                if (port.m_PortIDStart <= Port && port.m_PortIDEnd >= Port)
+                {
+                    port.Write(Data, (ushort)Port);
+                }
+            });
+        }
+        public void OutPort(int Port, ushort Data)
+        {
+            if (!(Port >= 0 && Port <= 0x200 - 1))
+            {
+                return;
+            }
+
+            m_ports.ForEach(port =>
+            {
+                if (port.m_PortIDStart <= Port && port.m_PortIDEnd >= Port)
+                {
+                    port.Write(Data, (ushort)Port);
+                }
+            });
+        }
+
+        public byte InPort(int Port, out byte Data)
+        {
+            if (!(Port >= 0 && Port <= 0x200 - 1))
+            {
+                Data = 0;
+                return 0;
+            }
+
+            byte result = 0;
+
+            m_ports.ForEach(port =>
+            {
+                if (port.m_PortIDStart <= Port && port.m_PortIDEnd >= Port)
+                {
+                    port.Read(out result, (ushort)Port);
+                }
             });
 
-            m_CPU.Tick();
+            Data = result;
+            return result;
+        }
+        public ushort InPort(int Port, out ushort Data)
+        {
+            if (!(Port >= 0 && Port <= 0x200 - 1))
+            {
+                Data = 0;
+                return 0;
+            }
+
+            ushort result = 0;
+
+            m_ports.ForEach(port =>
+            {
+                if (port.m_PortIDStart <= Port && port.m_PortIDEnd >= Port)
+                {
+                    port.Read(out result, (ushort)Port);
+                }
+            });
+
+            Data = result;
+            return result;
         }
     }
 }

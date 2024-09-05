@@ -2,6 +2,41 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
+      "BFDCG12/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "CommonBCGCPU": "1.0.0",
+          "HexLibrary": "1.0.0",
+          "filesystem": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/BFDCG12.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BFDCG12.dll": {}
+        }
+      },
+      "CommonBCGCPU/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/CommonBCGCPU.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CommonBCGCPU.dll": {}
+        }
+      },
+      "filesystem/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/filesystem.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/filesystem.dll": {}
+        }
+      },
       "HexLibrary/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -15,6 +50,21 @@
     }
   },
   "libraries": {
+    "BFDCG12/1.0.0": {
+      "type": "project",
+      "path": "../BFDCG12/BFDCG12.csproj",
+      "msbuildProject": "../BFDCG12/BFDCG12.csproj"
+    },
+    "CommonBCGCPU/1.0.0": {
+      "type": "project",
+      "path": "../CommonBCGCPU/CommonBCGCPU.csproj",
+      "msbuildProject": "../CommonBCGCPU/CommonBCGCPU.csproj"
+    },
+    "filesystem/1.0.0": {
+      "type": "project",
+      "path": "../fileSystem/filesystem.csproj",
+      "msbuildProject": "../fileSystem/filesystem.csproj"
+    },
     "HexLibrary/1.0.0": {
       "type": "project",
       "path": "../HexLibrary/HexLibrary.csproj",
@@ -23,6 +73,8 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "BFDCG12 >= 1.0.0",
+      "CommonBCGCPU >= 1.0.0",
       "HexLibrary >= 1.0.0"
     ]
   },
@@ -53,6 +105,12 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BFDCG12\\BFDCG12.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BFDCG12\\BFDCG12.csproj"
+            },
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\CommonBCGCPU\\CommonBCGCPU.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\CommonBCGCPU\\CommonBCGCPU.csproj"
+            },
             "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj": {
               "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj"
             }

@@ -130,18 +130,22 @@ public class RegisterInfo
         switch (m_Register)
         {
             case Register.AH:
+                return Register.AH;
             case Register.AL:
             case Register.A:
                 return Register.AL;
             case Register.BH:
+                return Register.BH;
             case Register.BL:
             case Register.B:
                 return Register.BL;
             case Register.CH:
+                return Register.CH;
             case Register.CL:
             case Register.C:
                 return Register.CL;
             case Register.DH:
+                return Register.DH;
             case Register.DL:
             case Register.D:
                 return Register.DL;

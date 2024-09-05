@@ -31,7 +31,6 @@
 - `0x1A`: JGE       address                 `Jumps to the specified address if the equal flag is set or the less flag is cleared`
 - `0x1B`: JNV       address                 `Jumps to the specified address if the overflow flag is cleared`
 - `0x2A`: JTZ                               `Jumps to address 0x0000_0000`
-- `0x2B`: JBA       address bank            `Jumps to the specified address and specified bank`
 
 # Arithmetic and logic operations
 
@@ -50,13 +49,13 @@
 - `0x3A`: SHR       destination operand1    `Shifts all the bits rigth in the destination by specified by operand1. The {SHIFT_FLAG} is the overflowing bit, and the next bit is zero.`
 - `0x3B`: ROL       destination operand1    `Rotates all the bits left in the destination by specified by operand1. The {SHIFT_FLAG} is used as the next bit, and the overflowing bit.`
 - `0x3C`: ROR       destination operand1    `Rotates all the bits right in the destination by specified by operand1. The {SHIFT_FLAG} is used as the next bit, and the overflowing bit.`
-- `0x3D`: INC       destination             `Increments the value at the destination by 1.`
-- `0x3E`: DEC       destination             `Decrements the value at the destination by 1.`
+- `0x3D`: INC       register                `Increments the value at the register by 1.`
+- `0x3E`: DEC       register                `Decrements the value at the register by 1.`
 - `0x3F`: NEG       destination             `Sets/clears the signed bit of the destination.`
-- `0x40`: AVG       destination operand1    `Calculates the average of the values in the destination and operand1 and puts the value in the destination.`
+- `0x40`: Unused
 - `0x41`: EXP       destination operand1    `Raises the value at the destination to the power of the value specified by operand1.`
 - `0x42`: SQRT      destination             `Calculates the square root of the destination.`
-- `0x43`: RNG       destination             `Generates a random number and puts the value into the destination`
+- `0x43`: RNG       destination             `Generates a random byte and puts the value into the destination`
 - `0x44`: SEB       source operand1         `Sets a bit in the source specified by the operand1`
 - `0x45`: CLB       source operand1         `Clears a bit in the source specified by the operand1`
 - `0x46`: TOB       source operand1         `Toggles a bit in the source specified by the operand1`
@@ -93,11 +92,11 @@
 
 # Special instructions
 
-- `0xF8`: RTI                               `returns from an intercept routine`
+- `0xF8`: RTI                               `returns from an interrupt routine`
 - `0xF9`: NOP                               `No operation`
 - `0xFA`: RISERR    error_source            `Raises the error flag and sets the A register with the value from error_source`
-- `0xFB`: PUSHR                             `Pushes (AX BX CX DX H L) on to the stack`
-- `0xFC`: POPR                              `Pops (AX BX CX DX H L) off the stack`
+- `0xFB`: PUSHR                             `Pushes (A B C D H L) on to the stack`
+- `0xFC`: POPR                              `Pops (A B C D H L) off the stack`
 - `0xFD`: INT       INTERRUPT_ROUTINE       `Generates an interrupt routine (more in the INTERRUPTS)`
-- `0xFE`: BRK       INDEX                   `Generates a software interrupt and the INDEX will be moved into the X register (more in the INTERRUPTS)`
+- `0xFE`: BRK                               `Generates a software interrupt (more in the INTERRUPTS)`
 - `0xFF`: HALT                              `Stops the CPU`

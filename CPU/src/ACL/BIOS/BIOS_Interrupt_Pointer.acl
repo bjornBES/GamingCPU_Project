@@ -1,5 +1,11 @@
 
+.section DATA
+
 BIOS_InterruptPointers:
 
-.db 0x01                            ; FDC interrupt byte
-.dword @FloppyInterruptHandler      ; FDC interrupt function pointer
+.times (BIOS_IRQ_InterruptPointers - BIOS_InterruptPointers) - 1024 .db 0
+
+; this is for the IRQs Interrupts
+BIOS_IRQ_InterruptPointers:
+.dd 0                               ; IRQ0: Unused
+.dd far @FloppyInterruptHandler     ; IRQ1: FDC interrupt function pointer

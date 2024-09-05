@@ -1,4 +1,4 @@
-﻿using BCG16CPUEmulator.Types;
+﻿using CommonBCGCPU.Types;
 
 namespace BCG16CPUEmulator
 {
@@ -30,7 +30,7 @@ namespace BCG16CPUEmulator
         public _16Bit_Register BP = new _16Bit_Register();
         public _16Bit_Register SP = new _16Bit_Register();
 
-        public _8Bit_Register IL = new _8Bit_Register();
+        public _24Bit_Register IDTAddressRegister = new _24Bit_Register();
 
         public _16Bit_Register R1 = new _16Bit_Register();
         public _16Bit_Register R2 = new _16Bit_Register();
@@ -45,5 +45,51 @@ namespace BCG16CPUEmulator
         public BUS m_BUS;
 
         public Instruction IR;
+
+        /// <summary>
+        /// Flag Zero
+        /// </summary>
+        public const int FZ = 0x0001;
+
+        /// <summary>
+        /// Flag equals
+        /// </summary>
+        public const int FE = 0x0002;
+
+        /// <summary>
+        /// Flag Signed
+        /// </summary>
+        public const int FS = 0x0004;
+
+        /// <summary>
+        /// Flag Carry
+        /// </summary>
+        public const int FC = 0x0008;
+
+        /// <summary>
+        /// Flag overflow
+        /// </summary>
+        public const int FO = 0x0010;
+
+        /// <summary>
+        /// flag less
+        /// </summary>
+        public const int FL = 0x0020;
+
+        /// <summary>
+        /// Flag interrupt
+        /// </summary>
+        public const int FI = 0x0200;
+
+        /// <summary>
+        /// flag Halted
+        /// </summary>
+        public const int FH = 0x8000;
+
+        public const int CR0_EnableA20 = 0x01;
+        public const int CR0_UseExtendedRegisters = 0x04;
+        public const int CR0_EnableA24 = 0x10;
+
+        public const int CR1_BiosRom = 0x10;
     }
 }

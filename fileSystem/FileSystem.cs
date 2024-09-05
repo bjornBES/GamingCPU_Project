@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace filesystem
@@ -11,7 +12,7 @@ namespace filesystem
     public class FileSystem
     {
         const int _144MB = 1_509_949;
-        const int _20MB = 20_971_520;
+        const int _20MB = (1024 * 1024) * 20;
 
         Encoding DefualtEncoder = Encoding.ASCII;
         ushort rootAddress = 0x300;
@@ -26,6 +27,8 @@ namespace filesystem
         ushort TotalTracks;
         ushort TracksPerHead;
 
+        public Disk m_Disk;
+
         bool WriteEnable = false;
 
         ushort entryConut;
@@ -35,15 +38,20 @@ namespace filesystem
         const ushort IsProtectedFlag = 0b0000_0000_0000_0100;
 
         const ushort IsReadOnlyFlag = 0b0000_0000_0001_0000;
-
-        public void FormatDisk(Disk disk)
+        public void CreateDisk(Disk disk)
         {
+            if (!File.Exists(disk.m_DiskPath))
+            {
+                File.Create(disk.m_DiskPath).Close();
+                Thread.Sleep(100);
+            }
+
+            m_Disk = disk;
             /*
              1.44 MB is 1,509,949.44 bytes.
 20 MB is 20,971,520 bytes.
             */
             entryConut = 0;
-            byte MaxNumberOfEntrys;
 
             BytesPerSector = 0x200;
             rootAddress = 0x300;
@@ -71,12 +79,16 @@ namespace filesystem
                     break;
             }
 
-            MaxNumberOfEntrys = (byte)((BytesPerSector - (rootAddress - BytesPerSector)) / entrySize);
             TotalSectors = (ushort)(DiskSize / BytesPerSector);
             SectorsPerTracks = (ushort)(TotalSectors / (TotalTracks * heads));
 
             DiskBuffer = new byte[DiskSize];
             DiskBuffer.Initialize();
+        }
+        public void FormatDisk(Disk disk)
+        {
+            CreateDisk(disk);
+            byte MaxNumberOfEntrys = (byte)((BytesPerSector - (rootAddress - BytesPerSector)) / entrySize);
 
             byte FatAllocation = (byte)Math.Clamp((int)MathF.Round((float)(DiskSize / 8) / BytesPerSector / BytesPerSector, 0, MidpointRounding.ToPositiveInfinity), 1, 255);
 
@@ -162,16 +174,21 @@ namespace filesystem
             // Step 3: Return the final result as a hex string array
             return result.ToArray();
         }
-
-        public void SaveFile(Disk disk)
+        public void SaveFile()
         {
             int offset = 0x200;
 
             WriteDisk(entryConut, offset + 0x16, false);
-            File.WriteAllBytes(disk.m_DiskPath, DiskBuffer);
+            File.WriteAllBytes(m_Disk.m_DiskPath, DiskBuffer);
         }
         public void LoadFile(Disk disk)
         {
+            if (m_Disk == null)
+            {
+                FormatDisk(disk);
+            }
+
+            m_Disk = disk;
             entryConut = 0;
             DiskBuffer = File.ReadAllBytes(disk.m_DiskPath);
             

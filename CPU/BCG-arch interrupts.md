@@ -1,7 +1,7 @@
 - [Hardware Interrupts](#hardware-interrupts)
 - [CPU Interrupts](#cpu-interrupts)
   - [int 0x00 Cpu Interrupts](#int-0x00-cpu-interrupts)
-    - [Load interrupt table AH = 0x00](#load-interrupt-table-ah--0x00)
+    - [Load interrupt Descriptor table AH = 0x00](#load-interrupt-descriptor-table-ah--0x00)
       - [Parameters](#parameters)
 - [BIOS Interrupts](#bios-interrupts)
   - [int 0x10 terminal services](#int-0x10-terminal-services)
@@ -33,11 +33,12 @@
 
 ## int 0x00 Cpu Interrupts
 
-### Load interrupt table AH = 0x00
+### Load interrupt Descriptor table AH = 0x00
 
 #### Parameters
 
 ```
+AL = Interrupt routine index
 HL = Pointer to interrupt table
 ```
 

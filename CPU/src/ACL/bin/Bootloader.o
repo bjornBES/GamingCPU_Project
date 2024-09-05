@@ -1,0 +1,50 @@
+INCLUDE HEADER
+
+
+SECTION HEADER
+_TEXT 0x0 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\Bootloader.acl
+
+
+STRUCT HEADER
+
+
+SYMBOLS HEADER
+_REF_ LABEL Bootloader,False [0x9000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\Bootloader.acl
+
+
+TEXT HEADER
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\Bootloader.acl"
+_NEWLINE_
+_NEWLINE_
+_OFF_ 9000
+_NEWLINE_
+_REF_ LABEL Bootloader,False [0x9000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\ACL\Bootloader.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_jmp [$]
+_SET_ BPX 0
+_SET_ SPX 0
+10
+0c
+00
+_SCA_
+_SET_ BPX 0
+_SET_ SPX 0
+_NEWLINE_
+_DEL_mov AL, 0x10
+_SET_ BPX 0
+_SET_ SPX 0
+01
+1a
+01
+00
+10
+_SET_ BPX 0
+_SET_ SPX 0
+_NEWLINE_
+_NEWLINE_
+_TIMES_ BINEXPR - I_1 - _SCS_ I_510,00.1
+_NEWLINE_
+55
+AA

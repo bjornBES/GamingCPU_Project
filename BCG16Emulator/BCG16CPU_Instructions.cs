@@ -1,10 +1,9 @@
-﻿using BCG16CPUEmulator.Types;
+﻿using CommonBCGCPU.Types;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Metadata;
 using System.Text;
-using static HexLibrary.SplitFunctions;
-using static HexLibrary.HexConverter;
+using System.ComponentModel;
 
 namespace BCG16CPUEmulator
 {
@@ -20,66 +19,18 @@ namespace BCG16CPUEmulator
         imm,
         Address,
         Register,
-        RegisterAddress,
-        FarAddress,
-        LongAddress,
         Float,
         SegmentAddress,
-        SegmentAddressImmediate,
-        SegmentImmediateAddress,
-        SegmentDSRegister
     }
-    public class BCG16CPU_Instructions : BCG16CPU_Registers
+    public class BCG16CPU_Instructions : BCG16CPU_Interrupts
     {
-        public void Jump(Address address)
-        {
-            PC = address;
-        }
-
         public void Move(Size InstructionSize, ArgumentMode destination, ArgumentMode source)
         {
-            object result;
-
-            Register? DestinationRegister = null;
-
-            int? ImmSource = null;
-
-            object DataSource = null;
-            object DataDestination = null;
-
-            if (GetDestination(destination, ArgumentType.Register, out result))
-            {
-                Register register = (Register)result;
-                DestinationRegister = register;
-                DataDestination = register;
-            }
-
-            if (GetSource(source, ArgumentType.imm, out result))
-            {
-                DataSource = result;
-                switch (source)
-                {
-                    case ArgumentMode.immediate_byte:
-                        byte Bresult = (byte)result;
-                        ImmSource = Bresult;
-                        break;
-                    case ArgumentMode.immediate_word:
-                        ushort Wresult = (ushort)result;
-                        ImmSource = Wresult;
-                        break;
-                    case ArgumentMode.immediate_tbyte:
-                        break;
-                    case ArgumentMode.immediate_dword:
-                        break;
-                }
-            }
-
-
-            if (DataSource == null)
+            if (GetDestinationAll(destination, InstructionSize, out Register? DestinationRegister, out Address? DestinationAddress))
             {
                 throw new NotImplementedException();
             }
-            if (DataDestination == null)
+            if (GetSourceAll(source, InstructionSize, out int? ImmSource))
             {
                 throw new NotImplementedException();
             }
@@ -91,23 +42,125 @@ namespace BCG16CPUEmulator
                     SetRegisterValue(DestinationRegister.Value, ImmSource.Value);
                 }
             }
+            else if (DestinationAddress.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    switch (InstructionSize)
+                    {
+                        case Size._byte:
+                            m_BUS.m_Memory.WriteByte(DestinationAddress.Value, (byte)ImmSource.Value);
+                            break;
+                        case Size._word:
+                            m_BUS.m_Memory.WriteWord(DestinationAddress.Value, (ushort)ImmSource.Value);
+                            break;
+                        case Size._tbyte:
+                            m_BUS.m_Memory.WriteTByte(DestinationAddress.Value, (uint)ImmSource.Value);
+                            break;
+                        case Size._dword:
+                            m_BUS.m_Memory.WriteDWord(DestinationAddress.Value, (uint)ImmSource.Value);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        public void Cmp(ArgumentMode operand1, ArgumentMode operand2)
+        {
+            if (GetSourceAll(operand1, Size._word, out int? ImmSource1))
+            {
+                throw new NotImplementedException();
+            }
+            if (GetSourceAll(operand2, Size._word, out int? ImmSource2))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource1.HasValue)
+            {
+                if (ImmSource2.HasValue)
+                {
+                    Compare(ImmSource1.Value, ImmSource2.Value);
+                }
+            }
+        }
+        public void Push(ArgumentMode source)
+        {
+            int? ImmSource = null;
+            Register? DestinationRegister = null;
+            if (!GetDestinationAll(source, Size._word, out DestinationRegister, out _))
+            {
+            }
+            else if (!GetSourceAll(source, Size._word, out ImmSource))
+            {
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                Push(DestinationRegister.Value);
+            }
+
+            if (ImmSource.HasValue)
+            {
+                Push(ImmSource.Value, source);
+            }
+        }
+        public void Pop(Size InstructionSize, ArgumentMode destination)
+        {
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                switch (InstructionSize)
+                {
+                    case Size._byte:
+                        byte popResult = Pop(out byte _);
+                        SetRegisterValue(DestinationRegister.Value, popResult);
+                        break;
+                    case Size._word:
+                        ushort WpopResult = Pop(out ushort _);
+                        SetRegisterValue(DestinationRegister.Value, WpopResult);
+                        break;
+                    case Size._tbyte:
+                        break;
+                    case Size._dword:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        public void Call(ArgumentMode destination)
+        {
+            if (GetDestinationAll(destination, Size._byte, out Register? _, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationAddress.HasValue)
+            {
+                Call(DestinationAddress.Value);
+            }
+        }
+        public void Ret(ArgumentMode source)
+        {
+            if (GetSourceAll(source, Size._byte, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                Ret(ImmSource.Value);
+            }
         }
         public void Sez(ArgumentMode destination)
         {
-            object result;
-
-            Register? DestinationRegister = null;
-
-            object DataDestination = null;
-
-            if (GetDestination(destination, ArgumentType.Register, out result))
-            {
-                Register register = (Register)result;
-                DestinationRegister = register;
-                DataDestination = register;
-            }
-
-            if (DataDestination == null)
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
             {
                 throw new NotImplementedException();
             }
@@ -117,51 +170,226 @@ namespace BCG16CPUEmulator
                 SetRegisterValue(DestinationRegister.Value, 0);
             }
         }
-
-        public void Push(ArgumentMode source)
+        public void Jump(ArgumentMode Address)
         {
-            object result;
-
-            int? ImmSource = null;
-
-            object DataSource = null;
-
-            if (GetSource(source, ArgumentType.imm, out result))
-            {
-                DataSource = result;
-                switch (source)
-                {
-                    case ArgumentMode.immediate_byte:
-                        byte Bresult = (byte)result;
-                        ImmSource = Bresult;
-                        break;
-                    case ArgumentMode.immediate_word:
-                        ushort Wresult = (ushort)result;
-                        ImmSource = Wresult;
-                        break;
-                    case ArgumentMode.immediate_tbyte:
-                        break;
-                    case ArgumentMode.immediate_dword:
-                        break;
-                }
-            }
-
-            if (DataSource == null)
+            if (GetSourceAll(Address, Size._word, out int? DestinationAddress))
             {
                 throw new NotImplementedException();
             }
 
-            if (ImmSource.HasValue)
+            if (DestinationAddress.HasValue)
             {
-                Push(ImmSource.Value, source);
+                Jump(DestinationAddress.Value);
+            }
+        }
+        public void JumpC(ArgumentMode Address, int flag, int value)
+        {
+            if (GetDestinationAll(Address, Size._word, out Register? _, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (GetFlag(flag) == Convert.ToBoolean(value))
+            {
+                if (DestinationAddress.HasValue)
+                {
+                    Jump(DestinationAddress.Value);
+                }
+            }
+        }
+        public void Inc(ArgumentMode destination)
+        {
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                SetRegisterValue(DestinationRegister.Value, ALU_Add(DestinationRegister.Value, 1, out int _));
+            }
+        }
+        public void Dec(ArgumentMode destination)
+        {
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                SetRegisterValue(DestinationRegister.Value, ALU_Sub(DestinationRegister.Value, 1, out _));
+            }
+        }
+        public void Or(ArgumentMode destination, ArgumentMode source)
+        {
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (GetSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_Or(DestinationRegister.Value, ImmSource.Value, out _));
+                }
+            }
+        }
+        public void Outb(ArgumentMode port, ArgumentMode source)
+        {
+            if (GetSourceAll(port, Size._word, out int? ImmPort))
+            {
+                throw new NotImplementedException();
+            }
+            if (GetSourceAll(source, Size._byte, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmPort.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    switch (source)
+                    {
+                        case ArgumentMode.immediate_byte:
+                        case ArgumentMode.register_AL:
+                        case ArgumentMode.register:
+                            m_BUS.OutPort(ImmPort.Value, (byte)ImmSource.Value);
+                            break;
+                        case ArgumentMode.immediate_word:
+                        case ArgumentMode.register_A:
+                            m_BUS.OutPort(ImmPort.Value, (ushort)ImmSource.Value);
+                            break;
+                        case ArgumentMode.None:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        public void Inb(ArgumentMode port, ArgumentMode destination)
+        {
+            if (GetSourceAll(port, Size._word, out int? ImmPort))
+            {
+                throw new NotImplementedException();
+            }
+            if (GetDestinationAll(destination, Size._word, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmPort.HasValue)
+                {
+                    Size size = (Size)GetRegisterSize(DestinationRegister.Value);
+                    int result = 0;
+                    switch (size)
+                    {
+                        case Size._byte:
+                            result = m_BUS.InPort(ImmPort.Value, out byte _);
+                            break;
+                        case Size._word:
+                        default:
+                            result = m_BUS.InPort(ImmPort.Value, out ushort _);
+                            break;
+                    }
+                    SetRegisterValue(DestinationRegister.Value, result);
+                }
+            }
+        }
+        public void Rti()
+        {
+            Pop(Register.F);
+            Pop(Register.CR1);
+            Pop(Register.CR0);
+
+            Pop(Register.MB);
+
+            Pop(Register.BP);
+            Pop(Register.SP);
+
+            Pop(Register.BF);
+            Pop(Register.AF);
+
+            Pop(Register.PC);
+
+            Pop(Register.S);
+            Pop(Register.SS);
+            Pop(Register.ES);
+            Pop(Register.DS);
+
+            Popr();
+        }
+        public void Pushr()
+        {
+            Push(Register.A);
+            Push(Register.B);
+            Push(Register.C);
+            Push(Register.D);
+            Push(Register.H);
+            Push(Register.L);
+        }
+        public void Popr()
+        {
+            Pop(Register.L);
+            Pop(Register.H);
+            Pop(Register.D);
+            Pop(Register.C);
+            Pop(Register.B);
+            Pop(Register.A);
+        }
+        public void Int(ArgumentMode source)
+        {
+            if (GetSourceAll(source, Size._byte, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if(ImmSource.HasValue)
+            {
+                Interrupt((byte)ImmSource.Value);
             }
         }
 
         bool GetDestination(ArgumentMode Destination, ArgumentType type, out object result)
         {
+            Register Segment;
+            Register Offset;
             result = default;
             switch (Destination)
             {
+                case ArgumentMode.register:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    Register register = (Register)FetchByte();
+                    result = register;
+                    return true;
+                case ArgumentMode.register_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Register registerAddress = (Register)FetchByte();
+                    result = GetRegisterValue(registerAddress);
+                    return true;
+                case ArgumentMode.near_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Address addressNear = FetchByte();
+                    result = addressNear;
+                    return true;
                 case ArgumentMode.address:
                     if (type != ArgumentType.Address)
                     {
@@ -170,30 +398,100 @@ namespace BCG16CPUEmulator
                     Address address = FetchWord();
                     result = address;
                     return true;
-                case ArgumentMode.register:
-                    if(type != ArgumentType.Register)
+                case ArgumentMode.long_address:
+                    if (type != ArgumentType.Address)
                     {
                         return false;
                     }
-                    Register register = (Register)FetchByte();
-                    result = register;
+                    Address addressLong = FetchTByte();
+                    result = addressLong;
                     return true;
-                case ArgumentMode.register_address:
-                    break;
-                case ArgumentMode.far_address:
-                    break;
-                case ArgumentMode.long_address:
-                    break;
-                case ArgumentMode.float_immediate:
-                    break;
+                case ArgumentMode.relative_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Address relativeAddress = FetchByte();
+                    result = (Address)(PC + (relativeAddress - argumentOffset));
+                    return true;
                 case ArgumentMode.segment_address:
-                    break;
-                case ArgumentMode.segment_address_immediate:
-                    break;
-                case ArgumentMode.segment_immediate_address:
-                    break;
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    Segment = (Register)FetchByte();
+                    Offset = (Register)FetchByte();
+
+                    result = GetSegment(Segment, Offset);
+                    return true;
                 case ArgumentMode.segment_DS_register:
-                    break;
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    Offset = (Register)FetchByte();
+
+                    result = GetSegment(Register.DS, Offset);
+                    return true;
+                case ArgumentMode.segment_address_immediate:
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    Segment = (Register)FetchByte();
+                    Address AOffset = FetchWord();
+
+                    result = GetSegment(Segment, AOffset);
+                    return true;
+                case ArgumentMode.segment_DS_B:
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    result = GetSegment(Register.DS, Register.B);
+                    return true;
+                case ArgumentMode.register_AL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.AL;
+                    return true;
+                case ArgumentMode.register_A:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.A;
+                    return true;
+                case ArgumentMode.register_HL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.HL;
+                    return true;
+                case ArgumentMode.register_address_HL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = GetRegisterValue(Register.HL);
+                    return true;
+                case ArgumentMode.BP_Offset_Address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    int r = GetRegisterValue(Register.BP);
+                    short offset = (short)FetchWord();
+                    r += offset;
+                    result = GetSegment(Register.SS, r);
+                    return true;
                 default:
                     break;
             }
@@ -203,6 +501,8 @@ namespace BCG16CPUEmulator
         }
         bool GetSource(ArgumentMode source, ArgumentType type, out object result)
         {
+            Register Segment;
+            Register Offset;
             result = default;
             switch (source)
             {
@@ -234,14 +534,8 @@ namespace BCG16CPUEmulator
                     }
 
                     return true;
-                case ArgumentMode.address:
-                    if (type != ArgumentType.Address)
-                    {
-                        return false;
-                    }
-                    Address address = FetchWord();
-                    result = address;
-                    return true;
+                case ArgumentMode.immediate_float:
+                    break;
                 case ArgumentMode.register:
                     if (type != ArgumentType.Register)
                     {
@@ -251,19 +545,123 @@ namespace BCG16CPUEmulator
                     result = register;
                     return true;
                 case ArgumentMode.register_address:
-                    break;
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Register registerAddress = (Register)FetchByte();
+                    result = GetRegisterValue(registerAddress);
+                    return true;
+                case ArgumentMode.near_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Address addressNear = FetchByte();
+                    result = addressNear;
+                    return true;
+                case ArgumentMode.address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Address address = FetchWord();
+                    result = address;
+                    return true;
                 case ArgumentMode.long_address:
-                    break;
-                case ArgumentMode.float_immediate:
-                    break;
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Address addressLong = FetchTByte();
+                    result = addressLong;
+                    return true;
+                case ArgumentMode.relative_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    Address relativeAddress = FetchByte();
+                    result = (Address)(PC + (relativeAddress - argumentOffset));
+                    return true;
                 case ArgumentMode.segment_address:
-                    break;
-                case ArgumentMode.segment_address_immediate:
-                    break;
-                case ArgumentMode.segment_immediate_address:
-                    break;
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    Segment = (Register)FetchByte();
+                    Offset = (Register)FetchByte();
+
+                    result = GetSegment(Segment, Offset);
+                    return true;
                 case ArgumentMode.segment_DS_register:
-                    break;
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    Offset = (Register)FetchByte();
+
+                    result = GetSegment(Register.DS, Offset);
+                    return true;
+                case ArgumentMode.segment_address_immediate:
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    Segment = (Register)FetchByte();
+                    Address AOffset = FetchWord();
+
+                    result = GetSegment(Segment, AOffset);
+                    return true;
+                case ArgumentMode.segment_DS_B:
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
+
+                    result = GetSegment(Register.DS, Register.B);
+                    return true;
+                case ArgumentMode.register_AL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.AL;
+                    return true;
+                case ArgumentMode.register_A:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.A;
+                    return true;
+                case ArgumentMode.register_HL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.HL;
+                    return true;
+                case ArgumentMode.register_address_HL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = GetRegisterValue(Register.HL);
+                    return true;
+                case ArgumentMode.BP_Offset_Address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    int r = GetRegisterValue(Register.BP);
+                    short offset = (short)FetchWord();
+                    r += offset;
+                    result = GetSegment(Register.SS, r);
+                    return true;
                 default:
                     break;
             }
@@ -271,332 +669,132 @@ namespace BCG16CPUEmulator
             result = default;
             return false;
         }
-
-        public uint GetFullStackAddress()
+        bool GetDestinationAll(ArgumentMode destination, Size InstructionSize, out Register? DestinationRegister, out Address? DestinationAddress)
         {
-            return (SS << 16) | SP;
-        }
+            object result;
 
-        public void Push(byte value)
-        {
-            uint StackAddress = GetFullStackAddress();
+            object DataDestination = null;
+            DestinationRegister = null;
+            DestinationAddress = null;
 
-            m_BUS.m_Memory.WriteByte(StackAddress, value);
-
-            try
+            if (GetDestination(destination, ArgumentType.Register, out result))
             {
-                SP++;
+                Register register = (Register)result;
+                DestinationRegister = register;
+                DataDestination = register;
             }
-            catch (OverflowException)
+            else if (GetDestination(destination, ArgumentType.Address, out result))
             {
-                SS++;
-                SP = 0;
+                Address address = (Address)result;
+                DataDestination = result;
+                DestinationAddress = (ushort)address;
             }
-        }
-        public void Push(int value, ArgumentMode source)
-        {
-            switch (source)
+            else if (GetDestination(destination, ArgumentType.SegmentAddress, out result))
             {
-                case ArgumentMode.immediate_byte:
-                    Push((byte)value);
-                    break;
-                case ArgumentMode.immediate_word:
-                    break;
-                case ArgumentMode.immediate_tbyte:
-                    break;
-                case ArgumentMode.immediate_dword:
-                    break;
-            }
-        }
-        public void Push(Register register)
-        {
-            int RegisterSize = GetRegisterSize(register);
-            int RegisterValue = GetRegisterValue(register);
-
-            string RegisterHex = ToHexString(RegisterValue);
-            string[] HexString = SplitHexString(RegisterHex, RegisterSize);
-
-            for (int i = 0; i < HexString.Length; i++)
-            {
-                byte v = Convert.ToByte(HexString[i], 16);
-                Push(v);
-            }
-        }
-
-        public byte FetchByte()
-        {
-            byte result = m_BUS.m_Memory.ReadByte(PC);
-            PC++;
-            return result;
-        }
-        public ushort FetchWord()
-        {
-            ushort result = m_BUS.m_Memory.ReadWord(PC);
-            PC += 2;
-            return result;
-        }
-        public uint FetchTByte()
-        {
-            uint result = m_BUS.m_Memory.ReadTByte(PC);
-            PC += 3;
-            return result;
-        }
-        public uint FetchDWord()
-        {
-            uint result = m_BUS.m_Memory.ReadDWord(PC);
-            PC += 4;
-            return result;
-        }
-
-        public int GetRegisterValue(Register register)
-        {
-            return register switch
-            {
-                Register.A => A,
-                Register.AH => A[true],
-                Register.AL => A[false],
-
-                Register.B => B,
-                Register.BH => B[true],
-                Register.BL => B[false],
-
-                Register.C => C,
-                Register.CH => C[true],
-                Register.CL => C[false],
-
-                Register.D => D,
-                Register.DH => D[true],
-                Register.DL => D[false],
-
-                Register.ABX => ABX,
-                Register.CDX => CDX,
-
-                Register.HL => HL,
-                Register.H => H,
-                Register.L => L,
-
-                Register.S => S,
-                Register.SS => SS,
-                Register.DS => DS,
-                Register.ES => ES,
-
-                Register.PC => PC,
-
-                Register.AF => AF,
-                Register.BF => BF,
-
-                Register.SP => SP,
-                Register.BP => BP,
-
-                Register.IL => IL,
-
-                Register.R1 => R1,
-                Register.R2 => R2,
-
-                Register.MB => MB,
-
-                Register.CR0 => CR0,
-                Register.CR1 => CR1,
-
-                Register.F => F,
-                Register.FH => F[true],
-                Register.FL => F[false],
-                _ => throw new NotImplementedException()
-            };
-        }
-        public int GetRegisterSize(Register register)
-        {
-            switch (register)
-            {
-                case Register.AH:
-                case Register.AL:
-                case Register.BH:
-                case Register.BL:
-                case Register.CH:
-                case Register.CL:
-                case Register.DH:
-                case Register.DL:
-                case Register.IL:
-                case Register.MB:
-                case Register.CR0:
-                case Register.CR1:
-                case Register.FH:
-                case Register.FL:
-                    return 1;
-                case Register.A:
-                case Register.B:
-                case Register.C:
-                case Register.D:
-                case Register.H:
-                case Register.L:
-                case Register.S:
-                case Register.SS:
-                case Register.DS:
-                case Register.ES:
-                case Register.BP:
-                case Register.SP:
-                case Register.R1:
-                case Register.R2:
-                case Register.F:
-                    return 2;
-                case Register.PC:
-                    return 3;
-                case Register.HL:
-                case Register.AF:
-                case Register.BF:
-                case Register.ABX:
-                case Register.CDX:
-                    return 4;
-                case Register.none:
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-        public void SetRegisterValue(Register register, int value)
-        {
-            switch (register)
-            {
-                case Register.A:
-                    A = value;
-                    break;
-                case Register.AH:
-                    A[true] = value;
-                    break;
-                case Register.AL:
-                    A[false] = value;
-                    break;
-                case Register.B:
-                    B = value;
-                    break;
-                case Register.BH:
-                    B[true] = value;
-                    break;
-                case Register.BL:
-                    B[false] = value;
-                    break;
-                case Register.C:
-                    C = value;
-                    break;
-                case Register.CH:
-                    C[true] = value;
-                    break;
-                case Register.CL:
-                    C[false] = value;
-                    break;
-                case Register.D:
-                    D = value;
-                    break;
-                case Register.DH:
-                    D[true] = value;
-                    break;
-                case Register.DL:
-                    D[false] = value;
-                    break;
-                case Register.ABX: 
-                    ABX = value;
-                    break;
-                case Register.CDX: 
-                    CDX = value;
-                    break;
-                case Register.HL:
-                    HL = value;
-                    break;
-                case Register.H:
-                    H = value;
-                    break;
-                case Register.L:
-                    L = value;
-                    break;
-                case Register.S:
-                    S = value;
-                    break;
-                case Register.SS:
-                    SS = value;
-                    break;
-                case Register.DS:
-                    DS = value;
-                    break;
-                case Register.ES:
-                    ES = value;
-                    break;
-                case Register.PC:
-                    PC = value;
-                    break;
-                case Register.AF:
-                    AF = value;
-                    break;
-                case Register.BF:
-                        BF = value;
-                    break;
-                case Register.BP:
-                    BP = value;
-                    break;
-                case Register.SP:
-                    SP = value;
-                    break;
-                case Register.IL:
-                        IL = value;
-                    break;
-                case Register.R1:
-                    R1 = value;
-                    break;
-                case Register.R2:
-                    R2 = value;
-                    break;
-                case Register.MB:
-                    MB = value;
-                    break;
-                case Register.F:
-                    F = value;
-                    break;
-                case Register.FH:
-                    F[true] = value;
-                    break;
-                case Register.FL:
-                    F[false] = value;
-                    break;
+                Address address = (Address)result;
+                DataDestination = result;
+                DestinationAddress = address;
             }
 
-            switch (register)
-            {
-                case Register.A:
-                case Register.AH:
-                case Register.AL:
-                case Register.B:
-                case Register.BH:
-                case Register.BL:
-                case Register.C:
-                case Register.CH:
-                case Register.CL:
-                case Register.D:
-                case Register.DH:
-                case Register.DL:
-                case Register.H:
-                case Register.L:
-                    ABX[true] = A;
-                    ABX[false] = B;
 
-                    CDX[true] = C;
-                    CDX[false] = D;
-
-                    HL[true] = H;
-                    HL[false] = L;
-                    break;
-                default:
-                    A = ABX[true];
-                    B = ABX[false];
-
-                    C = CDX[true];
-                    D = CDX[false];
-
-                    H = HL[true];
-                    L = HL[false];
-                    break;
-            }
+            return DataDestination == null;
         }
-        public void SetRegisterValue(Register register, Register value)
+        bool GetSourceAll(ArgumentMode source, Size InstructionSize, out int? ImmSource)
         {
-            SetRegisterValue(register, GetRegisterValue(value));
+            object result;
+
+            ImmSource = null;
+            object DataSource = null;
+
+            if (GetSource(source, ArgumentType.imm, out result))
+            {
+                DataSource = result;
+                ImmSource = null;
+                switch (source)
+                {
+                    case ArgumentMode.immediate_byte:
+                        byte Bresult = (byte)result;
+                        ImmSource = Bresult;
+                        break;
+                    case ArgumentMode.immediate_word:
+                        ushort Wresult = (ushort)result;
+                        ImmSource = Wresult;
+                        break;
+                    case ArgumentMode.immediate_tbyte:
+                        int Tresult = (int)result & 0x00FF_FFFF;
+                        ImmSource = Tresult;
+                        break;
+                    case ArgumentMode.immediate_dword:
+                        int Dresult = (int)result;
+                        ImmSource = Dresult;
+                        break;
+                }
+            }
+            else if (GetSource(source, ArgumentType.Address, out result))
+            {
+                Address address = (Address)result;
+                DataSource = result;
+                switch (InstructionSize)
+                {
+                    case Size._byte:
+                        ImmSource = m_BUS.m_Memory.ReadByte(address);
+                        break;
+                    case Size._word:
+                        ImmSource = m_BUS.m_Memory.ReadWord(address);
+                        break;
+                    case Size._tbyte:
+                        ImmSource = (int)m_BUS.m_Memory.ReadTByte(address);
+                        break;
+                    case Size._dword:
+                        ImmSource = (int)m_BUS.m_Memory.ReadDWord(address);
+                        break;
+                }
+            }
+            else if (GetSource(source, ArgumentType.Register, out result))
+            {
+                Register register = (Register)result;
+                DataSource = register;
+
+                switch (InstructionSize)
+                {
+                    case Size._byte:
+                        ImmSource = (byte)GetRegisterValue(register);
+                        break;
+                    case Size._word:
+                        ImmSource = (ushort)GetRegisterValue(register);
+                        break;
+                    case Size._tbyte:
+                        ImmSource = GetRegisterValue(register) & 0x00FF_FFFF;
+                        break;
+                    case Size._dword:
+                        ImmSource = GetRegisterValue(register);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (GetDestination(source, ArgumentType.SegmentAddress, out result))
+            {
+                Address address = (Address)result;
+                DataSource = result;
+                switch (InstructionSize)
+                {
+                    case Size._byte:
+                        ImmSource = m_BUS.m_Memory.ReadByte(address);
+                        break;
+                    case Size._word:
+                        ImmSource = m_BUS.m_Memory.ReadWord(address);
+                        break;
+                    case Size._tbyte:
+                        ImmSource = (int)m_BUS.m_Memory.ReadTByte(address);
+                        break;
+                    case Size._dword:
+                        ImmSource = (int)m_BUS.m_Memory.ReadDWord(address);
+                        break;
+                }
+            }
+
+            return DataSource == null;
         }
     }
 }

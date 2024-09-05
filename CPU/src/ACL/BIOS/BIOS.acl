@@ -1,29 +1,118 @@
 .section TEXT
 
+$BootableDiskNumber = 0x55AA
+
 .SETCPU "BCG16"
 
 .org 0x200
 .global _BIOSStart:
     pushr
 
-    sez     SS
-    mov     SP,         @Stack
+    sez     SS                                  ; SS = 0
+    mov     SP,             @Stack              ; SP = 0x8000
 
-    sez     B
-    push    BL
+    call    [Initialize]
 
-    mov     AL,         'H'
+    call    [FindBootDisk]
+
+    mov     B,              @RAM                ; B = @RAM
+
+    mov     C,              @EndOfBIOS
+    mov     D,              @BIOSEnd - @EndOfBIOS
+
+    ; moving the End of the BIOS into RAM
+    push    B
+    jmp     [MoveToRAM_LOOP]
+
+; this function will use the DL register as the disk index
+FindBootDisk:
+    push    long @RAM                           ; long uint8_t *data
+    push    0x1                                 ; uint8_t sector
+    push    0x0                                 ; uint8_t head
+    push    word 0x0                            ; uint16_t track
+    push    DL                                  ; uint8_t drive
+    call    [Read_Sector]
+
+    mov     A,              [RAM + 510]
+    cmp     A,              %BootableDiskNumber
+    je      [Exit_FindDiskLoop]
+    inc     DL
+    cmp     DL,             4
+    jl      [FindBootDisk]
+    mov     AL,             'B'
     push    AL
-    
-    call    [CharOut]
+    jmp     [Error_Invalid_BootDisk]
+Exit_FindDiskLoop:
+    mov     [DiskNumber],   DL
+    retz
 
-    mov     B,          @RAM
+.section BSS
+DiskNumber:
+.resb
+ReceivedIRQ:
+.resb
+Cursorx:
+.resw
+Cursory:
+.resw
+EReg:
+.resd
 
-    mov     C,          @EndOfBIOS
-    mov     D,          @End - @EndOfBIOS
+.includeil "./BIOS_errors.acl"
+.includeil "./IOFunctions.acl"
+.includeil "./BIOS_Functions.acl"
 
+EndOfBIOS:
+    mov     A,              CR1
+    xor     A,              0x01                ; getting out of the BIOS
+    mov     CR1,            A
+
+    ; moving the fainal part of the BIOS
+
+    mov     B,              @_BIOSStart         ; B = 0x200
+    push    B
+
+    mov     C,              @BIOSEnd
+    mov     D,              @End - @BIOSEnd
+
+    push    B
+    jmp     [MoveToRAM_LOOP]
+
+; this is at offset 0 when ran
+; this code is the code that exites the BIOS
+BIOSEnd:
+
+    mov     DL,             [DiskNumber]
+
+    push    long @RAM                           ; long uint8_t *data
+    push    0x1                                 ; uint8_t sector
+    push    0x0                                 ; uint8_t head
+    push    word 0x0                            ; uint16_t track
+    push    DL                                  ; uint8_t drive
+    call    [Read_Sector]
+
+    popr
+
+    jmp     [$]
+End:
+
+.section DATA
+
+.includeil "./BIOS_Interrupt_Pointer.acl"
+
+.section BSS
+.org 0x8000
+Stack:
+
+.res 0x400
+
+StackEnd:
+
+.section TEXT
+
+.times @MoveToRAM_LOOP - $ .db 0
 MoveToRAM_LOOP:
-    mov     [B],        byte [C]
+    mov     [B],            byte [C]
     inc     B
     inc     C
     dec     D
@@ -31,41 +120,9 @@ MoveToRAM_LOOP:
     test    D
     jnz     [MoveToRAM_LOOP]
 
-    jmp     long [RAM]
+    pop     B
+    ; now we are executing the end of the BIOS
+    jmp     [B]
 
-EndOfBIOS:
-    mov     A,          CR1
-    or      A,          0x01                ; getting out of the BIOS
-    mov     CR1,        A
-
-    mov     R1,         [DiskNumber]
-    popr
-    mov     DL,         R1
-
-    jmp     [$]
-End:
-
-.includeil "./IOFunctions.acl"
-.includeil "./BIOS_Functions.acl"
-.includeil "./Functions.acl"
-
-.section DATA
-
-.includeil "./BIOS_Interrupt_Functions.acl"
-
-
-.section BSS
-.org 0xF000
-Stack:
-
-.res 0x400
-
-StackEnd:
-
-DiskNumber:
-.resb
-ReceivedIRQ:
-.resb
-
-.section TEXT
+.org 0x9000
 RAM:

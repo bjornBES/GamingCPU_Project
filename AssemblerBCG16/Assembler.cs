@@ -16,14 +16,12 @@ public class Assembler : AssmeblerErrors
 {
     public string[] m_Src;
     public string[] m_SrcRaw;
+    public string m_SrcPreprocedCode;
 
     List<Variable> m_variables = new List<Variable>();
     List<Label> m_labels = new List<Label>();
 
     public List<string> m_output = new List<string>();
-    public List<string> m_output_bss = new List<string>();
-    public List<string> m_output_data = new List<string>();
-    public List<string> m_output_rdata = new List<string>();
     public List<string> m_output_symbols = new List<string>();
     public List<string> m_output_section = new List<string>();
     public List<string> m_output_structs = new List<string>();
@@ -63,9 +61,6 @@ public class Assembler : AssmeblerErrors
         if (!Going)
         {
             m_output.Clear();
-            m_output_bss.Clear();
-            m_output_data.Clear();
-            m_output_rdata.Clear();
             m_output_symbols.Clear();
             m_output_section.Clear();
             m_output_structs.Clear();
@@ -79,8 +74,10 @@ public class Assembler : AssmeblerErrors
 
         m_SrcRaw = src.Split(Environment.NewLine);
 
-        src = Regex.Replace(src, @";\s[^\r\n]*(\r?\n)", Environment.NewLine);
+        src = Regex.Replace(src, @";[^\r\n]*(\r?\n)", Environment.NewLine);
         src = Regex.Replace(src, @" +", " ");
+
+        m_SrcPreprocedCode += src;
 
         m_Src = src.Split(Environment.NewLine);
 
@@ -91,9 +88,6 @@ public class Assembler : AssmeblerErrors
         if (Going)
         {
             m_output.Insert(0, "TEXT HEADER");
-            m_output_bss.Insert(0, "BSS HEADER");
-            m_output_data.Insert(0, "DATA HEADER");
-            m_output_rdata.Insert(0, "RDATA HEADER");
             m_output_symbols.Insert(0, "SYMBOLS HEADER");
             m_output_section.Insert(0, "SECTION HEADER");
             m_output_structs.Insert(0, "STRUCT HEADER");
@@ -120,17 +114,11 @@ public class Assembler : AssmeblerErrors
                 m_output_structs.Add(format);
             }
 
-            m_output_bss.Add(Environment.NewLine);
-            m_output_data.Add(Environment.NewLine);
-            m_output_rdata.Add(Environment.NewLine);
             m_output_symbols.Add(Environment.NewLine);
             m_output_section.Add(Environment.NewLine);
             m_output_structs.Add(Environment.NewLine);
             m_output_includedFiles.Add(Environment.NewLine);
 
-            m_output.InsertRange(0, m_output_bss);
-            m_output.InsertRange(0, m_output_data);
-            m_output.InsertRange(0, m_output_rdata);
             m_output.InsertRange(0, m_output_symbols);
             m_output.InsertRange(0, m_output_structs);
             m_output.InsertRange(0, m_output_section);
@@ -144,6 +132,9 @@ public class Assembler : AssmeblerErrors
     {
         for (lineNumber = 0; lineNumber < m_Src.Length; lineNumber++)
         {
+
+            m_Src[lineNumber] = Regex.Replace(m_Src[lineNumber], @";[^.]*", Environment.NewLine);
+            m_Src[lineNumber] = Regex.Replace(m_Src[lineNumber], @" +", " ");
 
             m_Src[lineNumber] = m_Src[lineNumber].Trim('\r', '\n');
 
@@ -206,6 +197,9 @@ public class Assembler : AssmeblerErrors
             m_assembler = this;
             if (lineNumber == 0)
                 continue;
+
+            m_Src[lineNumber] = Regex.Replace(m_Src[lineNumber], @";[^.]*", Environment.NewLine);
+            m_Src[lineNumber] = Regex.Replace(m_Src[lineNumber], @" +", " ");
 
             AddLine("_NEWLINE_");
 
@@ -361,7 +355,7 @@ public class Assembler : AssmeblerErrors
 
                 string Savem_file = m_file;
                 m_file = FindPath($"./{FileName}", FileIndex);
-
+                AddLine($"_FILE_ \"{m_file}\"");
                 bool SaveGoing = Going;
                 Going = true;
 
@@ -828,6 +822,7 @@ public class Assembler : AssmeblerErrors
         AddLine($"_SET_ BPX {BPX_ref}");
         AddLine($"_SET_ SPX {SPX_ref}");
 
+        ArgumentMode mode;
         switch (result)
         {
             case Instruction.POP:
@@ -853,7 +848,7 @@ public class Assembler : AssmeblerErrors
             case Instruction.RET:
                 SPX_ref -= 2;
                 string SizeAlignment = "byte";
-                string expr = parseTerm(Arguments[0], ref SizeAlignment, out _, out ArgumentMode mode);
+                string expr = parseTerm(Arguments[0], ref SizeAlignment, out _, out mode);
                 if (IsNumber(expr))
                 {
                     int number = Convert.ToInt32(expr, 16);
@@ -869,12 +864,36 @@ public class Assembler : AssmeblerErrors
                 SPX_ref -= 2;
                 break;
 
+            case Instruction.PUSH:
+                parseTerm(Arguments[0], "byte", out _, out mode);
+                switch (mode)
+                {
+                    case ArgumentMode.immediate_byte:
+                        SPX_ref += 1;
+                        break;
+                    case ArgumentMode.immediate_word:
+                        SPX_ref += 2;
+                        break;
+                    case ArgumentMode.immediate_tbyte:
+                        SPX_ref += 3;
+                        break;
+                    case ArgumentMode.immediate_dword:
+                        SPX_ref += 4;
+                        break;
+                    case ArgumentMode.immediate_qword:
+                        SPX_ref += 8;
+                        break;
+                    case ArgumentMode.immediate_float:
+                        SPX_ref += 4;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
             default:
                 break;
         }
-
-        AddLine($"_SET_ BPX {BPX_ref}");
-        AddLine($"_SET_ SPX {SPX_ref}");
 
         AddLine(InstrutionBytes);
 
@@ -884,8 +903,8 @@ public class Assembler : AssmeblerErrors
 
     private void ParseArgument(ref Instruction instruction, string[] Arguments, ref List<string> InstrutionBytes, int startingIndex = 0, bool DoWrite = true)
     {
-        string Argument1 = "00";
-        string Argument2 = "00";
+        string Argument1 = "FF";
+        string Argument2 = "FF";
         List<string> argumrntBuffer = new List<string>();
 
         string SizeAlignment = "";
@@ -930,6 +949,7 @@ public class Assembler : AssmeblerErrors
                 case ArgumentMode.immediate_word:
                 case ArgumentMode.immediate_tbyte:
                 case ArgumentMode.immediate_dword:
+                case ArgumentMode.immediate_qword:
                     if (DoSplit == true)
                     {
                         argumrntBuffer.AddRange(SplitHexString(expr));
@@ -1009,14 +1029,40 @@ public class Assembler : AssmeblerErrors
                             register2 = reg_result;
                         }
 
-                        m_pc++;
-                        SetArgumentMode(ref Argument1, ref Argument2, mode);
-                        argumrntBuffer.Add(GetRegisterHex(reg_result));
+                        switch (reg_result)
+                        {
+                            case Register.AL:
+                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_AL);
+                                break;
+                            case Register.A:
+                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_A);
+                                break;
+                            case Register.AX:
+                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_AX);
+                                break;
+                            case Register.HL:
+                                if(mode == ArgumentMode.register_address)
+                                {
+                                    SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_address_HL);
+                                    break;
+                                }
+                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_HL);
+                                break;
+                            case Register.none:
+                                break;
+                            default:
+                                m_pc++;
+                                SetArgumentMode(ref Argument1, ref Argument2, mode);
+                                argumrntBuffer.Add(GetRegisterHex(reg_result));
+                                break;
+                        }
                     }
                     break;
+                case ArgumentMode.near_address:
                 case ArgumentMode.address:
                 case ArgumentMode.far_address:
                 case ArgumentMode.long_address:
+                case ArgumentMode.relative_address:
                     if (DoSplit)
                     {
                         argumrntBuffer.AddRange(SplitHexString(expr));
@@ -1028,7 +1074,7 @@ public class Assembler : AssmeblerErrors
                         argumrntBuffer.Add(expr);
                     }
                     break;
-                case ArgumentMode.float_immediate:
+                case ArgumentMode.immediate_float:
                     break;
                 case ArgumentMode.segment_DS_register:
                 case ArgumentMode.segment_address:
@@ -1046,14 +1092,30 @@ public class Assembler : AssmeblerErrors
                     }
 
                     m_pc++;
-                    m_pc++;
 
                     if (mode != ArgumentMode.segment_DS_register)
                     {
+                        m_pc++;
                         argumrntBuffer.Add(GetRegisterHex(register1));
                     }
 
                     argumrntBuffer.Add(GetRegisterHex(register2));
+
+                    SetArgumentMode(ref Argument1, ref Argument2, mode);
+                    break;
+                case ArgumentMode.segment_DS_B:
+                    segment = expr.Split(':')[0];
+                    offset = expr.Split(':')[1];
+
+                    if (!IsRegister(segment, out register1))
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    if (!IsRegister(offset, out register2))
+                    {
+                        throw new NotImplementedException();
+                    }
 
                     SetArgumentMode(ref Argument1, ref Argument2, mode);
                     break;
@@ -1066,26 +1128,19 @@ public class Assembler : AssmeblerErrors
                         throw new NotImplementedException();
                     }
 
+                    m_pc += 1;
+                    m_pc += 2;
+
                     argumrntBuffer.Add(GetRegisterHex(register1));
                     argumrntBuffer.AddRange(SplitHexString(offset));
 
                     SetArgumentMode(ref Argument1, ref Argument2, mode);
                     break;
-                case ArgumentMode.segment_immediate_address:
-                    segment = expr.Split(':')[0];
-                    offset = expr.Split(':')[1];
-
-                    if (!IsRegister(offset, out register2))
-                    {
-                        throw new NotImplementedException();
-                    }
-
-                    argumrntBuffer.AddRange(SplitHexString(segment));
-                    argumrntBuffer.Add(GetRegisterHex(register2));
-
-                    SetArgumentMode(ref Argument1, ref Argument2, mode);
-                    break;
                 case ArgumentMode.None:
+                    break;
+                case ArgumentMode.BP_Offset_Address:
+                    argumrntBuffer.AddRange(SplitHexString(expr));
+                    SetArgumentMode(ref Argument1, ref Argument2, mode);
                     break;
                 default:
                     break;
@@ -1157,7 +1212,29 @@ public class Assembler : AssmeblerErrors
     {
         Register reg_result;
         string expr;
-        if (Parse(arg, out mode, out expr) && expr.StartsWith("BINEXPR"))
+
+        if (arg.StartsWith("[BP ") && ContainsOperators(arg) && arg.EndsWith(']'))
+        {
+            string[] line = arg.Trim('[', ']').Split(' ', 3);
+            char Operator = line[1][0];
+            expr = parseTerm(line[2], "byte", out bool s, out ArgumentMode m);
+
+            if (m > ArgumentMode.immediate_dword)
+            {
+
+            }
+
+            mode = ArgumentMode.BP_Offset_Address;
+
+            short number = Convert.ToInt16(expr, 16);
+
+            number = (short)(Operator == '-' ? -number : number);
+
+            split = true;
+            string hexString = ToHexString(number);
+            return hexString;
+        }
+        else if (Parse(arg, out mode, out expr) && expr.StartsWith("BINEXPR"))
         {
             split = false;
             return expr;
@@ -1262,7 +1339,7 @@ public class Assembler : AssmeblerErrors
 
             return ParseSegmentAddressing(segment, offset, out mode);
         }
-        else if (IsVariabel(arg, out Variable variable))
+        else if (arg.StartsWith('%') && IsVariabel(arg.TrimStart('%'), out Variable variable))
         {
             split = true;
             mode = variable.m_Mode;
@@ -1274,25 +1351,25 @@ public class Assembler : AssmeblerErrors
 
             if (IsFar)
             {
-                mode = ArgumentMode.far_address;
+                mode = ArgumentMode.immediate_dword;
                 string label = arg.Substring(1);
                 return $"FL_{label}";
             }
-            else if (IsLong)
-            {
-                mode = ArgumentMode.long_address;
-                string label = arg.Substring(1);
-                return $"LL_{label}";
-            }
             else if (IsNear)
             {
-                mode = ArgumentMode.near_address;
+                mode = ArgumentMode.immediate_byte;
                 string label = arg.Substring(1);
                 return $"NL_{label}";
             }
+            else if (IsLong)
+            {
+                mode = ArgumentMode.immediate_tbyte;
+                string label = arg.Substring(1);
+                return $"LL_{label}";
+            }
             else
             {
-                mode = ArgumentMode.address;
+                mode = ArgumentMode.immediate_word;
                 string label = arg.Substring(1);
                 return $"SL_{label}";
             }
@@ -1304,6 +1381,11 @@ public class Assembler : AssmeblerErrors
             {
                 mode = ArgumentMode.long_address;
                 return $"LL_{arg}";
+            }
+            else if (IsNear)
+            {
+                mode = ArgumentMode.near_address;
+                return $"_NL_";
             }
             else if (IsFar)
             {
@@ -1324,6 +1406,11 @@ public class Assembler : AssmeblerErrors
                 mode = ArgumentMode.long_address;
                 return $"_LCA_";
             }
+            else if (IsNear)
+            {
+                mode = ArgumentMode.near_address;
+                return $"_NCA_";
+            }
             else if (IsFar)
             {
                 mode = ArgumentMode.far_address;
@@ -1342,6 +1429,11 @@ public class Assembler : AssmeblerErrors
             {
                 mode = ArgumentMode.long_address;
                 return $"_LCS_";
+            }
+            else if (IsNear)
+            {
+                mode = ArgumentMode.near_address;
+                return $"_NCS_";
             }
             else if (IsFar)
             {
@@ -1365,6 +1457,10 @@ public class Assembler : AssmeblerErrors
             {
 
             }
+            else if (IsNear)
+            {
+
+            }
             else
             {
                 if (Parse(arg, out mode, out expr))
@@ -1375,14 +1471,13 @@ public class Assembler : AssmeblerErrors
                         switch (mode)
                         {
                             case ArgumentMode.immediate_byte:
-                                mode = ArgumentMode.immediate_word;
+                                mode = ArgumentMode.relative_address;
                                 expr = expr.PadLeft(2, '0');
-                                break;
+                                split = true;
+                                return expr;
                             case ArgumentMode.immediate_word:
                                 expr = expr.PadLeft(4, '0');
                                 done = true;
-                                m_pc++;
-                                m_pc++;
                                 mode = ArgumentMode.address;
                                 break;
                             case ArgumentMode.immediate_tbyte:
@@ -1423,6 +1518,11 @@ public class Assembler : AssmeblerErrors
                         mode = ArgumentMode.far_address;
                         return $"_FCA_";
                     }
+                    else if (IsNear)
+                    {
+                        mode = ArgumentMode.near_address;
+                        return $"_NCA_";
+                    }
                     else
                     {
                         mode = ArgumentMode.address;
@@ -1449,14 +1549,16 @@ public class Assembler : AssmeblerErrors
 
         // check segment
 
-        string SizeAlignment = "word";
-
-        SegmentOutput = parseTerm(segment, ref SizeAlignment, out _, out ArgumentMode SegmentMode);
-        OffsetOutput = parseTerm(offset, ref SizeAlignment, out _, out ArgumentMode OffsetMode);
+        SegmentOutput = parseTerm(segment, "word", out _, out ArgumentMode SegmentMode);
+        OffsetOutput = parseTerm(offset, "word", out _, out ArgumentMode OffsetMode);
 
         if (SegmentMode == ArgumentMode.register && OffsetMode == ArgumentMode.register)
         {
-            if (SegmentOutput == "DS")
+            if (SegmentOutput == "DS" && OffsetOutput == "B")
+            {
+                mode = ArgumentMode.segment_DS_B;
+            }
+            else if (SegmentOutput == "DS")
             {
                 mode = ArgumentMode.segment_DS_register;
             }
@@ -1470,12 +1572,6 @@ public class Assembler : AssmeblerErrors
             AdjustImmediateValue(ref OffsetMode, "word", ref OffsetOutput);
 
             mode = ArgumentMode.segment_address_immediate;
-        }
-        else if (SegmentMode <= ArgumentMode.immediate_dword && OffsetMode == ArgumentMode.register)
-        {
-            AdjustImmediateValue(ref SegmentMode, "word", ref SegmentOutput);
-
-            mode = ArgumentMode.segment_immediate_address;
         }
         else
         {
@@ -1493,19 +1589,23 @@ public class Assembler : AssmeblerErrors
             case ArgumentMode.immediate_word:
             case ArgumentMode.immediate_tbyte:
             case ArgumentMode.immediate_dword:
-            case ArgumentMode.address:
             case ArgumentMode.register:
             case ArgumentMode.register_address:
             case ArgumentMode.near_address:
+            case ArgumentMode.address:
+            case ArgumentMode.relative_address:
+            case ArgumentMode.register_AL:
+            case ArgumentMode.register_HL:
+            case ArgumentMode.register_address_HL:
 
             case ArgumentMode.segment_address:
             case ArgumentMode.segment_address_immediate:
-            case ArgumentMode.segment_immediate_address:
             case ArgumentMode.segment_DS_register:
+            case ArgumentMode.segment_DS_B:
                 break;
 
             case ArgumentMode.long_address:
-            case ArgumentMode.float_immediate:
+            case ArgumentMode.immediate_float:
                 if (CPUType < CPUType.BCG16)
                 {
                     E_InvalidCPUFeature(CPUType.BCG16);
@@ -1513,22 +1613,27 @@ public class Assembler : AssmeblerErrors
                 break;
             case ArgumentMode.far_address:
             case ArgumentMode.immediate_qword:
+            case ArgumentMode.register_AX:
                 if (CPUType < CPUType.BCG1684)
                 {
                     E_InvalidCPUFeature(CPUType.BCG1684);
                 }
                 break;
-            case ArgumentMode.None:
+            case ArgumentMode.register_A:
+                if (CPUType < CPUType.BCG16)
+                {
+                    E_InvalidCPUFeature(CPUType.BCG16);
+                }
                 break;
             default:
                 break;
         }
 
-        if (arg1 == "00")
+        if (arg1 == "FF")
         {
             arg1 = GetArgumentMode(mode);
         }
-        else if (arg2 == "00")
+        else if (arg2 == "FF")
         {
             arg2 = GetArgumentMode(mode);
         }
@@ -1783,7 +1888,7 @@ public class Assembler : AssmeblerErrors
                     {
                         throw new Exception("What the fuck");
                     }
-                case ArgumentMode.float_immediate:
+                case ArgumentMode.immediate_float:
                     break;
                 case ArgumentMode.None:
                     throw new Exception("What the fuck");
@@ -1847,7 +1952,7 @@ public class Assembler : AssmeblerErrors
                     break;
                 case ArgumentMode.long_address:
                     break;
-                case ArgumentMode.float_immediate:
+                case ArgumentMode.immediate_float:
                     break;
                 case ArgumentMode.None:
                     break;
@@ -1879,7 +1984,7 @@ public class Assembler : AssmeblerErrors
                     break;
                 case ArgumentMode.long_address:
                     break;
-                case ArgumentMode.float_immediate:
+                case ArgumentMode.immediate_float:
                     break;
                 case ArgumentMode.None:
                     break;
@@ -1891,7 +1996,7 @@ public class Assembler : AssmeblerErrors
         }
         else if (value.StartsWith("0x"))
         {
-            string HexTerm = value.Substring(2);
+            string HexTerm = value.Substring(2).Replace("_", "");
             int size = GetSize(ref HexTerm);
 
             expr = HexTerm;
@@ -1922,7 +2027,7 @@ public class Assembler : AssmeblerErrors
         }
         else if (value.StartsWith("0b"))
         {
-            string HexTerm = ToHexString(value.Substring(2), 2);
+            string HexTerm = ToHexString(value.Substring(2).Replace("_", ""), 2);
             int size = GetSize(ref HexTerm);
 
             expr = HexTerm;
@@ -1950,7 +2055,7 @@ public class Assembler : AssmeblerErrors
         }
         else if (char.IsDigit(value[0]))
         {
-            string HexTerm = ToHexString(value, 10);
+            string HexTerm = ToHexString(value.Replace("_", ""), 10);
 
             int size = GetSize(ref HexTerm);
 
@@ -2047,7 +2152,18 @@ public class Assembler : AssmeblerErrors
         for (int i = 0; i < value.Length;)
         {
             string buf = "";
-            if (char.IsDigit(value[i]))
+            if (value[i] == '0' && i + 1 < value.Length && value[i + 1] == 'x')
+            {
+                i += 2;
+                while (i < value.Length && IsHex(value[i].ToString()))
+                {
+                    buf += value[i];
+                    i++;
+                }
+
+                tokens.Add(Convert.ToString(Convert.ToUInt32(buf, 16)));
+            }
+            else if (char.IsDigit(value[i]))
             {
                 while (i < value.Length && char.IsDigit(value[i]))
                 {
@@ -2194,6 +2310,7 @@ public class Assembler : AssmeblerErrors
                             _mode = ArgumentMode.register;
                         }
                         break;
+                    case ArgumentMode.near_address:
                     case ArgumentMode.address:
                     case ArgumentMode.long_address:
                     case ArgumentMode.far_address:
@@ -2205,7 +2322,11 @@ public class Assembler : AssmeblerErrors
                         {
                             ident = "BINEXPRF";
                         }
-                        if (_mode != ArgumentMode.register )
+                        else if (_mode == ArgumentMode.near_address)
+                        {
+                            ident = "BINEXPRN";
+                        }
+                        if (_mode != ArgumentMode.register)
                         {
                             _mode = mode;
                         }
@@ -2216,17 +2337,23 @@ public class Assembler : AssmeblerErrors
                         break;
                     case ArgumentMode.register_address:
                         break;
-                    case ArgumentMode.float_immediate:
-                        break;
                     case ArgumentMode.segment_address:
                         break;
                     case ArgumentMode.segment_address_immediate:
                         break;
-                    case ArgumentMode.segment_immediate_address:
-                        break;
                     case ArgumentMode.segment_DS_register:
                         break;
                     case ArgumentMode.None:
+                        break;
+                    case ArgumentMode.immediate_byte:
+                    case ArgumentMode.immediate_word:
+                    case ArgumentMode.immediate_tbyte:
+                    case ArgumentMode.immediate_dword:
+                    case ArgumentMode.immediate_qword:
+                        if (!DoSplit)
+                        {
+                            OutputStack.Push(_exprOut);
+                        }
                         break;
                     default:
                         break;
@@ -2384,16 +2511,10 @@ public class Assembler : AssmeblerErrors
         switch (section)
         {
             case Section.Text:
-                m_output.Add(line);
-                break;
             case Section.Data:
-                m_output_data.Add(line);
-                break;
             case Section.Rdata:
-                m_output_rdata.Add(line);
-                break;
             case Section.Bss:
-                m_output_bss.Add(line);
+                m_output.Add(line);
                 break;
             case Section.Symbols:
                 m_output_symbols.Add(line);

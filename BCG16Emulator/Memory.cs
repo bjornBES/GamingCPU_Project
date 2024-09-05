@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BCG16CPUEmulator.Types;
+using CommonBCGCPU.Types;
 using HexLibrary;
 namespace BCG16CPUEmulator
 {
@@ -9,12 +9,18 @@ namespace BCG16CPUEmulator
     {
         public const uint MemBankSize = 0x008_0000;
         public const uint MemBankEndAddress = 0x008_0000;
-        public const uint TotalMemorySize =    4096 * 4096; // 16 MB
+
+        public const uint TotalMemorySize = 16 * (1024 * 1024);             // 16 MB
+        public const uint InterruptDescriptorTableSize = 32 * (1024);       // 32 KB
+        public const uint InterruptRoutineCount = 0xFF;
+        public const uint AllInterruptRoutineSize = 1024;
+
         public const uint MemorySize = TotalMemorySize - MemBankSize;
         public const uint MaxBanks = 0xF;
 
         public byte[][] BankedMemory = new byte[MaxBanks][];
-        public byte[] Mem = new byte[MemorySize + 1];
+        public byte[] InterruptDescriptorTable = new byte[InterruptDescriptorTableSize];
+        public byte[] Mem = new byte[MemorySize];
         BUS m_BUS;
 
 
@@ -51,11 +57,15 @@ namespace BCG16CPUEmulator
 
             Address MemAddr = address - MemBankSize;
 
-            if (address >= 0 && address <= 0x200 - 1)
+            if (bank == 0x11)
+            {
+
+            }
+            else if (address >= 0 && address <= 0x200 - 1)
             {
                 return 0;
             }
-            if ((m_BUS.m_CPU.CR0 & 0x11) == 0x00)
+            else if ((m_BUS.m_CPU.CR0 & 0x11) == 0x00)
             {
                 MemAddr = MemAddr & 0x00FFFF;
                 address = address & 0x00FFFF;
@@ -75,8 +85,15 @@ namespace BCG16CPUEmulator
                 MemAddr = MemAddr & 0xF0FFFF;
                 address = address & 0xF0FFFF;
             }
-
-            if (address >= 0 && address <= MemBankSize)
+            
+            if (bank == 0x11)
+            {
+                return readByteInterruptDescriptorTable(address, 0);
+            }
+            else if (address >= 0 && address <= 0x200-1)
+            {
+            }
+            else if (address >= 0 && address <= MemBankSize)
             {
                 return readByteMemory(address, 0);
             }
@@ -141,7 +158,11 @@ namespace BCG16CPUEmulator
             byte RealBank = (byte)(bank - 1);
                 Address MemAddr = address - MemBankSize;
 
-            if (address >= 0 && address <= 0x200 - 1)
+            if (bank == 0x11)
+            {
+
+            }
+            else if (address >= 0 && address <= 0x200 - 1)
             {
                 return;
             }
@@ -166,7 +187,15 @@ namespace BCG16CPUEmulator
                 address = address & 0xF0FFFF;
             }
 
-            if (address >= 0 && address <= MemBankSize)
+            if (bank == 0x11)
+            {
+                writeByteInterruptDescriptorTable(address, data);
+            }
+            else if (address >= 0 && address <= 0x200 - 1)
+            {
+                return;
+            }
+            else if (address >= 0 && address <= MemBankSize)
             {
                 writeByteMemory(address, 0, byteData);
             }
@@ -218,6 +247,10 @@ namespace BCG16CPUEmulator
             Address RealAddress = address + offset;
             Mem[RealAddress] = data[offset];
         }
+        void writeByteInterruptDescriptorTable(Address address, byte data)
+        {
+            InterruptDescriptorTable[address] = data;
+        }
         byte readByteBankedMemory(Address address, int offset, byte bank)
         {
             Address RealAddress = address + offset;
@@ -227,6 +260,11 @@ namespace BCG16CPUEmulator
         {
             Address RealAddress = address + offset;
             return Mem[RealAddress];
+        }
+        byte readByteInterruptDescriptorTable(Address address, int offset)
+        {
+            Address RealAddress = address + offset;
+            return InterruptDescriptorTable[RealAddress + offset];
         }
 
         public void ConnectBus(BUS bus)

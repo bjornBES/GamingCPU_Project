@@ -1,21 +1,19 @@
 $variabel_segment = 0x000E
 
-; word*     cursorx = 0x000E:3100
-$cursorx_offset = 0x3100
-
-; word*     cursory = 0x000E:3102
-$cursory_offset = 0x3102
-
-; dword*    reg0    = 0x000E:3104
-$reg0_offset = 0x3104
-
 $width = 240
 $height = 320
 
+$SRA                = 0x100
+$SRB                = 0x101
+$MSR                = 0x102
+
+$DRS                = 0x103
+$DATA               = 0x104
+
 ;
 ; Arguments:
-; uint8_t c         [BP - 5]
-; uint8_t color     [BP - 6]
+; uint8_t c         [BP - 6]
+; uint8_t color     [BP - 7]
 ;
 ; void CharOut(uint8_t c, uint8_t color)
 .global CharOut:
@@ -23,115 +21,82 @@ $height = 320
     mov         BP,     SP
     pushr
     push        DS
+    push        ES
+    mov         HL,     [EReg]
+    push        HL
 
     ; getting arguments
-    mov         AL,     [BP - 5]            ; loading the char
-    mov         AH,     [BP - 6]            ; loading the color
+    mov         AL,     [BP - 6]            ; loading the char
+    mov         AH,     [BP - 7]            ; loading the color
 
     ; the some variabels
-    mov         DS,     0x000E              ; the segment
-    mov         B,      0x3100              ; and the offset
-    mov         C,      [DS:B]              ; loading cursorx into C
-
-    add         B,      2                   ; now B is 0x3102
-    mov         D,      [HL]                ; loading cursory into D
+    mov         C,      [Cursorx]           ; loading cursorx into C
+    mov         D,      [Cursory]           ; loading cursory into D
 
     ; video memory is at 0x0009:8100
     ; writing to VRAM
+    mov         ES,     %variabel_segment   
     add         B,      2                   ; now B is 0x3104
     sez         HL
 
-    mov         [DS:B], 0x00098100          ; memory address of VRAM
-    add         [DS:B], dword C             ; adding the cursorx to the memory address of VRAM
+    mov         [EReg], 0x004_0000          ; memory address of VRAM
+    add         [EReg], dword C             ; adding the cursorx to the memory address of VRAM
 
     mov         HL,     dword D             ; Moving D ito HL
     mul         HL,     dword %height       ; getting the X crood using cursory
 
-    add         HL,     [DS:B]              ; getting the memory address
+    add         HL,     [EReg]              ; getting the memory address
 
     mov byte    [HL],   0x10                ; writing the flags
     mov byte    [HL],   AL                  ; writing the color
     mov byte    [HL],   AH                  ; writing the char data
 
+    pop         HL
+    mov         [EReg], [HL]
+    pop         ES
     pop         DS
     popr
     pop         BP 
     ret 2
 
-;
-; uint32_t return_address   [BP - 0] 4 bytes
-; uint16_t old_BP           [BP - 4] 2 bytes
-;
 ; Arguments:
-; long uint8_t* data        [BP - 6] 3 bytes
-; uint16_t sector           [BP - 9] 2 bytes
+; long uint8_t* address     [BP - 6] 3 bytes
+; uint8_t sector            [BP - 9] 1 byte
+; uint8_t Head              [BP - 10] 1 byte
 ; uint16_t track            [BP - 11] 2 bytes
-; uint8_t head              [BP - 13] 1 byte
-; uint8_t disk              [BP - 14] 1 byte
+; uint8_t drive             [BP - 13] 1 byte
 ;
-; Return:
-;   if the carry flag is non zero there was an error, the error in A
-;   if the carry flag is zero it was successfully
 ;
-; void _Read_sector(uint8_t disk, 
-;                   uint8_t head, 
-;                   uint16_t track, uint16_t sector, long uint8_t* data)
 ;
-.global Read_sector:
+; void Read_Sector(uint8_t drive, uint16_t track, uint8_t Head, uint8_t sector, long uint8_t* address)
+.global Read_Sector:
     push    BP
-    mov     BP,         SP
+    mov     BP,             SP
     pushr
-    push    DS
-    push    ES
-    push    R1
-    push    R2
+
+    mov     AL,             [BP - 13]       ; uint8_t head
+    push    AL
+    mov     A,              [BP - 11]       ; uint16_t Track
+    push    A
+    mov     AL,             [BP - 10]       ; uint8_t head
+    push    AL
+    mov     AL,             [BP - 9]        ; uint8_t sector
+    push    AL
 
     call    [Read_Data]
 
-    pop     R2
-    pop     R1
-    pop     ES
-    pop     DS
+    mov     D,              0x200
+    mov     HL,             tbyte [BP - 6]
+
+    ReadDataLoop:
+    inb     %DATA,          AL
+    mov     [HL],           AL
+    inc     HL
+    dec     D
+    jnz     [ReadDataLoop]
+
     popr
     pop     BP
-    ret     9
-
-;
-; uint32_t return_address   [BP - 0] 4 bytes
-; uint16_t old_BP           [BP - 4] 2 bytes
-;
-; Arguments:
-; long uint8_t* data        [BP - 6] 3 bytes
-; uint16_t sector           [BP - 9] 2 bytes
-; uint16_t track            [BP - 11] 2 bytes
-; uint8_t head              [BP - 13] 1 byte
-; uint8_t disk              [BP - 14] 1 byte
-;
-; Return:
-;   if the carry flag is non zero there was an error, the error in A
-;   if the carry flag is zero it was successfully
-;
-; void _Write_sector(
-;                   uint8_t disk, 
-;                   uint8_t head, 
-;                   uint16_t track, uint16_t sector, long uint8_t* data)
-.global Write_sector:
-    push    BP
-    mov     BP,         SP
-    pushr
-    push    DS
-    push    ES
-    push    R1
-    push    R2
-
-
-
-    pop     R2
-    pop     R1
-    pop     ES
-    pop     DS
-    popr
-    pop     BP
-    ret     9
+    ret     8
 
 .includeil "./Filesystem.acl"

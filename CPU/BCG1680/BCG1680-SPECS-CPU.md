@@ -54,19 +54,30 @@ U = unused
 - 0x01: immediate word                    word number
 - 0x02: immediate tbyte                   tbyte number
 - 0x03: immediate dword                   dword number
-- 0x04: address                           [address]           a 16 bit address
-- 0x05: register                          register
-- 0x06: register address                  [register]
-- 0x07: Near address                      Near [address]      a 8 bit address
-- 0x08: long address                      long [address]      a 24 bit address
-- 0x09: Unused
-- 0x0A: float immediate                   float_numberf
-- 0x0B: Unused
-- 0x0C: 32 bit segment address            [register:register]
-- 0x0D: 32 bit segment address immediate  [register:immediate]
-- 0x0E: 32 bit segment immediate address  [immediate:register]
-- 0x0F: 32 bit segment DS register        [DS:register]
-- 0x10: Register A                        A
+- 0x04: Unused                            Unused
+- 0x05: Unused                            Unused
+- 0x06: Unused                            Unused
+- 0x07: float immediate                   float_numberf
+- 0x08: register                          register
+- 0x09: register address                  [register]
+- 0x0B: Near address                      Near [address]      a 8 bit address
+- 0x0C: address                           [address]           a 16 bit address
+- 0x0D: long address                      long [address]      a 24 bit address
+- 0x0E: Unused                            Unused
+- 0x0F: Relative address                  [byte address]      an 8 bit offset to the PC
+- 0x10: 32 bit segment address            [register:register]
+- 0x11: 32 bit segment address immediate  [register:immediate]
+- 0x12: 32 bit segment DS register        [DS:register]
+- 0x13: 32 bit segment DS B               [DS:B]
+- 0x1A: Register AL                       AL
+- 0x1B: Register A                        A
+- 0x1C: Unused                            Unused
+- 0x1D: Register HL                       HL
+- 0x1E: Register address HL               [HL]
+- 0x1F: BP offset address                 [BP - number]/[BP + number]
+- 0x20: Register BL                       BL
+- 0x21: Register B                        B
+- 0x22: Unused                            Unused
 - 0xFF: None
 
 #### Note
@@ -152,17 +163,17 @@ note: `all cells is in bytes`
 
 - Address bus: 16 bits to a max of 24 bits
 
-|Base Address |Size         |Name                           |Description
-|-------------|-------------|-------------------------------|-
-|`0x000_0000` |`0x000_0200` | IO ports                      | this is where the Ports is at
-|`0x000_0200` |`0x003_FE00` | RAM                           | RAM
-|`0x004_0000` |`0x003_3100` | VRAM                          | video ram
-|`0x007_3100` |`0x000_8000` | Char set                      | char set
-|`0x007_B100` |`0x000_4F00` | RESERVED MEMORY               | this memory should not be used
-|`0x008_0000` |`0x008_0000` | RAM Banked                    | this is the data/prgram is at but banked
-|`0x010_0000` |`0x0F0_0000` | RAM                           | this is the data/prgram is at
+|Base Address |Size         |Name         |Is Protected |Description
+|-------------|-------------|-------------|-------------|-
+|`0x0000_0000`|`0x0000_0200`| IO ports    |false        | this is where the Ports is at
+|`0x0000_0200`|`0x0000_FE00`| RAM         |false        | RAM in the first segment
+|`0x0001_0200`|`0x0002_8000`| RAM         |false        | RAM
+|`0x0003_8000`|`0x0000_8000`| Char set    |true         | char set
+|`0x0004_0000`|`0x0004_0000`| VRAM        |true         | video ram
+|`0x0008_0000`|`0x0008_0000`| RAM Banked  |false        | this is the data/prgram is at but banked
+|`0x0010_0000`|`0x00F0_0000`| RAM         |false        | this is the data/prgram is at
 
-the end is `0xFFFFFF`/`0x1000000`
+the end is `0x00FF_FFFF`/`0x0100_0000`
 
 ## REGISTERS
 
@@ -189,9 +200,6 @@ the end is `0xFFFFFF`/`0x1000000`
 - BP:             16  bit Stack register
 - SP:             16  bit Stack register
 
-- IL:             8   bit register
-  the IL(interrupt location register) it's a register that can be read from to get the interrupt location as in where the interrupt came from for example from the keyboard or somewhere else.
-
 - R1:             16  bit temp register
 - R2:             16  bit temp register
 - R3:             16  bit temp register
@@ -199,25 +207,25 @@ the end is `0xFFFFFF`/`0x1000000`
 - MB:             8   bit memory bank register
 
 - CR0:            16   bit control register
-  - 0   0x0001 Enable A20                       is 1 by defult
+  - 0   0x0001 Enable A20                       enableing 20 bits of address
   - 1   0x0002
   - 2   0x0004 Use extended registers
   - 3   0x0008
-  - 4   0x0010 Enable A24                       enableing 24 bits of address
+  - 4   0x0010 Enable extended Addresing        enableing 24 bits of address
   - 5   0x0020
   - 6   0x0040
   - 7   0x0080
-  - 8   0x0100 Enable Protected mode            enableing 24 bits of data
-  - 9   0x0200 Enable extended Protected mode   enableing 32 bits of data
+  - 8   0x0100 Enable extended mode             enableing 24 bits of data
+  - 9   0x0200
   - 10  0x0400
   - 11  0x0800
   - 12  0x1000
   - 13  0x2000
   - 14  0x4000
-  - 15  0x8000
+  - 15  0x8000 Enable Protected mode            enableing 32 bits of data
 
 - CR1:            16   bit control register
-  - 0   0x0001 Point to BIOS ROM readonly
+  - 0   0x0001 Point to BIOS ROM                *readonly*
   - 1   0x0002
   - 2   0x0004
   - 3   0x0008
@@ -243,7 +251,7 @@ the end is `0xFFFFFF`/`0x1000000`
   - 5 0x0020 less
   - 6 0x0040
   - 7 0x0080
-  - 8 0x0100 error
+  - 8 0x0100
   - 9 0x0200 interrupt enable
   - 10 0x0400
   - 11 0x0800

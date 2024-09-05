@@ -27,7 +27,6 @@ namespace filesystem
                 m_DiskPath = args[1],
                 m_DiskLetter = 'C',
                 m_DiskSize = DiskSize._20MB,
-                m_IsFloppy = false,
                 WriteEnable = 1,
             };
             Disk floppyDisk1 = new Disk()
@@ -35,13 +34,12 @@ namespace filesystem
                 m_DiskPath = inputfile,
                 m_DiskSize = DiskSize._F3MB,
                 m_DiskLetter = 'A',
-                m_IsFloppy = true,
                 WriteEnable = 1,
             };
 
             FileSystem fileSystem = new FileSystem();
             fileSystem.FormatDisk(floppyDisk1);
-            fileSystem.SaveFile(floppyDisk1);
+            fileSystem.SaveFile();
 
             fileSystem.CreateFile("./test.txt", 1);
             fileSystem.WriteEntry("./test.txt", Encoding.ASCII.GetBytes("HELLO WORLD"));
@@ -56,43 +54,43 @@ namespace filesystem
 
             fileSystem.ReadSector(0, 0, 2, out buffer);
 
-            fileSystem.SaveFile(floppyDisk1);
+            fileSystem.SaveFile();
 
             fileSystem.FormatDisk(HDDdisk);
 
             fileSystem.CreateFile("./test.txt", 1);
-            fileSystem.SaveFile(HDDdisk);
+            fileSystem.SaveFile();
             return 0;
         }
     }
 
     public class Disk
     {
-        public bool m_IsFloppy;
         public DiskSize m_DiskSize;
 
         public char m_DiskLetter;
         public string m_DiskPath;
 
         public byte WriteEnable;
-
-        public ushort m_PageSize { get; private set; }
-
-        public byte GetSize()
-        {
-            m_PageSize = 0x1200;
-            return (byte)m_DiskSize;
-        }
-
     }
 
     public enum DiskSize
     {
+        /// <summary>
+        /// 20 MB HDD
+        /// </summary>
         _20MB = 0x00,
         _40MB = 0x01,
         _60MB = 0x02,
 
+        /// <summary>
+        /// 
+        /// </summary>
         _F5MB = 0x80,
+        
+        /// <summary>
+        /// 1,44 MB Floppy
+        /// </summary>
         _F3MB = 0x81,
     }
 }

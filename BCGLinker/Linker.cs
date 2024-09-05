@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.ExceptionServices;
+using System.Text;
 using static HexLibrary.HexConverter;
 using static HexLibrary.StringFunctions;
 
@@ -17,7 +18,7 @@ namespace BCGLinker
 
         public List<string> m_DataOutput = new List<string>();
         public List<string> m_Output = new List<string>();
-        public string m_OutputBin = "";
+        public List<byte> m_OutputBin = new List<byte>();
         List<Label> m_Labels = new List<Label>();
         List<Struct> m_Structs = new List<Struct>();
         List<Section> m_Sections = new List<Section>();
@@ -108,6 +109,8 @@ namespace BCGLinker
             string[] m_pre_Output = tempList.ToArray();
             m_Output.Clear();
 
+            List<byte> OutputBytes = new List<byte>();
+
             List<string> UsedAddress = new List<string>();
             for (int i = 0; i < m_pre_Output.Length; i++)
             {
@@ -133,29 +136,40 @@ namespace BCGLinker
                     continue;
                 }
 
+                if (UsedAddress.Count > 0)
+                {
+                    int LastAddress = Convert.ToInt32(UsedAddress.Last(), 16);
+                    int currAddress = Convert.ToInt32(Full_address, 16);
+                    if (LastAddress + 1 < currAddress)
+                    {
+                        int count = currAddress - (LastAddress + 1);
+                        for (int a = 0; a < count; a++)
+                        {
+                            OutputBytes.Add(0);
+                        }
+                    }
+                }
+
                 byte number = Convert.ToByte(code, 16);
 
                 if (UsedAddress.Contains(Full_address))
                 {
-                    m_Output[^1] = ((char)number).ToString();
+                    OutputBytes[^1] = number;
                     //m_Output[^1] = "  " + address + ":\t" + code + " DEBUG CODE";
                     continue;
                 }
                 else
                 {
-                    m_Output.Add(((char)number).ToString());
+                    OutputBytes.Add(number);
                     //write_out(code + " DEBUG CODE");
                 }
                 UsedAddress.Add(Full_address);
             }
 
-            for (int i = 0; i < m_Output.Count; i++)
+            for (int i = 0; i < OutputBytes.Count; i++)
             {
-                m_OutputBin += m_Output[i];
-            }
-            if (m_OutputBin.Length % 3 != 0)
-            {
-                m_OutputBin += "\0";
+                byte v = (byte)(OutputBytes[i] & 0x00FF);
+                m_OutputBin.Add(v);
             }
         }
 
@@ -224,48 +238,8 @@ namespace BCGLinker
             {
                 string file = line.Split(' ').Last();
                 m_CurrFile = file.Trim('"');
+                lineNumber = 0;
                 return;
-            }
-            else if (line.StartsWith("_TIMES_"))
-            {
-                string Lineexpr = line.Split(" ", 2).Last();
-                string NumberExpr = Lineexpr.Split(',')[0];
-                string Instr = Lineexpr.Split(",")[1].Split('.')[0];
-
-                string result;
-
-                if (NumberExpr.StartsWith("BINEXPR"))
-                {
-                    string bin_type = line.Split(' ').First();
-                    result = gen_expr(NumberExpr, bin_type);
-
-                }
-                else if(gen_term(NumberExpr, out string[] outputExpr))
-                {
-                    result = "";
-
-                    for (int i = 0; i < outputExpr.Length; i++)
-                    {
-                        result += outputExpr[i];
-                    }
-                }
-                else
-                {
-                    result = "";
-                }
-
-                int times = Convert.ToInt32(result, 16) + 1;
-                int size = int.Parse(line.Split('.').Last());
-
-                string[] ResultStr = SplitHexString(Instr, size);
-
-                for (int a = 0; a < times; a++)
-                {
-                    for (int i = 0; i < ResultStr.Length; i++)
-                    {
-                        AddString(ResultStr[i]);
-                    }
-                }
             }
             else if (line.StartsWith("_REF_"))
             {
@@ -371,6 +345,47 @@ namespace BCGLinker
                     AddString(expr[i]);
                 }
             }
+            else if (line.StartsWith("_TIMES_"))
+            {
+                string Lineexpr = line.Split(" ", 2).Last();
+                string NumberExpr = Lineexpr.Split(',')[0];
+                string Instr = Lineexpr.Split(",")[1].Split('.')[0];
+
+                string result;
+
+                if (NumberExpr.StartsWith("BINEXPR"))
+                {
+                    string bin_type = Lineexpr.Split(' ').First();
+                    result = gen_expr(NumberExpr.Split(' ', 2)[1], bin_type);
+
+                }
+                else if (gen_term(NumberExpr, out string[] outputExpr))
+                {
+                    result = "";
+
+                    for (int i = 0; i < outputExpr.Length; i++)
+                    {
+                        result += outputExpr[i];
+                    }
+                }
+                else
+                {
+                    result = "";
+                }
+
+                int times = Convert.ToInt32(result, 16) + 1;
+                int size = int.Parse(line.Split('.').Last());
+
+                string[] ResultStr = SplitHexString(Instr, size);
+
+                for (int a = 0; a < times; a++)
+                {
+                    for (int i = 0; i < ResultStr.Length; i++)
+                    {
+                        AddString(ResultStr[i]);
+                    }
+                }
+            }
             else
             {
                 AddString(line);
@@ -385,6 +400,7 @@ namespace BCGLinker
                 if (!GetLabel(name, out Label label))
                 {
                     Console.WriteLine($"LINKER ERROR: {name} not found as symbol");
+                    Console.WriteLine($"{m_CurrFile}:{lineNumber + 1}");
                 }
 
                 string[] address;
@@ -784,6 +800,7 @@ namespace BCGLinker
                         int address;
                         string file;
                         string[] Ident;
+                                    bool Con = false;
                         if (line[0] == "_REF_")
                         {
                             switch (line[1])
@@ -795,6 +812,19 @@ namespace BCGLinker
                                     Hex_address = line[3].Trim('[', ']').Replace("0x", "");
                                     address = Convert.ToInt32(Hex_address, 16);
                                     file = line[4];
+
+                                    m_Labels.ForEach(label =>
+                                    {
+                                        if (label.m_Name == name)
+                                        {
+                                            Con = true;
+                                        }
+                                    });
+
+                                    if (Con)
+                                    {
+                                        continue;
+                                    }
 
                                     m_Labels.Add(
                                         new Label()

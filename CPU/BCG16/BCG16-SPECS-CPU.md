@@ -7,11 +7,10 @@
     - [INSTRUCTION LAYOUT](#instruction-layout)
     - [ARGUMENT MODE](#argument-mode)
       - [Note](#note)
+  - [Interrupt descriptor table](#interrupt-descriptor-table)
+    - [Layout](#layout)
   - [Date and Time](#date-and-time)
-  - [CPU PINS](#cpu-pins)
   - [INTERRUPTS](#interrupts)
-    - [interrupt table](#interrupt-table)
-    - [SOFTWARE INTERRUPTS](#software-interrupts)
   - [Pipelining](#pipelining)
   - [Caches](#caches)
   - [Screen](#screen)
@@ -28,10 +27,10 @@
 
 - Name: BCG16
 - Data bus: 16 bits
-- Clock speed: 10 MHz
+- Clock speed:  MHz
 - Address bus: 16 bits to a max of 24 bits
 
-The BCG-16 CPU is a 16-bit processor designed to reflect the technology and performance characteristics of the DOS era (versions 3.x, 4.x, and potentially 5.x). It aims to compete with the Intel 80286 in terms of raw performance.
+The BCG-16 CPU is a 16-bit processor designed to reflect the technology and performance characteristics of the DOS era (versions 3.x, 4.x, and potentially 5.x). It aims to compete with the Intel   in terms of raw performance.
 
 based of the **IBM Personal System/2 Model 25**
 
@@ -56,40 +55,49 @@ U = unused
 - 0x01: immediate word                    word number
 - 0x02: immediate tbyte                   tbyte number
 - 0x03: immediate dword                   dword number
-- 0x04: address                           [address]           a 16 bit address
-- 0x05: register                          register
-- 0x06: register address                  [register]
-- 0x07: Near address                      Near [address]      a 8 bit address
-- 0x08: long address                      long [address]      a 24 bit address
-- 0x09: Unused
-- 0x0A: float immediate                   float_numberf
-- 0x0B: Unused
-- 0x0C: 32 bit segment address            [register:register]
-- 0x0D: 32 bit segment address immediate  [register:immediate]
-- 0x0E: 32 bit segment immediate address  [immediate:register]
-- 0x0F: 32 bit segment DS register        [DS:register]
-- 0x10: Register A                        A
+- 0x04: Unused                            Unused
+- 0x05: Unused                            Unused
+- 0x06: Unused                            Unused
+- 0x07: float immediate                   float_numberf
+- 0x08: register                          register
+- 0x09: register address                  [register]
+- 0x0B: Near address                      Near [address]      a 8 bit address
+- 0x0C: address                           [address]           a 16 bit address
+- 0x0D: long address                      long [address]      a 24 bit address
+- 0x0E: Unused                            Unused
+- 0x0F: Relative address                  [byte address]      an 8 bit offset to the PC
+- 0x10: 32 bit segment address            [register:register]
+- 0x11: 32 bit segment address immediate  [register:immediate]
+- 0x12: 32 bit segment DS register        [DS:register]
+- 0x13: 32 bit segment DS B               [DS:B]
+- 0x1A: Register AL                       AL
+- 0x1B: Register A                        A
+- 0x1C: Unused                            Unused
+- 0x1D: Register HL                       HL
+- 0x1E: Register address HL               [HL]
+- 0x1F: BP offset address                 [BP - number]/[BP + number]
+- 0x20: Register BL                       BL
+- 0x21: Register B                        B
+- 0x22: Unused                            Unused
 - 0xFF: None
 
 #### Note
 
+## Interrupt descriptor table
+
+The Interrupt vector table is 32 KB in size
+
+### Layout
+
+The first word is the Address Segment for the routine
+
+The second word is the Address offset for the routine
+
 ## Date and Time
-
-## CPU PINS
-
-- IRQ: interrupt request
 
 ## INTERRUPTS
 
-Interrupts can be triggered by software or hardware specified by the interrupt location port.
-
-### interrupt table
-
-The interrupt table is a list of interrupt entritys that
-
-### SOFTWARE INTERRUPTS
-
-A software interrupt can be generated using the [BRK](./instructions%20BCG16.md#special-instructions) Instruction and will make a long jump to 0x010000 in bank 0xF, before jumping the PC, MB and the F(flags register) will be push onto the stack and the [PUSHR](./instructions%20BCG16.md#special-instructions) Instruction will also be called.
+Interrupts can be triggered by hardware where the CPU will look into the [Interrupt descriptor table](#interrupt-descriptor-table)(IDT) and jump to the address specified by the IDT.
 
 ## Pipelining
 
@@ -105,7 +113,7 @@ The BCG16 can do 3 stage pipelining like this
 
 ## Screen
 
-The screen is a 320×240 VGA screen with a 8 bpp and 1 bit for Alpha
+The screen is a 320×240 VGA screen with a 8 bpp
 
 ### Writing to the screen
 
@@ -129,7 +137,7 @@ The calling convention for the BCG architecture is as follows:
 3. Retrieve Return Value
    1. The return value will be in either the AX or HL register:
       1. Use the [HL](#registers) register if it's a pointer/address.
-      2. Use the [AX](#registers) register if it's an immediate value.
+      2. Use the [A](#registers) register if it's an immediate value.
 
 ### Callee
 
@@ -145,7 +153,7 @@ This is the sequence within the called function:
 4. Return Value
    1. Move the return value to the appropriate register:
       1. HL register if it's a pointer.
-      2. AX register if it's an immediate value.
+      2. A register if it's an immediate value.
 5. Restore Registers
    1. Pop all registers using the [POPR](./instructions%20BCG16.md#special-instructions) instruction.
 6. Return from Function
@@ -171,10 +179,10 @@ note: `all cells is in bytes`
 |Base Address |Size         |Name                           |Description
 |-------------|-------------|-------------------------------|-
 |`0x000_0000` |`0x000_0200` | IO ports                      | this is where the Ports is at
-|`0x000_0200` |`0x003_FE00` | RAM                           | RAM
-|`0x004_0000` |`0x003_3100` | VRAM                          | video ram
-|`0x007_3100` |`0x000_8000` | Char set                      | char set
-|`0x007_B100` |`0x000_4F00` | RESERVED MEMORY               | this memory should not be used
+|`0x000_0200` |`0x000_FE00` | RAM                           | RAM in the first segment
+|`0x001_0000` |`0x002_8000` | RAM                           | RAM
+|`0x003_8000` |`0x000_8000` | Char set                      | Char set
+|`0x004_0000` |`0x004_0000` | VRAM                          | video ram
 |`0x008_0000` |`0x008_0000` | RAM Banked                    | this is the data/prgram is at but banked
 |`0x010_0000` |`0x0F0_0000` | RAM                           | this is the data/prgram is at
 
@@ -204,26 +212,23 @@ the end is `0xFFFFFF`/`0x1000000`
 - BP:             16  bit Stack register
 - SP:             16  bit Stack register
 
-- IL:             8   bit register
-  the IL(interrupt location register) it's a register that can be read from to get the interrupt location as in where the interrupt came from for example from the keyboard or somewhere else.
-
 - R1:             16  bit temp register
 - R2:             16  bit temp register
 
 - MB:             4   bit memory bank register
 
 - CR0:            8   bit control register
-  - 0 0x01 Enable A20
+  - 0 0x01 Enable A20                       enableing 20 bits of address
   - 1 0x02
   - 2 0x04 Use extended registers
   - 3 0x08
-  - 4 0x10 Enable A24
+  - 4 0x10 Enable extended Addresing        enableing 24 bits of address
   - 5 0x20
   - 6 0x40
   - 7 0x80
 
 - CR1:            8   bit control register
-  - 0 0x01 Point to BIOS ROM readonly
+  - 0 0x01 Point to BIOS ROM                *readonly*
   - 1 0x02
   - 2 0x04
   - 3 0x08

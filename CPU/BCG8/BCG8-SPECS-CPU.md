@@ -8,7 +8,6 @@
     - [ARGUMENT MODE](#argument-mode)
       - [Note](#note)
   - [Date and Time](#date-and-time)
-  - [CPU PINS](#cpu-pins)
   - [INTERRUPTS](#interrupts)
     - [SOFTWARE INTERRUPTS](#software-interrupts)
   - [CACHES](#caches)
@@ -62,27 +61,31 @@ U = unused
 - 0x01: immediate word                    word number
 - 0x02: immediate tbyte                   tbyte number
 - 0x03: immediate dword                   dword number
-- 0x04: address 16                        [address]
-- 0x05: register                          register
-- 0x06: register address                  [register]
-- 0x07: Near address                      Near [address]      a 8 bit address
-- 0x08: Unused
-- 0x09: Unused
-- 0x0A: Unused
-- 0x0B: 32 bit segment DS address         [DS:register]
-- 0x0C: 32 bit segment address            [register:register]
-- 0x0D: 32 bit segment address immediate  [register:immediate]
-- 0x0E: 32 bit segment immediate address  [immediate:register]
-- 0x10: Register A                        A
+- 0x04: Unused                            Unused
+- 0x05: Unused                            Unused
+- 0x06: Unused                            Unused
+- 0x07: Unused                            Unused
+- 0x08: register                          register
+- 0x09: register address                  [register]
+- 0x0B: Near address                      Near [address]      a 8 bit address
+- 0x0C: address                           [address]           a 16 bit address
+- 0x0D: Unused                            Unused
+- 0x0E: Unused                            Unused
+- 0x0F: Relative address                  [byte address]      an 8 bit offset to the PC
+- 0x10: 32 bit segment address            [register:register]
+- 0x11: 32 bit segment address immediate  [register:immediate]
+- 0x12: 32 bit segment DS register        [DS:register]
+- 0x13: 32 bit segment DS B               [DS:B]
+- 0x1A: Register AL                       AL
+- 0x1B: Register A                        A
+- 0x1C: Unused                            Unused
+- 0x1D: Register HL                       HL
+- 0x1E: Register address HL               [HL]
 - 0xFF: None
 
 #### Note
 
 ## Date and Time
-
-## CPU PINS
-
-- IRQ: interrupt request
 
 ## INTERRUPTS
 

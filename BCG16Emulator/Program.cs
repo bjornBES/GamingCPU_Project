@@ -43,20 +43,44 @@ namespace BCG16CPUEmulator
 
             bUS.Reset();
 
-            string BinFileContents = File.ReadAllText(InputFile, Encoding.Default);
+            byte[] BinFileContents = File.ReadAllBytes(InputFile);
 
             bUS.Load(BinFileContents);
 
-            bUS.Tick();
-            bUS.Tick();
-            bUS.Tick();
-            bUS.Tick();
-            bUS.Tick();
+            while (bUS.m_CPU.GetFlag(BCG16CPU_Registers.FH) == false)
+            {
+                bUS.Tick();
+            }
 
-            int start = (int)(0x000F_FF00 - Memory.MemBankSize);
-            int end = (int)(0x000F_FFFF - Memory.MemBankSize);
+            WriteInfo(bUS.m_CPU);
+        }
 
-            byte[] array = bUS.m_Memory.Mem[start..end];
+        void WriteInfo(BCG16CPU cpu)
+        {
+            Console.WriteLine($"A:\t0x{cpu.A.ToHex()}" + $" B:\t0x{cpu.B.ToHex()}");
+            Console.WriteLine($"C:\t0x{cpu.C.ToHex()}" + $" D:\t0x{cpu.D.ToHex()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"HL:\t0x{cpu.H.ToHex()}:{cpu.L.ToHex()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"DS:\t0x{cpu.DS.ToHex()} ES:\t0x{cpu.ES.ToHex()}");
+            Console.WriteLine($"SS:\t0x{cpu.SS.ToHex()} S:\t0x{cpu.S.ToHex()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"PC:\t0x{cpu.PC.ToHex()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"SP:\t0x{cpu.SP.ToHex()}" + $" BP:\t0x{cpu.BP.ToHex()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"AF:\t{cpu.AF.m_Value}f".PadRight(11, ' ') + $"BF:\t{cpu.BF.m_Value}f");
+            Console.WriteLine($"");
+            Console.WriteLine($"R1:\t0x{cpu.R1.ToHex()}" + $" R2:\t0x{cpu.R2.ToHex()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"MB:\t0x{cpu.MB.ToHex()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"CR0:\t0b{cpu.CR0.ToBin()}" + $" CR1:\t0b{cpu.CR1.ToBin()}");
+            Console.WriteLine($"");
+            Console.WriteLine($"\t  F     F    FFFFFF");
+            Console.WriteLine($"\t  H     I    LOCSEZ");
+            Console.WriteLine($"\t  A     E    EFYIQO");
+            Console.WriteLine($"F:\t0x{cpu.F.ToBin()}");
         }
 
         void DecodeArguments(string[] args)

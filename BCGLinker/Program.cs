@@ -57,9 +57,18 @@ namespace BCGLinker
             }
 
             InputFile = Path.GetFullPath(InputFile);
+            OutputFile = Path.GetFullPath(OutputFile);
 
             int index = InputFile.IndexOf(InputFile.Split(Path.DirectorySeparatorChar).Last()) - 1;
             string path = InputFile.Substring(0, index);
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(InputFile.Substring(0, index)).Create();
+            }
+
+            index = OutputFile.IndexOf(OutputFile.Split(Path.DirectorySeparatorChar).Last()) - 1;
+            path = OutputFile.Substring(0, index);
 
             if (!Directory.Exists(path))
             {
@@ -103,16 +112,16 @@ namespace BCGLinker
 
             linker.BuildSrc(FullSrc);
 
-            string copyOld = File.ReadAllText(OutputFile, Encoding.Default);
+            byte[] copyOld = File.ReadAllBytes(OutputFile);
 
             Thread.Sleep(250);
 
-            File.WriteAllText(OutputFile, linker.m_OutputBin, Encoding.Default);
-            string contents = File.ReadAllText(OutputFile, Encoding.Default);
+            File.WriteAllBytes(OutputFile, linker.m_OutputBin.ToArray());
+            byte[] contents = File.ReadAllBytes(OutputFile);
 
-            if (linker.m_OutputBin != contents)
+            if (Equals(contents, linker.m_OutputBin.ToArray()))
             {
-                File.WriteAllText(OutputFile, copyOld);
+                File.WriteAllBytes(OutputFile, copyOld);
                 Console.WriteLine("Error: values does not match");
                 Environment.Exit(1);
             }

@@ -10,6 +10,10 @@ namespace HexLibrary
         {
             return Convert.ToString(Convert.ToInt32(value, _base), 16);
         }
+        public static string ToHexString(short value)
+        {
+            return Convert.ToString(value, 16);
+        }
         public static string ToHexString(int value)
         {
             return Convert.ToString(value, 16);

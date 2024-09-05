@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace BCG16CPUEmulator.Types
+namespace CommonBCGCPU.Types
 {
     [Serializable]
     [ComVisible(true)]
@@ -161,6 +161,21 @@ namespace BCG16CPUEmulator.Types
         public override int GetHashCode()
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return m_Value.ToString();
+        }
+
+        public string ToHex()
+        {
+            return Convert.ToString(m_Value, 16).PadLeft(4, '0');
+        }
+        public string ToBin()
+        {
+            string result = Convert.ToString(m_Value, 2).PadLeft(16, '0');
+            return $"{result.Substring(0, 8)}_{result.Substring(8)}";
         }
     }
 }

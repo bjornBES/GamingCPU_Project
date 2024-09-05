@@ -1,0 +1,10 @@
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\obj\Debug\netcoreapp3.1\CommonBCGCPU.csproj.AssemblyReference.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\obj\Debug\netcoreapp3.1\CommonBCGCPU.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\obj\Debug\netcoreapp3.1\CommonBCGCPU.AssemblyInfoInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\obj\Debug\netcoreapp3.1\CommonBCGCPU.AssemblyInfo.cs
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\obj\Debug\netcoreapp3.1\CommonBCGCPU.csproj.CoreCompileInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\bin\Debug\netcoreapp3.1\CommonBCGCPU.deps.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\bin\Debug\netcoreapp3.1\CommonBCGCPU.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\bin\Debug\netcoreapp3.1\CommonBCGCPU.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\obj\Debug\netcoreapp3.1\CommonBCGCPU.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CommonBCGCPU\obj\Debug\netcoreapp3.1\CommonBCGCPU.pdb

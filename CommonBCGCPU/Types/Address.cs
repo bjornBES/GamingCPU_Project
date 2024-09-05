@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 
-namespace BCG16CPUEmulator.Types
+namespace CommonBCGCPU.Types
 {
     [Serializable]
     [ComVisible(true)]
@@ -60,7 +60,19 @@ namespace BCG16CPUEmulator.Types
         {
             return new Address(value.m_Value);
         }
+        public static implicit operator Address(_16Bit_Register value)
+        {
+            return new Address(value.m_Value);
+        }
+        public static implicit operator Address(_8Bit_Register value)
+        {
+            return new Address(value.m_Value);
+        }
 
+        public static implicit operator ushort(Address register)
+        {
+            return (ushort)register.m_Value;
+        }
         public static implicit operator uint(Address register)
         {
             return register.m_Value;

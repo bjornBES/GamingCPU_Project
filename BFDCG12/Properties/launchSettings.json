@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "BFDCG12": {
+      "commandName": "Project",
+      "workingDirectory": "./",
+      "commandLineArgs": ""
+    }
+  }
+}

@@ -1,13 +1,105 @@
 .SETCPU "BCG16"
 
+$StackSegment = 0x0001
+$BSSSegment = 0x0008            ; in bank 0
+
 .section TEXT
+
+.org    0x200
 
 L_HEADER:
 
-mov     SS,     0x00
-mov     SP,     0x8000
+mov     AL,             CR0
+or      AL,             0x05            ; Enable A20, Use externel registers
+mov     CR0,            AL
+
+mov     SS,             word %StackSegment
+mov     SP,             @Start_Stack
+
+mov     DS,             0x0008
+
+push    0x10
+call    [test]
+
+sez     A
+mov     HL,             @IDT
+int     0x00
+
+int     0x10
+
+outb    0x00,           0x55
+inb     0x00,           AH
+
+cmp     AH,             0x01
+je      [_End]
+
+halt
+
+_End:
+
+sez     AL
+outb    AL,             0xAA
+inb     0x00,           AL
+nop
+cmp     AL,             0x02
+je      [__End]
+
+halt
+
+__End:
+
 push    0x55
+
+mov     AL,             [Start_Stack]
+mov     [Start_Stack],  AL
+mov     AL,             [0x55]
+
+pop     AH
+
+mov     B,              0xF000
+mov     [S:B],          0x89
+
+mov     [S:0xF003],     0xFF
+
+inc     B
+mov     [DS:B],         0x55
+
+halt
+mov     A,              [DS:B]
+
+Loop:
+jmp     [Loop]
+
+;
+; byte a                [BP - 6]
+; 
+; void _test(byte a)
+.org 0x400
+test:
+push    BP
+mov     BP,             SP
+mov     DL,             [BP - 6]
+mov     A,              0x10
+pop     BP
+ret     1
 
 Start:
 
+.org 0x8000
+IDT:
+.dd     far @Function
+IDT_END:
+
+.org 0x20000
+
+Function:
+mov     D,              0x50AA
+rti
+
 ; .includeil "./BIOS/BIOS.acl"
+
+.section BSS
+; at segment 0x0001
+.org    0x0000
+Start_Stack:
+.res 0xFFFF

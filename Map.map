@@ -1,8 +1,41 @@
 Offset		:	size			Name
 
-00000000	:	00000000		_text
+00000000	:	00000263		_text
+00000263	:	000001ea		_bss
+0000044d	:	00000000		_data
+0000044d	:	00000000		_data
+0000046d	:	00007fb3		_bss
+00008400	:	00000000		_text
 
 Address	:	offset		Name                     File
 
-0000	:	0000		L_HEADER                 \CPU\src\ACL\TestProgram.acl
-0000	:	0010		Start                    \CPU\src\ACL\TestProgram.acl
+0000	:	0200		_BIOSStart               \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0232		FindBootDisk             \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0277		Exit_FindDiskLoop        \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0280		DiskNumber               \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0264		ReceivedIRQ              \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0265		Cursorx                  \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0267		Cursory                  \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0269		EReg                     \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	026d		Error_Invalid_BootDisk   \CPU\src\ACL\BIOS\BIOS_errors.acl
+0000	:	026d		CharOut                  \CPU\src\ACL\BIOS\IOFunctions.acl
+0000	:	02f5		Read_Sector              \CPU\src\ACL\BIOS\IOFunctions.acl
+0000	:	0331		ReadDataLoop             \CPU\src\ACL\BIOS\IOFunctions.acl
+0000	:	0350		Initialize               \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	0363		Read_Data                \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	03a9		WaitForData              \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	03c2		Write_Data               \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	03c2		Seek                     \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	03c2		Recalibrate              \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	03f4		wait_irq                 \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	040f		FloppyInterruptHandler   \CPU\src\ACL\BIOS\Filesystem.acl
+0000	:	0418		ACharOut                 \CPU\src\ACL\BIOS\BIOS_Functions.acl
+0000	:	0443		EndOfBIOS                \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	046f		BIOSEnd                  \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0499		End                      \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	0499		BIOS_InterruptPointers   \CPU\src\ACL\BIOS\BIOS_Interrupt_Pointer.acl
+0000	:	0499		BIOS_IRQ_InterruptPointers\CPU\src\ACL\BIOS\BIOS_Interrupt_Pointer.acl
+0000	:	8000		Stack                    \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	8400		StackEnd                 \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	8402		MoveToRAM_LOOP           \CPU\src\ACL\BIOS\BIOS.acl
+0000	:	9000		RAM                      \CPU\src\ACL\BIOS\BIOS.acl
