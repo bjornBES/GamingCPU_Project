@@ -3,7 +3,7 @@
 - [CPU Specifications](#cpu-specifications)
   - [Date and Time](#date-and-time)
   - [PORTS](#ports)
-    - [RS232C DE-9 Serial Ports](#rs232c-de-9-serial-ports)
+    - [PS/2 Ports](#ps2-ports)
     - [VGA Screen port (more in Screen)](#vga-screen-port-more-in-screen)
   - [Parallel Port](#parallel-port)
     - [Expaction cards](#expaction-cards)
@@ -13,14 +13,15 @@
     - [Modes](#modes)
     - [Writing to the screen](#writing-to-the-screen)
     - [Video Layout](#video-layout)
+      - [Mode 0, 1](#mode-0-1)
 
 ## Date and Time
 
 ## PORTS
 
-The Computer has a few ports for example the [Keyboard port or Mouse port](#rs232c-de-9-serial-ports)
+The Computer has a few ports for example the [Keyboard port or Mouse port](#ps2-ports)
 
-### RS232C DE-9 Serial Ports
+### PS/2 Ports
 
 Keyboard port at `0x00`
 
@@ -28,7 +29,7 @@ Mouse port at `0x01`
 
 ### VGA Screen port (more in [Screen](#screen))
 
-The VGA Screen port is at `0x02`
+The VGA Screen port is at `0x02-0x04`
 
 ## Parallel Port
 
@@ -54,14 +55,16 @@ These ports will use the `40-pin IDE connectors`
 
 ## Screen
 
-The screen is a 640×480 VGA screen with a 8 bpp
+The screens default mode is 360×400 VGA screen with 16 colors
 
 ### Modes
 
 |Mode |Resolution |Colors |T/G  |CharBlock  |AlphaRes
 |-----|-----------|-------|-----|-----------|-
 |0    |360 x 400  |16     |T    |8 x 16     | 40 x 25
-|2    |720 x 400  |16     |T    |8 x 16     | 80 x 25
+|1    |360 x 400  |16     |T    |8 x 8      | 40 x 25
+|2    |640 x 400  |16     |T    |8 x 16     | 80 x 25
+|3    |720 x 400  |16     |T    |8 x 16     | 80 x 25
 |7    |720 x 400  |mono   |T    |8 x 16     | 80 x 25
 |11   |640 x 480  |2      |G    |8 x 16     | 80 x 30
 |12   |640 x 480  |16     |G    |8 x 16     | 80 x 30
@@ -73,6 +76,10 @@ to write to the screen you can use the [INT 0x10 interrupt routine](./interrupts
 
 ### Video Layout
 
-CCCCCCCC
+#### Mode 0, 1
 
-- C = color index
+CCCCCCCC_IIIIUUUU
+
+- C = char index
+- I = color index
+- U = unused

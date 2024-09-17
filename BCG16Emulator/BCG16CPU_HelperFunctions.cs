@@ -31,6 +31,15 @@ namespace BCG16CPUEmulator
             return GetSegment(Vsegment, offset);
         }
 
+        public _32Bit_Register GetABX()
+        {
+            return (A << 16) | B;
+        }
+        public _32Bit_Register GetCDX()
+        {
+            return (C << 16) | D;
+        }
+
         public byte FetchByte()
         {
             byte result = m_BUS.m_Memory.ReadByte(PC);
@@ -52,9 +61,9 @@ namespace BCG16CPUEmulator
             PC += 3;
             return result;
         }
-        public uint FetchDWord()
+        public int FetchDWord()
         {
-            uint result = m_BUS.m_Memory.ReadDWord(PC);
+            int result = m_BUS.m_Memory.ReadDWord(PC);
             argumentOffset += 4;
             PC += 4;
             return result;
@@ -82,9 +91,9 @@ namespace BCG16CPUEmulator
                 switch (register)
                 {
                     case Register.ABX:
-                        return ABX;
+                        return GetABX();
                     case Register.CDX:
-                        return CDX;
+                        return GetCDX();
                 }
             }
 
@@ -229,13 +238,15 @@ namespace BCG16CPUEmulator
                 case Register.ABX:
                     if ((CR0 & CR0_UseExtendedRegisters) == CR0_UseExtendedRegisters)
                     {
-                        ABX = value;
+                        A = (ushort)((value & 0xFFFF0000) >> 16);
+                        B = (ushort)value & 0x0000FFFF;
                     }
                     break;
                 case Register.CDX:
                     if ((CR0 & CR0_UseExtendedRegisters) == CR0_UseExtendedRegisters)
                     {
-                        CDX = value;
+                        C = (ushort)((value & 0xFFFF0000) >> 16);
+                        D = (ushort)value & 0x0000FFFF;
                     }
                     break;
                 case Register.HL:
@@ -297,43 +308,6 @@ namespace BCG16CPUEmulator
                     break;
                 case Register.CR1:
                     CR1 = value;
-                    break;
-            }
-
-            switch (register)
-            {
-                case Register.A:
-                case Register.AH:
-                case Register.AL:
-                case Register.B:
-                case Register.BH:
-                case Register.BL:
-                case Register.C:
-                case Register.CH:
-                case Register.CL:
-                case Register.D:
-                case Register.DH:
-                case Register.DL:
-                case Register.H:
-                case Register.L:
-                    ABX[true] = A;
-                    ABX[false] = B;
-
-                    CDX[true] = C;
-                    CDX[false] = D;
-
-                    HL[true] = H;
-                    HL[false] = L;
-                    break;
-                default:
-                    A = ABX[true];
-                    B = ABX[false];
-
-                    C = CDX[true];
-                    D = CDX[false];
-
-                    H = HL[true];
-                    L = HL[false];
                     break;
             }
         }
@@ -453,7 +427,7 @@ namespace BCG16CPUEmulator
             SetRegisterValue(destination, V);
         }
 
-        public void Ret(int offset)
+        public void Return(int offset)
         {
             Pop(Register.PC);
             SP -= offset;
@@ -670,13 +644,6 @@ namespace BCG16CPUEmulator
         }
         public void PushInterrupt()
         {
-            Push(Register.A);
-            Push(Register.B);
-            Push(Register.C);
-            Push(Register.D);
-            Push(Register.H);
-            Push(Register.L);
-
             Push(Register.DS);
             Push(Register.ES);
             Push(Register.SS);
@@ -684,16 +651,6 @@ namespace BCG16CPUEmulator
 
             Push(Register.PC);
 
-            Push(Register.AF);
-            Push(Register.BF);
-
-            Push(Register.SP);
-            Push(Register.BP);
-
-            Push(Register.MB);
-
-            Push(Register.CR0);
-            Push(Register.CR1);
             Push(Register.F);
         }
     }

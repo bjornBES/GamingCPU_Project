@@ -1,2 +1,6 @@
 Disk_Read_error:
 Error_Invalid_BootDisk:
+    pop         AL
+    push        0x00
+    push        AL
+    call        [CharOut]

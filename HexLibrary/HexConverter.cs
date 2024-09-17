@@ -18,6 +18,10 @@ namespace HexLibrary
         {
             return Convert.ToString(value, 16);
         }
+        public static string ToHexString(long value)
+        {
+            return Convert.ToString(value, 16);
+        }
 
         public static string[] SplitHexString(string hexString)
         {

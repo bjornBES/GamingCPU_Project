@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.ComponentModel.DataAnnotations;
 
 public class Program : ArgumentFunctions
 {
@@ -68,19 +69,24 @@ public class Program : ArgumentFunctions
         }
 
         InputFile = Path.GetFullPath(InputFile);
+        OutputFile = Path.GetFullPath(OutputFile);
 
-        int index = InputFile.IndexOf(InputFile.Split(Path.DirectorySeparatorChar).Last()) - 1;
-        string path = InputFile.Substring(0, index);
+        int index = OutputFile.IndexOf(OutputFile.Split(Path.DirectorySeparatorChar).Last()) - 1;
+        string path = OutputFile.Substring(0, index);
 
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(OutputFile.Substring(0, index)).Create();
         }
 
-        File.Create(OutputFile).Close();
-
+        if (!File.Exists(OutputFile))
+        {
+            File.Create(OutputFile).Close();
+        }
 
         includeFiles();
+
+        new Instructions();
 
         Assembler assembler = new Assembler();
         string FullSrc = "";

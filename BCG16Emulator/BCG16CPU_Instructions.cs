@@ -41,6 +41,7 @@ namespace BCG16CPUEmulator
                 {
                     SetRegisterValue(DestinationRegister.Value, ImmSource.Value);
                 }
+                Compare(DestinationRegister.Value, DestinationRegister.Value);
             }
             else if (DestinationAddress.HasValue)
             {
@@ -65,6 +66,21 @@ namespace BCG16CPUEmulator
                     }
                 }
             }
+
+
+        }
+        public void Move(Size InstructionSize, Register destination, ArgumentMode source)
+        {
+            if (GetSourceAll(source, InstructionSize, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ImmSource.Value);
+                Compare(Register.AL, Register.AL);
+            }
         }
         public void Cmp(ArgumentMode operand1, ArgumentMode operand2)
         {
@@ -85,14 +101,14 @@ namespace BCG16CPUEmulator
                 }
             }
         }
-        public void Push(ArgumentMode source)
+        public void Push(Size size, ArgumentMode source)
         {
             int? ImmSource = null;
             Register? DestinationRegister = null;
-            if (!GetDestinationAll(source, Size._word, out DestinationRegister, out _))
+            if (!GetDestinationAll(source, size, out DestinationRegister, out _))
             {
             }
-            else if (!GetSourceAll(source, Size._word, out ImmSource))
+            else if (!GetSourceAll(source, size, out ImmSource))
             {
             }
 
@@ -155,7 +171,7 @@ namespace BCG16CPUEmulator
 
             if (ImmSource.HasValue)
             {
-                Ret(ImmSource.Value);
+                Return(ImmSource.Value);
             }
         }
         public void Sez(ArgumentMode destination)
@@ -169,31 +185,63 @@ namespace BCG16CPUEmulator
             {
                 SetRegisterValue(DestinationRegister.Value, 0);
             }
-        }
-        public void Jump(ArgumentMode Address)
+            else if (DestinationAddress.HasValue)
+            {
+                m_BUS.m_Memory.WriteByte(DestinationAddress.Value, 0);
+            }
+        }        
+        public void Test(ArgumentMode destination)
         {
-            if (GetSourceAll(Address, Size._word, out int? DestinationAddress))
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
             {
                 throw new NotImplementedException();
             }
 
-            if (DestinationAddress.HasValue)
+            if (DestinationRegister.HasValue)
             {
-                Jump(DestinationAddress.Value);
+                Compare(DestinationRegister.Value, DestinationRegister.Value);
+            }
+            else if (DestinationAddress.HasValue)
+            {
+                byte b = m_BUS.m_Memory.ReadByte(DestinationAddress.Value);
+                Compare(b, b);
             }
         }
-        public void JumpC(ArgumentMode Address, int flag, int value)
+        public void Add(ArgumentMode destination, ArgumentMode source)
         {
-            if (GetDestinationAll(Address, Size._word, out Register? _, out Address? DestinationAddress))
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (GetSourceAll(source, Size._word, out int? ImmSource))
             {
                 throw new NotImplementedException();
             }
 
-            if (GetFlag(flag) == Convert.ToBoolean(value))
+            if (DestinationRegister.HasValue)
             {
-                if (DestinationAddress.HasValue)
+                if (ImmSource.HasValue)
                 {
-                    Jump(DestinationAddress.Value);
+                    SetRegisterValue(DestinationRegister.Value, ALU_Add(DestinationRegister.Value, ImmSource.Value, out _));
+                }
+            }
+        }
+        public void Or(ArgumentMode destination, ArgumentMode source)
+        {
+            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (GetSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_Or(DestinationRegister.Value, ImmSource.Value, out _));
                 }
             }
         }
@@ -221,26 +269,7 @@ namespace BCG16CPUEmulator
                 SetRegisterValue(DestinationRegister.Value, ALU_Sub(DestinationRegister.Value, 1, out _));
             }
         }
-        public void Or(ArgumentMode destination, ArgumentMode source)
-        {
-            if (GetDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
-            {
-                throw new NotImplementedException();
-            }
-            if (GetSourceAll(source, Size._word, out int? ImmSource))
-            {
-                throw new NotImplementedException();
-            }
-
-            if (DestinationRegister.HasValue)
-            {
-                if (ImmSource.HasValue)
-                {
-                    SetRegisterValue(DestinationRegister.Value, ALU_Or(DestinationRegister.Value, ImmSource.Value, out _));
-                }
-            }
-        }
-        public void Outb(ArgumentMode port, ArgumentMode source)
+        public void Outb(Size InstructionSize, ArgumentMode port, ArgumentMode source)
         {
             if (GetSourceAll(port, Size._word, out int? ImmPort))
             {
@@ -274,13 +303,13 @@ namespace BCG16CPUEmulator
                 }
             }
         }
-        public void Inb(ArgumentMode port, ArgumentMode destination)
+        public void Inb(Size InstructionSize, ArgumentMode port, ArgumentMode destination)
         {
-            if (GetSourceAll(port, Size._word, out int? ImmPort))
+            if (GetSourceAll(port, InstructionSize, out int? ImmPort))
             {
                 throw new NotImplementedException();
             }
-            if (GetDestinationAll(destination, Size._word, out Register? DestinationRegister, out Address? DestinationAddress))
+            if (GetDestinationAll(destination, InstructionSize, out Register? DestinationRegister, out Address? DestinationAddress))
             {
                 throw new NotImplementedException();
             }
@@ -305,19 +334,36 @@ namespace BCG16CPUEmulator
                 }
             }
         }
+        public void Jump(ArgumentMode Address)
+        {
+            if (GetDestinationAll(Address, Size._word, out Register? _, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationAddress.HasValue)
+            {
+                Jump(DestinationAddress.Value);
+            }
+        }
+        public void JumpC(ArgumentMode Address, int flag, int value)
+        {
+            if (GetDestinationAll(Address, Size._word, out Register? _, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (GetFlag(flag) == Convert.ToBoolean(value))
+            {
+                if (DestinationAddress.HasValue)
+                {
+                    Jump(DestinationAddress.Value);
+                }
+            }
+        }
         public void Rti()
         {
             Pop(Register.F);
-            Pop(Register.CR1);
-            Pop(Register.CR0);
-
-            Pop(Register.MB);
-
-            Pop(Register.BP);
-            Pop(Register.SP);
-
-            Pop(Register.BF);
-            Pop(Register.AF);
 
             Pop(Register.PC);
 
@@ -325,8 +371,6 @@ namespace BCG16CPUEmulator
             Pop(Register.SS);
             Pop(Register.ES);
             Pop(Register.DS);
-
-            Popr();
         }
         public void Pushr()
         {
@@ -476,11 +520,11 @@ namespace BCG16CPUEmulator
                     result = Register.HL;
                     return true;
                 case ArgumentMode.register_address_HL:
-                    if (type != ArgumentType.Register)
+                    if (type != ArgumentType.Address)
                     {
                         return false;
                     }
-                    result = GetRegisterValue(Register.HL);
+                    result = (Address)GetRegisterValue(Register.HL);
                     return true;
                 case ArgumentMode.BP_Offset_Address:
                     if (type != ArgumentType.Address)
@@ -550,7 +594,7 @@ namespace BCG16CPUEmulator
                         return false;
                     }
                     Register registerAddress = (Register)FetchByte();
-                    result = GetRegisterValue(registerAddress);
+                    result = (Address)GetRegisterValue(registerAddress);
                     return true;
                 case ArgumentMode.near_address:
                     if (type != ArgumentType.Address)
@@ -646,11 +690,11 @@ namespace BCG16CPUEmulator
                     result = Register.HL;
                     return true;
                 case ArgumentMode.register_address_HL:
-                    if (type != ArgumentType.Register)
+                    if (type != ArgumentType.Address)
                     {
                         return false;
                     }
-                    result = GetRegisterValue(Register.HL);
+                    result = (Address)GetRegisterValue(Register.HL);
                     return true;
                 case ArgumentMode.BP_Offset_Address:
                     if (type != ArgumentType.Address)
@@ -687,7 +731,7 @@ namespace BCG16CPUEmulator
             {
                 Address address = (Address)result;
                 DataDestination = result;
-                DestinationAddress = (ushort)address;
+                DestinationAddress = (Address)address;
             }
             else if (GetDestination(destination, ArgumentType.SegmentAddress, out result))
             {
@@ -721,8 +765,8 @@ namespace BCG16CPUEmulator
                         ImmSource = Wresult;
                         break;
                     case ArgumentMode.immediate_tbyte:
-                        int Tresult = (int)result & 0x00FF_FFFF;
-                        ImmSource = Tresult;
+                        uint Tresult = (uint)result & 0x00FF_FFFF;
+                        ImmSource = (int)Tresult;
                         break;
                     case ArgumentMode.immediate_dword:
                         int Dresult = (int)result;

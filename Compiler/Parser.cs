@@ -17,97 +17,123 @@ namespace Compiler
         Token[] m_tokens;
         int m_index = 0;
 
-        const int BYTESIZE = 1;
-        const int WORDSIZE = 2;
-        const int POINTERSIZE = 3;
-        const int DWORDSIZE = 4;
-
-        int parse_size(out bool isSigned, out bool IsString, out int o_size)
+        _Type parse_size()
         {
+            if (IsType() == false)
+            {
+                return null;
+            }
+
+            _Type result = new _Type();
+
             switch (peek().Value.Type)
             {
-                case TokenType._byte:
-                    consume();
-                    isSigned = ISUNSIGNED;
-                    IsString = false;
-                    o_size = BYTESIZE;
-                    return BYTESIZE;
-                case TokenType._sbyte:
-                    consume();
-                    isSigned = ISSIGNED;
-                    IsString = false;
-                    o_size = BYTESIZE;
-                    return BYTESIZE;
                 case TokenType._char:
+                case TokenType.uint8:
                     consume();
-                    isSigned = ISUNSIGNED;
-                    IsString = false;
-                    if (try_consume(TokenType.open_square))
-                    {
-                        int size = int.Parse(try_consume_error(TokenType.int_lit).value);
-                        IsString = true;
-                        try_consume_error(TokenType.close_square);
-                        o_size = size + 1;
-                        return size + 1;
-                    }
-                    o_size = BYTESIZE;
-                    return BYTESIZE;
+                    result.m_IsSigned = ISUNSIGNED;
+                    result.m_IsPointer = false;
+                    result.m_TypeSize = BYTESIZE;
+                    break;
+                case TokenType.int8:
+                    consume();
+                    result.m_IsSigned = ISSIGNED;
+                    result.m_IsPointer = false;
+                    result.m_TypeSize = BYTESIZE;
+                    break;
 
-                case TokenType._ushort or TokenType.size_t:
+                case TokenType.uint16:
                     consume();
-                    isSigned = ISUNSIGNED;
-                    IsString = false;
-                    o_size = WORDSIZE;
-                    return WORDSIZE;
+                    result.m_IsSigned = ISUNSIGNED;
+                    result.m_IsPointer = false;
+                    result.m_TypeSize = WORDSIZE;
+                    break;
+                case TokenType.int16:
+                    consume();
+                    result.m_IsSigned = ISSIGNED;
+                    result.m_IsPointer = false;
+                    result.m_TypeSize = WORDSIZE;
+                    break;
+
+                case TokenType.uint24:
+                    consume();
+                    result.m_IsSigned = ISUNSIGNED;
+                    result.m_IsPointer = false;
+                    result.m_TypeSize = TBYTESIZE;
+                    break;
+
+                case TokenType.uint32:
+                    consume();
+                    result.m_IsSigned = ISUNSIGNED;
+                    result.m_IsPointer = false;
+                    result.m_TypeSize = DWORDSIZE;
+                    break;
+
+                case TokenType._near:
+                    consume();
+                    result = parse_size();
+                    result.m_PointerSize = NEARPOINTERSIZE;
+                    break;
                 case TokenType._short:
                     consume();
-                    isSigned = ISSIGNED;
-                    IsString = false;
-                    o_size = WORDSIZE;
-                    return WORDSIZE;
-
-                case TokenType.pointer:
+                    result = parse_size();
+                    result.m_PointerSize = SHORTPOINTERSIZE;
+                    break;
+                case TokenType._long:
                     consume();
-                    isSigned = ISUNSIGNED;
-                    IsString = false;
-                    o_size = POINTERSIZE;
-                    return POINTERSIZE;
-                case TokenType.tbyte:
+                    result = parse_size();
+                    result.m_PointerSize = LONGPOINTERSIZE;
+                    break;
+                case TokenType._far:
                     consume();
-                    isSigned = ISUNSIGNED;
-                    IsString = false;
-                    o_size = POINTERSIZE;
-                    return POINTERSIZE;
-
-                case TokenType._int:
-                    consume();
-                    isSigned = ISUNSIGNED;
-                    IsString = false;
-                    o_size = DWORDSIZE;
-                    return DWORDSIZE;
-
-                case TokenType._string:
-                    consume();
-                    isSigned = ISUNSIGNED;
-                    IsString = true;
-                    o_size = -2;
-                    return -2;
+                    result = parse_size();
+                    result.m_PointerSize = FARPOINTERSIZE;
+                    break;
 
                 default:
-                    //error_expected(peek(-1).Value, "type");
-                    isSigned = ISUNSIGNED;
-                    IsString = false;
-                    o_size = -1;
-                    return -1;
+                    return null;
             }
-        }
-        _Type parse_size(out bool IsString)
-        {
-            bool isSigned;
-            int o_size;
-            parse_size(out isSigned, out IsString, out o_size);
 
-            return new _Type() { TypeSize = o_size, IsSigned = isSigned };
+            if (peek().HasValue && peek().Value.Type == TokenType.star)
+            {
+                consume();
+                result.m_IsPointer = true;
+                result.m_PointerSize = SHORTPOINTERSIZE;
+            }
+
+            return result;
+        }
+        bool IsType(int offset = 0)
+        {
+            switch (peek(offset).Value.Type)
+            {
+                case TokenType._void:
+                case TokenType._char:
+                case TokenType.uint8:
+                case TokenType.int8:
+                case TokenType.uint16:
+                case TokenType.int16:
+                case TokenType.uint24:
+                case TokenType.uint32:
+                case TokenType.int32:
+                    return true;
+                case TokenType._near:
+                case TokenType._short:
+                case TokenType._long:
+                case TokenType._far:
+                    if (!IsType(1))
+                    {
+                        return false;
+                    }
+
+                    if (peek(2).Value.Type != TokenType.star)
+                    {
+                        error_expected(peek(-1).Value, TokenType.star);
+                        return false;
+                    }
+                    return true;
+            }
+            return false;
         }
         AssignmentOperators parse_assignmentOperator()
         {
@@ -349,17 +375,34 @@ namespace Compiler
             return expr_lhs;
         }
 
-        NodeStmtDeclareVariabel parse_DeclareCountVariabel()
+        NodeScope parse_scope()
+        {
+            if (!try_consume(TokenType.open_curly))
+            {
+                return null;
+            }
+
+            List<NodeStmt> nodeStmts = new List<NodeStmt>();
+            NodeScope scope = new NodeScope();
+            while (!try_consume(TokenType.close_curly))
+            {
+                nodeStmts.Add(Parse_Stmt());
+            }
+            scope.Stmts = nodeStmts.ToArray();
+            return scope;
+        }
+
+        NodeStmtDeclareVariabel parse_DeclareConstVariabel()
         {
             try_consume_error(TokenType._const);
-            parse_size(out bool IsSigned, out bool IsString, out int typesize);
-            NodeStmtDeclareVariabel declareVariabel = parse_DeclareVariabel(IsSigned, IsString, typesize);
+            NodeStmtDeclareVariabel declareVariabel = parse_DeclareVariabel();
 
             declareVariabel.IsConst = true; 
             return declareVariabel;
         }
-        NodeStmtDeclareVariabel parse_DeclareVariabel(bool IsSigned, bool IsString, int typesize)
+        NodeStmtDeclareVariabel parse_DeclareVariabel()
         {
+            _Type _Type = parse_size();
             Token name = try_consume_error(TokenType.ident);
             AssignmentOperators operators = parse_assignmentOperator();
             NodeExpr nodeExpr = null;
@@ -370,11 +413,7 @@ namespace Compiler
                 nodeExpr = new NodeExpr() { var = parse_term() };
             }
             
-            if (typesize == -1)
-            {
-                error_expected(peek(-1).Value, "type");
-            }
-
+            /*
             if (IsString)
             {
                 if (typesize == -2)
@@ -384,7 +423,7 @@ namespace Compiler
                     typesize = nodeTermString.str.value.Length;
                 }
             }
-
+             */
             if (try_consume(TokenType.colon))
             {
                 if (try_consume(TokenType._public))
@@ -392,20 +431,14 @@ namespace Compiler
                     IsPublic = true;
                 }
             }
-
             return new NodeStmtDeclareVariabel()
             {
                 ident = name,
                 _operator = operators,
                 expr = nodeExpr,
-                IsString = IsString,
                 IsPublic = IsPublic,
                 IsConst = false,
-                Type = new _Type()
-                {
-                    IsSigned = IsSigned,
-                    TypeSize = typesize,
-                }
+                Type = _Type
             };
         }
         NodeStmtReAssingnVariabel parse_ReassignVariabel()
@@ -434,30 +467,15 @@ namespace Compiler
         NodeStmtDeclareFunction parse_DeclareFunction()
         {
             try_consume_error(TokenType._void);
+            bool IsPublic = false;
             Token ident = try_consume_error(TokenType.ident);
             List<NodeFunctionArgs> args = new List<NodeFunctionArgs>();
             try_consume_error(TokenType.open_paren);
             while (!try_consume(TokenType.close_paren))
             {
-                bool IsOut;
+                bool IsOut = false;
                 
-                if (try_consume(TokenType._IN_))
-                {
-                    IsOut = false;
-                }
-                else if (try_consume(TokenType._OUT_))
-                {
-                    IsOut = true;
-                }
-                else
-                {
-                    IsOut = false;
-                }
-                _Type _Type = parse_size(out bool IsString);
-                if (IsString)
-                {
-                    throw new Exception("Argument can't be a string");
-                }
+                _Type _Type = parse_size();
                 Token A_Name = try_consume_error(TokenType.ident);
                 
                 args.Add(new NodeFunctionArgs() { name = A_Name, _Type = _Type, IsOut = IsOut});
@@ -467,7 +485,6 @@ namespace Compiler
                 }
             }
 
-            bool IsPublic = false;
             if (try_consume(TokenType.colon))
             {
                 if (try_consume(TokenType._public))
@@ -476,11 +493,14 @@ namespace Compiler
                 }
             }
 
+            NodeScope nodeScope = parse_scope();
+
             return new NodeStmtDeclareFunction()
             {
                 ident = ident,
                 IsPublic = IsPublic,
-                args = args.ToArray()
+                args = args.ToArray(),
+                Scope = nodeScope
             };
         }
         NodeStmtReturn parse_Return()
@@ -549,94 +569,42 @@ namespace Compiler
             };
         }
 
-        void Parse_Stmt(string[] src)
+        NodeStmt Parse_Stmt()
         {
-            NodeStmt nodeStmt = new NodeStmt();
-            nodeStmt.Line = new Token() { line = peek().Value.line, value = src[peek().Value.line] };
-            if (peek().Value.Type == TokenType._void &&
-                peek(1).HasValue && peek(1).Value.Type == TokenType.ident &&
-                peek(2).HasValue && peek(2).Value.Type == TokenType.open_paren)
+            NodeStmt result = new NodeStmt();
+
+            if (!peek().HasValue)
             {
-                nodeStmt.var = parse_DeclareFunction();
-                m_Stmts.Add(nodeStmt);
-                return;
+                return null;
             }
-            else if (peek().Value.Type == TokenType.end &&
-                peek(1).HasValue && peek(1).Value.Type == TokenType.ident)
+
+            if (IsType() &&
+              ((peek(1).HasValue && peek(1).Value.Type == TokenType.ident &&
+                peek(2).HasValue && peek(2).Value.Type == TokenType.open_paren) ||
+               (peek(1).HasValue && peek(1).Value.Type == TokenType.star &&
+                peek(2).HasValue && peek(2).Value.Type == TokenType.ident &&
+                peek(3).HasValue && peek(3).Value.Type == TokenType.open_paren) ||
+               (peek(1).HasValue && peek(1).Value.Type == TokenType.star &&
+                peek(2).HasValue && peek(2).Value.Type == TokenType.ident &&
+                peek(3).HasValue && peek(3).Value.Type == TokenType.open_paren)))
             {
-                nodeStmt.var = parse_EndFunction();
-                m_Stmts.Add(nodeStmt);
-                return;
+                result.var = parse_DeclareFunction();
             }
-            else if (peek().Value.Type == TokenType.ident &&
-                    (peek(1).HasValue && peek(1).Value.Type == TokenType.eq ||
-                     peek(2).HasValue && peek(2).Value.Type == TokenType.eq))
+            else if (IsType() &&
+               ((peek(1).HasValue && peek(1).Value.Type == TokenType.ident &&
+                peek(2).HasValue && peek(2).Value.Type == TokenType.eq) ||
+
+               (peek(1).HasValue && peek(1).Value.Type == TokenType.star &&
+                peek(2).HasValue && peek(2).Value.Type == TokenType.ident &&
+                peek(3).HasValue && peek(3).Value.Type == TokenType.eq) ||
+
+               (peek(2).HasValue && peek(2).Value.Type == TokenType.star &&
+                peek(3).HasValue && peek(3).Value.Type == TokenType.ident &&
+                peek(4).HasValue && peek(4).Value.Type == TokenType.eq)))
             {
-                nodeStmt.var = parse_ReassignVariabel();
-                m_Stmts.Add(nodeStmt);
-                return;
+                result.var = parse_DeclareVariabel();
             }
-            else if (parse_size(out bool IsSigned, out bool IsString, out int o_size) != -1 &&
-                     peek().HasValue && peek().Value.Type == TokenType.ident)
-            {
-                nodeStmt.var = parse_DeclareVariabel(IsSigned, IsString, o_size);
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
-            else if (peek().Value.Type == TokenType._return)
-            {
-                nodeStmt.var = parse_Return();
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
-            else if (peek().Value.Type == TokenType._const &&
-                     peek(2).HasValue && peek(2).Value.Type == TokenType.ident &&
-                    (peek(3).HasValue && peek(3).Value.Type == TokenType.eq ||
-                     peek(4).HasValue && peek(4).Value.Type == TokenType.eq))
-            {
-                nodeStmt.var = parse_DeclareCountVariabel();
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
-            else if (peek().Value.Type == TokenType.star &&
-                     peek(1).HasValue && peek(1).Value.Type == TokenType.ident &&
-                    (peek(2).HasValue && peek(2).Value.Type == TokenType.eq ||
-                     peek(3).HasValue && peek(3).Value.Type == TokenType.eq))
-            {
-                nodeStmt.var = parse_Pointer();
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
-            else if (peek(1).HasValue && peek(1).Value.Type == TokenType.star &&
-                     peek(2).HasValue && peek(2).Value.Type == TokenType.ident)
-            {
-                nodeStmt.var = parse_Pointer(1);
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
-            else if (peek().Value.Type == TokenType.star &&
-                     peek(1).HasValue && peek(1).Value.Type == TokenType.int_lit &&
-                    (peek(2).HasValue && peek(2).Value.Type == TokenType.eq ||
-                     peek(3).HasValue && peek(3).Value.Type == TokenType.eq))
-            {
-                nodeStmt.var = parse_Pointer(0, TokenType.int_lit);
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
-            else if (peek(1).HasValue && peek(1).Value.Type == TokenType.star &&
-                     peek(2).HasValue && peek(2).Value.Type == TokenType.int_lit)
-            {
-                nodeStmt.var = parse_Pointer(1, TokenType.int_lit);
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
-            else if (peek().Value.Type == TokenType.ident &&
-                     peek(1).HasValue && peek(1).Value.Type == TokenType.open_paren)
-            {
-                nodeStmt.var = parse_CallFunction();
-                m_Stmts.Add(nodeStmt);
-                return;
-            }
+            return result;
         }
 
         public ProgNode Parse_Prog(Token[] tokens, string[] src)
@@ -645,7 +613,11 @@ namespace Compiler
 
             while (peek().HasValue)
             {
-                Parse_Stmt(src);
+                NodeStmt temp = new NodeStmt();
+                temp.Line = new Token() { line = peek().Value.line, value = src[peek().Value.line] };
+                NodeStmt nodeStmt = Parse_Stmt();
+                nodeStmt.Line = temp.Line;
+                m_Stmts.Add(nodeStmt);
             }
 
             return new ProgNode() { stmts = m_Stmts.ToArray() };

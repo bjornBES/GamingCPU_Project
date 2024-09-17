@@ -9,66 +9,104 @@ $BSSSegment = 0x0008            ; in bank 0
 
 L_HEADER:
 
-mov     AL,             CR0
-or      AL,             0x05            ; Enable A20, Use externel registers
-mov     CR0,            AL
+mov         AL,             CR0
+or          AL,             0x05            ; Enable A20, Use externel registers
+mov         CR0,            AL
 
-mov     SS,             word %StackSegment
-mov     SP,             @Start_Stack
+outb        0x02,           0x55
+outb        0x03,           0xAA
+outb        0x04,           0x00
 
-mov     DS,             0x0008
+mov         SS,             word %StackSegment
+mov         SP,             @Start_Stack
 
-push    0x10
-call    [test]
+mov         DS,             0x0008
 
-sez     A
-mov     HL,             @IDT
-int     0x00
+sez         A
+mov         HL,             @IDT
+int         0x00
 
-int     0x10
+inc         AL
+mov         HL,             @IDT_INT13h
+int         0x00
 
-outb    0x00,           0x55
-inb     0x00,           AH
+inc         AL
+mov         HL,             @IDT_INT10h
+int         0x00
 
-cmp     AH,             0x01
-je      [_End]
+sef         0x0200
+
+call        [LoadVideo]
+
+push        0x10
+call        [test]
+
+int         0x10
+
+
+outb        0x00,           0x55
+inb         0x00,           AH
+
+cmp         AH,             0x01
+je          [_End]
 
 halt
 
 _End:
 
-sez     AL
-outb    AL,             0xAA
-inb     0x00,           AL
+sez         AL
+outb        AL,             0xAA
+inb         0x00,           AL
 nop
-cmp     AL,             0x02
-je      [__End]
+cmp         AL,             0x02
+je          [__End]
 
 halt
 
 __End:
 
-push    0x55
+push        0x55
 
-mov     AL,             [Start_Stack]
-mov     [Start_Stack],  AL
-mov     AL,             [0x55]
+mov         AL,             [Start_Stack]
+mov         [Start_Stack],  AL
+mov         AL,             [0x55]
 
-pop     AH
+pop         AH
 
-mov     B,              0xF000
-mov     [S:B],          0x89
+mov         B,              0xF000
+mov         [S:B],          0x89
 
-mov     [S:0xF003],     0xFF
+mov         [S:0xF003],     0xFF
 
-inc     B
-mov     [DS:B],         0x55
+inc         B
+mov         [DS:B],         0x55
 
 halt
-mov     A,              [DS:B]
+
+message:
+.db "This is a test", 0xD, 0xA
+.db "Hello world!", 0x0
+
+LoadVideo:
+pushr
+
+mov         HL,             0x00040000
+mov         B,              @message
+
+LoadVideo_Loop:
+mov         AL,             [B]
+jz          [LoadVideo_Exit]
+mov         byte [HL],      byte AL
+add         HL,             2
+inc         B
+jmp         [LoadVideo_Loop]
+LoadVideo_Exit:
+
+popr
+retz
 
 Loop:
-jmp     [Loop]
+jmp         [Loop]
 
 ;
 ; byte a                [BP - 6]
@@ -76,24 +114,55 @@ jmp     [Loop]
 ; void _test(byte a)
 .org 0x400
 test:
-push    BP
-mov     BP,             SP
-mov     DL,             [BP - 6]
-mov     A,              0x10
-pop     BP
-ret     1
+push        BP
+mov         BP,             SP
+mov         DL,             [BP - 6]
+mov         A,              0x10
+pop         BP
+ret         1
 
 Start:
 
+TestPortFunction:
+mov         A,              0x55
+rti
+
+VideoPortFunction:
+    rti
+
 .org 0x8000
 IDT:
-.dd     far @Function
+.dd         0                       ; 0x0000    IRQ_00
+.dd         far @TestPortFunction   ; 0x0004    IRQ_01
+.dd         0                       ; 0x0008    IRQ_02
+.dd         0                       ; 0x000C    IRQ_03
+.dd         0                       ; 0x0010    IRQ_04
+.dd         0                       ; 0x0014    IRQ_05
+.dd         0                       ; 0x0018    IRQ_06
+.dd         0                       ; 0x001C    IRQ_07
+.dd         0                       ; 0x0020    IRQ_08
+.dd         0                       ; 0x0024    IRQ_09
+.dd         0                       ; 0x0028    IRQ_0A
+.dd         0                       ; 0x002C    IRQ_0B
+.dd         0                       ; 0x0030    IRQ_0C
+.dd         0                       ; 0x0034    IRQ_0D
+.dd         0                       ; 0x0038    IRQ_0E
+.dd         far @VideoPortFunction  ; 0x0040    IRQ_0F
+
+.org 0x8400
+; in INT 0x7
+IDT_INT13h:
+.dd         0                       ; 0x0400
+.org 0x8800
+; in INT 0x10
+IDT_INT10h:
+.dd         far @Function           ; 0x0800
 IDT_END:
 
 .org 0x20000
 
 Function:
-mov     D,              0x50AA
+mov         D,              0x50AA
 rti
 
 ; .includeil "./BIOS/BIOS.acl"

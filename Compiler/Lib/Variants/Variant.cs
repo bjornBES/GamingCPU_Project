@@ -520,6 +520,56 @@ namespace Compiler.Lib.Variants
             }
         }
 
+        public object Get<R>(out R __out)
+        {
+            object _out;
+            if (CheckAndOut<R>(m_V1, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else if (CheckAndOut<R>(m_V2, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else if (CheckAndOut<R>(m_V3, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else if (CheckAndOut<R>(m_V4, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else if (CheckAndOut<R>(m_V5, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else if (CheckAndOut<R>(m_V6, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else if (CheckAndOut<R>(m_V7, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else if (CheckAndOut<R>(m_V8, out _out))
+            {
+                __out = (R)_out;
+                return _out;
+            }
+            else
+            {
+                __out = default(R);
+                return null;
+            }
+        }
+
         bool CheckAndOut<R>(object V, out object _out)
         {
             if (V != null)

@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v7.0": {
       "Compiler/1.0.0": {
+        "dependencies": {
+          "HexLibrary": "1.0.0"
+        },
         "runtime": {
           "Compiler.dll": {}
+        }
+      },
+      "HexLibrary/1.0.0": {
+        "runtime": {
+          "HexLibrary.dll": {}
         }
       }
     }
   },
   "libraries": {
     "Compiler/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HexLibrary/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -3,9 +3,21 @@
 
 BIOS_InterruptPointers:
 
-.times (BIOS_IRQ_InterruptPointers - BIOS_InterruptPointers) - 1024 .db 0
-
 ; this is for the IRQs Interrupts
 BIOS_IRQ_InterruptPointers:
 .dd 0                               ; IRQ0: Unused
-.dd far @FloppyInterruptHandler     ; IRQ1: FDC interrupt function pointer
+.dd 0                               ; IRQ1: Unused
+.dd 0                               ; IRQ2: Unused
+.dd 0                               ; IRQ3: Unused
+.dd 0                               ; IRQ4: Unused
+.dd 0                               ; IRQ5: Unused
+.dd 0                               ; IRQ6: Unused
+.dd 0                               ; IRQ7: Unused
+.dd 0                               ; IRQ8: Unused
+.dd 0                               ; IRQ9: Unused
+.dd 0                               ; IRQA: Unused
+.dd 0                               ; IRQB: Unused
+.dd 0                               ; IRQC: Unused
+.dd 0                               ; IRQD: Unused
+.dd 0                               ; IRQE: Unused
+.dd far @FloppyInterruptHandler     ; IRQF: FDC interrupt function pointer

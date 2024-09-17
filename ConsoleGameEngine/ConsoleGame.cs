@@ -9,7 +9,7 @@
     /// Abstract class to aid in Gamemaking.
     /// Implements an instance of the ConsoleEngine and has Looping methods.
     /// </summary>
-    public abstract class ConsoleGame
+    public class ConsoleGame
     {
         /// <summary> Instance of a ConsoleEngine. </summary>
         public ConsoleEngine Engine { get; private set; }
@@ -28,7 +28,7 @@
         /// <summary> The framerate the engine is trying to run at. </summary>
         public int TargetFramerate { get; set; }
 
-        private bool Running { get; set; }
+        public bool Running { get; set; }
         private Thread gameThread;
 
         private double[] framerateSamples;
@@ -44,18 +44,16 @@
         /// <see cref="FramerateMode"/> <see cref="ConsoleEngine"/>
         public void Construct(int width, int height, int fontW, int fontH, FramerateMode m, Color[] VGAcolors)
         {
-            TargetFramerate = 30;
-
             Engine = new ConsoleEngine(width, height, fontW, fontH, VGAcolors);
             Start();
             StartTime = DateTime.Now;
 
-            if (m == FramerateMode.Unlimited)
-                gameThread = new Thread(new ThreadStart(GameLoopUnlimited));
-            if (m == FramerateMode.MaxFps)
-                gameThread = new Thread(new ThreadStart(GameLoopLocked));
-            Running = true;
-            gameThread.Start();
+            // if (m == FramerateMode.Unlimited)
+            //     gameThread = new Thread(new ThreadStart(GameLoopUnlimited));
+            // if (m == FramerateMode.MaxFps)
+            //     gameThread = new Thread(new ThreadStart(GameLoopLocked));
+            // Running = true;
+            // gameThread.Start();
 
             // gör special checks som ska gå utanför spelloopen
             // om spel-loopen hänger sig ska man fortfarande kunna avsluta
@@ -153,8 +151,11 @@
 
         public void Exit()
         {
-            Engine.Close();
-            Running = false;
+            if (Running)
+            {
+                Engine.Close();
+                Running = false;
+            }
         }
 
         private void CheckForExit()
@@ -166,9 +167,15 @@
         }
 
         /// <summary> Run once on Creating, import Resources here. </summary>
-        public abstract void Start();
+        public virtual void Start()
+        {
+
+        }
         /// <summary> Run every frame before rendering. Do math here. </summary>
-        public abstract void Update();
+        public virtual void Update()
+        {
+
+        }
         /// <summary> Run every frame after updating. Do drawing here. </summary>
         public virtual void Render()
         {

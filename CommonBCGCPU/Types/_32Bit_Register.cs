@@ -55,7 +55,7 @@ namespace CommonBCGCPU.Types
                 }
                 else if (high == true)
                 {
-                    return (ushort)(m_Value & 0xFFFF0000) >> 8;
+                    return (ushort)((m_Value & 0xFFFF0000) >> 16);
                 }
 
                 return 0;
@@ -64,12 +64,10 @@ namespace CommonBCGCPU.Types
             {
                 if (high == false)
                 {
-                    m_Value &= 0xFFFF0000;
-                    m_Value |= value;
+                    m_Value |= (value & 0xFFFF);
                 }
                 else if (high == true)
                 {
-                    m_Value &= 0x0000FFFF;
                     m_Value |= (uint)(value << 16);
                 }
             }

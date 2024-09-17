@@ -103,3 +103,16 @@ Moves the head back to track 0
   - DD00HHHH
   - D = drive
   - H = head
+
+### Seek 0x04
+
+Moves the head to the track
+
+#### Calling
+
+- Send the command (0x04) to the [Data register](#data-register)
+- Send the [Drive number](#drive-number) + Head to the [Data register](#data-register)
+  - DD00HHHH
+  - D = drive
+  - H = head
+- Send the track number (0x0000-0xFFFF) to the [Data register](#data-register)

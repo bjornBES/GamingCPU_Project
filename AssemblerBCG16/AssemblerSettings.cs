@@ -7,12 +7,19 @@ public enum OutputFormats
 }
 public enum CPUType
 {
-    BCG8,
-    BCG16,
-    BCG1680,
-    BCG1684,
-    BCG1880,
-    BCG1884,
+    BC8,
+    BC816,
+    BC80016,
+    BC81680,
+
+    BC16,
+    BC16C0,
+    BC16C0G,
+    BC16C0GX,
+
+    BC24,
+
+    BC32,
 }
 public class AssemblerSettings
 {

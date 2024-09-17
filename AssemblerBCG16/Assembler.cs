@@ -85,6 +85,11 @@ public class Assembler : AssmeblerErrors
 
         Assemble();
 
+        for (int i = 0; i < m_labels.Count; i++)
+        {
+            AddLine($"_REF_ LABEL {m_labels[i].m_Name},{m_labels[i].m_IsGlobal} [{ToHexString(m_labels[i].m_Address)}] {m_labels[i].m_file}", Section.Symbols);
+        }
+
         if (Going)
         {
             m_output.Insert(0, "TEXT HEADER");
@@ -279,7 +284,6 @@ public class Assembler : AssmeblerErrors
         string Instruction = line.Split(' ', 2)[0].ToLower();
         string PreArguments = line.Split(' ', 2).Last();
         string[] Arguments = PreArguments.Split(", ");
-
         string[] output = BuildDirectives(Instruction, Arguments, out int size);
 
         if (output == null)
@@ -295,11 +299,32 @@ public class Assembler : AssmeblerErrors
     }
     private string[] BuildDirectives(string Instruction, string[] Arguments, out int size)
     {
+        string name;
         string data;
         string SizeAlignment = "";
+        List<string> output = new List<string>();
 
         switch (Instruction)
         {
+            case "export":
+            case "global":
+                name = Arguments[0];
+                if (LabelExists(name))
+                {
+                    int index = GetLabelIndex(name);
+
+                    m_labels[index].m_IsGlobal = true;
+                }
+                else
+                {
+                    m_labels.Add(new Label()
+                    {
+                        m_file = m_file,
+                        m_Name = name,
+                        m_IsGlobal = true
+                    });
+                }
+                break;
             case "newfile":
                 m_file = Arguments[0];
                 if (m_DoneFiles.Contains(m_file))
@@ -388,7 +413,7 @@ public class Assembler : AssmeblerErrors
 
                         m_labels[^1].m_HaveStruct = true;
                         m_labels[^1].m_Struct = result;
-                        
+
                         m_pc += result.m_Size;
                     }
                     else if (parseTerm(Arguments[0], "word", out split, out _, out outputExpr))
@@ -482,25 +507,20 @@ public class Assembler : AssmeblerErrors
                 {
                     if (parseTerm(Arguments[i], "byte", out bool DoSplit, out ArgumentMode mode, out data))
                     {
-                        string[] output;
 
                         if (DoSplit)
                         {
-                            output = SplitHexString(data);
+                            output.AddRange(SplitHexString(data));
                         }
                         else
                         {
-                            output = new string[]
-                            {
-                                data
-                            };
+                            output.Add(data);
                         }
 
-                        size = 1;
-                        return output;
                     }
                 }
-                break;
+                size = 1;
+                return output.ToArray();
 
             case "dw":
             case "ushort":
@@ -510,25 +530,20 @@ public class Assembler : AssmeblerErrors
                 {
                     if (parseTerm(Arguments[i], "word", out bool DoSplit, out ArgumentMode mode, out data))
                     {
-                        string[] output;
 
                         if (DoSplit)
                         {
-                            output = SplitHexString(data, 2);
+                            output.AddRange(SplitHexString(data));
                         }
                         else
                         {
-                            output = new string[]
-                            {
-                                data
-                            };
+                            output.Add(data);
                         }
 
-                        size = 2;
-                        return output;
                     }
                 }
-                break;
+                size = 2;
+                return output.ToArray();
 
             case "dt":
             case "tbyte":
@@ -536,25 +551,20 @@ public class Assembler : AssmeblerErrors
                 {
                     if (parseTerm(Arguments[i], "tbyte", out bool DoSplit, out ArgumentMode mode, out data))
                     {
-                        string[] output;
 
                         if (DoSplit)
                         {
-                            output = SplitHexString(data, 3);
+                            output.AddRange(SplitHexString(data));
                         }
                         else
                         {
-                            output = new string[]
-                            {
-                                data
-                            };
+                            output.Add(data);
                         }
 
-                        size = 3;
-                        return output;
                     }
                 }
-                break;
+                size = 3;
+                return output.ToArray();
 
             case "dd":
             case "int":
@@ -563,28 +573,20 @@ public class Assembler : AssmeblerErrors
                 {
                     if (parseTerm(Arguments[i], "dword", out bool DoSplit, out ArgumentMode mode, out data))
                     {
-                        string[] output;
 
                         if (DoSplit)
                         {
-                            output = SplitHexString(data, 4);
+                            output.AddRange(SplitHexString(data));
                         }
                         else
                         {
-                            output = new string[]
-                            {
-                                data,
-                                "",
-                                "",
-                                "",
-                            };
+                            output.Add(data);
                         }
 
-                        size = 4;
-                        return output;
                     }
                 }
-                break;
+                size = 4;
+                return output.ToArray();
             case "dq":
             case "long":
             case "qword":
@@ -592,28 +594,23 @@ public class Assembler : AssmeblerErrors
                 {
                     if (parseTerm(Arguments[i], "qword", out bool DoSplit, out ArgumentMode mode, out data))
                     {
-                        string[] output;
 
                         if (DoSplit)
                         {
-                            output = SplitHexString(data, 8);
+                            output.AddRange(SplitHexString(data));
                         }
                         else
                         {
-                            output = new string[]
-                            {
-                                data
-                            };
+                            output.Add(data);
                         }
 
-                        size = 8;
-                        return output;
                     }
                 }
-                break;
+                size = 8;
+                return output.ToArray();
 
             case "struct":
-                string name = Arguments[0];
+                name = Arguments[0];
                 DoStruct(name);
                 break;
             case "EndStruct":
@@ -731,30 +728,31 @@ public class Assembler : AssmeblerErrors
 
     void MakeLabel()
     {
-        bool IsGlobal = m_Src[lineNumber].ToLower().Contains(".global");
+        string name = m_Src[lineNumber].Trim(':');
 
-        string name = m_Src[lineNumber].Replace(".global ", "").Trim(':');
-        m_labels.ForEach(label =>
+        if (LabelExists(name))
         {
-            if (label.m_Name == name)
+            int index = GetLabelIndex(name);
+
+            AddLine($"_REF_ LABEL {name} [{HexPC()}] {m_file}");
+            m_labels[index].m_Address = m_pc;
+        }
+        else
+        {
+            AddLine($"_REF_ LABEL {name} [{HexPC()}] {m_file}");
+            m_labels.Add(new Label()
             {
-                return;
-            }
-        });
-
-        AddLine($"_REF_ LABEL {name},{IsGlobal} [{HexPC()}] {m_file}", Section.Symbols);
-        AddLine($"_REF_ LABEL {name},{IsGlobal} [{HexPC()}] {m_file}");
-
-        m_labels.Add(new Label()
-        {
-            m_Address = m_pc,
-            m_Name = name
-        });
+                m_Name = name,
+                m_file = m_file,
+                m_IsGlobal = false,
+                m_Address = m_pc,
+            });
+        }
 
         //AddLine($"_REF_ LABEL {name},{IsGlobal}");
         return;
     }
-    bool IsLabel(string name, out Label result)
+    bool GetLabel(string name, out Label result)
     {
         for (int i = 0; i < m_labels.Count; i++)
         {
@@ -765,6 +763,28 @@ public class Assembler : AssmeblerErrors
             }
         }
         result = null;
+        return false;
+    }
+    int GetLabelIndex(string name)
+    {
+        for (int i = 0; i < m_labels.Count; i++)
+        {
+            if (name == m_labels[i].m_Name)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+    bool LabelExists(string name)
+    {
+        for (int i = 0; i < m_labels.Count; i++)
+        {
+            if (m_labels[i].m_Name == name)
+            {
+                return true;
+            }
+        }
         return false;
     }
     bool IsVariabel(string name, out Variable result)
@@ -880,9 +900,6 @@ public class Assembler : AssmeblerErrors
                     case ArgumentMode.immediate_dword:
                         SPX_ref += 4;
                         break;
-                    case ArgumentMode.immediate_qword:
-                        SPX_ref += 8;
-                        break;
                     case ArgumentMode.immediate_float:
                         SPX_ref += 4;
                         break;
@@ -903,8 +920,8 @@ public class Assembler : AssmeblerErrors
 
     private void ParseArgument(ref Instruction instruction, string[] Arguments, ref List<string> InstrutionBytes, int startingIndex = 0, bool DoWrite = true)
     {
-        string Argument1 = "FF";
-        string Argument2 = "FF";
+        string Argument1 = "\0";
+        string Argument2 = "\0";
         List<string> argumrntBuffer = new List<string>();
 
         string SizeAlignment = "";
@@ -943,24 +960,26 @@ public class Assembler : AssmeblerErrors
 
             string expr = parseTerm(arg, ref SizeAlignment, out bool DoSplit, out ArgumentMode mode);
 
+            ArgumentMode? OutputMode = null;
+
+            int OldargumrntBufferSize = argumrntBuffer.Count;
+
             switch (mode)
             {
                 case ArgumentMode.immediate_byte:
                 case ArgumentMode.immediate_word:
                 case ArgumentMode.immediate_tbyte:
                 case ArgumentMode.immediate_dword:
-                case ArgumentMode.immediate_qword:
                     if (DoSplit == true)
                     {
                         argumrntBuffer.AddRange(SplitHexString(expr));
                         m_pc += SplitHexString(expr).Length;
-                        SetArgumentMode(ref Argument1, ref Argument2, mode);
                     }
                     else
                     {
-                        SetArgumentMode(ref Argument1, ref Argument2, mode);
                         argumrntBuffer.Add(expr);
                     }
+                        OutputMode = mode;
                     break;
                 case ArgumentMode.register:
                 case ArgumentMode.register_address:
@@ -971,7 +990,10 @@ public class Assembler : AssmeblerErrors
                             RegisterInfo registerInfo = Registers.regs[reg_result];
                             if (registerInfo.m_size == 1)
                             {
-                                SizeAlignment = "byte";
+                                if (mode == ArgumentMode.register)
+                                {
+                                    SizeAlignment = "byte";
+                                }
                                 if (instruction == Instruction.PUSH)
                                 {
                                     SPX_ref++;
@@ -980,7 +1002,10 @@ public class Assembler : AssmeblerErrors
                             }
                             else if (registerInfo.m_size == 2)
                             {
-                                SizeAlignment = "word";
+                                if (mode == ArgumentMode.register)
+                                {
+                                    SizeAlignment = "word";
+                                }
                                 if (instruction == Instruction.PUSH)
                                 {
                                     SPX_ref += 2;
@@ -992,7 +1017,10 @@ public class Assembler : AssmeblerErrors
                             }
                             else if (registerInfo.m_size == 3)
                             {
-                                SizeAlignment = "tbyte";
+                                if (mode == ArgumentMode.register)
+                                {
+                                    SizeAlignment = "tbyte";
+                                }
                                 if (instruction == Instruction.PUSH)
                                 {
                                     SPX_ref += 3;
@@ -1000,7 +1028,10 @@ public class Assembler : AssmeblerErrors
                             }
                             else if (registerInfo.m_size == 4)
                             {
-                                SizeAlignment = "dword";
+                                if (mode == ArgumentMode.register)
+                                {
+                                    SizeAlignment = "dword";
+                                }
                                 if (instruction == Instruction.PUSH)
                                 {
                                     SPX_ref += 4;
@@ -1008,7 +1039,10 @@ public class Assembler : AssmeblerErrors
                             }
                             else if (registerInfo.m_size == 8)
                             {
-                                SizeAlignment = "qword";
+                                if (mode == ArgumentMode.register)
+                                {
+                                    SizeAlignment = "qword";
+                                }
                                 if (instruction == Instruction.PUSH)
                                 {
                                     SPX_ref += 8;
@@ -1032,47 +1066,44 @@ public class Assembler : AssmeblerErrors
                         switch (reg_result)
                         {
                             case Register.AL:
-                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_AL);
+                                OutputMode = ArgumentMode.register_AL;
                                 break;
                             case Register.A:
-                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_A);
+                                OutputMode = ArgumentMode.register_A;
                                 break;
                             case Register.AX:
-                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_AX);
+                                OutputMode = ArgumentMode.register_AX;
                                 break;
                             case Register.HL:
-                                if(mode == ArgumentMode.register_address)
+                                if (mode == ArgumentMode.register_address)
                                 {
-                                    SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_address_HL);
+                                    OutputMode = ArgumentMode.register_address_HL;
                                     break;
                                 }
-                                SetArgumentMode(ref Argument1, ref Argument2, ArgumentMode.register_HL);
-                                break;
-                            case Register.none:
+                                OutputMode = ArgumentMode.register_HL;
                                 break;
                             default:
-                                m_pc++;
-                                SetArgumentMode(ref Argument1, ref Argument2, mode);
-                                argumrntBuffer.Add(GetRegisterHex(reg_result));
+                            case Register.none:
+                                OutputMode = ArgumentMode.register;
                                 break;
                         }
+                        m_pc++;
+                        argumrntBuffer.Add(GetRegisterHex(reg_result));
                     }
                     break;
                 case ArgumentMode.near_address:
                 case ArgumentMode.address:
-                case ArgumentMode.far_address:
                 case ArgumentMode.long_address:
                 case ArgumentMode.relative_address:
                     if (DoSplit)
                     {
                         argumrntBuffer.AddRange(SplitHexString(expr));
-                        SetArgumentMode(ref Argument1, ref Argument2, mode);
                     }
                     else
                     {
-                        SetArgumentMode(ref Argument1, ref Argument2, mode);
                         argumrntBuffer.Add(expr);
                     }
+                                OutputMode = mode;
                     break;
                 case ArgumentMode.immediate_float:
                     break;
@@ -1101,7 +1132,7 @@ public class Assembler : AssmeblerErrors
 
                     argumrntBuffer.Add(GetRegisterHex(register2));
 
-                    SetArgumentMode(ref Argument1, ref Argument2, mode);
+                    OutputMode = mode;
                     break;
                 case ArgumentMode.segment_DS_B:
                     segment = expr.Split(':')[0];
@@ -1117,32 +1148,91 @@ public class Assembler : AssmeblerErrors
                         throw new NotImplementedException();
                     }
 
-                    SetArgumentMode(ref Argument1, ref Argument2, mode);
-                    break;
-                case ArgumentMode.segment_address_immediate:
-                    segment = expr.Split(':')[0];
-                    offset = expr.Split(':')[1];
-
-                    if (!IsRegister(segment, out register1))
-                    {
-                        throw new NotImplementedException();
-                    }
-
-                    m_pc += 1;
-                    m_pc += 2;
-
-                    argumrntBuffer.Add(GetRegisterHex(register1));
-                    argumrntBuffer.AddRange(SplitHexString(offset));
-
-                    SetArgumentMode(ref Argument1, ref Argument2, mode);
-                    break;
-                case ArgumentMode.None:
+                    OutputMode = mode;
                     break;
                 case ArgumentMode.BP_Offset_Address:
                     argumrntBuffer.AddRange(SplitHexString(expr));
-                    SetArgumentMode(ref Argument1, ref Argument2, mode);
+                    OutputMode = mode;
                     break;
                 default:
+                    break;
+            }
+
+            if (OutputMode == null)
+            {
+                continue;
+            }
+
+            switch (instruction)
+            {
+                case Instruction.MOV:
+                    if (OutputMode == ArgumentMode.register_AL && i == 0)
+                    {
+                        instruction = Instruction.MOVRAL;
+                        //argumrntBuffer.RemoveRange(OldargumrntBufferSize, argumrntBuffer.Count - OldargumrntBufferSize);
+                        break;
+                    }
+
+                    SetArgumentMode(ref Argument1, ref Argument2, OutputMode);
+                    break;
+                case Instruction.MOVW:
+                    if (OutputMode == ArgumentMode.register_A && i == 0)
+                    {
+                        instruction = Instruction.MOVWRA;
+                        //argumrntBuffer.RemoveRange(OldargumrntBufferSize, argumrntBuffer.Count - OldargumrntBufferSize);
+                        break;
+                    }
+
+                    SetArgumentMode(ref Argument1, ref Argument2, OutputMode);
+                    break;
+                case Instruction.SEZ:
+                    if (OutputMode == ArgumentMode.register_A && i == 0)
+                    {
+                        instruction = Instruction.SEZRA;
+                        //argumrntBuffer.RemoveRange(OldargumrntBufferSize, argumrntBuffer.Count - OldargumrntBufferSize);
+                        break;
+                    }
+                    else if (OutputMode == ArgumentMode.register_AL && i == 0)
+                    {
+                        instruction = Instruction.SEZRAL;
+                        //argumrntBuffer.RemoveRange(OldargumrntBufferSize, argumrntBuffer.Count - OldargumrntBufferSize);
+                        break;
+                    }
+
+                    SetArgumentMode(ref Argument1, ref Argument2, OutputMode);
+                    break;
+                case Instruction.TEST:
+                    if (OutputMode == ArgumentMode.register_A && i == 0)
+                    {
+                        instruction = Instruction.TESTRA;
+                        //argumrntBuffer.RemoveRange(OldargumrntBufferSize, argumrntBuffer.Count - OldargumrntBufferSize);
+                        break;
+                    }
+                    else if (OutputMode == ArgumentMode.register_AL && i == 0)
+                    {
+                        instruction = Instruction.TESTRAL;
+                        //argumrntBuffer.RemoveRange(OldargumrntBufferSize, argumrntBuffer.Count - OldargumrntBufferSize);
+                        break;
+                    }
+
+                    SetArgumentMode(ref Argument1, ref Argument2, OutputMode);
+                    break;
+                default:
+
+                    switch (OutputMode)
+                    {
+                        case ArgumentMode.register_AL:
+                        case ArgumentMode.register_A:
+                        case ArgumentMode.register_AX:
+                        case ArgumentMode.register_HL:
+                            OutputMode = ArgumentMode.register;
+                            break;
+                        case ArgumentMode.register_address_HL:
+                            OutputMode = ArgumentMode.register_address;
+                            break;
+                    }
+
+                    SetArgumentMode(ref Argument1, ref Argument2, OutputMode);
                     break;
             }
         }
@@ -1184,12 +1274,20 @@ public class Assembler : AssmeblerErrors
                     break;
             }
 
-            InstrutionBytes.Add(Convert.ToString((byte)instruction, 16).PadLeft(2, '0'));
+            int instructionBytes = (ushort)instruction;
+            InstrutionBytes.AddRange(SplitHexString(ToHexString(instructionBytes)));
             m_pc++;
-            InstrutionBytes.Add(Argument1);
             m_pc++;
-            InstrutionBytes.Add(Argument2);
-            m_pc++;
+            if (Argument1 != "\0")
+            {
+                InstrutionBytes.Add(Argument1);
+                m_pc++;
+            }
+            if (Argument2 != "\0")
+            {
+                InstrutionBytes.Add(Argument2);
+                m_pc++;
+            }
             InstrutionBytes.AddRange(argumrntBuffer);
         }
     }
@@ -1208,10 +1306,26 @@ public class Assembler : AssmeblerErrors
         expr = parseTerm(arg, ref SizeAlignment, out split, out mode);
         return expr != null;
     }
+        bool MaskLow = false;
+        bool MaskHigh = false;
     string parseTerm(string arg, ref string SizeAlignment, out bool split, out ArgumentMode mode)
     {
         Register reg_result;
         string expr;
+
+        MaskLow = false;
+        MaskHigh = false;
+
+        if (arg.StartsWith("LOW", StringComparison.OrdinalIgnoreCase))
+        {
+            MaskLow = true;
+            arg = arg.Split(' ', 2)[1];
+        }
+        else if (arg.StartsWith("HIGH", StringComparison.OrdinalIgnoreCase))
+        {
+            MaskHigh = true;
+            arg = arg.Split(' ', 2)[1];
+        }
 
         if (arg.StartsWith("[BP ") && ContainsOperators(arg) && arg.EndsWith(']'))
         {
@@ -1225,6 +1339,27 @@ public class Assembler : AssmeblerErrors
             }
 
             mode = ArgumentMode.BP_Offset_Address;
+
+            short number = Convert.ToInt16(expr, 16);
+
+            number = (short)(Operator == '-' ? -number : number);
+
+            split = true;
+            string hexString = ToHexString(number);
+            return hexString;
+        }
+        else if (arg.StartsWith("[SP ") && ContainsOperators(arg) && arg.EndsWith(']'))
+        {
+            string[] line = arg.Trim('[', ']').Split(' ', 3);
+            char Operator = line[1][0];
+            expr = parseTerm(line[2], "byte", out bool s, out ArgumentMode m);
+
+            if (m > ArgumentMode.immediate_dword)
+            {
+
+            }
+
+            mode = ArgumentMode.SP_Offset_Address;
 
             short number = Convert.ToInt16(expr, 16);
 
@@ -1275,7 +1410,7 @@ public class Assembler : AssmeblerErrors
 
             return expr;
         }
-        else if (arg.StartsWith('\"') && arg.EndsWith('\"'))
+        else if (arg.StartsWith('\"') && arg.Contains('\"'))
         {
             string data = arg.Trim('"');
             byte[] bytes = Encoding.ASCII.GetBytes(data);
@@ -1347,104 +1482,158 @@ public class Assembler : AssmeblerErrors
         }
         else if (arg.StartsWith('@'))
         {
+            string _output;
             split = false;
 
             if (IsFar)
             {
                 mode = ArgumentMode.immediate_dword;
                 string label = arg.Substring(1);
-                return $"FL_{label}";
+
+                _output = $"_FL_{label}";
             }
             else if (IsNear)
             {
                 mode = ArgumentMode.immediate_byte;
                 string label = arg.Substring(1);
-                return $"NL_{label}";
+                _output = $"_NL_{label}";
             }
             else if (IsLong)
             {
                 mode = ArgumentMode.immediate_tbyte;
                 string label = arg.Substring(1);
-                return $"LL_{label}";
+                _output = $"_LL_{label}";
             }
             else
             {
                 mode = ArgumentMode.immediate_word;
                 string label = arg.Substring(1);
-                return $"SL_{label}";
+                _output = $"_SL_{label}";
             }
+
+            if (MaskHigh == true)
+            {
+                _output += ",MH";
+            }
+            else if (MaskLow == true)
+            {
+                _output += ",ML";
+            }
+
+            return _output;
         }
         else if (IsLetter(arg))
         {
+            string _output;
             split = false;
-            if (IsLong)
+
+            if (IsFar)
             {
                 mode = ArgumentMode.long_address;
-                return $"LL_{arg}";
+                _output = $"_FL_{arg}";
             }
             else if (IsNear)
             {
                 mode = ArgumentMode.near_address;
-                return $"_NL_";
+                _output = $"_NL_{arg}";
             }
-            else if (IsFar)
+            else if (IsLong)
             {
-                mode = ArgumentMode.far_address;
-                return $"FL_{arg}";
+                mode = ArgumentMode.long_address;
+                _output = $"_LL_{arg}";
             }
             else
             {
                 mode = ArgumentMode.address;
-                return $"SL_{arg}";
+                _output = $"_SL_{arg}";
             }
+
+            if (MaskHigh == true)
+            {
+                _output += ",MH";
+            }
+            else if (MaskLow == true)
+            {
+                _output += ",ML";
+            }
+
+            return _output;
         }
         else if (arg == "$")
         {
+            string Output = "";
             split = false;
             if (IsLong)
             {
-                mode = ArgumentMode.long_address;
-                return $"_LCA_";
-            }
-            else if (IsNear)
-            {
-                mode = ArgumentMode.near_address;
-                return $"_NCA_";
+                mode = ArgumentMode.immediate_dword;
+                Output = $"_LCA";
             }
             else if (IsFar)
             {
-                mode = ArgumentMode.far_address;
-                return $"_FCA_";
+                mode = ArgumentMode.immediate_tbyte;
+                Output = $"_FCA";
+            }
+            else if (IsNear)
+            {
+                mode = ArgumentMode.immediate_byte;
+                Output = $"_NCA";
             }
             else
             {
-                mode = ArgumentMode.address;
-                return $"_SCA_";
+                mode = ArgumentMode.immediate_word;
+                Output = $"_SCA";
             }
+
+            Output += "_";
+
+            if (MaskHigh == true)
+            {
+                Output += ",MH";
+            }
+            else if (MaskLow == true)
+            {
+                Output += ",ML";
+            }
+
+            return Output;
         }
         else if (arg == "$$")
         {
+            string Output = "";
             split = false;
             if (IsLong)
             {
-                mode = ArgumentMode.long_address;
-                return $"_LCS_";
-            }
-            else if (IsNear)
-            {
-                mode = ArgumentMode.near_address;
-                return $"_NCS_";
+                mode = ArgumentMode.immediate_dword;
+                Output = $"_LCS";
             }
             else if (IsFar)
             {
-                mode = ArgumentMode.far_address;
-                return $"_FCS_";
+                mode = ArgumentMode.immediate_tbyte;
+                Output = $"_FCS";
+            }
+            else if (IsNear)
+            {
+                mode = ArgumentMode.immediate_byte;
+                Output = $"_NCS";
             }
             else
             {
-                mode = ArgumentMode.address;
-                return $"_SCS_";
+                mode = ArgumentMode.immediate_word;
+                Output = $"_SCS";
             }
+
+            Output += "_";
+
+            if (MaskHigh == true)
+            {
+                Output += ",MH";
+            }
+            else if (MaskLow == true)
+            {
+                Output += ",ML";
+            }
+
+            return Output;
         }
         else if (arg.StartsWith('[') && arg.EndsWith("]"))
         {
@@ -1490,13 +1679,22 @@ public class Assembler : AssmeblerErrors
                                 mode = ArgumentMode.immediate_word;
                                 expr = expr.Substring(expr.Length - 4);
                                 break;
-                            case ArgumentMode.None:
-                                throw new Exception("What the fuck");
                             default:
-                                break;
+                                throw new Exception("What the fuck");
                         }
                     }
                     split = true;
+
+                    uint OutputDec = Convert.ToUInt32(expr, 16);
+                    if (MaskHigh == true)
+                    {
+                        OutputDec &= 0xFFFF0000;
+                    }
+                    else if (MaskLow == true)
+                    {
+                        OutputDec &= 0x0000FFFF;
+                    }
+
                     return expr;
                 }
                 else if (IsRegister(arg, out reg_result))
@@ -1507,38 +1705,52 @@ public class Assembler : AssmeblerErrors
                 }
                 else if (arg == "$")
                 {
+                    string Output = "";
                     split = false;
                     if (IsLong)
                     {
                         mode = ArgumentMode.long_address;
-                        return $"_LCA_";
+                        Output = $"_LCA";
                     }
                     else if (IsFar)
                     {
                         mode = ArgumentMode.far_address;
-                        return $"_FCA_";
+                        Output = $"_FCA";
                     }
                     else if (IsNear)
                     {
                         mode = ArgumentMode.near_address;
-                        return $"_NCA_";
+                        Output = $"_NCA";
                     }
                     else
                     {
                         mode = ArgumentMode.address;
-                        return $"_SCA_";
+                        Output = $"_SCA";
                     }
+
+                    Output += "_";
+
+                    if (MaskHigh == true)
+                    {
+                        Output += ",MH";
+                    }
+                    else if (MaskLow == true)
+                    {
+                        Output += ",ML";
+                    }
+
+                    return Output;
                 }
                 else
                 {
                     mode = ArgumentMode.address;
                     split = false;
-                    return $"SL_{arg}";
+                    return $"_SL_{arg}";
                 }
             }
         }
         split = false;
-        mode = ArgumentMode.None;
+        mode = default;
         return null;
     }
 
@@ -1567,12 +1779,6 @@ public class Assembler : AssmeblerErrors
                 mode = ArgumentMode.segment_address;
             }
         }
-        else if (SegmentMode == ArgumentMode.register && OffsetMode <= ArgumentMode.immediate_dword)
-        {
-            AdjustImmediateValue(ref OffsetMode, "word", ref OffsetOutput);
-
-            mode = ArgumentMode.segment_address_immediate;
-        }
         else
         {
             throw new NotImplementedException();
@@ -1581,8 +1787,13 @@ public class Assembler : AssmeblerErrors
         return $"{SegmentOutput}:{OffsetOutput}";
     }
 
-    void SetArgumentMode(ref string arg1, ref string arg2, ArgumentMode mode)
+    void SetArgumentMode(ref string arg1, ref string arg2, ArgumentMode? mode)
     {
+        if (!mode.HasValue)
+        {
+            throw new NotImplementedException();
+        }
+
         switch (mode)
         {
             case ArgumentMode.immediate_byte:
@@ -1599,43 +1810,36 @@ public class Assembler : AssmeblerErrors
             case ArgumentMode.register_address_HL:
 
             case ArgumentMode.segment_address:
-            case ArgumentMode.segment_address_immediate:
             case ArgumentMode.segment_DS_register:
             case ArgumentMode.segment_DS_B:
                 break;
 
             case ArgumentMode.long_address:
             case ArgumentMode.immediate_float:
-                if (CPUType < CPUType.BCG16)
+            case ArgumentMode.register_A:
+                if (CPUType <= CPUType.BC16)
                 {
-                    E_InvalidCPUFeature(CPUType.BCG16);
+                    E_InvalidCPUFeature(CPUType.BC16);
                 }
                 break;
             case ArgumentMode.far_address:
-            case ArgumentMode.immediate_qword:
             case ArgumentMode.register_AX:
-                if (CPUType < CPUType.BCG1684)
+                if (CPUType <= CPUType.BC16C0)
                 {
-                    E_InvalidCPUFeature(CPUType.BCG1684);
-                }
-                break;
-            case ArgumentMode.register_A:
-                if (CPUType < CPUType.BCG16)
-                {
-                    E_InvalidCPUFeature(CPUType.BCG16);
+                    E_InvalidCPUFeature(CPUType.BC16C0);
                 }
                 break;
             default:
                 break;
         }
 
-        if (arg1 == "FF")
+        if (arg1 == "\0")
         {
-            arg1 = GetArgumentMode(mode);
+            arg1 = GetArgumentMode(mode.Value);
         }
-        else if (arg2 == "FF")
+        else if (arg2 == "\0")
         {
-            arg2 = GetArgumentMode(mode);
+            arg2 = GetArgumentMode(mode.Value);
         }
     }
     bool IsRegister(string value, out Register register) => Enum.TryParse(value, true, out register);
@@ -1650,7 +1854,7 @@ public class Assembler : AssmeblerErrors
         string LabelName = layers[0];
         layerIndex++;
 
-        if (IsLabel(LabelName, out Label result))
+        if (GetLabel(LabelName, out Label result))
         {
             if (layers[layerIndex] == "sizeof")
             {
@@ -1778,7 +1982,7 @@ public class Assembler : AssmeblerErrors
         }
 
         split = false;
-        mode = ArgumentMode.None;
+        mode = default;
         return "";
     }
     bool IsMember(string name, Struct _struct, out StructMembers result)
@@ -1865,7 +2069,7 @@ public class Assembler : AssmeblerErrors
                         continue;
                     }
                 case ArgumentMode.immediate_dword:
-                    AdjustSize(SizeAlignment, ref expr, ref Done, ref mode, ArgumentMode.immediate_qword, "dword", 8);
+                    AdjustSize(SizeAlignment, ref expr, ref Done, ref mode, default, "dword", 8);
                     if (Done)
                     {
                         break;
@@ -1874,26 +2078,10 @@ public class Assembler : AssmeblerErrors
                     {
                         continue;
                     }
-                case ArgumentMode.immediate_qword:
-                    if (!(CPUType < CPUType.BCG1884))
-                    {
-                        throw new Exception("What the fuck");
-                    }
-                    AdjustSize(SizeAlignment, ref expr, ref Done, ref mode, ArgumentMode.None, "qword", 16);
-                    if (Done)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        throw new Exception("What the fuck");
-                    }
                 case ArgumentMode.immediate_float:
                     break;
-                case ArgumentMode.None:
-                    throw new Exception("What the fuck");
                 default:
-                    break;
+                    throw new Exception("What the fuck");
             }
         }
     }
@@ -1922,7 +2110,7 @@ public class Assembler : AssmeblerErrors
     {
         if (value == null)
         {
-            mode = ArgumentMode.None;
+            mode = default;
             expr = null;
             return false;
         }
@@ -1948,13 +2136,9 @@ public class Assembler : AssmeblerErrors
                     break;
                 case ArgumentMode.register:
                     break;
-                case ArgumentMode.far_address:
-                    break;
                 case ArgumentMode.long_address:
                     break;
                 case ArgumentMode.immediate_float:
-                    break;
-                case ArgumentMode.None:
                     break;
                 default:
                     break;
@@ -1980,13 +2164,9 @@ public class Assembler : AssmeblerErrors
                     break;
                 case ArgumentMode.register:
                     break;
-                case ArgumentMode.far_address:
-                    break;
                 case ArgumentMode.long_address:
                     break;
                 case ArgumentMode.immediate_float:
-                    break;
-                case ArgumentMode.None:
                     break;
                 default:
                     break;
@@ -2015,11 +2195,8 @@ public class Assembler : AssmeblerErrors
                 case 4:
                     mode = ArgumentMode.immediate_dword;
                     break;
-                case 5:
-                    mode = ArgumentMode.immediate_qword;
-                    break;
                 default:
-                    mode = ArgumentMode.None;
+                    mode = default;
                     break;
             }
 
@@ -2047,7 +2224,7 @@ public class Assembler : AssmeblerErrors
                     mode = ArgumentMode.immediate_dword;
                     break;
                 default:
-                    mode = ArgumentMode.None;
+                    mode = default;
                     break;
             }
 
@@ -2076,7 +2253,7 @@ public class Assembler : AssmeblerErrors
                     mode = ArgumentMode.immediate_dword;
                     break;
                 default:
-                    mode = ArgumentMode.None;
+                    mode = default;
                     break;
             }
 
@@ -2103,7 +2280,7 @@ public class Assembler : AssmeblerErrors
             return true;
         }
 
-        mode = ArgumentMode.None;
+        mode = default;
         expr = null;
         return false;
     }
@@ -2146,7 +2323,7 @@ public class Assembler : AssmeblerErrors
         string[] expr = value.Split(' ');
         string SizeAlignment = "word";
 
-        _mode = ArgumentMode.None;
+        _mode = default;
 
         List<string> tokens = new List<string>();
         for (int i = 0; i < value.Length;)
@@ -2256,7 +2433,7 @@ public class Assembler : AssmeblerErrors
                         break;
                 }
 
-                if (_mode == ArgumentMode.None)
+                if (_mode == default)
                 {
                     _mode = mode;
                 }
@@ -2339,17 +2516,12 @@ public class Assembler : AssmeblerErrors
                         break;
                     case ArgumentMode.segment_address:
                         break;
-                    case ArgumentMode.segment_address_immediate:
-                        break;
                     case ArgumentMode.segment_DS_register:
-                        break;
-                    case ArgumentMode.None:
                         break;
                     case ArgumentMode.immediate_byte:
                     case ArgumentMode.immediate_word:
                     case ArgumentMode.immediate_tbyte:
                     case ArgumentMode.immediate_dword:
-                    case ArgumentMode.immediate_qword:
                         if (!DoSplit)
                         {
                             OutputStack.Push(_exprOut);

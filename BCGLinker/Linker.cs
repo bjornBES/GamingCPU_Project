@@ -257,7 +257,6 @@ namespace BCGLinker
                         case "LABEL":
                             Ident = s_line[2].Split(',');
                             name = Ident[0];
-                            IsGolbal = bool.Parse(Ident[1]);
                             Hex_address = s_line[3].Trim('[', ']').Replace("0x", "");
                             address = Convert.ToInt32(Hex_address, 16);
                             file = s_line[4];
@@ -394,75 +393,9 @@ namespace BCGLinker
 
         bool gen_term(string line, out string[] expr)
         {
-            if (line.StartsWith("SL_") || line.StartsWith("LL_") || line.StartsWith("FL_"))
+            if (line.StartsWith("_S") || line.StartsWith("_L") || line.StartsWith("_F"))
             {
-                string name = line.Replace("FL_", "").Replace("LL_", "").Replace("SL_", "");
-                if (!GetLabel(name, out Label label))
-                {
-                    Console.WriteLine($"LINKER ERROR: {name} not found as symbol");
-                    Console.WriteLine($"{m_CurrFile}:{lineNumber + 1}");
-                }
-
-                string[] address;
-
-                if (line.StartsWith("LL_"))
-                {
-                    address = label.GetAddressLong();
-                }
-                else if (line.StartsWith("FL_"))
-                {
-                    address = label.GetAddressFar();
-                }
-                else
-                {
-                    address = label.GetAddress();
-                }
-
-                expr = address; 
-                return true;
-            }
-            else if (line.StartsWith("_SCA_") || line.StartsWith("_LCA_") || line.StartsWith("_FCA_"))
-            {
-                string[] address;
-
-                int PCValue = m_pc - m_InstrOffset;
-
-                if (line.StartsWith("LL_"))
-                {
-                    address = SplitHexString(Convert.ToString(PCValue, 16), 4);
-                }
-                else if (line.StartsWith("FL_"))
-                {
-                    address = SplitHexString(Convert.ToString(PCValue, 16), 3);
-                }
-                else
-                {
-                    address = SplitHexString(Convert.ToString(PCValue, 16), 2);
-                }
-
-                expr = address;
-                return true;
-            }
-            else if (line.StartsWith("_SCS_") || line.StartsWith("_LCS_") || line.StartsWith("_FCS_"))
-            {
-                string[] address;
-
-                int PCValue = (m_pc - m_InstrOffset) % 0x200;
-
-                if (line.StartsWith("LL_"))
-                {
-                    address = SplitHexString(Convert.ToString(PCValue, 16), 4);
-                }
-                else if (line.StartsWith("FL_"))
-                {
-                    address = SplitHexString(Convert.ToString(PCValue, 16), 3);
-                }
-                else
-                {
-                    address = SplitHexString(Convert.ToString(PCValue, 16), 2);
-                }
-
-                expr = address;
+                expr = DoAddress(line);
                 return true;
             }
             else if (line.StartsWith("I_"))
@@ -539,6 +472,71 @@ namespace BCGLinker
             expr = null;
             return false;
         }
+
+        string[] DoAddress(string line)
+        {
+            string[] Outputaddress;
+            int address = 0;
+
+            string Mask = line.Split(',').Last();
+            line = line.Split(',').First();
+
+            if (line.StartsWith("_SCS_") || line.StartsWith("_LCS_") || line.StartsWith("_FCS_"))
+            {
+                address = (m_pc - m_InstrOffset) % 0x200;
+            }
+            else if (line.StartsWith("_SCA_") || line.StartsWith("_LCA_") || line.StartsWith("_FCA_"))
+            {
+                address = m_pc - m_InstrOffset;
+            }
+            else if (line.StartsWith("_SL_") || line.StartsWith("_LL_") || line.StartsWith("_FL_"))
+            {
+                string name = line.Replace("_FL_", "").Replace("_LL_", "").Replace("_SL_", "");
+                if (!GetLabel(name, out Label label))
+                {
+                    Console.WriteLine($"LINKER ERROR: {name} not found as symbol");
+                    Console.WriteLine($"{m_CurrFile}:{lineNumber + 1}");
+                    Environment.Exit(-1);
+                }
+
+                address = label.m_Address;
+            }
+
+            if (Mask == "MH")
+            {
+                address = (int)(address & 0xFFFF0000) >> 16;
+            }
+
+            if (Mask == "ML")
+            {
+                address = address & 0x0000FFFF;
+            }
+
+            if (line.StartsWith("_N"))
+            {
+                Outputaddress = SplitHexString(Convert.ToString(address, 16), 1);
+            }
+            else if (line.StartsWith("_S"))
+            {
+                Outputaddress = SplitHexString(Convert.ToString(address, 16), 2);
+            }
+            else if (line.StartsWith("_L"))
+            {
+                Outputaddress = SplitHexString(Convert.ToString(address, 16), 3);
+            }
+            else if (line.StartsWith("_F"))
+            {
+                Outputaddress = SplitHexString(Convert.ToString(address, 16), 4);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+
+            return Outputaddress;
+        }
+
         string gen_expr(string binExpr, string binType)
         {
             string[] expr = binExpr.Split(' ', StringSplitOptions.RemoveEmptyEntries).Reverse().ToArray();

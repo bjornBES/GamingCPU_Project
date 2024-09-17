@@ -8,7 +8,7 @@
     "Test Compiler": {
       "commandName": "Project",
       "workingDirectory": "./..",
-      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL -s 0x0 -e -o .\\CPU\\src\\ACL\\CCLOutput.acl"
+      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL -o ./CPU/src/ACL/CCLOutput.acl"
     }
   }
 }

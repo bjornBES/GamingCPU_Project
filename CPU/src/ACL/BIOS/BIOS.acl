@@ -8,24 +8,33 @@ $BootableDiskNumber = 0x55AA
 .global _BIOSStart:
     pushr
 
+    mov     HL,             @BIOS_IRQ_InterruptPointers
+    sez     A
+    int     0x00
+
     sez     SS                                  ; SS = 0
     mov     SP,             @Stack              ; SP = 0x8000
 
-    call    [Initialize]
-
     call    [FindBootDisk]
 
-    mov     B,              @RAM                ; B = @RAM
+    mov     A,              @RAM                ; A = @RAM
 
     mov     C,              @EndOfBIOS
     mov     D,              @BIOSEnd - @EndOfBIOS
 
     ; moving the End of the BIOS into RAM
-    push    B
-    jmp     [MoveToRAM_LOOP]
+    jmp     [MoveToRAM]
 
 ; this function will use the DL register as the disk index
 FindBootDisk:
+
+    mov     DL,             0x0
+    sef     0x0200
+
+FindBootDiskLoop:
+    push    DL                                  ; Drive X
+    call    [Initialize]
+
     push    long @RAM                           ; long uint8_t *data
     push    0x1                                 ; uint8_t sector
     push    0x0                                 ; uint8_t head
@@ -38,11 +47,12 @@ FindBootDisk:
     je      [Exit_FindDiskLoop]
     inc     DL
     cmp     DL,             4
-    jl      [FindBootDisk]
+    jne     [FindBootDiskLoop]
     mov     AL,             'B'
     push    AL
     jmp     [Error_Invalid_BootDisk]
 Exit_FindDiskLoop:
+    clf     0x0200
     mov     [DiskNumber],   DL
     retz
 
@@ -69,14 +79,13 @@ EndOfBIOS:
 
     ; moving the fainal part of the BIOS
 
-    mov     B,              @_BIOSStart         ; B = 0x200
-    push    B
+    mov     A,              @_BIOSStart         ; A = 0x200
+    push    A
 
     mov     C,              @BIOSEnd
     mov     D,              @End - @BIOSEnd
 
-    push    B
-    jmp     [MoveToRAM_LOOP]
+    jmp     [MoveToRAM]
 
 ; this is at offset 0 when ran
 ; this code is the code that exites the BIOS
@@ -92,6 +101,8 @@ BIOSEnd:
     call    [Read_Sector]
 
     popr
+
+    jmp     [RAM]
 
     jmp     [$]
 End:
@@ -110,9 +121,11 @@ StackEnd:
 
 .section TEXT
 
-.times @MoveToRAM_LOOP - $ .db 0
+.times @MoveToRAM - $ .db 0
+MoveToRAM:
+    push    A
 MoveToRAM_LOOP:
-    mov     [B],            byte [C]
+    mov     [A],            byte [C]
     inc     B
     inc     C
     dec     D
@@ -120,9 +133,9 @@ MoveToRAM_LOOP:
     test    D
     jnz     [MoveToRAM_LOOP]
 
-    pop     B
+    pop     A
     ; now we are executing the end of the BIOS
-    jmp     [B]
+    jmp     [A]
 
 .org 0x9000
 RAM:

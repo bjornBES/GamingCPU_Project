@@ -9,9 +9,6 @@ namespace BCG16CPUEmulator
         public _16Bit_Register C = new _16Bit_Register();
         public _16Bit_Register D = new _16Bit_Register();
 
-        public _32Bit_Register ABX = new _32Bit_Register();
-        public _32Bit_Register CDX = new _32Bit_Register();
-
         public _16Bit_Register H = new _16Bit_Register();
         public _16Bit_Register L = new _16Bit_Register();
         public _32Bit_Register HL = new _32Bit_Register();

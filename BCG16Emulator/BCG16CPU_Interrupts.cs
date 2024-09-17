@@ -11,42 +11,43 @@ namespace BCG16CPUEmulator
         {
             switch (routine)
             {
-                case 0x00:
-                    InterruptRoutine00h();
+                case 0x02:
+                    InterruptRoutine02h();
+                    break;
+                case 0x04:
+                    InterruptRoutine04h();
                     break;
                 case 0x10:
-                    InterruptRoutine10h();
+                    InterruptRoutine0Fh();
                     break;
                 default:
                     break;
             }
         }
 
-        public void InterruptRoutine00h()
+        public void InterruptRoutine02h()
         {
-            switch (A[true])
-            {
-                case 0x00: // Load interrupt descriptor table
-                    if ((CR1 & CR1_BiosRom) > 0x0 && A[false] == 0)
-                    {
-                        break;
-                    }
-                    for (int i = 0; i < Memory.InterruptDescriptorTableSize; i++)
-                    {
-                        Address address = HL + i;
-                        byte b = m_BUS.m_Memory.ReadByte(address, MB);
-                        Address IDTAddress = i + (A[false] * 1024);
-                        m_BUS.m_Memory.WriteByte(IDTAddress, 0x11, b);
-                    }
-                    break;
-                default:
-                    break;
-            }
+            Address RoutineAddress = 0x0004;
+            Address ServiceAddress = m_BUS.m_Memory.ReadDWord(RoutineAddress, 0x11);
+
+            PushInterrupt();
+            Jump(ServiceAddress);
         }
-        public void InterruptRoutine10h()
+
+        public void InterruptRoutine04h()
         {
             int Routine = A[true];
-            Address RoutineAddress = 0 + (Routine * 0x4);
+            Address RoutineAddress = 0x0080 + (Routine * 0x4);
+            Address ServiceAddress = m_BUS.m_Memory.ReadDWord(RoutineAddress, 0x11);
+
+            PushInterrupt();
+            Jump(ServiceAddress);
+        }
+
+        public void InterruptRoutine0Fh()
+        {
+            int Routine = A[true];
+            Address RoutineAddress = 0x0400 + (Routine * 0x4);
             Address ServiceAddress = m_BUS.m_Memory.ReadDWord(RoutineAddress, 0x11);
 
             PushInterrupt();

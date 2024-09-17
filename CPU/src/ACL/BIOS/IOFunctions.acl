@@ -1,10 +1,6 @@
 $variabel_segment = 0x000E
 
-$width = 240
-$height = 320
-
-$SRA                = 0x100
-$SRB                = 0x101
+$STR                = 0x100
 $MSR                = 0x102
 
 $DRS                = 0x103
@@ -22,37 +18,23 @@ $DATA               = 0x104
     pushr
     push        DS
     push        ES
-    mov         HL,     [EReg]
-    push        HL
 
     ; getting arguments
     mov         AL,     [BP - 6]            ; loading the char
     mov         AH,     [BP - 7]            ; loading the color
 
     ; the some variabels
-    mov         C,      [Cursorx]           ; loading cursorx into C
-    mov         D,      [Cursory]           ; loading cursory into D
-
-    ; video memory is at 0x0009:8100
+    mov         B,      [Cursorx]           ; loading cursorx into C
+    mov         C,      [Cursory]           ; loading cursory into D
+    mul         C,      %height
+    add         B,      C                   ; X and Y is now a coord
+    ; video memory is at 0x0004:0000
     ; writing to VRAM
-    mov         ES,     %variabel_segment   
-    add         B,      2                   ; now B is 0x3104
-    sez         HL
+    mov         HL,     0x004_0000          ; memory address of VRAM
+    add         HL,     dword B             ; adding the cursorx to the memory address of VRAM
 
-    mov         [EReg], 0x004_0000          ; memory address of VRAM
-    add         [EReg], dword C             ; adding the cursorx to the memory address of VRAM
+    mov         [HL],   A                   ; writing the char data
 
-    mov         HL,     dword D             ; Moving D ito HL
-    mul         HL,     dword %height       ; getting the X crood using cursory
-
-    add         HL,     [EReg]              ; getting the memory address
-
-    mov byte    [HL],   0x10                ; writing the flags
-    mov byte    [HL],   AL                  ; writing the color
-    mov byte    [HL],   AH                  ; writing the char data
-
-    pop         HL
-    mov         [EReg], [HL]
     pop         ES
     pop         DS
     popr
@@ -74,13 +56,15 @@ $DATA               = 0x104
     mov     BP,             SP
     pushr
 
-    mov     AL,             [BP - 13]       ; uint8_t head
+    mov     AL,             [BP - 10]       ; uint8_t head
     push    AL
     mov     A,              [BP - 11]       ; uint16_t Track
     push    A
-    mov     AL,             [BP - 10]       ; uint8_t head
-    push    AL
     mov     AL,             [BP - 9]        ; uint8_t sector
+    push    AL
+    mov     AL,             0x02            ; data length
+    push    AL
+    mov     AL,             [BP - 13]       ; uint8_t drive
     push    AL
 
     call    [Read_Data]

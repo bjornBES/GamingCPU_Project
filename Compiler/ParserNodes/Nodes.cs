@@ -75,20 +75,34 @@ namespace Compiler.ParserNodes
         public Variant<NodeTerm, NodeBinExpr> var;
     }
 
+    public class NodeScope
+    {
+        public NodeStmt[] Stmts;
+    }
+
     public class NodeStmtDeclareFunction
     {
         public Token ident;
         public bool IsPublic;
         public NodeFunctionArgs[] args;
-	}
+        public NodeScope Scope;
+    }
     public class NodeStmtEndFunction
     {
         public Token ident;
     }
     public class _Type
     {
-        public int TypeSize;
-        public bool IsSigned;
+        public bool m_IsPointer;
+        public int m_PointerSize;
+
+        public int m_TypeSize;
+        public bool m_IsSigned;
+
+        public bool m_IsPublic;
+        public bool m_IsGlobal;
+        public bool m_IsLocal;
+        public bool m_IsConst;
     }
     public class NodeStmtPointer
     {
@@ -103,7 +117,6 @@ namespace Compiler.ParserNodes
         public AssignmentOperators _operator;
         public NodeExpr expr;
         public _Type Type;
-        public bool IsString;
         public bool IsConst;
         public bool IsPublic;
     }
@@ -125,7 +138,7 @@ namespace Compiler.ParserNodes
     public class NodeStmt
 	{
         public Token Line;
-        public Variant<NodeStmtCallFunction, NodeStmtPointer, NodeStmtReturn, NodeStmtReAssingnVariabel, NodeStmtDeclareVariabel, NodeStmtEndFunction, NodeStmtDeclareFunction> var;
+        public Variant<NodeStmtCallFunction, NodeStmtPointer, NodeStmtReturn, NodeStmtReAssingnVariabel, NodeStmtDeclareVariabel, NodeStmtEndFunction, NodeStmtDeclareFunction, NodeScope> var;
     }
 	public class ProgNode
 	{

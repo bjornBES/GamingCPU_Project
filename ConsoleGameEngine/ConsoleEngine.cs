@@ -62,19 +62,9 @@
             // This must be done after SetBufferSize, otherwise it throws an IOException
             ConsoleFont.SetFont(stdOutputHandle, (short)fontW, (short)fontH);
 
-            // sets the window and buffer size
-            // the buffer must be set after the window, as it must never be smaller than the screen
-            Console.SetWindowSize(width, height);
-            Console.SetBufferSize(width, height);
-
             ConsoleBuffer = new ConsoleBuffer(width, height);
 
             WindowSize = new Point(width, height);
-
-            if (colorsPalette.Length != 256)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
 
             FontSize = new Point(fontW, fontH);
 
@@ -82,6 +72,11 @@
             for (int y = 0; y < GlyphBuffer.GetLength(1); y++)
                 for (int x = 0; x < GlyphBuffer.GetLength(0); x++)
                     GlyphBuffer[x, y] = new Glyph();
+
+            // sets the window and buffer size
+            // the buffer must be set after the window, as it must never be smaller than the screen
+            Console.SetWindowSize(width, height);
+            Console.SetBufferSize(width, height);
 
             // here we make it so we can have more then 16 colors
             if (NativeMethods.GetConsoleMode(stdOutputHandle, out uint mode))
@@ -130,8 +125,6 @@
         /// <exception cref="ArgumentException"/> <exception cref="ArgumentNullException"/>
         public void SetPalette(Color[] colors)
         {
-            if (colors.Length > 256)
-                throw new ArgumentException("VGA palette only supports 256 colors.");
             Palette = colors ?? throw new ArgumentNullException();
 
             for (int i = 0; i < colors.Length; i++)

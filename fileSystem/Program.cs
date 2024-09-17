@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.SymbolStore;
 using System.IO;
 using System.Text;
 
@@ -6,8 +7,11 @@ namespace filesystem
 {
     class Program
     {
+        public static bool Admin = false;
         static int Main(string[] args)
         {
+            Admin = true;
+
             if (args.Length < 0)
             {
                 Console.WriteLine("on input file");
@@ -37,7 +41,7 @@ namespace filesystem
                 WriteEnable = 1,
             };
 
-            FileSystem fileSystem = new FileSystem();
+            FileSystemBFS01 fileSystem = new FileSystemBFS01();
             fileSystem.FormatDisk(floppyDisk1);
             fileSystem.SaveFile();
 
@@ -52,7 +56,7 @@ namespace filesystem
 
             fileSystem.ReadEntryPage("./Disk/Disk.inf", out byte[] buffer);
 
-            fileSystem.ReadSector(0, 0, 2, out buffer);
+            buffer = fileSystem.ReadDiskSector(0, 0, 2);
 
             fileSystem.SaveFile();
 
@@ -68,10 +72,13 @@ namespace filesystem
     {
         public DiskSize m_DiskSize;
 
+        public bool Is80Track = false;
+
         public char m_DiskLetter;
         public string m_DiskPath;
 
         public byte WriteEnable;
+        public FileSystemType FileSystemFormat = FileSystemType.BFS01;
     }
 
     public enum DiskSize
@@ -92,5 +99,12 @@ namespace filesystem
         /// 1,44 MB Floppy
         /// </summary>
         _F3MB = 0x81,
+    }
+
+    public enum FileSystemType
+    {
+        BFS01,
+        FAT12,
+        FAT16,
     }
 }

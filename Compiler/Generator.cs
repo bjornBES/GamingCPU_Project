@@ -3,14 +3,15 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using static CompilerSettings;
+using static HexLibrary.HexConverter;
 
 public class Generator
 {
     public List<string> m_output = new List<string>();
     public List<string> m_output_rdata = new List<string>();
     public List<string> m_output_bss = new List<string>();
-    public List<string> m_output_Truebss = new List<string>();
     public List<string> m_output_data = new List<string>();
 
     public List<string> m_Strings = new List<string>();
@@ -18,9 +19,6 @@ public class Generator
     List<Function> m_function = new List<Function>();
 
     public int m_stackSize = 0;
-    public int m_ArgsStackSize = 0;
-
-    Token last_Line;
 
     List<Var> m_var = new List<Var>();
 
@@ -48,12 +46,12 @@ public class Generator
     {
         if (expr == null)
             return null;
-
         if (expr.var.Get<NodeTerm>() != null)
         {
             NodeTerm term = (NodeTerm)expr.var.Get<NodeTerm>();
             return gen_term(term);
         }
+        /*
         else if (expr.var.Get<NodeBinExpr>() != null)
         {
             BinExprIndex++;
@@ -64,6 +62,8 @@ public class Generator
             return "ABX";
         }
 
+        return null;
+        */
         return null;
     }
     string gen_term(NodeTerm term)
@@ -77,12 +77,15 @@ public class Generator
             int value = Convert.ToInt32(nodeTermIntLit.int_lit.value);
             if (value >= 0 && value <= 0xFFFF)
             {
-                
                 if (BinExprIndex > 0)
                 {
-                    AddLine($"mov ABX, 0x{Convert.ToString(value, 16)}");
-                    Push("tbyte ABX");
-                    return "ABX";
+                    AddLine($"mov A, 0x{ToHexString(value)}");
+                    Push("A");
+                    return "A";
+                }
+                else if (BinExprIndex == 0)
+                {
+                    return $"0x{ToHexString(value)}";
                 }
 
                 AddLine($"mov AX, 0x{Convert.ToString(value, 16)}");
@@ -97,25 +100,30 @@ public class Generator
             }
             else
             {
-                AddLine($"mov HL, 0x{Convert.ToString(value, 16)}");
                 if (BinExprIndex > 0)
                 {
-                    Push("tbyte HL");
-                    return nodeTermIntLit.int_lit.value;
+                    AddLine($"mov HL, 0x{ToHexString(value)}");
+                    Push("HL");
+                    return "HL";
+                }
+                else if (BinExprIndex == 0)
+                {
+                    return $"0x{ToHexString(value)}";
                 }
 
+                AddLine($"mov HL, 0x{Convert.ToString(value, 16)}");
                 if (!m_DontPushValue && BinExprIndex != 0)
                 {
-                    Push("tbyte HL");
+                    Push("HL");
                 }
                 else
                 {
                     m_DontPushValue = false;
                 }
-                return "HL";
             }
             return nodeTermIntLit.int_lit.value;
         }
+        /*
         else if (term.var.Get<NodeTermIdent>() != null)
         {
             NodeTermIdent nodeTermIdent = (NodeTermIdent)term.var.Get<NodeTermIdent>();
@@ -278,11 +286,13 @@ public class Generator
                 return $"@_{nodeTermPointer.ident.value}";
             }
         }
+        */
 
         return null;
     }
     void gen_binexpr(NodeBinExpr expr)
     {
+        /*
         if (expr.var.Get<NodeBinExprAdd>() != null)
         {
             NodeBinExprAdd exprAdd = (NodeBinExprAdd)expr.var.Get<NodeBinExprAdd>();
@@ -329,6 +339,7 @@ public class Generator
             AddLine("div ABX, HL");
         }
         Push("ABX");
+        */
     }
     _Size GetSize(int size)
     {
@@ -352,6 +363,17 @@ public class Generator
     }
 
     #region Generator Functions
+    void gen_Scope(NodeScope scope)
+    {
+        begin_scope();
+
+        for (int i = 0; i < scope.Stmts.Length; i++)
+        {
+            gen_stmt(scope.Stmts[i]);
+        }
+        AddLine($"", 0);
+        end_scope();
+    }
     void gen_DeclareFunction(NodeStmtDeclareFunction declareFunction)
     {
         string name = declareFunction.ident.value;
@@ -361,7 +383,7 @@ public class Generator
         {
             NodeFunctionArgs nodeFunctionArgs = declareFunction.args[i];
 
-            _Size size = GetSize(nodeFunctionArgs._Type.TypeSize);
+            _Size size = GetSize(nodeFunctionArgs._Type.m_TypeSize);
             switch (size)
             {
                 case _Size._byte:
@@ -371,7 +393,7 @@ public class Generator
                 case _Size._tbyte:
                 case _Size._int:
                 default:
-                argSize += nodeFunctionArgs._Type.TypeSize;
+                argSize += nodeFunctionArgs._Type.m_TypeSize;
                     break;
             }
 
@@ -390,12 +412,24 @@ public class Generator
             AddLine($"_{name}:", 0);
         }
 
-        AddLine($"push bp");
+        Push("BP");
+        AddLine($"mov BP, SP");
         Pushr();
-        begin_scope();
+        gen_Scope(declareFunction.Scope);
+        Popr();
+        Pop("BP");
+        if (ArgumentSize == 0)
+        {
+            AddLine($"retz");
+        }
+        else
+        {
+            AddLine($"ret {ArgumentSize}");
+        }
     }
     void gen_endFunction(NodeStmtEndFunction nodeStmtEndFunction)
     {
+        /*
         if (m_function.Last().m_Name == nodeStmtEndFunction.ident.value)
         {
             if (LastStmt.var.Get<NodeStmtReturn>() != null)
@@ -412,35 +446,31 @@ public class Generator
         {
             throw new NotImplementedException();
         }
+        */
     }
     void gen_newVariable(NodeStmtDeclareVariabel declareVariabel)
     {
-        string name = declareVariabel.ident.value;
-        NodeExpr expr = declareVariabel.expr;
-        AssignmentOperators assignmentOperators = declareVariabel._operator;
-        _Type _Type = declareVariabel.Type;
-
-        bool IsTopScope = m_scopes.Count == 0;
-        if (declareVariabel.IsString)
+        if (declareVariabel.IsConst)
         {
-            NewVariabelRDATA(name, _Type, expr, IsTopScope, declareVariabel);
+            NewVariabelRDATA(declareVariabel);
 
             return;
         }
 
-        if (assignmentOperators == AssignmentOperators.none && expr == null)
+        if (declareVariabel._operator == AssignmentOperators.none && declareVariabel.expr == null)
         {
             // BSS
-            NewVariabelBss(name, _Type, IsTopScope, declareVariabel);
+            NewVariabelBss(declareVariabel);
             return;
         }
         else
         {
-            NewVariabelData(name, _Type, expr, IsTopScope, declareVariabel);
+            NewVariabelData(declareVariabel);
         }
     }
     void gen_ReassignVariable(NodeStmtReAssingnVariabel declareVariabel)
     {
+        /*
         string name = $"_{declareVariabel.ident.value}";
         NodeExpr expr = declareVariabel.expr;
         AssignmentOperators assignmentOperators = declareVariabel._operator;
@@ -508,9 +538,11 @@ public class Generator
                     break;
             }
         }
+        */
     }
     void gen_return(NodeStmtReturn nodeStmtReturn)
     {
+        /*
         object term = gen_expr(nodeStmtReturn.ReturnExpr);
 
         string termHex;
@@ -527,9 +559,11 @@ public class Generator
 
         AddLine($"mov R1, {termHex}");
         AddLine($"jmp [_END_{m_function.Last().m_Name}]");
+        */
     }
     void gen_pointer(NodeStmtPointer nodeStmtPointer)
     {
+        /*
         string name = $"_{nodeStmtPointer.name.value}";
         NodeExpr expr = nodeStmtPointer.Expr;
         AssignmentOperators assignmentOperators = nodeStmtPointer._operator;
@@ -647,9 +681,11 @@ public class Generator
                 AddLine($"mov [{address}], {termHex}");
             }
         }
+        */
     }
     void gen_callFunction(NodeStmtCallFunction nodeStmtCallFunction)
     {
+        /*
         string funcName = $"_{nodeStmtCallFunction.FunctionName.value}";
         if (!GetFunction($"{nodeStmtCallFunction.FunctionName.value}", out Function result))
         {
@@ -701,38 +737,12 @@ public class Generator
         }
         AddLine($"call [{funcName}]");
         //AddLine($"mov AX, R1");
+        */
     }
-    /*
-    void gen_assembly()
-    {
-        last_Line = try_consume_error(TokenType._asm);
-        try_consume_error(TokenType.open_paren);
-        try_consume_error(TokenType.quotation_mark);
-        string asmCode = try_consume_error(TokenType.ident).value;
-        if (asmCode.Contains("dec") && asmCode.Contains('S'))
-        {
-            m_segment_register -= 1;
-        }
-        else if (asmCode.Contains("inc") && asmCode.Contains('S'))
-        {
-            m_segment_register += 1;
-        }
-        if (asmCode.Contains("dec") && asmCode.Contains("SI"))
-        {
-            m_segment_index_register -= 1;
-        }
-        else if (asmCode.Contains("inc") && asmCode.Contains("SI"))
-        {
-            m_segment_index_register += 1;
-        }
-        try_consume_error(TokenType.quotation_mark);
-        try_consume_error(TokenType.close_paren);
-        AddLine($"{asmCode}");
-    }
-    */
     #endregion
     void gen_stmt(NodeStmt nodeStmt)
     {
+        AddLine($"", 0);
         if (nodeStmt.var.Get(out NodeStmtDeclareFunction nodeStmtDeclareFunction) != null)
         {
             gen_DeclareFunction(nodeStmtDeclareFunction);
@@ -761,36 +771,18 @@ public class Generator
         {
             gen_callFunction(stmtCallFunction);
         }
-        /*
-        else if (peek() != null && peek().Type == TokenType.ident && peek(1) != null)
-        {
-            gen_newVariable();
-        }
-        else if (peek() != null && peek().Type == TokenType._asm && peek(1) != null && peek(1).Type == TokenType.open_paren)
-        {
-            gen_assembly();
-        }
-        else if (peek() != null && peek().Type == TokenType._return)
-        {
-            last_Line = try_consume_error(TokenType._return);
-            object term = parse_term(out _);
-
-            AddLine("popr");
-            AddLine($"mov R1, {term}");
-            end_scope();
-            AddLine($"ret {m_function.Last().m_NumOfArguments}");
-        }
-        */
     }
     public void gen_prog(ProgNode progNode)
     {
         AddLine(".section TEXT", 0);
-        AddLine($".org 0x{Convert.ToString(StartOffset, 16)}", 0);
         if (DoEntry)
         {
             AddLine("_START_PROG:", 0);
-            setDataSegmentRegister(0x00EF);
+            setDataSegmentRegister(0x0008);
             AddLine("; WIP");
+            AddLine("mov SS, 0x0001");
+            AddLine("sez SP");
+            AddLine("sez BP");
             //setBank(0x0);
             AddLine("call [_main]");
             AddLine("rts");
@@ -798,22 +790,19 @@ public class Generator
 
         for (int i = 0; i < progNode.stmts.Length; i++)
         {
-            AddLine($"\n_{Convert.ToString(progNode.stmts[i].Line.line, 16).PadLeft(6, '0')}: ; {progNode.stmts[i].Line.value}", 0);
+            AddLine($"{Environment.NewLine}_{Convert.ToString(progNode.stmts[i].Line.line, 16).PadLeft(6, '0')}: ; {progNode.stmts[i].Line.value}", 0);
             gen_stmt(progNode.stmts[i]);
             LastStmt = progNode.stmts[i];
             m_WasInBinExpr = false;
         }
 
-        AddLine("\n.section DATA", 0);
+        AddLine($"{Environment.NewLine}.section DATA", 0);
         m_output.AddRange(m_output_data);
 
-        AddLine("\n.section RDATA", 0);
+        AddLine($"{Environment.NewLine}.section RDATA", 0);
         m_output.AddRange(m_output_rdata);
 
-        AddLine("\n.section BSS", 0);
-        m_output.AddRange(m_output_Truebss);
-
-        AddLine("\n.org 0x0", 0);
+        AddLine($"{Environment.NewLine}.section BSS", 0);
         m_output.AddRange(m_output_bss);
     }
     void AddLine(string line, int taps = 1, Section section = Section.text)
@@ -823,14 +812,11 @@ public class Generator
             case Section.bss:
                 m_output_bss.Add("".PadLeft(taps, '\t') + line);
                 break;
-            case Section.Truebss:
-                m_output_Truebss.Add("".PadLeft(taps, '\t') + line);
-                break;
             case Section.rdata:
                 m_output_rdata.Add(line);
                 break;
             case Section.data:
-                m_output_data.Add(line.Replace(":|:", ":\n\t"));
+                m_output_data.Add(line.Replace(":|:", $":{Environment.NewLine}\t"));
                 break;
             case Section.text:
                 m_output.Add("".PadLeft(taps, '\t') + line);
@@ -839,23 +825,48 @@ public class Generator
                 break;
         }
     }
+    void CheckName(string name)
+    {
+        m_function.ForEach(func =>
+        {
+            if (func.m_Name == name)
+            {
+                // TODO Error
+                Console.WriteLine("Error:Same name Error");
+                Environment.Exit(1);
+            }
+        });
+
+        m_var.ForEach(var =>
+        {
+            if (var.m_Name == name)
+            {
+                Console.WriteLine("Error:Same name Error");
+                // TODO Error
+                Environment.Exit(1);
+            }
+        });
+    }
     void Push(string reg16)
     {
-        AddLine($"push {reg16}\n");
-
+        AddLine($"push {reg16}");
+        m_stackSize++;
     }
     void Pushr()
     {
         AddLine($"pushr");
+        m_stackSize += 6;
     }
     void Pop(string reg16)
     {
         AddLine($"pop {reg16}");
+        m_stackSize--;
 
     }
     void Popr()
     {
         AddLine($"popr");
+        m_stackSize -= 6;
     }
 
     string getSetSegmentRegister(int value)
@@ -927,60 +938,26 @@ public class Generator
         }
         m_DataSegmentRegister = value;
     }
-
-    /*
-    #region Bank Functions
-    void setBank(byte bank)
-    {
-        if (bank == m_bank_loc -1)
-        {
-            AddLine($"dec MB");
-        }
-        else if (bank == m_bank_loc + 1)
-        {
-            AddLine($"inc MB");
-        }
-        else if (bank != m_bank_loc)
-        {
-            AddLine($"mov MB, 0x{Convert.ToString(bank, 16)}");
-        }
-        else
-        {
-            return;
-        }
-        m_bank_loc = bank;
-    }
-    void pushBank()
-    {
-        AddLine($"push MB");
-        m_bank_stack.Push(m_bank_loc);
-    }
-    void popBank()
-    {
-        AddLine($"pop MB");
-        m_bank_loc = m_bank_stack.Pop();
-    }
-    #endregion
-    */
     void begin_scope()
     {
         m_scopes.Push(m_var.Count);
     }
     void end_scope()
     {
-
-        int added = 0;
-        for (int i = m_scopes.First(); i < m_var.Count; i++)
+        int popCount = m_var.Count - m_scopes.Peek();
+        
+        if (popCount != 0)
         {
-            string addr = m_var[i].GetFullAddress();
-            AddLine($"; {m_var[i].m_Name} at {addr}");
-            AddLine($"mov {GetSizeStr(GetSize(m_var[i].m_Size))} [{addr}], 0");
-            added += m_var[i].m_Size;
-            m_VariabelCount -= m_var[i].m_Size;
+            AddLine($"add SP, {popCount * 2}");
         }
 
-        m_ArgsStackSize = 0;
-        m_var.RemoveRange(m_scopes.First(), m_var.Count - m_scopes.First());
+        m_stackSize -= popCount;
+        
+        for (int i = m_scopes.First(); i < m_var.Count; i++)
+        {
+            m_var.RemoveAt(i);
+        }
+
         m_scopes.Pop();
     }
 
@@ -1033,8 +1010,10 @@ public class Generator
         return false;
     }
 
-    void NewVariabelBss(string name, _Type type, bool IsTopScope, NodeStmtDeclareVariabel DeclareVariabel)
+    void NewVariabelBss(NodeStmtDeclareVariabel DeclareVariabel)
     {
+        bool IsTopScope = m_scopes.Count == 0;
+        /*
         _Size size = GetSize(type.TypeSize);
 
         switch (size)
@@ -1107,30 +1086,50 @@ public class Generator
         AddLine($"", 0, section: Section.bss);
 
         m_var.Add(new Var($"_{name}", type, $"_{name}", IsTopScope, DeclareVariabel));
+        */
     }
-    void NewVariabelData(string name, _Type type, NodeExpr expr, bool IsTopScope, NodeStmtDeclareVariabel DeclareVariabel)
+    void NewVariabelData(NodeStmtDeclareVariabel DeclareVariabel)
     {
-        string reference = "";
+        string name = "_" + DeclareVariabel.ident.value;
 
-        if (expr.var.Get(out NodeTerm __out) != null)
+        CheckName(name);
+
+        bool IsTopScope = m_scopes.Count == 0;
+
+        NodeExpr nodeExpr = DeclareVariabel.expr;
+        
+        object pre_term = gen_expr(nodeExpr);
+        string registerTerm = "A";
+        _Type type = DeclareVariabel.Type;
+        _Size size = GetSize(type.m_TypeSize);
+
+        AddLine($"; {name} with {type.m_TypeSize} bytes", section: Section.text);
+
+        Address address = new Address();
+
+        if (IsTopScope == false)
         {
-            if (__out.var.Get(out NodeTermReference termReference) != null)
+            address.m_IsInStack = true;
+            address.m_StackLoc = m_stackSize;
+
+            AddLine($"mov {registerTerm}, {pre_term}");
+            AddLine($"; SP = {m_stackSize * 2}");
+            if (registerTerm == "HL")
             {
-                reference = termReference.reference.value;
+                Push("H");
+                Push("L");
             }
+            else
+            {
+                Push(registerTerm);
+            }
+            AddLine($"; SP = {m_stackSize * 2}");
+
         }
-
-        m_DontPushValue = true;
-        bool DontPushValue = true;
-
-        m_DoAlign = false;
-
-        object term = gen_expr(expr);
-
-        AddLine($"; _{name} with {type.TypeSize} bytes", section: Section.text);
-        _Size size = GetSize(type.TypeSize);
+        m_var.Add(new Var(name, type, address));
 
 
+        /*
         string termHex;
 
         if (long.TryParse(term.ToString(), out long result) || string.IsNullOrWhiteSpace(term.ToString()))
@@ -1205,9 +1204,12 @@ public class Generator
         }
 
         m_VariabelCount += type.TypeSize;
+        */
     }
-    private void NewVariabelRDATA(string name, _Type type, NodeExpr expr, bool isTopScope, NodeStmtDeclareVariabel DeclareVariabel)
+    private void NewVariabelRDATA(NodeStmtDeclareVariabel DeclareVariabel)
     {
+        bool IsTopScope = m_scopes.Count == 0;
+        /*
         object term = gen_expr(expr);
         string address = $"str_{Convert.ToString(m_Strings.Count, 16).PadLeft(4, '0')}";
 
@@ -1233,156 +1235,47 @@ public class Generator
         //m_var.Add(var);
 
         NewVariabelData(name, type, new NodeExpr() { var = new NodeTerm() { var = new NodeTermReference() { reference = new Token() { value = address } } } }, isTopScope, DeclareVariabel);
+        */
     }
     private void NewVariabelLocal(string name, _Type type)
     {
+        /*
         AddLine($"; _{name} with {type.TypeSize} bytes", section: Section.text);
 
         m_var.Add(new Var($"_{name}", type, m_ArgsStackSize, false));
         m_ArgsStackSize += type.TypeSize;
+        */
     }
 }
 public struct Var
 {
     public string m_Name;
+    public Address m_Address;
+    public _Type m_Type;
 
-    public int m_MemoryLoc;
-    public int m_DSValue;
-    public string m_label;
+    public int GetAddress()
+    {
+        if (m_Address.m_IsInStack)
+        {
+            return m_Address.m_StackLoc;
+        }
 
-    public bool m_IsGlobal;
+        return 0;
+    }
 
+    public Var(string name, _Type _Type, Address address)
+    {
+        m_Name = name;
+        m_Type = _Type;
+        m_Address = address;
+    }
+}
+public struct Address
+{
+    public bool m_IsInStack;
+    public int m_StackLoc;
+    
     public int m_MemoryBank;
-
-    public int m_Size;
-    public bool m_IsSigned;
-    public bool m_IsString;
-
-    public bool m_IsPublic;
-    public bool m_IsConst;
-
-    public string m_Reference;
-
-    public int GetMemoryLoc()
-    {
-        return ((m_DSValue << 16) | m_MemoryLoc);
-    }
-    public string GetHexMemoryLoc()
-    {
-        string MemoryLoc = Convert.ToString(m_MemoryLoc, 16);
-        return $"0x{MemoryLoc}";
-    }
-    public string GetFullAddress()
-    {
-        if (m_label != "\0")
-        {
-            return m_label;
-        }
-        else
-        {
-            if (m_DSValue != -1)
-            {
-                return $"DS:{GetHexMemoryLoc()}";
-            }
-            else
-            {
-                return $"{GetHexMemoryLoc()}";
-            }
-        }
-    }
-    public string GetFullAddressRaw()
-    {
-        if (m_label != "\0")
-        {
-            return m_label;
-        }
-        else
-        {
-            if (m_DSValue != -1)
-            {
-                return $"0x{Convert.ToString(GetMemoryLoc(), 16)}";
-            }
-            else
-            {
-                return $"{GetHexMemoryLoc()}";
-            }
-        }
-    }
-
-    public Var(string name, _Type type, ushort memory_loc, ushort DSvalue, bool IsTopScope, NodeStmtDeclareVariabel declareVariabel)
-    {
-        m_Name = name;
-        m_Size = type.TypeSize;
-        m_IsSigned = type.IsSigned;
-        m_MemoryLoc = memory_loc;
-        m_DSValue = DSvalue;
-        m_IsGlobal = IsTopScope;
-        m_label = "\0";
-        m_Reference = "\0";
-        m_IsPublic = declareVariabel.IsPublic;
-        m_IsConst = declareVariabel.IsConst;
-    }
-    public Var(string name, _Type type, string label, bool IsTopScope, NodeStmtDeclareVariabel declareVariabel)
-    {
-        m_Name = name;
-        m_Size = type.TypeSize;
-        m_IsSigned = type.IsSigned;
-        m_label = label;
-        m_IsGlobal = IsTopScope;
-        m_MemoryLoc = -1;
-        m_DSValue = -1;
-        m_Reference = "\0";
-        m_IsPublic = declareVariabel.IsPublic;
-        m_IsConst = declareVariabel.IsConst;
-    }
-
-    public Var(string name, _Type type, ushort memory_loc, ushort DSvalue, bool IsTopScope)
-    {
-        m_Name = name;
-        m_Size = type.TypeSize;
-        m_IsSigned = type.IsSigned;
-        m_MemoryLoc = memory_loc;
-        m_DSValue = DSvalue;
-        m_IsGlobal = IsTopScope;
-        m_label = "\0";
-        m_Reference = "\0";
-    }
-    public Var(string name, _Type type, int ArgStackSize, bool IsTopScope)
-    {
-        m_Name = name;
-        m_Size = type.TypeSize;
-        m_IsSigned = type.IsSigned;
-        m_label = $"(BP + {ArgStackSize})";
-        m_IsGlobal = IsTopScope;
-        m_MemoryLoc = -1;
-        m_DSValue = -1;
-        m_Reference = "\0";
-    }
-    public Var(string name, _Type type, string label, bool IsTopScope)
-    {
-        m_Name = name;
-        m_Size = type.TypeSize;
-        m_IsSigned = type.IsSigned;
-        m_label = label;
-        m_IsGlobal = IsTopScope;
-        m_MemoryLoc = -1;
-        m_DSValue = -1;
-        m_Reference = "\0";
-    }
-
-    public Var(string name, _Type type, ushort memory_loc, ushort DSvalue, bool IsTopScope, NodeStmtDeclareVariabel declareVariabel, string reference) : this(name, type, memory_loc, DSvalue, IsTopScope, declareVariabel)
-    {
-        m_Reference = reference;
-        m_Name = name;
-        m_Size = type.TypeSize;
-        m_IsSigned = type.IsSigned;
-        m_MemoryLoc = memory_loc;
-        m_DSValue = DSvalue;
-        m_IsGlobal = IsTopScope;
-        m_label = "\0";
-        m_IsPublic = declareVariabel.IsPublic;
-        m_IsConst = declareVariabel.IsConst;
-    }
 }
 struct Function
 {
@@ -1393,7 +1286,6 @@ struct Function
 enum Section
 {
     bss,
-    Truebss,
     rdata,
     data,
     text,

@@ -10,12 +10,9 @@
   - [Interrupt descriptor table](#interrupt-descriptor-table)
     - [Layout](#layout)
   - [Date and Time](#date-and-time)
-  - [CPU PINS](#cpu-pins)
   - [INTERRUPTS](#interrupts)
   - [Pipelining](#pipelining)
   - [CACHES](#caches)
-  - [Screen](#screen)
-    - [Writing to the screen](#writing-to-the-screen)
   - [Floating values](#floating-values)
   - [Calling convention](#calling-convention)
     - [Caller](#caller)
@@ -31,7 +28,7 @@
 - Name: BCG1684
 - Data bus: 16/32 bits
 - Clock speed: 20 MHz
-- Address bus: 16 bits to a max of 32 bits
+- Address bus: 16 bits to a max of 24 bits
 
 The BCG-1684 CPU is a 16/32-bit processor designed to reflect the technology and performance characteristics of the DOS era (versions 3.x, 4.x, and potentially 5.x). It aims to compete with the Intel 80286 in terms of raw performance.
 
@@ -78,10 +75,14 @@ U = unused
 - 0x1C: Register AX                       AX
 - 0x1D: Register HL                       HL
 - 0x1E: Register address HL               [HL]
-- 0x1F: BPX offset address                [BPX - number]/[BPX + number]
+- 0x1F: BP relative address               [BP - number]/[BP + number]
 - 0x20: Register BL                       BL
 - 0x21: Register B                        B
 - 0x22: Register BX                       BX
+- 0xF0: Register AF                       AF
+- 0xF1: Register BF                       BF
+- 0xF2: Register CF                       CF
+- 0xF3: Register DF                       DF
 - 0xFF: None
 
 #### Note
@@ -98,10 +99,6 @@ The second word is the Address offset for the routine
 
 ## Date and Time
 
-## CPU PINS
-
-- IRQ: interrupt request
-
 ## INTERRUPTS
 
 Interrupts can be triggered by hardware where the CPU will look into the [Interrupt descriptor table](#interrupt-descriptor-table)(IDT) and jump to the address specified by the IDT.
@@ -117,14 +114,6 @@ The BCG16 can do 3 stage pipelining like this
 |Opertion2  |                   |                     |Fetch instruction      |instruction Decoding
 
 ## CACHES
-
-## Screen
-
-The screen is a 320×240 VGA screen with a 8 bpp
-
-### Writing to the screen
-
-to write to the screen you can use the [INT 0x10 interrupt routine](../interrupts.md#int-0x10-services) or write to the video memory at `0x0098100 - 0x00E3100`
 
 ## Floating values
 
@@ -191,20 +180,19 @@ Protected memory are some regions that the CPU can't read from or write to
 
 ### MEMORY LAYOUT
 
-- Address bus: 16 bits to a max of 32 bits
+- Address bus: 16 bits to a max of 24 bits
 
 |Base Address |Size         |Name         |Is Protected |Description
 |-------------|-------------|-------------|-------------|-
-|`0x0000_0000`|`0x0000_0200`| IO ports    |false        | this is where the Ports is at
+|`0x0000_0000`|`0x0000_0200`| IO ports    |true         | this is where the Ports is at
 |`0x0000_0200`|`0x0000_FE00`| RAM         |false        | RAM in the first segment
 |`0x0001_0200`|`0x0002_8000`| RAM         |false        | RAM
 |`0x0003_8000`|`0x0000_8000`| Char set    |true         | char set
-|`0x0004_0000`|`0x0004_0000`| VRAM        |true         | video ram
+|`0x0004_0000`|`0x0004_0000`| VRAM        |false        | video ram
 |`0x0008_0000`|`0x0008_0000`| RAM Banked  |false        | this is the data/prgram is at but banked
 |`0x0010_0000`|`0x00F0_0000`| RAM         |false        | this is the data/prgram is at
-|`0x0100_0000`|`0x0F00_0000`| RAM         |false        | this is the data/prgram is at
 
-the end is `0x0FFF_FFFF`/`0x1000_0000`
+the end is `0x0FF_FFFF`/`0x100_0000`
 
 ## REGISTERS
 
@@ -214,32 +202,35 @@ the end is `0x0FFF_FFFF`/`0x1000_0000`
 - D:    (CH + DL) 16  bit general purpose register
 
 - AX:             32  bit general purpose register based on A
+  - if Protected mode is enabled
 - BX:             32  bit general purpose register based on B
+  - if Protected mode is enabled
 - CX:             32  bit general purpose register based on C
+  - if Protected mode is enabled
 - DX:             32  bit general purpose register based on D
+  - if Protected mode is enabled
 
 - ABX:  (A + B)   32  bit general purpose register if the CR0 bit 0x04 is 1
 - CDX:  (C + D)   32  bit general purpose register if the CR0 bit 0x04 is 1
 
-- EAB:  (AX + BX) 64  bit general purpose register if the CR0 bit 0x04 is 1
-- ECD:  (CX + DX) 64  bit general purpose register if the CR0 bit 0x04 is 1
+- EAB:  (AX + BX) 64  bit general purpose register if the CR0 bit 0x0200 is 1
+- ECD:  (CX + DX) 64  bit general purpose register if the CR0 bit 0x0200 is 1
 - HL:   (H + L)   32  bit general purpose address register
 
 - DS:             16  bit data segment register
 - ES:             16  bit extra data segment register
-- CS:             16  bit code segment register
 - SS:             16  bit stack segment register
 - S:              16  bit segment register
 
-- PC:             32  bit program counter
+- PC:             24  bit program counter
 
 - AF:             32  bit float register
 - BF:             32  bit float register
 - CF:             32  bit float register
 - DF:             32  bit float register
 
-- EABF: (FA + FB) 64  bit float register if the CR0 bit 0x04 is 1
-- ECDF: (FC + FD) 64  bit float register if the CR0 bit 0x04 is 1
+- EABF: (FA + FB) 64  bit float register if the CR0 bit 0x0200 is 1
+- ECDF: (FC + FD) 64  bit float register if the CR0 bit 0x0200 is 1
 
 - BP:             16  bit Stack register
 - SP:             16  bit Stack register
@@ -253,24 +244,29 @@ the end is `0x0FFF_FFFF`/`0x1000_0000`
 - R4:             16  bit temp register
 
 - MB:             8   bit memory bank register
+  - Starting at 4 bit until 0x00100(Enable extended mode) in CR0 is 1
 
-- CR0:            16   bit control register
-  - 0   0x0001 Enable A20                       enableing 20 bits of address
-  - 1   0x0002
-  - 2   0x0004 Use extended registers
-  - 3   0x0008
-  - 4   0x0010 Enable extended Addresing        enableing 24 bits of address
-  - 5   0x0020
-  - 6   0x0040
-  - 7   0x0080
-  - 8   0x0100 Enable extended mode             enableing 24 bits of data
-  - 9   0x0200
-  - 10  0x0400
-  - 11  0x0800
-  - 12  0x1000
-  - 13  0x2000
-  - 14  0x4000
-  - 15  0x8000 Enable Protected mode            enableing 32 bits of addressing and data
+- CR0:            24   bit control register
+  - 0   0x00001 Enable A20                      enableing 20 bits of address
+  - 1   0x00002
+  - 2   0x00004 Use extended registers
+  - 3   0x00008
+  - 4   0x00010 Enable extended mode            enableing 24 bits of address and data
+  - 5   0x00020
+  - 6   0x00040
+  - 7   0x00080
+  - 8   0x00100
+  - 9   0x00200 Use extended 32 bit registers   enableing the 32 bit registers
+  - 10  0x00400
+  - 11  0x00800
+  - 12  0x01000
+  - 13  0x02000
+  - 14  0x04000
+  - 15  0x08000 Enable Protected mode           enableing 32 bits of data
+  - 16  0x10000
+  - 17  0x20000
+  - 18  0x40000
+  - 19  0x80000 Enable Paging                   enableing memory paging
 
 - CR1:            16   bit control register
   - 0   0x0001 Point to BIOS ROM                *readonly*
@@ -290,20 +286,24 @@ the end is `0x0FFF_FFFF`/`0x1000_0000`
   - 14  0x4000
   - 15  0x8000
 
-- F:              16: bit (F)lags register
-  - 0 0x0001 zero
-  - 1 0x0002 equals
-  - 2 0x0004 signed
-  - 3 0x0008 carry
-  - 4 0x0010 overflow
-  - 5 0x0020 less
-  - 6 0x0040
-  - 7 0x0080
-  - 8 0x0100
-  - 9 0x0200 interrupt enable
-  - 10 0x0400
-  - 11 0x0800
-  - 12 0x1000
-  - 13 0x2000
-  - 14 0x4000
-  - 15 0x8000 HALT
+- F:              20: bit (F)lags register
+  - 0x00001 zero
+  - 0x00002 equals
+  - 0x00004 signed
+  - 0x00008 carry
+  - 0x00010 overflow
+  - 0x00020 less
+  - 0x00040 interrupt enable
+  - 0x00080 HALT
+  - 0x00100
+  - 0x00200
+  - 0x00400 enable virtual BCG8 mode
+  - 0x00800
+  - 0x01000
+  - 0x02000
+  - 0x04000
+  - 0x08000
+  - 0x10000
+  - 0x20000
+  - 0x40000
+  - 0x80000

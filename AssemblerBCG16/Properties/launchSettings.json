@@ -9,6 +9,11 @@
       "commandName": "Project",
       "workingDirectory": "./..",
       "commandLineArgs": "-i ./CPU/src/ACL/BIOS/BIOS.acl -o ./CPU/src/BIOSBin/OBJ/BIOS.o"
+    },
+    "Assemble DOS": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/DOS/dos.acl -o ./CPU/src/Build/dos.o"
     }
   }
 }

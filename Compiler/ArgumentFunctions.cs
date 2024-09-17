@@ -1,31 +1,46 @@
-﻿public class ArgumentFunctions
+﻿public class ArgumentFunctions : CompilerSettings
 {
     public static void GetOutputFile(string[] args, ref int i)
     {
         i++;
-        CompilerSettings.OutputFile = Path.GetFullPath(args[i]);
+        OutputFile = Path.GetFullPath(args[i]);
     }
     public static void GetInputFile(string[] args, ref int i)
     {
         i++;
-        CompilerSettings.InputFile = args[i];
-        CompilerSettings.Files.Add(new FileInfo(Path.GetFullPath(args[i])));
+        InputFile = args[i];
+        Files.Add(new FileInfo(Path.GetFullPath(args[i])));
     }
 
     public static void DoNotEntry(string[] args, ref int i)
     {
-        CompilerSettings.DoEntry = false;
+        DoEntry = false;
     }
     public static void SetStartOffset(string[] args, ref int i)
     {
         i++;
         if (int.TryParse(args[i], out int result))
         {
-            CompilerSettings.StartOffset = result;
+            StartOffset = result;
         }
         else if (args[i].StartsWith("0x"))
         {
-            CompilerSettings.StartOffset = Convert.ToInt32(args[i], 16);
+            StartOffset = Convert.ToInt32(args[i], 16);
+        }
+    }
+    public static void SetCPUType(string[] args, ref int i)
+    {
+        i++;
+
+        string CPUstr = args[i];
+
+        if (Enum.TryParse(CPUstr, true, out CPUType result))
+        {
+            CPUType = result;
+        }
+        else
+        {
+
         }
     }
 }

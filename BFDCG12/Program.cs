@@ -2,7 +2,7 @@
 using filesystem;
 using System;
 
-namespace BFDCG12
+namespace _BFDCG12
 {
     public class Program
     {

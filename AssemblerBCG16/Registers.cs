@@ -4,43 +4,63 @@ using System.Text;
 
 public enum Register
 {
-    A = 0b00_00_0000, AH = 0b00_01_0000, AL = 0b00_10_0000,
-    B = 0b00_00_0001, BH = 0b00_01_0001, BL = 0b00_10_0001,
-    C = 0b00_00_0010, CH = 0b00_01_0010, CL = 0b00_10_0010,
-    D = 0b00_00_0011, DH = 0b00_01_0011, DL = 0b00_10_0011,
+    AX =    0b01_00_0000,
+    A =     0b00_00_0000,
+    AH =    0b00_01_0000,
+    AL =    0b00_10_0000,
+    
+    BX =    0b01_00_0001,
+    B =     0b00_00_0001,
+    BH =    0b00_01_0001,
+    BL =    0b00_10_0001,
+    
+    CX =    0b01_00_0010,
+    C =     0b00_00_0010,
+    CH =    0b00_01_0010,
+    CL =    0b00_10_0010,
+    
+    DX =    0b01_00_0011,
+    D =     0b00_00_0011,
+    DH =    0b00_01_0011,
+    DL =    0b00_10_0011,
 
-    HL = 0b00_00_0100, H = 0b00_01_0100, L = 0b00_10_0100,
-    S = 0b00_00_0101, SS = 0b00_01_0101, DS = 0b00_10_0101, ES = 0b01_10_0101, CS = 0b00_11_0101,
-    PC = 0b00_00_0110,
+    HL =    0b00_00_0100, 
+    H =     0b00_01_0100, 
+    L =     0b00_10_0100,
+    SS =    0b00_01_0101, 
+    DS =    0b00_10_0101, 
+    ES =    0b01_10_0101, 
+    FS =    0b01_10_0101, 
+    CS =    0b00_11_0101,
 
-    AF = 0b00_00_0111, BF = 0b00_01_0111,
-    CF = 0b00_10_0111, DF = 0b00_11_0111,
+    PC =    0b00_00_0110,
 
-    EABF = 0b01_00_0111,
-    ECDF = 0b01_01_0111,
+    AF =    0b00_00_0111, 
+    BF =    0b00_01_0111,
+    CF =    0b00_10_0111, 
+    DF =    0b00_11_0111,
 
-    BPX = 0b00_00_1000, BP = 0b00_01_1000,
-    SPX = 0b00_10_1000, SP = 0b00_11_1000,
+    BPX =   0b00_00_1000, 
+    BP =    0b00_01_1000,
 
-    IL = 0b00_00_1001,
+    SPX =   0b00_10_1000, 
+    SP =    0b00_11_1000,
 
-    R1 = 0b00_00_1010, R2 = 0b00_01_1010, R3 = 0b00_10_1010, R4 = 0b00_11_1010,
+    R1 =    0b00_00_1010, 
+    R2 =    0b00_01_1010, 
+    R3 =    0b00_10_1010, 
+    R4 =    0b00_11_1010,
+    R5 =    0b00_11_1010,
+    R6 =    0b00_11_1010,
+    R7 =    0b00_11_1010,
+    R8 =    0b00_11_1010,
 
-    MB = 0b00_00_1011,
-    CR0 = 0b00_00_1100, CR1 = 0b00_01_1100,
+    MB =    0b00_00_1011,
 
-    ABX = 0b00_11_0000,
-    CDX = 0b00_11_0001,
+    CR0 =   0b00_00_1100, 
+    CR1 =   0b00_01_1100,
 
-    EAB = 0b01_11_0000,
-    ECD = 0b01_11_0001,
-
-    F = 0b00_00_1111, FH = 0b00_01_1111, FL = 0b00_10_1111,
-
-    AX = 0b01_00_0000,
-    BX = 0b01_00_0001,
-    CX = 0b01_00_0010,
-    DX = 0b01_00_0011,
+    F =     0b00_00_1111,
     none
 }
 
@@ -48,68 +68,57 @@ public class Registers
 {
     public static Dictionary<Register, RegisterInfo> regs = new Dictionary<Register, RegisterInfo>()
     {
-        { Register.A,   new RegisterInfo(Register.A, CPUType.BCG8) },
-        { Register.AH,  new RegisterInfo(Register.AH, CPUType.BCG8) },
-        { Register.AL,  new RegisterInfo(Register.AL, CPUType.BCG8) },
-        { Register.B,   new RegisterInfo(Register.B, CPUType.BCG8) },
-        { Register.BH,  new RegisterInfo(Register.BH, CPUType.BCG8) },
-        { Register.BL,  new RegisterInfo(Register.BL, CPUType.BCG8) },
-        { Register.C,   new RegisterInfo(Register.C, CPUType.BCG16) },
-        { Register.CH,  new RegisterInfo(Register.CH, CPUType.BCG8) },
-        { Register.CL,  new RegisterInfo(Register.CL, CPUType.BCG8) },
-        { Register.D,   new RegisterInfo(Register.D, CPUType.BCG16) },
-        { Register.DH,  new RegisterInfo(Register.DH, CPUType.BCG8) },
-        { Register.DL,  new RegisterInfo(Register.DL, CPUType.BCG8) },
+        { Register.A,   new RegisterInfo(Register.A, CPUType.BC8) },
+        { Register.AH,  new RegisterInfo(Register.AH, CPUType.BC8) },
+        { Register.AL,  new RegisterInfo(Register.AL, CPUType.BC8) },
+        { Register.B,   new RegisterInfo(Register.B, CPUType.BC8) },
+        { Register.BH,  new RegisterInfo(Register.BH, CPUType.BC8) },
+        { Register.BL,  new RegisterInfo(Register.BL, CPUType.BC8) },
+        { Register.C,   new RegisterInfo(Register.C, CPUType.BC16) },
+        { Register.CH,  new RegisterInfo(Register.CH, CPUType.BC8) },
+        { Register.CL,  new RegisterInfo(Register.CL, CPUType.BC8) },
+        { Register.D,   new RegisterInfo(Register.D, CPUType.BC16) },
+        { Register.DH,  new RegisterInfo(Register.DH, CPUType.BC8) },
+        { Register.DL,  new RegisterInfo(Register.DL, CPUType.BC8) },
     
-        { Register.AX,  new RegisterInfo(Register.AX, CPUType.BCG1684) },
-        { Register.BX,  new RegisterInfo(Register.BX, CPUType.BCG1684) },
-        { Register.CX,  new RegisterInfo(Register.CX, CPUType.BCG1684) },
-        { Register.DX,  new RegisterInfo(Register.DX, CPUType.BCG1684) },
+        { Register.AX,  new RegisterInfo(Register.AX, CPUType.BC32) },
+        { Register.BX,  new RegisterInfo(Register.BX, CPUType.BC32) },
+        { Register.CX,  new RegisterInfo(Register.CX, CPUType.BC32) },
+        { Register.DX,  new RegisterInfo(Register.DX, CPUType.BC32) },
     
-        { Register.HL,  new RegisterInfo(Register.HL, CPUType.BCG8)},
-        { Register.H,   new RegisterInfo(Register.H, CPUType.BCG8) },
-        { Register.L,   new RegisterInfo(Register.L, CPUType.BCG8) },
+        { Register.HL,  new RegisterInfo(Register.HL, CPUType.BC8)},
+        { Register.H,   new RegisterInfo(Register.H, CPUType.BC8) },
+        { Register.L,   new RegisterInfo(Register.L, CPUType.BC8) },
     
-        { Register.S,   new RegisterInfo(Register.S, CPUType.BCG8) },
-        { Register.SS,  new RegisterInfo(Register.SS, CPUType.BCG16) },
-        { Register.DS,  new RegisterInfo(Register.DS, CPUType.BCG8) },
-        { Register.CS,  new RegisterInfo(Register.CS, CPUType.BCG8) },
-        { Register.ES,  new RegisterInfo(Register.ES, CPUType.BCG8) },
+        { Register.SS,  new RegisterInfo(Register.SS, CPUType.BC16) },
+        { Register.DS,  new RegisterInfo(Register.DS, CPUType.BC8) },
+        { Register.CS,  new RegisterInfo(Register.CS, CPUType.BC8) },
+        { Register.ES,  new RegisterInfo(Register.ES, CPUType.BC8) },
     
-        { Register.EAB, new RegisterInfo(Register.EAB, CPUType.BCG1684) },
-        { Register.ECD, new RegisterInfo(Register.ECD, CPUType.BCG1684) },
+        { Register.PC,  new RegisterInfo(Register.PC, CPUType.BC8) },
     
-        { Register.PC,  new RegisterInfo(Register.PC, CPUType.BCG8) },
+        { Register.AF,  new RegisterInfo(Register.AF, CPUType.BC16) },
+        { Register.BF,  new RegisterInfo(Register.BF, CPUType.BC16) },
+        { Register.CF,  new RegisterInfo(Register.CF, CPUType.BC32) },
+        { Register.DF,  new RegisterInfo(Register.DF, CPUType.BC32) },
     
-        { Register.AF,  new RegisterInfo(Register.AF, CPUType.BCG16) },
-        { Register.BF,  new RegisterInfo(Register.BF, CPUType.BCG16) },
-        { Register.CF,  new RegisterInfo(Register.CF, CPUType.BCG1684) },
-        { Register.DF,  new RegisterInfo(Register.DF, CPUType.BCG1684) },
+        { Register.SP,  new RegisterInfo(Register.SP, CPUType.BC8) },
+        { Register.BP,  new RegisterInfo(Register.BP, CPUType.BC8) },
     
-        { Register.SP,  new RegisterInfo(Register.SP, CPUType.BCG8) },
-        { Register.BP,  new RegisterInfo(Register.BP, CPUType.BCG8) },
+        { Register.SPX, new RegisterInfo(Register.SPX, CPUType.BC32) },
+        { Register.BPX, new RegisterInfo(Register.BPX, CPUType.BC32) },
     
-        { Register.SPX, new RegisterInfo(Register.SPX, CPUType.BCG1684) },
-        { Register.BPX, new RegisterInfo(Register.BPX, CPUType.BCG1684) },
+        { Register.R1,new RegisterInfo(Register.R1, CPUType.BC8) },
+        { Register.R2,new RegisterInfo(Register.R2, CPUType.BC8) },
+        { Register.R3,new RegisterInfo(Register.R3, CPUType.BC8) },
+        { Register.R4,new RegisterInfo(Register.R4, CPUType.BC8) },
     
-        { Register.IL,new RegisterInfo(Register.IL, CPUType.BCG8) },
+        { Register.MB,new RegisterInfo(Register.MB, CPUType.BC8) },
     
-        { Register.R1,new RegisterInfo(Register.R1, CPUType.BCG8) },
-        { Register.R2,new RegisterInfo(Register.R2, CPUType.BCG8) },
-        { Register.R3,new RegisterInfo(Register.R3, CPUType.BCG1680) },
-        { Register.R4,new RegisterInfo(Register.R4, CPUType.BCG1684) },
+        { Register.CR0,new RegisterInfo(Register.CR0, CPUType.BC8) },
+        { Register.CR1,new RegisterInfo(Register.CR1, CPUType.BC16) },
     
-        { Register.MB,new RegisterInfo(Register.MB, CPUType.BCG8) },
-    
-        { Register.CR0,new RegisterInfo(Register.CR0, CPUType.BCG8) },
-        { Register.CR1,new RegisterInfo(Register.CR1, CPUType.BCG16) },
-    
-        { Register.F, new RegisterInfo(Register.F, CPUType.BCG8) },
-        { Register.FH,new RegisterInfo(Register.FH, CPUType.BCG8) },
-        { Register.FL,new RegisterInfo(Register.FL, CPUType.BCG8) },
-    
-        { Register.ABX, new RegisterInfo(Register.ABX, CPUType.BCG16) },
-        { Register.CDX, new RegisterInfo(Register.CDX, CPUType.BCG16) },
+        { Register.F, new RegisterInfo(Register.F, CPUType.BC8) },
     };
 }
 
@@ -158,15 +167,15 @@ public class RegisterInfo
     {
         return AssemblerSettings.CPUType switch
         {
-            CPUType.BCG8 => GetSizeBCG8(),
-            CPUType.BCG16 => GetSizeBCG16(),
-            CPUType.BCG1680 => GetSizeBCG1680(),
-            CPUType.BCG1684 => GetSizeBCG1684(),
+            CPUType.BC8 => GetSizeBC8(),
+            CPUType.BC16 => GetSizeBC16(),
+            CPUType.BC24 => GetSizeBC24(),
+            CPUType.BC32 => GetSizeBC32(),
             _ => -1,
         };
     }
 
-    int GetSizeBCG8()
+    int GetSizeBC8()
     {
         return m_Register switch
         {
@@ -183,25 +192,21 @@ public class RegisterInfo
             Register.HL => 2,
             Register.H => 1,
             Register.L => 1,
-            Register.S => 2,
             Register.DS => 2,
             Register.ES => 2,
             Register.CS => 2,
             Register.PC => 2,
             Register.BP => 1,
             Register.SP => 1,
-            Register.IL => 1,
             Register.R1 => 2,
             Register.R2 => 2,
             Register.MB => 1,
             Register.CR0 => 1,
             Register.F => 2,
-            Register.FH => 1,
-            Register.FL => 1,
             _ => -1,
         };
     }
-    int GetSizeBCG16()
+    int GetSizeBC16()
     {
         return m_Register switch
         {
@@ -221,14 +226,10 @@ public class RegisterInfo
             Register.DH => 1,
             Register.DL => 1,
 
-            Register.ABX => 4,
-            Register.CDX => 4,
-
             Register.HL => 4,
             Register.H => 2,
             Register.L => 2,
 
-            Register.S => 2,
             Register.DS => 2,
             Register.ES => 2,
             Register.CS => 2,
@@ -241,8 +242,6 @@ public class RegisterInfo
 
             Register.BP => 2,
             Register.SP => 2,
-
-            Register.IL => 1,
 
             Register.R1 => 2,
             Register.R2 => 2,
@@ -253,12 +252,10 @@ public class RegisterInfo
             Register.CR1 => 1,
 
             Register.F => 2,
-            Register.FH => 1,
-            Register.FL => 1,
             _ => -1,
         };
     }
-    int GetSizeBCG1680()
+    int GetSizeBC24()
     {
         return m_Register switch
         {
@@ -278,14 +275,10 @@ public class RegisterInfo
             Register.DH => 1,
             Register.DL => 1,
 
-            Register.ABX => 4,
-            Register.CDX => 4,
-
             Register.HL => 4,
             Register.H => 2,
             Register.L => 2,
 
-            Register.S => 2,
             Register.DS => 2,
             Register.ES => 2,
             Register.CS => 2,
@@ -298,8 +291,6 @@ public class RegisterInfo
 
             Register.BP => 2,
             Register.SP => 2,
-
-            Register.IL => 1,
 
             Register.R1 => 2,
             Register.R2 => 2,
@@ -311,12 +302,10 @@ public class RegisterInfo
             Register.CR1 => 2,
 
             Register.F => 2,
-            Register.FH => 1,
-            Register.FL => 1,
             _ => -1,
         };
     }
-    int GetSizeBCG1684()
+    int GetSizeBC32()
     {
         return m_Register switch
         {
@@ -341,17 +330,10 @@ public class RegisterInfo
             Register.CX => 4,
             Register.DX => 4,
 
-            Register.ABX => 4,
-            Register.CDX => 4,
-
-            Register.EAB => 8,
-            Register.ECD => 8,
-
             Register.HL => 4,
             Register.H => 2,
             Register.L => 2,
 
-            Register.S => 2,
             Register.DS => 2,
             Register.ES => 2,
             Register.CS => 2,
@@ -364,16 +346,11 @@ public class RegisterInfo
             Register.CF => 4,
             Register.DF => 4,
 
-            Register.EABF => 8,
-            Register.ECDF => 8,
-
             Register.BP => 2,
             Register.SP => 2,
 
             Register.BPX => 4,
             Register.SPX => 4,
-
-            Register.IL => 2,
 
             Register.R1 => 2,
             Register.R2 => 2,
@@ -386,8 +363,6 @@ public class RegisterInfo
             Register.CR1 => 2,
 
             Register.F => 2,
-            Register.FH => 1,
-            Register.FL => 1,
             _ => -1,
         };
     }

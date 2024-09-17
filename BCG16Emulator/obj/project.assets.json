@@ -27,6 +27,16 @@
           "bin/placeholder/CommonBCGCPU.dll": {}
         }
       },
+      "ConsoleGameEngine/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/ConsoleGameEngine.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ConsoleGameEngine.dll": {}
+        }
+      },
       "filesystem/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -60,6 +70,11 @@
       "path": "../CommonBCGCPU/CommonBCGCPU.csproj",
       "msbuildProject": "../CommonBCGCPU/CommonBCGCPU.csproj"
     },
+    "ConsoleGameEngine/1.0.0": {
+      "type": "project",
+      "path": "../ConsoleGameEngine/ConsoleGameEngine.csproj",
+      "msbuildProject": "../ConsoleGameEngine/ConsoleGameEngine.csproj"
+    },
     "filesystem/1.0.0": {
       "type": "project",
       "path": "../fileSystem/filesystem.csproj",
@@ -75,6 +90,7 @@
     ".NETCoreApp,Version=v3.1": [
       "BFDCG12 >= 1.0.0",
       "CommonBCGCPU >= 1.0.0",
+      "ConsoleGameEngine >= 1.0.0",
       "HexLibrary >= 1.0.0"
     ]
   },
@@ -110,6 +126,9 @@
             },
             "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\CommonBCGCPU\\CommonBCGCPU.csproj": {
               "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\CommonBCGCPU\\CommonBCGCPU.csproj"
+            },
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj"
             },
             "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj": {
               "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj"

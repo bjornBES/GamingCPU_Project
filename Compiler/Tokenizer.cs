@@ -24,6 +24,21 @@
                     consume();
                 }
             }
+            if (peek().Value == '/' && peek(1).HasValue && peek(1).Value == '*')
+            {
+                consume();
+                consume();
+                while (peek().HasValue)
+                {
+                    if (peek().Value == '*' && peek(1).HasValue && peek(1).Value == '/')
+                    {
+                        break;
+                    }
+                    consume();
+                }
+                consume();
+                consume();
+            }
             else if (peek().Value == '\'')
             {
                 consume();
@@ -76,27 +91,31 @@
 
                     case "public":  addToken(TokenType._public);    break;
 
-                    case "char":    addToken(TokenType._char);      break;
-                    case "byte":    addToken(TokenType._byte);      break;
-                    case "sbyte":   addToken(TokenType._sbyte);     break;
-
+                    case "near":    addToken(TokenType._near);      break;
                     case "short":   addToken(TokenType._short);     break;
-                    case "ushort":  addToken(TokenType._ushort);    break;
-                    case "size_t":  addToken(TokenType.size_t);     break;
+                    case "long":    addToken(TokenType._long);      break;
+                    case "far":     addToken(TokenType._far);       break;
                     
-                    case "pointer": addToken(TokenType.pointer);    break;
-                    case "tbyte":   addToken(TokenType.tbyte);      break;
+                    case "void":    addToken(TokenType._void);      break;
+
+                    case "char":    addToken(TokenType._char);      break;
+                    case "uint8":   addToken(TokenType.uint8);      break;
+                    case "int8":    addToken(TokenType.int8);       break;
+
+                    case "uint16":  addToken(TokenType.uint16);     break;
+                    case "int16":   addToken(TokenType.int16);      break;
                     
-                    case "int":     addToken(TokenType._int);       break;
+                    case "tbyte":   addToken(TokenType.uint24);     break;
+                    case "uint24":  addToken(TokenType.uint24);     break;
+                    case "sint24":  addToken(TokenType.int24);      break;
+                    
+                    case "uint32":  addToken(TokenType.uint32);     break;
+                    case "sint32":  addToken(TokenType.int32);      break;
 
                     case "string":  addToken(TokenType._string);    break;
 
                     case "const":   addToken(TokenType._const);     break;
 
-                    case "void":    addToken(TokenType._void);      break;
-
-                    case "in":      addToken(TokenType._IN_);       break;
-                    case "out":     addToken(TokenType._OUT_);      break;
                     default:
                         addToken(TokenType.ident);
                         break;
@@ -162,6 +181,14 @@
                     case ')':
                         consume();
                         addToken(TokenType.close_paren);
+                        break;
+                    case '{':
+                        consume();
+                        addToken(TokenType.open_curly);
+                        break;
+                    case '}':
+                        consume();
+                        addToken(TokenType.close_curly);
                         break;
                     case '[':
                         consume();

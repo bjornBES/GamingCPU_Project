@@ -13,3 +13,6 @@ C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\Compiler\obj\Debug\net7.0
 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\Compiler\obj\Debug\net7.0\Compiler.pdb
 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\Compiler\obj\Debug\net7.0\Compiler.genruntimeconfig.cache
 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\Compiler\obj\Debug\net7.0\ref\Compiler.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\Compiler\bin\Debug\net7.0\HexLibrary.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\Compiler\bin\Debug\net7.0\HexLibrary.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\Compiler\obj\Debug\net7.0\Compiler.csproj.CopyComplete

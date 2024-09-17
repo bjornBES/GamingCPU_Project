@@ -111,6 +111,10 @@ namespace CommonBCGCPU.Types
         {
             return (ushort)(a.m_Value & b);
         }
+        public static ushort operator &(_16Bit_Register a, short b)
+        {
+            return (ushort)(a.m_Value & b);
+        }
 
         public static _16Bit_Register operator ++(_16Bit_Register a)
         {

@@ -4,6 +4,11 @@
       "commandName": "Project",
       "commandLineArgs": "-i ./a.bin",
       "workingDirectory": "../"
+    },
+    "BCG16CPUEmulator BIOS": {
+      "commandName": "Project",
+      "commandLineArgs": "-i ./CPU/src/BIOSBin/Bin/BIOS.bin",
+      "workingDirectory": "../"
     }
   }
 }

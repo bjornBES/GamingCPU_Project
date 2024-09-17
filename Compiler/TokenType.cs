@@ -30,8 +30,6 @@
     none,
 
     int_lit,
-    hex_lit,
-    bin_lit,
     ident,
 
     _struct,
@@ -45,24 +43,32 @@
 
     _public,
 
+    _while,
+
     _char,
-    _byte,
-    _sbyte,
-    _short,
-    _ushort,
-    tbyte,
-    pointer,
-    _int,
-    size_t,
+    uint8,
+    int8,
+    
+    int16,
+    uint16,
+    
+    int24,
+    uint24,
+    
+    int32,
+    uint32,
+
     _string,
     _const,
+
+    _near,
+    _short,
+    _long,
+    _far,
 
     _void,
 
     neg,
     dec,
     inc,
-
-    _IN_,
-    _OUT_
 };

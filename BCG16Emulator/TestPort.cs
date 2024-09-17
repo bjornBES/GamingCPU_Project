@@ -11,35 +11,24 @@ namespace BCG16CPUEmulator
         public TestPort(ushort portID) 
         {
             m_PortID = portID;
-            m_InterruptIndex = 0;
+            m_InterruptIndex = 2;       // IRQ 2
         }
 
+        public void ConnectBus(CPUBus bus)
+        {
+            m_BUS = bus;
+        }
         public ushort m_PortID { get; set; }
-        public ushort m_InterruptIndex { get; set; }
+        public byte m_InterruptIndex { get; set; }
         public Address m_Address { get; set; }
         public bool m_ReadRam { get; set; }
         public bool m_WriteRam { get; set; }
-        public bool m_IRQEnable { get; set; }
         public ushort m_Databus { get; set; }
         public ushort m_Outputbus { get; set; }
+        public int m_PortIDStart { get; set; }
+        public int m_PortIDEnd { get; set; }
 
-        public byte Read(out byte data)
-        {
-            data = (byte)m_Outputbus;
-            return data;
-        }
-
-        public ushort Read(out ushort data)
-        {
-            data = m_Outputbus;
-            return data;
-        }
-
-        public int Read(out int data)
-        {
-            data = (int)m_Outputbus;
-            return data;
-        }
+        CPUBus m_BUS;
 
         public void Tick()
         {
@@ -56,23 +45,36 @@ namespace BCG16CPUEmulator
             {
                 Console.WriteLine("TEST 2");
                 m_Outputbus = 0x02;
+
+                m_BUS.IRQ(this);
             }
+
             m_Databus = 0;
         }
         public void Reset()
         {
         }
 
-        public void Write(byte[] data)
+        public void Write(byte data, ushort Port)
         {
-            if (data.Length == 1)
-            {
-                m_Databus = data[0];
-            }
-            else
-            {
-                m_Databus = BitConverter.ToUInt16(data);
-            }
+            m_Databus = data;
+        }
+
+        public void Write(ushort data, ushort Port)
+        {
+            m_Databus = data;
+        }
+
+        public byte Read(out byte data, ushort Port)
+        {
+            data = (byte)m_Outputbus;
+            return data;
+        }
+
+        public ushort Read(out ushort data, ushort Port)
+        {
+            data = m_Outputbus;
+            return data;
         }
     }
 }

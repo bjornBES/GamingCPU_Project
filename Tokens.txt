@@ -1,0 +1,52 @@
+_void               line:00002	void
+identifier          line:00002	main
+open_paren          line:00002	
+close_paren         line:00002	
+open_curly          line:00003	
+uint8               line:00004	uint8
+identifier          line:00004	UB
+eq                  line:00004	
+int literal         line:00004	21930
+uint16              line:00005	uint16
+identifier          line:00005	UW
+eq                  line:00005	
+int literal         line:00005	4096
+int8                line:00006	int8
+identifier          line:00006	SB
+eq                  line:00006	
+int literal         line:00006	22015
+int16               line:00007	int16
+identifier          line:00007	SW
+eq                  line:00007	
+int literal         line:00007	65535
+_near               line:00009	near
+uint8               line:00009	uint8
+star                line:00009	
+identifier          line:00009	NPUB
+eq                  line:00009	
+ampersand           line:00009	
+identifier          line:00009	UB
+_short              line:00010	short
+uint8               line:00010	uint8
+star                line:00010	
+identifier          line:00010	SPUB
+eq                  line:00010	
+int literal         line:00010	65535
+uint8               line:00011	uint8
+star                line:00011	
+identifier          line:00011	PUB
+eq                  line:00011	
+int literal         line:00011	65535
+_long               line:00012	long
+uint8               line:00012	uint8
+star                line:00012	
+identifier          line:00012	LPUB
+eq                  line:00012	
+int literal         line:00012	16777215
+_far                line:00013	far
+uint8               line:00013	uint8
+star                line:00013	
+identifier          line:00013	FPUB
+eq                  line:00013	
+int literal         line:00013	-1
+close_curly         line:00016	
