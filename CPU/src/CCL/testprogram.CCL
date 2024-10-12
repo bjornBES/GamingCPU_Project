@@ -1,20 +1,15 @@
+SECTION:TEXT
 
-void main()
-{
-    uint8 UB = 0x55AA
-    uint16 UW = 0x1000
-    int8 SB = 0x55FF
-    int16 SW = 0xFFFF
-
-    near uint8* NPUB = &UB
-    short uint8* SPUB = 0xFFFF
-    uint8* PUB = 0xFFFF
-    long uint8* LPUB = 0xFFFFFF
-    far uint8* FPUB = 0xFFFFFFFF
-
-    /*
-    while(1) {
-
-    }
-    */
-}
+0000000:program test.                                                   \\
+0000001:word test.                                                      \\
+0000002:word testt.                                                     \\
+@       TEST
+0000010:func main().                                                    \\
+0000011:test=0x55.                                                      \\
+0000012:testt=0x55.                                                     \\
+0000015:byte a = test.                                                  \\
+0000020:word Wb = 10.                                                   \\
+0000025:uint Dv = 10.                                                   \\
+0000030:return a.                                                       \\
+0000035:endfunc.                                                        \\
+0000040:endprogram.                                                     \\

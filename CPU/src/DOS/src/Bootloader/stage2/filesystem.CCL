@@ -1,0 +1,25 @@
+#inc   "./console.CCL"
+
+struct File
+
+byte   ID
+word   head
+word   track
+word   sector
+
+endstruct
+
+SECTION:TEXT
+0000000:program FileSystem.                                             \\
+0000005:func ReadSector(byte d,word sec,word t,byte h,long byte*des).   \\
+0000006:@DL=d.@B=sec.@C=t.@AL=h.@HL=des.                                \\
+0000007:byte error=invoke(0x13,0x01).if error==1.then.call ErrorRS().   \\
+0000008:eif.ret 1.endfunc.                                              \\
+@test this is a test tes
+0000100:func ErrorRS().display(MessERS).Exit(1).endfunc.                \\
+0010000:endprogram.                                                     \\
+
+SECTION:DATA
+
+SECTION:STRING
+       :MessERS "Error white reading a sector"

@@ -61,7 +61,7 @@ The screens default mode is 360×400 VGA screen with 16 colors
 
 |Mode |Resolution |Colors |T/G  |CharBlock  |AlphaRes
 |-----|-----------|-------|-----|-----------|-
-|0    |360 x 400  |16     |T    |8 x 16     | 40 x 25
+|0    |320 x 200  |16     |T    |8 x 8      | 40 x 25
 |1    |360 x 400  |16     |T    |8 x 8      | 40 x 25
 |2    |640 x 400  |16     |T    |8 x 16     | 80 x 25
 |3    |720 x 400  |16     |T    |8 x 16     | 80 x 25

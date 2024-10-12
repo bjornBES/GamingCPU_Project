@@ -1,0 +1,24 @@
+{
+  "profiles": {
+    "AssemblerBCG": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/TestProgram.acl -o ./CPU/src/ACL/bin/TestProgram.o"
+    },
+    "Assemble BIOS": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/BIOS/BIOS.acl -o ./CPU/src/BIOSBin/OBJ/BIOS.o"
+    },
+    "Assemble DOS": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/DOS/src/Bootloader/bootloader.acl -o ./CPU/src/DOS/Build/bootloader.o"
+    },
+    "Assemble Bootloader": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/DOS/src/Bootloader/stage1/newbootloader.acl -o ./CPU/src/DOS/build/Bootloader/stage1/newbootloader.o"
+    }
+  }
+}

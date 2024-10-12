@@ -1,0 +1,205 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "SlimDX/4.0.13.44": {
+        "type": "package",
+        "compile": {
+          "lib/NET40/SlimDX.dll": {}
+        },
+        "runtime": {
+          "lib/NET40/SlimDX.dll": {}
+        }
+      },
+      "BFDCG12/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "CommonBCGCPU": "1.0.0",
+          "HexLibrary": "1.0.0",
+          "filesystem": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/BFDCG12.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BFDCG12.dll": {}
+        }
+      },
+      "CommonBCGCPU/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "SlimDX": "4.0.13.44"
+        },
+        "compile": {
+          "bin/placeholder/CommonBCGCPU.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CommonBCGCPU.dll": {}
+        }
+      },
+      "ConsoleGameEngine/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/ConsoleGameEngine.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ConsoleGameEngine.dll": {}
+        }
+      },
+      "filesystem/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/filesystem.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/filesystem.dll": {}
+        }
+      },
+      "HexLibrary/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/HexLibrary.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/HexLibrary.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SlimDX/4.0.13.44": {
+      "sha512": "Oj8ICZ3tIGvd93s5W6wSWXckDb3payQCo4fWp7GKPwnnGck7wEHHBZwnwfJJTdNb+t+IYr4HJCu07YhZ82xrIg==",
+      "type": "package",
+      "path": "slimdx/4.0.13.44",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/NET20/SlimDX.dll",
+        "lib/NET40/SlimDX.dll",
+        "slimdx.4.0.13.44.nupkg.sha512",
+        "slimdx.nuspec"
+      ]
+    },
+    "BFDCG12/1.0.0": {
+      "type": "project",
+      "path": "../BFDCG12/BFDCG12.csproj",
+      "msbuildProject": "../BFDCG12/BFDCG12.csproj"
+    },
+    "CommonBCGCPU/1.0.0": {
+      "type": "project",
+      "path": "../CommonBCGCPU/CommonBCGCPU.csproj",
+      "msbuildProject": "../CommonBCGCPU/CommonBCGCPU.csproj"
+    },
+    "ConsoleGameEngine/1.0.0": {
+      "type": "project",
+      "path": "../ConsoleGameEngine/ConsoleGameEngine.csproj",
+      "msbuildProject": "../ConsoleGameEngine/ConsoleGameEngine.csproj"
+    },
+    "filesystem/1.0.0": {
+      "type": "project",
+      "path": "../fileSystem/filesystem.csproj",
+      "msbuildProject": "../fileSystem/filesystem.csproj"
+    },
+    "HexLibrary/1.0.0": {
+      "type": "project",
+      "path": "../HexLibrary/HexLibrary.csproj",
+      "msbuildProject": "../HexLibrary/HexLibrary.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.1": [
+      "BFDCG12 >= 1.0.0",
+      "CommonBCGCPU >= 1.0.0",
+      "ConsoleGameEngine >= 1.0.0",
+      "HexLibrary >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\bjorn\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BC16Emulator\\BC16Emulator.csproj",
+      "projectName": "BC16Emulator",
+      "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BC16Emulator\\BC16Emulator.csproj",
+      "packagesPath": "C:\\Users\\bjorn\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BC16Emulator\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\bjorn\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp3.1"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "projectReferences": {
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BFDCG12\\BFDCG12.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BFDCG12\\BFDCG12.csproj"
+            },
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\CommonBCGCPU\\CommonBCGCPU.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\CommonBCGCPU\\CommonBCGCPU.csproj"
+            },
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj"
+            },
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SlimDX 4.0.13.44' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "SlimDX",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
+}

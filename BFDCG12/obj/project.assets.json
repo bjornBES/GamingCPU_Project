@@ -2,9 +2,21 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
+      "SlimDX/4.0.13.44": {
+        "type": "package",
+        "compile": {
+          "lib/NET40/SlimDX.dll": {}
+        },
+        "runtime": {
+          "lib/NET40/SlimDX.dll": {}
+        }
+      },
       "CommonBCGCPU/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "SlimDX": "4.0.13.44"
+        },
         "compile": {
           "bin/placeholder/CommonBCGCPU.dll": {}
         },
@@ -35,6 +47,19 @@
     }
   },
   "libraries": {
+    "SlimDX/4.0.13.44": {
+      "sha512": "Oj8ICZ3tIGvd93s5W6wSWXckDb3payQCo4fWp7GKPwnnGck7wEHHBZwnwfJJTdNb+t+IYr4HJCu07YhZ82xrIg==",
+      "type": "package",
+      "path": "slimdx/4.0.13.44",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/NET20/SlimDX.dll",
+        "lib/NET40/SlimDX.dll",
+        "slimdx.4.0.13.44.nupkg.sha512",
+        "slimdx.nuspec"
+      ]
+    },
     "CommonBCGCPU/1.0.0": {
       "type": "project",
       "path": "../CommonBCGCPU/CommonBCGCPU.csproj",
@@ -125,5 +150,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SlimDX 4.0.13.44' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "SlimDX",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

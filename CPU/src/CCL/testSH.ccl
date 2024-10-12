@@ -1,0 +1,16 @@
+0000000:program test.                   \\ test hello world aa
+0000001:func main().                    \\
+0000005:byte a = 10.                    \\
+0000006:near byte* pB = 0x8000.         \\
+0000007:short byte* pA = &a.            \\
+0000008:long byte* pL = 0x8000.         \\
+0000009:far byte* pF = 0x8000.          \\
+0000098:return a.                       \\
+0000099:endfunc.                        \\
+0000100:func add(byte a, byte b).       \\
+0000101:return a + b.                   \\
+0000102:byte yesy = 255.                \\
+0000103:ushort aest = 0xffff.           \\
+0000104:short short* tast = 0x00.       \\
+0000109:endfunc.                        \\
+0000110:endprogram.                     \\

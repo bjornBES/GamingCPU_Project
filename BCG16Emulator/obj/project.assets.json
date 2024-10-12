@@ -100,9 +100,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BCG16Emulator\\BCG16Emulator.csproj",
-      "projectName": "BCG16Emulator",
-      "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BCG16Emulator\\BCG16Emulator.csproj",
+      "projectUniqueName": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BCG16Emulator\\BC16Emulator.csproj",
+      "projectName": "BC16Emulator",
+      "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BCG16Emulator\\BC16Emulator.csproj",
       "packagesPath": "C:\\Users\\bjorn\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BCG16Emulator\\obj\\",
       "projectStyle": "PackageReference",

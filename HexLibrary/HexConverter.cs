@@ -22,6 +22,7 @@ namespace HexLibrary
         {
             return Convert.ToString(value, 16);
         }
+        public static int FromHexString(string hexString) => Convert.ToInt32(hexString, 16);
 
         public static string[] SplitHexString(string hexString)
         {
@@ -82,6 +83,7 @@ namespace HexLibrary
     public static class StringFunctions
     {
         public const string _LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_";
+        public const string _LETTERSAndNUMBER = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_";
         public const string _NUMBERSDEC = "123456790_";
         public const string _NUMBERSHEX = "123456790ABCDEFabcdef_";
         public const string _OPERATORSWS = "+ - * /";
@@ -92,6 +94,7 @@ namespace HexLibrary
 
 
         public static bool IsLetter(string expr) => IsPatten(expr, _LETTERS);
+        public static bool IsLetterOrDidit(string expr) => IsPatten(expr, _LETTERSAndNUMBER);
         public static bool IsNumber(string expr) => IsPatten(expr, _NUMBERSDEC);
         public static bool IsHexUpper(string expr) => IsPatten(expr, _HEXNUMBERUPPER);
         public static bool IsHexLower(string expr) => IsPatten(expr, _HEXNUMBERLOWER);

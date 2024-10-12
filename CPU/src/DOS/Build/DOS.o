@@ -2,198 +2,24 @@ INCLUDE HEADER
 
 
 SECTION HEADER
-_text 0x0 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_BSS 0x10000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-
-
-STRUCT HEADER
+_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\dos.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL Entry,True [1200] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL KeybIn,False [1226] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL NMI_Interrupt_Handler,False [1236] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL BRK_Interrupt_Handler,False [1238] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL Start_BSS,False [10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL IRQ1,False [10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
 
 
 TEXT HEADER
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl"
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\dos.acl"
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_OFF_ 1200
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Entry [0x1200] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_DEL_mov AL, CR0
-_SET_ BPX 0
-_SET_ SPX 0
-01
-04
-20
-0c
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_DEL_or AL, 0x10
-_SET_ BPX 0
-_SET_ SPX 0
-20
-70
-04
-01
-20
-00
-10
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_DEL_mov CR0, AL
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
-11
-0c
-20
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_DEL_mov SS, 0x0010
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
-01
-15
-00
-10
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_DEL_sez SP
-_SET_ BPX 0
-_SET_ SPX 0
-07
-00
-04
-38
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_DEL_mov ES, high @Start_BSS
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
-01
-65
-_SL_Start_BSS,MH
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_DEL_mov near [0x64], far @KeybIn
-_SET_ BPX 0
-_SET_ SPX 0
-00
-00
+_DEL_ mov AX, 0x10
 03
-
-_FL_KeybIn
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL KeybIn [0x1226] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_DEL_pushr
-_SET_ BPX 0
-_SET_ SPX 0
-f0
-20
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_DEL_mov B, LOW @IRQ1
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
 01
-01
-_SL_IRQ1,ML
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_DEL_mov [ES:B], 1
-_SET_ BPX 0
-_SET_ SPX 0
+05
 00
-0a
 00
-65
-01
-01
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_DEL_reti
-_SET_ BPX 0
-_SET_ SPX 0
-f0
-00
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL NMI_Interrupt_Handler [0x1236] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_DEL_reti
-_SET_ BPX 0
-_SET_ SPX 0
-f0
-00
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_REF_ LABEL BRK_Interrupt_Handler [0x1238] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_DEL_reti
-_SET_ BPX 0
-_SET_ SPX 0
-f0
-00
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_OFF_ 00010000
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Start_BSS [0x10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL IRQ1 [0x10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_OFF_ 10001
+10

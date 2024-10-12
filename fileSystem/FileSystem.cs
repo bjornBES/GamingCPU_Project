@@ -11,40 +11,76 @@ namespace filesystem
     {
         public FileSystemBFS01()
         {
-            m_FormatFunction = FormatDisk;
-            m_LoadFile = BFS01LoadFile;
-            m_ReadSector = _ReadSector;
+            m_formatFunction = FormatDiskNoFiles;
+            m_loadFile = BFS01LoadFile;
+            m_readSector = readSector;
         }
 
-        public ushort entryConut;
-        public const ushort entrySize = 0x20;
-
-        public void FormatDisk(Disk disk)
+        public ushort m_EntryConut;
+        public const ushort EntrySize = 0x20;
+        public const int FatAddress = 0x600;
+        public void FormatDiskNoFiles(Disk disk)
         {
-            entryConut = 0;
+            m_EntryConut = 0;
             CreateDisk(disk);
-            ushort MaxNumberOfEntrys = (ushort)((BytesPerSector - (rootAddress - BytesPerSector)) / entrySize);
+            if (Program.m_Admin == false)
+            {
+                if (File.Exists(disk.m_DiskPath))
+                {
+                    LoadFile(disk);
+                    return;
+                }
+            }
 
-            byte FatAllocation = (byte)Math.Clamp((int)MathF.Round((float)(DiskSize / 8) / BytesPerSector / BytesPerSector, 0, MidpointRounding.ToPositiveInfinity), 1, 255);
+            ushort MaxNumberOfEntrys = (ushort)((0x300 - (m_RootAddress - m_BytesPerSector)) / EntrySize);
+
+            byte FatAllocation = (byte)Math.Clamp((int)MathF.Round((float)(m_DiskSize / 8) / m_BytesPerSector / m_BytesPerSector, 0, MidpointRounding.ToPositiveInfinity), 1, 255);
 
             int newOffset = 0x200;
             // Boot sector
 
-            newOffset = WriteToDisk("BFS01".PadRight(6, ' '), newOffset);                 // header
-            newOffset = WriteToDisk((byte)disk.m_DiskLetter, newOffset);                  // disk letter
-            newOffset = WriteToDisk(heads, newOffset, inline: false);                     // Number of heads
-            newOffset = WriteToDisk(TracksPerHead, newOffset, inline: false);             // Number of Tracks per side
-            newOffset = WriteToDisk(TotalSectors, newOffset, false);                      // Number of sectors
-            newOffset = WriteToDisk(SectorsPerTracks, newOffset, false);                  // Sectors per Track
-            newOffset = WriteToDisk(BytesPerSector, newOffset, false);                    // Bytes Per Sector
-            newOffset = WriteToDisk(rootAddress, newOffset, inline: true);                // root directory address
-            newOffset = WriteToDisk(MaxNumberOfEntrys, newOffset, false);                 // max number of root directory entrys 
-            newOffset = WriteToDisk(FatAllocation, newOffset, false);                     // Allocated FAT in sectors
-            newOffset = WriteToDisk("Hello world".PadLeft(16, ' '), newOffset);           // volume label
-            newOffset = WriteToDisk("".PadRight(rootAddress - newOffset, '\0'), newOffset);
-
-            if (Program.Admin)
+            if (Program.m_Admin == true)
             {
+                newOffset = WriteToDisk("BFS01".PadRight(6, ' '), newOffset);                 // header
+                newOffset = WriteToDisk((byte)disk.m_DiskLetter, newOffset);                  // disk letter
+                newOffset = WriteToDisk(m_Heads, newOffset, inline: false);                     // Number of heads
+                newOffset = WriteToDisk(m_TracksPerHead, newOffset, inline: false);             // Number of Tracks per side
+                newOffset = WriteToDisk(m_TotalSectors, newOffset, false);                      // Number of sectors
+                newOffset = WriteToDisk(m_SectorsPerTracks, newOffset, false);                  // Sectors per Track
+                newOffset = WriteToDisk(m_BytesPerSector, newOffset, false);                    // Bytes Per Sector
+                newOffset = WriteToDisk(m_RootAddress, newOffset, inline: false);                // root directory address
+                newOffset = WriteToDisk(MaxNumberOfEntrys, newOffset, false);                 // max number of root directory entrys 
+                newOffset = WriteToDisk(FatAllocation, newOffset, false);                     // Allocated FAT in sectors
+                newOffset = WriteToDisk("Hello world".PadLeft(16, ' '), newOffset);           // volume label
+                newOffset = WriteToDisk("".PadRight(m_RootAddress - newOffset, '\0'), newOffset);
+            }
+        }
+        public void FormatDisk(Disk disk)
+        {
+            m_EntryConut = 0;
+            CreateDisk(disk);
+            ushort MaxNumberOfEntrys = (ushort)((m_BytesPerSector - (m_RootAddress - m_BytesPerSector)) / EntrySize);
+
+            byte FatAllocation = (byte)Math.Clamp((int)MathF.Round((float)(m_DiskSize / 8) / m_BytesPerSector / m_BytesPerSector, 0, MidpointRounding.ToPositiveInfinity), 1, 255);
+
+            int newOffset = 0x200;
+            // Boot sector
+
+            if (Program.m_Admin)
+            {
+                newOffset = WriteToDisk("BFS01".PadRight(6, ' '), newOffset);                 // header
+                newOffset = WriteToDisk((byte)disk.m_DiskLetter, newOffset);                  // disk letter
+                newOffset = WriteToDisk(m_Heads, newOffset, inline: false);                     // Number of heads
+                newOffset = WriteToDisk(m_TracksPerHead, newOffset, inline: false);             // Number of Tracks per side
+                newOffset = WriteToDisk(m_TotalSectors, newOffset, false);                      // Number of sectors
+                newOffset = WriteToDisk(m_SectorsPerTracks, newOffset, false);                  // Sectors per Track
+                newOffset = WriteToDisk(m_BytesPerSector, newOffset, false);                    // Bytes Per Sector
+                newOffset = WriteToDisk(m_RootAddress, newOffset, inline: true);                // root directory address
+                newOffset = WriteToDisk(MaxNumberOfEntrys, newOffset, false);                 // max number of root directory entrys 
+                newOffset = WriteToDisk(FatAllocation, newOffset, false);                     // Allocated FAT in sectors
+                newOffset = WriteToDisk("Hello world".PadLeft(16, ' '), newOffset);           // volume label
+                newOffset = WriteToDisk("".PadRight(m_RootAddress - newOffset, '\0'), newOffset);
+
                 string[] test = SplitAndMap(FatAllocation);
 
                 CreateFile("fat.disk", FatAllocation, false, true);
@@ -110,8 +146,8 @@ namespace filesystem
 
         public void CreateDirectory(string path, bool IsProtected = false, bool IsHidden = false)
         {
-            ConvertToFSPath(path, out string name, out string parentDirectory);
-            if (m_Disk.FileSystemFormat == FileSystemType.BFS01)
+            convertToFSPath(path, out string name, out string parentDirectory);
+            if (m_Disk.m_FileSystemFormat == FileSystemType.BFS01)
             {
                 if (name.Length > 0xF)
                 {
@@ -125,37 +161,37 @@ namespace filesystem
             if (!string.IsNullOrEmpty(parentDirectory))
             {
                 entry = GetEntryByPath(parentDirectory);
-                if ((entry.Flags & IsDirectoryFlag) != IsDirectoryFlag)
+                if ((entry.m_Flags & IsDirectoryFlag) != IsDirectoryFlag)
                 {
                     Console.WriteLine($"{parentDirectory} is not a directory");
                     return;
                 }
-                offsetDir = (entry.StartingPage + 1) * BytesPerSector;
-                EntryConut = entry.EntryCount;
+                offsetDir = (entry.m_StartingPage + 1) * m_BytesPerSector;
+                EntryConut = entry.m_EntryCount;
             }
             else
             {
-                offsetDir = rootAddress;
-                EntryConut = entryConut;
+                offsetDir = m_RootAddress;
+                EntryConut = m_EntryConut;
             }
 
-            CreateEntryBFS01(name, 1, offsetDir, ref EntryConut, true, IsProtected, IsHidden);
+            createEntryBFS01(name, 1, offsetDir, ref EntryConut, true, IsProtected, IsHidden);
 
             if (!string.IsNullOrEmpty(parentDirectory))
             {
                 Entry Newentry = entry;
-                Newentry.EntryCount = (byte)EntryConut;
-                UpdateEntry(ref entry, Newentry);
+                Newentry.m_EntryCount = (byte)EntryConut;
+                updateEntry(ref entry, Newentry);
             }
             else
             {
-                entryConut = (ushort)EntryConut;
+                m_EntryConut = (ushort)EntryConut;
             }
         }
         public void CreateFile(string path, int size, bool IsProtected = false, bool IsHidden = false)
         {
-            ConvertToFSPath(path, out string name, out string parentDirectory);
-            if (m_Disk.FileSystemFormat == FileSystemType.BFS01)
+            convertToFSPath(path, out string name, out string parentDirectory);
+            if (m_Disk.m_FileSystemFormat == FileSystemType.BFS01)
             {
                 if (name.Length > 0xF)
                 {
@@ -163,7 +199,7 @@ namespace filesystem
                     return;
                 }
             }
-            else if (m_Disk.FileSystemFormat == FileSystemType.FAT12)
+            else if (m_Disk.m_FileSystemFormat == FileSystemType.FAT12)
             {
                 if (name.Length > 0xB)
                 {
@@ -177,41 +213,40 @@ namespace filesystem
             if (!string.IsNullOrEmpty(parentDirectory))
             {
                 entry = GetEntryByPath(parentDirectory);
-                if ((entry.Flags & IsDirectoryFlag) != IsDirectoryFlag)
+                if ((entry.m_Flags & IsDirectoryFlag) != IsDirectoryFlag)
                 {
                     Console.WriteLine($"{parentDirectory} is not a directory");
                     return;
                 }
-                offsetDir = (entry.StartingPage + 1) * BytesPerSector;
-                EntryConut = entry.EntryCount;
+                offsetDir = (entry.m_StartingPage + 1) * m_BytesPerSector;
+                EntryConut = entry.m_EntryCount;
             }
             else
             {
-                offsetDir = rootAddress;
-                EntryConut = entryConut;
+                offsetDir = m_RootAddress;
+                EntryConut = m_EntryConut;
             }
 
-            CreateEntryBFS01(name, (ushort)size, offsetDir, ref EntryConut, false, IsProtected, IsHidden);
+            createEntryBFS01(name, (ushort)size, offsetDir, ref EntryConut, false, IsProtected, IsHidden);
             if (!string.IsNullOrEmpty(parentDirectory))
             {
-                ConventName(entry.name, out string FileName, out string FileType);
+                conventName(entry.m_Name, out string FileName, out string FileType);
                 Entry Newentry = new Entry()
                 {
-                    name = FileName,
-                    type = FileType,
-                    ContinueAddress = entry.ContinueAddress,
-                    dateTime = entry.dateTime,
-                    EntryCount = entry.EntryCount,
-                    FileSizeInPages = entry.FileSizeInPages,
-                    Flags = entry.Flags,
-                    StartingPage = entry.StartingPage,
+                    m_Name = FileName,
+                    m_Type = FileType,
+                    m_DateTime = entry.m_DateTime,
+                    m_EntryCount = entry.m_EntryCount,
+                    m_FileSizeInPages = entry.m_FileSizeInPages,
+                    m_Flags = entry.m_Flags,
+                    m_StartingPage = entry.m_StartingPage,
                 };
-                Newentry.EntryCount = (byte)EntryConut;
-                UpdateEntry(ref entry, Newentry);
+                Newentry.m_EntryCount = (byte)EntryConut;
+                updateEntry(ref entry, Newentry);
             }
             else
             {
-                entryConut = (ushort)EntryConut;
+                m_EntryConut = (ushort)EntryConut;
             }
         }
 
@@ -223,81 +258,97 @@ namespace filesystem
             }
 
             m_Disk = disk;
-            entryConut = 0;
-            DiskBuffer = File.ReadAllBytes(disk.m_DiskPath);
+            m_EntryConut = 0;
+            m_DiskBuffer = File.ReadAllBytes(disk.m_DiskPath);
 
-            int offset = 0x200;
+            int offset = 0x207;
 
-            char DiskIdent = (char)ReadDisk(ref offset, out byte _, false);
-            ReadDisk(ref offset, out heads, false);
-            ReadDisk(ref offset, out TracksPerHead, false);
-            ReadDisk(ref offset, out TotalSectors, false);
-            ReadDisk(ref offset, out SectorsPerTracks, false);
-            ReadDisk(ref offset, out BytesPerSector, false);
+            ReadDisk(ref offset, out m_Heads, false);
+            ReadDisk(ref offset, out m_TracksPerHead, false);
+            ReadDisk(ref offset, out m_TotalSectors, false);
+            ReadDisk(ref offset, out m_SectorsPerTracks, false);
+            ReadDisk(ref offset, out m_BytesPerSector, false);
 
-            TotalTracks = (ushort)(TracksPerHead * 2);
+            m_TotalTracks = (ushort)(m_TracksPerHead * 2);
 
-            DiskSize = (TracksPerHead * 2) * heads * SectorsPerTracks * BytesPerSector;
+            m_DiskSize = (m_TracksPerHead * 2) * m_Heads * m_SectorsPerTracks * m_BytesPerSector;
         }
 
-        void UpdateEntry(ref Entry entry, Entry NewEntry)
+        void updateEntry(ref Entry entry, Entry NewEntry)
         {
-            entry.EntryCount = NewEntry.EntryCount;
+            entry.m_EntryCount = NewEntry.m_EntryCount;
 
-            entry.dateTime = NewEntry.dateTime;
+            entry.m_DateTime = NewEntry.m_DateTime;
 
-            int offset = (entry.ContinueAddress - 0x20) + 0x12;
-            offset = WriteToDisk(NewEntry.EntryCount, offset, true);
-            offset = WriteToDisk(NewEntry.dateTime.Day, offset);
-            offset = WriteToDisk(NewEntry.dateTime.Month, offset);
-            offset = WriteToDisk(NewEntry.dateTime.Year, offset);
-            offset = WriteToDisk(NewEntry.dateTime.Hour, offset);
-            WriteToDisk(NewEntry.dateTime.Minute, offset);
+            int offset = getAddressOfEntry(entry) + 0x12;
+            offset = WriteToDisk(NewEntry.m_EntryCount, offset, true);
+            offset = WriteToDisk(NewEntry.m_DateTime.m_Day, offset);
+            offset = WriteToDisk(NewEntry.m_DateTime.m_Month, offset);
+            offset = WriteToDisk(NewEntry.m_DateTime.m_Year, offset);
+            offset = WriteToDisk(NewEntry.m_DateTime.m_Hour, offset);
+            WriteToDisk(NewEntry.m_DateTime.m_Minute, offset);
         }
-        void CreateEntryBFS01(string name, ushort sizeInSectors, int offsetDir, ref int EntryConut, bool IsDirectory = false, bool IsProtected = false, bool IsHidden = false)
+        int getAddressOfEntry(Entry entry, int startAddress = 0x300)
         {
-            name = name.PadRight(0xF, '\0');
+            int Address = startAddress;
+            Entry[] entries = GetEntrysByAddress(Address);
+            for (int i = 0; i < entries.Length; i++)
+            {
+                if (entries[i].m_Name == entry.m_Name && entries[i].m_Type == entry.m_Type && entries[i].m_StartingPage == entry.m_StartingPage)
+                {
+                    return Address + (i * EntrySize);
+                }
+
+                if ((entries[i].m_Flags & IsDirectoryFlag) == IsDirectoryFlag)
+                {
+                    int result = getAddressOfEntry(entry, convetToAddress(entries[i]));
+                    if (result == 0)
+                    {
+                        continue;
+                    }
+                    return result;
+                }
+            }
+            return 0;
+        }
+        void createEntryBFS01(string name, ushort sizeInSectors, int offsetDir, ref int EntryConut, bool IsDirectory = false, bool IsProtected = false, bool IsHidden = false)
+        {
+            name = name.PadRight(0x10, '\0');
+            Console.WriteLine($"Creating {name} entry");
 
             ushort page = BFS01findFreeSector(name, sizeInSectors);
+            Console.WriteLine($"{name} got sector {page} with {sizeInSectors} in size");
 
-            ushort flag = 0;
-            flag |= (ushort)(IsDirectory ? IsDirectoryFlag : 0);
-            flag |= (ushort)(IsHidden ? IsHiddenFlag : 0);
-            flag |= (ushort)(IsProtected ? IsProtectedFlag : 0);
+            byte flag = 0;
+            flag |= (byte)(IsDirectory ? IsDirectoryFlag : 0);
+            flag |= (byte)(IsHidden ? IsHiddenFlag : 0);
+            flag |= (byte)(IsProtected ? IsProtectedFlag : 0);
 
-            int address = offsetDir + EntryConut * entrySize;
+            int address = offsetDir + EntryConut * EntrySize;
 
             int offset = address;
 
-            ConventName(name, out string FileName, out string FileType);
+            conventName(name, out string FileName, out string FileType);
 
             if (FileType != "")
             {
-                offset = WriteToDisk(FileName.PadRight(0xA, '\0'), offset);
+                offset = WriteToDisk(FileName.PadRight(0xB, '\0'), offset);
                 offset = WriteToDisk(FileType.PadRight(0x5, '\0'), offset);
             }
             else
             {
-                offset = WriteToDisk(FileName.PadRight(0xF, '\0'), offset);
+                offset = WriteToDisk(FileName.PadRight(0x10, '\0'), offset);
             }
             offset = WriteToDisk(page, offset, false);
-            offset = WriteToDisk(sizeInSectors, offset, false);
+            offset = WriteToDisk((byte)sizeInSectors, offset, false);
             offset = WriteToDisk(flag, offset, false);
-            if (IsDirectory)
-            {
-                offset = WriteToDisk((byte)00, offset);
-            }
-            else
-            {
-                offset = WriteToDisk((byte)0xFF, offset);
-            }
 
-            offset = WriteToDisk(02, 04, 2024, 16, 59, offset);
-            offset = WriteToDisk((ushort)(address + entrySize), offset, false);
-            WriteToDisk("".PadRight(entrySize - (offset - (address)), '\0'), offset);
+            // original datetime : 02 04 2024, 16 59 59
+            offset = WriteToDisk(05, 10, 2024, 17, 20, (byte)(System.DateTime.Now.Second / 2), offset);
+            WriteToDisk("".PadRight(EntrySize - (offset - (address)), '\0'), offset);
             EntryConut++;
         }
-        void ConventName(string name, out string FileName, out string FileType)
+        void conventName(string name, out string FileName, out string FileType)
         {
             if (!name.Contains('.'))
             {
@@ -305,15 +356,17 @@ namespace filesystem
                 FileType = "";
                 return;
             }
-            FileName = name.Split('.')[0];
-            FileType = name.Split('.')[0];
+            FileName = name.Split('.')[0].TrimEnd('\0');
+            FileType = name.Split('.')[1].TrimEnd('\0');
         }
         public Entry GetEntryByPath(string path)
         {
             path = path.Replace('\\', '/');
             string[] DividePath = path.Split('/');
-            int PointedAddress = rootAddress;
+            int PointedAddress = m_RootAddress;
             int e = 0;
+
+            Console.WriteLine($"Geting Entry from {path}");
 
             Entry[] entries = null;
             for (int i = 0; i < DividePath.Length; i++)
@@ -321,10 +374,10 @@ namespace filesystem
                 entries = GetEntrysByAddress(PointedAddress);
                 for (e = 0; e < entries.Length; e++)
                 {
-                    ConventName(DividePath[i], out string FileName, out string FileType);
-                    if (entries[e].name == FileName && entries[e].type == FileType)
+                    conventName(DividePath[i], out string FileName, out string FileType);
+                    if (entries[e].m_Name == FileName && entries[e].m_Type == FileType)
                     {
-                        PointedAddress = GetAddressFromEntry(entries[e]);
+                        PointedAddress = convetToAddress(entries[e]);
                         break;
                     }
                 }
@@ -343,7 +396,7 @@ namespace filesystem
         {
             path = path.Replace('\\', '/');
             string[] DividePath = path.Split('/');
-            int PointedAddress = rootAddress;
+            int PointedAddress = m_RootAddress;
             int e = 0;
 
             Entry[] entries = null;
@@ -352,9 +405,9 @@ namespace filesystem
                 entries = GetEntrysByAddress(PointedAddress);
                 for (e = 0; e < entries.Length; e++)
                 {
-                    if (entries[e].name == DividePath[i])
+                    if (entries[e].m_Name == DividePath[i])
                     {
-                        PointedAddress = GetAddressFromEntry(entries[e]);
+                        PointedAddress = convetToAddress(entries[e]);
                         break;
                     }
                 }
@@ -370,33 +423,31 @@ namespace filesystem
                 if (entry == null)
                     break;
                 entries.Add(entry);
-                address += entrySize;
-            } while (DiskBuffer[address] != '\0');
+                address += EntrySize;
+            } while (m_DiskBuffer[address] != '\0');
             return entries.ToArray();
         }
         public Entry GetEntryByAddress(int address)
         {
             Entry result = new Entry();
-            byte[] name = ReadDisk(ref address, 0xA);
+            byte[] name = ReadDisk(ref address, 0xB);
             byte[] type = ReadDisk(ref address, 0x5);
             if (name[0] == 0)
             {
                 return null;
             }
-            result.name = DefualtEncoder.GetString(name).TrimEnd('\0');
-            result.type = DefualtEncoder.GetString(type).TrimEnd('\0');
+            result.m_Name = m_DefualtEncoder.GetString(name).TrimEnd('\0');
+            result.m_Type = m_DefualtEncoder.GetString(type).TrimEnd('\0');
 
-            ReadDisk(ref address, out result.StartingPage, false);
+            ReadDisk(ref address, out result.m_StartingPage, false);
 
-            ReadDisk(ref address, out result.FileSizeInPages, false);
+            ReadDisk(ref address, out result.m_FileSizeInPages, false);
 
-            ReadDisk(ref address, out result.Flags, false);
+            ReadDisk(ref address, out result.m_Flags, false);
 
-            ReadDisk(ref address, out result.EntryCount, false);
+            ReadDisk(ref address, out result.m_EntryCount, false);
 
-            result.dateTime = ReadDisk(ref address);
-
-            ReadDisk(ref address, out result.ContinueAddress, false);
+            result.m_DateTime = ReadDisk(ref address);
 
             return result;
         }
@@ -406,7 +457,7 @@ namespace filesystem
             int result = -1;
             if (filename != "fat.disk".PadRight(0xF, '\0'))
             {
-                ReadEntryPage("fat.disk", out byte[] buffer);
+                byte[] buffer = m_DiskBuffer[0x600..0x800];
                 int doneSize = 0;
                 for (int i = 0; i < buffer.Length; i++)
                 {
@@ -440,7 +491,7 @@ namespace filesystem
                         }
                     }
                 }
-                WriteEntry("fat.disk", buffer);
+                Array.Copy(buffer, 0, m_DiskBuffer, 0x600, 0x200);
             }
             if (result == -1)
             {
@@ -449,7 +500,7 @@ namespace filesystem
             return (ushort)(result + 1);
         }
 
-        void ConvertToFSPath(string path, out string filename, out string parentDirectory)
+        void convertToFSPath(string path, out string filename, out string parentDirectory)
         {
             string result = path.Replace("\\", "/").Replace("./", "");
 
@@ -465,20 +516,20 @@ namespace filesystem
         }
         public void WriteEntry(Entry entry, byte[] data)
         {
-            if (data.Length != BytesPerSector)
+            if (data.Length != m_BytesPerSector)
             {
-                Array.Resize(ref data, BytesPerSector);
+                Array.Resize(ref data, m_BytesPerSector);
             }
 
-            int entryAddress = GetAddressFromEntry(entry);
-            for (int i = entryAddress; i < entryAddress + BytesPerSector; i++)
+            int entryAddress = convetToAddress(entry);
+            for (int i = entryAddress; i < entryAddress + m_BytesPerSector; i++)
             {
-                DiskBuffer[i] = data[i - entryAddress];
+                m_DiskBuffer[i] = data[i - entryAddress];
             }
         }
         public void WriteEntry(string path, byte[] data)
         {
-            ConvertToFSPath(path, out string file, out string dir);
+            convertToFSPath(path, out string file, out string dir);
 
             Entry entry = GetEntryByPath((dir == null ? "" : dir + "/") + file);
 
@@ -490,47 +541,47 @@ namespace filesystem
 
             for (int i = offset; i < offset + length; i++)
             {
-                data.Add(DiskBuffer[i]);
+                data.Add(m_DiskBuffer[i]);
             }
 
             buffer = data.ToArray();
         }
-        public void ReadEntryPage(Entry entry, out byte[] buffer)
+        public void ReadEntrySector(Entry entry, out byte[] buffer)
         {
             if (entry == null)
             {
                 throw new ArgumentNullException();
             }
 
-            if ((entry.Flags & IsDirectoryFlag) == IsDirectoryFlag)
+            if ((entry.m_Flags & IsDirectoryFlag) == IsDirectoryFlag)
             {
                 Console.WriteLine("Entry is a directory");
                 buffer = null;
                 return;
             }
 
-            List<byte> data = new List<byte>(BytesPerSector);
+            List<byte> data = new List<byte>(m_BytesPerSector);
 
-            int entryAddress = GetAddressFromEntry(entry);
+            int entryAddress = convetToAddress(entry);
 
-            for (int i = entryAddress; i < entryAddress + BytesPerSector; i++)
+            for (int i = entryAddress; i < entryAddress + m_BytesPerSector; i++)
             {
-                data.Add(DiskBuffer[i]);
+                data.Add(m_DiskBuffer[i]);
             }
 
             buffer = data.ToArray();
         }
         public void ReadEntryPage(string path, out byte[] buffer)
         {
-            ConvertToFSPath(path, out string file, out string dir);
+            convertToFSPath(path, out string file, out string dir);
 
             Entry entry = GetEntryByPath((dir == null ? "" : dir + "/") + file);
 
-            ReadEntryPage(entry, out buffer);
+            ReadEntrySector(entry, out buffer);
         }
-        public byte[] _ReadSector(byte head, ushort track, ushort sector)
+        byte[] readSector(byte head, ushort track, ushort sector)
         {
-            byte[] buffer = new byte[BytesPerSector];
+            byte[] buffer = new byte[m_BytesPerSector];
 
             for (int i = 0; i < buffer.Length; i++)
             {
@@ -548,27 +599,26 @@ namespace filesystem
             return buffer;
         }
 
-        int GetAddressFromEntry(Entry entry) => 0x400 + ((entry.StartingPage - 1) * BytesPerSector);
+        int convetToAddress(Entry entry) => 0x600 + (entry.m_StartingPage * m_BytesPerSector);
 
         public class Entry
         {
-            public string name;
-            public string type;
-            public ushort StartingPage;
-            public ushort FileSizeInPages;
-            public ushort Flags;
-            public byte EntryCount;
-            public DateTime dateTime;
-            public ushort ContinueAddress;
+            public string m_Name;
+            public string m_Type;
+            public ushort m_StartingPage;
+            public ushort m_FileSizeInPages;
+            public ushort m_Flags;
+            public byte m_EntryCount;
+            public DateTime m_DateTime;
         }
     }
     public struct DateTime
     {
-        public byte Day;
-        public byte Month;
-        public ushort Year;
+        public byte m_Day;
+        public byte m_Month;
+        public ushort m_Year;
 
-        public byte Hour;
-        public byte Minute;
+        public byte m_Hour;
+        public byte m_Minute;
     }
 }

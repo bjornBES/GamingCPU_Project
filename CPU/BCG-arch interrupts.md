@@ -1,46 +1,37 @@
 - [Hardware Interrupts](#hardware-interrupts)
-- [CPU Interrupts](#cpu-interrupts)
-  - [int 0x00 Cpu Interrupts](#int-0x00-cpu-interrupts)
-    - [Load interrupt Descriptor table AH = 0x00](#load-interrupt-descriptor-table-ah--0x00)
-      - [Parameters](#parameters)
 - [BIOS Interrupts](#bios-interrupts)
   - [int 0x10 terminal services](#int-0x10-terminal-services)
     - [PRINT CHAR AH = 0x00](#print-char-ah--0x00)
-      - [Parameters](#parameters-1)
+      - [Inputs](#inputs)
       - [Description](#description)
+    - [Read char key AH = 0x01](#read-char-key-ah--0x01)
+      - [Inputs](#inputs-1)
+      - [Return](#return)
+      - [Description](#description-1)
+    - [Print string AH = 0x02](#print-string-ah--0x02)
+      - [Inputs](#inputs-2)
+      - [Description](#description-2)
   - [int 0x13 services (Disk functions)](#int-0x13-services-disk-functions)
     - [READ SECTOR AH = 0x01](#read-sector-ah--0x01)
       - [Function code](#function-code)
-      - [Parameters](#parameters-2)
-      - [Description](#description-1)
+      - [Parameters](#parameters)
+      - [Description](#description-3)
+      - [Return](#return-1)
     - [WRITE SECTOR AH = 0x02](#write-sector-ah--0x02)
       - [Function code](#function-code-1)
-      - [Parameters](#parameters-3)
-      - [Description](#description-2)
+      - [Parameters](#parameters-1)
+      - [Description](#description-4)
     - [READ DISK STATUS AH = 0x03](#read-disk-status-ah--0x03)
       - [Function code](#function-code-2)
-      - [Parameters](#parameters-4)
-      - [Description](#description-3)
+      - [Parameters](#parameters-2)
+      - [Description](#description-5)
     - [GET DRIVE PARAMETERS AH = 0x08](#get-drive-parameters-ah--0x08)
       - [Function code](#function-code-3)
-      - [Parameters](#parameters-5)
-      - [Description](#description-4)
+      - [Parameters](#parameters-3)
+      - [Description](#description-6)
   - [int 0x15 BIOS interrupts](#int-0x15-bios-interrupts)
 
 # Hardware Interrupts
-
-# CPU Interrupts
-
-## int 0x00 Cpu Interrupts
-
-### Load interrupt Descriptor table AH = 0x00
-
-#### Parameters
-
-```
-AL = Interrupt routine index
-HL = Pointer to interrupt table
-```
 
 # BIOS Interrupts
 
@@ -48,16 +39,46 @@ HL = Pointer to interrupt table
 
 ### PRINT CHAR AH = 0x00
 
-#### Parameters
+#### Inputs
 
 ```
 AL = char to be printed,
-BX = color index
+BL = color index
 ```
 
 #### Description
 
 prints the char in AL
+
+### Read char key AH = 0x01
+
+#### Inputs
+
+```
+```
+
+#### Return
+
+```
+AL = ASCII charactor of the button pressed
+```
+
+#### Description
+
+prints the char in AL
+
+### Print string AH = 0x02
+
+#### Inputs
+
+```
+DS = the segment of the string
+B = the offset of the string
+```
+
+#### Description
+
+prints a string to the screen
 
 ## int 0x13 services (Disk functions)
 
@@ -69,14 +90,19 @@ AH = 0x01
 
 #### Parameters
 
-AL = disk,
-BX = track,
-CL = heads,
-DX = sector
+AL = heads,
+B = sector,
+C = track,
+DL = Drive,
+HL = destination address
 
 #### Description
 
-returns in the [Data file cache](./SPECS_BEG-8-CPU.md#file-data-cache) and error in the [ERROR FLAG](./SPECS_BEG-8-CPU.md#registers)
+Reads a sector from the disk and moves to data to HL
+
+#### Return
+
+carry flag = 1 = error :D
 
 ### WRITE SECTOR AH = 0x02
 

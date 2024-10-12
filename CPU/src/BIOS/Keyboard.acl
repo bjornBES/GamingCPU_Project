@@ -1,0 +1,83 @@
+.section TEXT
+
+$KB_Status = 0x00
+
+InitBuffer:
+    push        A
+    sez         A
+    mov         [ReadPtrVar],       A
+    mov         [WritePtrVar],      A
+    pop         A
+    retz
+
+; Char c in CL
+WriteBuffer:
+    pushr
+
+    sez         H
+    mov         L,                  @KeyboardBuffer
+    mov         A,                  [WritePtrVar]
+    add         L,                  A
+    mov         [HL],               CL
+    inc         A
+    mov         [WritePtrVar],      A
+
+    popr
+    retz
+
+; return in AL
+ReadBuffer:
+    push        H
+    push        L
+    push        B
+    
+    sez         H
+    mov         L,                  @KeyboardBuffer
+    mov         B,                  [ReadPtrVar]
+    add         L,                  B
+    inc         B
+    mov         [ReadPtrVar],       B
+
+    mov         AL,                 [HL]
+    pop         B
+    pop         L
+    pop         H
+    retz
+
+; return in A
+BufferSize:
+    push        B
+
+    mov         B,                  [ReadPtrVar]
+    mov         A,                  [WritePtrVar]
+    sub         A,                  B
+
+    pop         B
+    retz
+
+; enabling the CLS pin to the Keyboard controller 
+EnableCLS:
+    outb        0x00,               0x01
+    retz
+
+; return in AL and status in AH
+CharIn:
+    call        [BufferSize]
+    test        A
+    jz          [nopeKey]
+    call        [ReadBuffer]
+    mov         AH,                 0x01
+    retz
+    nopeKey:
+    sez         AH
+    retz
+
+.section BSS
+ReadPtrVar:
+.res 2              ; This is the read pointer
+WritePtrVar:
+.res 2              ; This is the write pointer
+KeyboardBuffer:
+.res 0x100          ; 256 entrys in the buffer
+
+.section TEXT

@@ -8,28 +8,28 @@ public static class CompilerErrors
 {
     public static void SystaxError(Token line)
     {
-        Console.WriteLine($"Systax error on line {line.line}");
-        ExitOut();
+        Console.WriteLine($"Systax error on line {line.m_Line}");
+        exitOut();
     }
     
-    public static void error_expected(Token line, string msg)
+    public static void Error_expected(Token line, string msg)
     {
-        Console.WriteLine($"Expected {msg} on line {line.line}");
-        ExitOut();
+        Console.WriteLine($"Expected {msg} on line {line.m_Line}");
+        exitOut();
     }
-    public static void error_expected(Token line, TokenType msg)
+    public static void Error_expected(Token line, TokenType msg)
     {
-        Console.WriteLine($"Expected {msg} on line {line.line}");
-        ExitOut();
-    }
-
-    public static void error_VariableIsConst(Token line, Var var)
-    {
-        Console.WriteLine($"{var.m_Name} is const and can't be reassigned on line {line.line}");
-        ExitOut();
+        Console.WriteLine($"Expected {msg} on line {line.m_Line}");
+        exitOut();
     }
 
-    static void ExitOut()
+    public static void Error_VariableIsConst(Token line, Var var)
+    {
+        Console.WriteLine($"{var.m_Name} is const and can't be reassigned on line {line.m_Line}");
+        exitOut();
+    }
+
+    static void exitOut()
     {
         Environment.Exit(1);
     }

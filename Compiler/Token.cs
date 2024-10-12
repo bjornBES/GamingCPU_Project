@@ -1,23 +1,23 @@
 ﻿public struct Token
 {
-    public TokenType Type;
-    public int line;
-    public string value;
+    public TokenType m_Type;
+    public int m_Line;
+    public string m_Value;
     public override string ToString()
     {
-        switch (Type)
+        switch (m_Type)
         {
             case TokenType.int_lit:
                 return "int literal";
             case TokenType.ident:
                 return "identifier";
             default:
-                return Type.ToString();
+                return m_Type.ToString();
         }
     }
-    public int? bin_proc()
+    public int? BinProc()
     {
-        switch (Type)
+        switch (m_Type)
         {
             case TokenType.inc:     return 0;
             case TokenType.dec:     return 0;

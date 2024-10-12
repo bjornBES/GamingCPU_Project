@@ -27,7 +27,7 @@
     leftanglebracket    = '<',
     rightanglebracket   = '>',
 
-    none,
+    none = 0x17F,
 
     int_lit,
     ident,
@@ -41,11 +41,8 @@
 
     _return,
 
-    _public,
-
     _while,
 
-    _char,
     uint8,
     int8,
     
@@ -58,17 +55,23 @@
     int32,
     uint32,
 
-    _string,
     _const,
+    _public,
 
-    _near,
-    _short,
-    _long,
-    _far,
+    _nearPointer,
+    _shortPointer,
+    _longPointer,
+    _farPointer,
 
     _void,
+    function,
+    program,
 
     neg,
     dec,
     inc,
-};
+    Section,
+    SectionText,
+    SectionData,
+    SectionString,
+}

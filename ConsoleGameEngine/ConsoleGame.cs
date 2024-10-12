@@ -29,7 +29,6 @@
         public int TargetFramerate { get; set; }
 
         public bool Running { get; set; }
-        private Thread gameThread;
 
         private double[] framerateSamples;
 
@@ -45,94 +44,12 @@
         public void Construct(int width, int height, int fontW, int fontH, FramerateMode m, Color[] VGAcolors)
         {
             Engine = new ConsoleEngine(width, height, fontW, fontH, VGAcolors);
-            Start();
             StartTime = DateTime.Now;
-
-            // if (m == FramerateMode.Unlimited)
-            //     gameThread = new Thread(new ThreadStart(GameLoopUnlimited));
-            // if (m == FramerateMode.MaxFps)
-            //     gameThread = new Thread(new ThreadStart(GameLoopLocked));
-            // Running = true;
-            // gameThread.Start();
 
             // gör special checks som ska gå utanför spelloopen
             // om spel-loopen hänger sig ska man fortfarande kunna avsluta
             while (Running)
             {
-                CheckForExit();
-            }
-        }
-
-        private void GameLoopLocked()
-        {
-            int sampleCount = TargetFramerate;
-            framerateSamples = new double[sampleCount];
-
-            DateTime lastTime;
-            float uncorrectedSleepDuration = 1000 / TargetFramerate;
-            while (Running)
-            {
-                lastTime = DateTime.UtcNow;
-
-                FrameCounter++;
-                FrameCounter = FrameCounter % sampleCount;
-
-                // kör main programmet
-                Update();
-
-                if (!IsRendering)
-                {
-                    IsRendering = true;
-                    Thread thread = new Thread(new ThreadStart(Render));
-                    thread.Start();
-                }
-
-                float computingDuration = (float)(DateTime.UtcNow - lastTime).TotalMilliseconds;
-                int sleepDuration = (int)(uncorrectedSleepDuration - computingDuration);
-                if (sleepDuration > 0)
-                {
-                    // programmet ligger före maxFps, sänker det
-                    Thread.Sleep(sleepDuration);
-                }
-
-                //increases total frames
-                FrameTotal++;
-
-                // beräknar framerate
-                TimeSpan diff = DateTime.UtcNow - lastTime;
-                DeltaTime = (float)(1 / (TargetFramerate * diff.TotalSeconds));
-
-                framerateSamples[FrameCounter] = (double)diff.TotalSeconds;
-            }
-        }
-
-        private void GameLoopUnlimited()
-        {
-            int sampleCount = TargetFramerate;
-            framerateSamples = new double[sampleCount];
-
-            DateTime lastTime;
-            while (Running)
-            {
-                lastTime = DateTime.UtcNow;
-
-                FrameCounter++;
-                FrameCounter = FrameCounter % sampleCount;
-
-                Update();
-                Render();
-
-                //increases total frames
-                FrameTotal++;
-
-                // beräknar framerate
-                TimeSpan diff = DateTime.UtcNow - lastTime;
-                DeltaTime = (float)diff.TotalSeconds;
-
-                framerateSamples[FrameCounter] = diff.TotalSeconds;
-
-                // kollar om spelaren vill sluta
-                CheckForExit();
             }
         }
 
@@ -146,7 +63,7 @@
 
         public void SetTitle(string title)
         {
-            Console.Title = title;
+            NativeMethods.SetConsoleTitle(title);
         }
 
         public void Exit()
@@ -158,29 +75,6 @@
             }
         }
 
-        private void CheckForExit()
-        {
-            if (Engine.GetKeyDown(ConsoleKey.Delete))
-            {
-                Exit();
-            }
-        }
-
-        /// <summary> Run once on Creating, import Resources here. </summary>
-        public virtual void Start()
-        {
-
-        }
-        /// <summary> Run every frame before rendering. Do math here. </summary>
-        public virtual void Update()
-        {
-
-        }
-        /// <summary> Run every frame after updating. Do drawing here. </summary>
-        public virtual void Render()
-        {
-            Engine.ClearBuffer();
-        }
         public virtual void Close()
         {
             Exit();

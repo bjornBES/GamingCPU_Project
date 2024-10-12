@@ -2,33 +2,59 @@
 
 - `0x0000`: MOV:  destination, source       `Moves the value from the source into the destination`
 - `0x0001`: MOV:  AL, source                `Moves the value from the source into the AL register`
-- `0x0004`: MOVW: destination, source       `Moves a word from the specified source to the destination`
-- `0x0005`: MOVW: A, source                 `Moves a word from the specified source to the A register`
-- `0x0008`: MOVT: destination, source       `Moves a tbyte from the specified source to the destination`
-- `0x000C`: MOVD: destination, source       `Moves a dword from the specified source to the destination`
-- `0x000D`: MOVD: AX, source                `Moves a dword from the specified source to the AX register`
-- `0x0100`: CMP:  operand1 operand2         `Compares operand1 and operand2 and sets the flags in the flags register`
-- `0x0200`: PUSB: source                    `Pushes the source onto the stack and increments the SP`
-- `0x0204`: PUSW: source                    `Pushes the source word onto the stack and increments the SP`
-- `0x0208`: PUST: source                    `Pushes the source tbyte onto the stack and increments the SP`
-- `0x020C`: PUSD: source                    `Pushes the source dword onto the stack and increments the SP`
-- `0x0300`: POP:  register                  `Decrements the SP and pops the current byte into the register`
-- `0x0304`: POPW: register                  `Decrements the SP and pops the current word into the register`
-- `0x0308`: POPT: register                  `Decrements the SP and pops the current tbyte into the register`
-- `0x030C`: POPD: register                  `Decrements the SP and pops the current dword into the register`
-- `0x0400`: CALL: address                   `pushes the PC register and jumps to the function specified by the address`
-- `0x0401`: CALL: HL                        `pushes the PC register and jumps to the function specified by the HL register`
-- `0x0500`: RET:  operand1                  `pops the PC register and subtracts the SP by operand1`
-- `0x0600`: RETZ:                           `pops the PC register`
-- `0x0700`: SEZ:  register                  `Sets a register to zero`
-- `0x0701`: SEZ:  AL                        `Sets the AL register to zero`
-- `0x0702`: SEZ:  A                         `Sets the A register to zero`
-- `0x0703`: SEZ:  AX                        `Sets the AX register to zero`
-- `0x0800`: TEST: register                  `Compares the destination with itself and sets the flag`
-- `0x0801`: TEST: AL                        `Compares the AL register with itself and sets the flag`
-- `0x0802`: TEST: A                         `Compares the A register with itself and sets the flag`
-- `0x0803`: TEST: AX                        `Compares the AX register with itself and sets the flag`
-- `0x0900`: MOTW: destination, source       `Moves a tword from the specified source to the destination`
+- `0x0100`: MOVW: destination, source       `Moves a word from the specified source to the destination`
+- `0x0101`: MOVW: A, source                 `Moves a word from the specified source to the A register`
+- `0x0102`: MOVW: B, source                 `Moves a word from the specified source to the B register`
+- `0x0103`: MOVW: C, source                 `Moves a word from the specified source to the C register`
+- `0x0104`: MOVW: D, source                 `Moves a word from the specified source to the D register`
+- `0x0105`: MOVW: A, CR0                    `Moves CR0 register into the A register`
+- `0x0106`: MOVW: CR0, A                    `Moves A register into the CR0 register`
+- `0x0200`: MOVT: destination, source       `Moves a tbyte from the specified source to the destination`
+- `0x0300`: MOVD: destination, source       `Moves a dword from the specified source to the destination`
+- `0x0301`: MOVD: AX, source                `Moves a dword from the specified source to the AX register`
+- `0x0302`: MOVD: BX, source                `Moves a dword from the specified source to the BX register`
+- `0x0303`: MOVD: CX, source                `Moves a dword from the specified source to the CX register`
+- `0x0304`: MOVD: DX, source                `Moves a dword from the specified source to the DX register`
+- `0x0400`: CMP:  operand1 operand2         `Compares operand1 and operand2 and sets the flags in the flags register`
+- `0x0401`: CMPZ: operand1                  `Compares operand1 and 0 and sets the flags in the flags register`
+- `0x0402`: CMP:  A operand2                `Compares A and operand2 and sets the flags in the flags register`
+- `0x0403`: CMP:  AX operand2               `Compares AX and operand2 and sets the flags in the flags register`
+- `0x0500`: PUSH: source                    `Pushes the source onto the stack and increments the SP`
+- `0x0600`: POP:  register                  `Decrements the SP and pops the current byte into the register`
+- `0x0604`: POPW: register                  `Decrements the SP and pops the current word into the register`
+- `0x0608`: POPT: register                  `Decrements the SP and pops the current tbyte into the register`
+- `0x060C`: POPD: register                  `Decrements the SP and pops the current dword into the register`
+- `0x0700`: CALL: address                   `pushes the PC register and jumps to the function specified by the address`
+- `0x0701`: CALL: HL                        `pushes the PC register and jumps to the function specified by the HL register`
+- `0x0800`: RET:  operand1                  `pops the PC register and subtracts the SP by operand1`
+- `0x0900`: RETZ:                           `pops the PC register`
+- `0x0A00`: SEZ:  register                  `Sets a register to zero`
+- `0x0A01`: SEZ:  AL                        `Sets the AL register to zero`
+- `0x0A02`: SEZ:  BL                        `Sets the BL register to zero`
+- `0x0A03`: SEZ:  CL                        `Sets the CL register to zero`
+- `0x0A04`: SEZ:  DL                        `Sets the DL register to zero`
+- `0x0A05`: SEZ:  A                         `Sets the A register to zero`
+- `0x0A06`: SEZ:  B                         `Sets the B register to zero`
+- `0x0A07`: SEZ:  C                         `Sets the C register to zero`
+- `0x0A08`: SEZ:  D                         `Sets the D register to zero`
+- `0x0A09`: SEZ:  AX                        `Sets the AX register to zero`
+- `0x0A0A`: SEZ:  BX                        `Sets the BX register to zero`
+- `0x0A0B`: SEZ:  CX                        `Sets the CX register to zero`
+- `0x0A0C`: SEZ:  DX                        `Sets the DX register to zero`
+- `0x0B00`: TEST: register                  `Compares the destination with itself and sets the flag`
+- `0x0B01`: TEST: AL                        `Compares the AL register with itself and sets the flag`
+- `0x0B02`: TEST: BL                        `Compares the BL register with itself and sets the flag`
+- `0x0B03`: TEST: CL                        `Compares the CL register with itself and sets the flag`
+- `0x0B04`: TEST: DL                        `Compares the DL register with itself and sets the flag`
+- `0x0B05`: TEST: A                         `Compares the A register with itself and sets the flag`
+- `0x0B06`: TEST: B                         `Compares the B register with itself and sets the flag`
+- `0x0B07`: TEST: C                         `Compares the C register with itself and sets the flag`
+- `0x0B08`: TEST: D                         `Compares the D register with itself and sets the flag`
+- `0x0B09`: TEST: AX                        `Compares the AX register with itself and sets the flag`
+- `0x0B0A`: TEST: BX                        `Compares the BX register with itself and sets the flag`
+- `0x0B0B`: TEST: CX                        `Compares the CX register with itself and sets the flag`
+- `0x0B0C`: TEST: DX                        `Compares the DX register with itself and sets the flag`
+- `0x0C00`: SWAP register register          `swaps the contents of register1 with register2`
 
 # IO instructions
 
@@ -79,17 +105,33 @@
 - `0x2170`: TOB:    source, operand1        `Toggles a bit in the source specified by the operand1`
 - `0x2180`: MOD:    destination, source     `WIP`
 
-# Float arithmetic operations
+# Single-Precision Float Arithmetic Operations
 
-- `0x2190`: FADD:   destination, source     `Adds the values of the source and the destination and stores the value in destination.`
-- `0x21A0`: FSUB:   destination, source     `Subtracts the values of the source and the destination and stores the value in destination.`
-- `0x21B0`: FMUL:   destination, source     `Multiplies the values of the source and the destination and stores the value in destination.`
-- `0x21C0`: FDIV:   destination, source     `Divides the values of the source and the destination and stores the value in destination.`
-- `0x21D0`: FAND:   destination, source     `Performs a bitwise AND operation between the destination and source and stores the value in destination.`
-- `0x21E0`: FOR:    destination, source     `Performs a bitwise OR operation between the destination and source and stores the value in destination.`
-- `0x21F0`: FNOR:   destination, source     `Performs a bitwise NOR operation between the destination and source and stores the value in destination.`
-- `0x2200`: FXOR:   destination, source     `Performs a bitwise XOR operation between the destination and source and stores the value in destination.`
-- `0x2210`: FNOT:   destination             `Performs a bitwise NOT operation on the destination and stores the value in destination.`
+- `0x2190`: ADDF:   destination, source     `Adds the values of the source and the destination and stores the result in the destination.`
+- `0x2191`: ADDF:   AF, source              `Adds the values of the source and the AF register and stores the result in the AF register.`
+- `0x21A0`: SUBF:   destination, source     `Subtracts the source from the destination and stores the result in the destination.`
+- `0x21A0`: SUBF:   AF, source              `Subtracts the source from the AF register and stores the result in the AF register.`
+- `0x21B0`: MULF:   destination, source     `Multiplies the source and the destination and stores the result in the destination.`
+- `0x21B0`: MULF:   AF, source              `Multiplies the source and the AF register and stores the result in the AF register.`
+- `0x21C0`: DIVF:   destination, source     `Divides the destination by the source and stores the result in the destination.`
+- `0x21C0`: DIVF:   AF, source              `Divides the AF register by the source and stores the result in the AF register.`
+- `0x21D0`: CMPF:   destination, source     `Compares the source and destination values, setting flags accordingly.`
+- `0x21E0`: SQRTF:  destination             `Computes the square root of the value in the destination and stores the result in the destination.`
+- `0x21F0`: MODF:   destination, source     `Computes the modulus of the destination by the source and stores the result in the destination.`
+
+# Double-Precision Float Arithmetic Operations
+
+- `0x2290`: ADDD:   destination, source     `Adds the values of the source and the destination and stores the result in the destination.`
+- `0x2290`: ADDD:   AD, source              `Adds the values of the source and the AD register and stores the result in the AD register.`
+- `0x22A0`: SUBD:   destination, source     `Subtracts the source from the destination and stores the result in the destination.`
+- `0x22A0`: SUBD:   AD, source              `Subtracts the source from the AD register and stores the result in the AD register.`
+- `0x22B0`: MULD:   destination, source     `Multiplies the source and the destination and stores the result in the destination.`
+- `0x22B0`: MULD:   AD, source              `Multiplies the source and the AD register and stores the result in the AD register.`
+- `0x22C0`: DIVD:   destination, source     `Divides the destination by the source and stores the result in the destination.`
+- `0x22C0`: DIVD:   AD, source              `Divides the AD register by the source and stores the result in the AD register.`
+- `0x22D0`: CMPD:   destination, source     `Compares the source and destination values, setting flags accordingly.`
+- `0x22E0`: SQRTD:  destination             `Computes the square root of the value in the destination and stores the result in the destination.`
+- `0x22F0`: MODD:   destination, source     `Computes the modulus of the destination by the source and stores the result in the destination.`
 
 # Conditional jumps
 
@@ -106,22 +148,19 @@
 - `0x3043`: JGE:    address                 `Jumps to the specified address if the equal flag is set or the less flag is cleared`
 - `0x3051`: JNV:    address                 `Jumps to the specified address if the overflow flag is cleared`
 
-# Convert instructions
-
-- `0x4000`: CBTA:   destination, source     `Convertes a byte into a ASCII string`
-
 # Memory Operations instructions
 
-- `0x4010`: CMPSTR: address1, address2      `Compares to null terminated strings specified by the addresses and outputs the result in the {equal} flag`
-- `0x4020`: MOVF:   destination, immediate  `moves a float from the specified immediate to the float register(destination)`
-- `0x4030`: MOVD:   destination, immediate  `moves a double from the specified immediate to the double register(destination)`
+- `0x4010`: CMPL:                           `Compares the memory address value in AX and HL for C times and updates the flags register` **Need extended mode**
+- `0x4020`: MOVF: destination, immediate    `moves a float from the specified immediate to the float register(destination)`
+- `0x4030`: MOFD: destination, immediate    `moves a double from the specified immediate to the double register(destination)`
+- `0x4040`: MOVQ: destination, source       `Moves a qword from the specified source to the destination`
 
 # Special instructions
 
 - `0xF000`: RETI:                           `returns from an interrupt routine`
 - `0xF010`: NOP:                            `No operation`
-- `0xF020`: PUSHR:                          `Pushes (A B C D H L) on to the stack`
-- `0xF030`: POPR:                           `Pops (A B C D H L) off the stack`
+- `0xF020`: PUSHR:                          `Pushes (AX BX CX DX H L) on to the stack`
+- `0xF030`: POPR:                           `Pops (AX BX CX DX H L) off the stack`
 - `0xF040`: INT:    INTERRUPT_ROUTINE       `Generates an interrupt routine (more in the INTERRUPTS)`
 - `0xF050`: BRK:                            `Generates a software interrupt (more in the INTERRUPTS)`
 - `0xF060`: ENTER:                          `Creates a stack frame`

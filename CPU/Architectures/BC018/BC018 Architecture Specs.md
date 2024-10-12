@@ -37,7 +37,7 @@
 
 ### INSTRUCTION LAYOUT
 
-XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
+XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 
 - U = Unused
 - X = instruction code
@@ -48,7 +48,6 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 
 - 0x00: immediate byte              number
 - 0x01: immediate word              number
-- 0x02: immediate tbyte             number
 - 0x10: register                    register
 - 0x11: register address            address [register]
 - 0x18: register A                  A
@@ -63,8 +62,8 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 - 0x51: Near address                Near [address]      a 8 bit address
 - 0x52: Short address               short [address]     a 16 bit address
 - 0x53: long address                long [address]      a 24 bit address
-- 0x58: SP relative address         [SP - number]/[SP + number]
-- 0x59: BP relative address         [BP - number]/[BP + number]
+- 0x58: SP relative address byte:   [SP + sbyte number]
+- 0x59: BP relative address byte:   [BP + sbyte number]
 - 0x5A: 32 bit segment address      [register:register]
 - 0x5B: 32 bit segment DS register  [DS:register]
 - 0x5C: 32 bit segment DS B         [DS:B]
@@ -111,17 +110,16 @@ when the BCG16 gets an Fault exception it will skip that instruction and continu
 
 - Address bus: 16 bits to a max of 24 bits
 
-|Base Address |Size       |Name                   |Description
-|-------------|-----------|-----------------------|-
-|`0x0000_0000`|`0x00_1000`| Interrupt vector table| Interrupt vector table more [here](#interrupt-vector-table)
-|`0x0000_1000`|`0x00_0200`| IO ports              | this is where the Ports is at
-|`0x0000_1200`|`0x00_EE00`| RAM                   | RAM in the first segment
-|`0x0001_0000`|`0x02_8000`| RAM                   | RAM
-|`0x0003_8000`|`0x00_8000`| Char set              | Char set
-|`0x0004_0000`|`0x04_0000`| VRAM                  | video ram
-|`0x0008_0000`|`0x08_0000`| RAM Banked            | this is the data/prgram is at but banked
+|Base Address |Size       |Name                     |Description
+|-------------|-----------|-------------------------|-
+|`0x0000_0000`|`0x00_1000`| Interrupt vector table  | Interrupt vector table more [here](#interrupt-vector-table)
+|`0x0000_1000`|`0x00_0200`| IO ports                | this is where the Ports is at
+|`0x0000_1200`|`0x00_EE00`| RAM                     | RAM in the first segment
+|`0x0001_0000`|`0x01_0000`| VRAM                    | video ram
+|`0x0002_0000`|`0x08_0000`| RAM Banked              | this is the data/prgram is at but banked
+|`0x000A_0000`|`0x06_0000`| RAM                     | RAM
 
-the end is `0xFFFFFF`/`0x1000000`
+the end is `0x10_0000`
 
 ## REGISTERS
 

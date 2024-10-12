@@ -3,14 +3,14 @@
     public struct Section
     {
         public string m_Name;
-        public int m_size;
-        public int m_offset;
+        public int m_Size;
+        public int m_Offset;
 
         public bool InSection(int i)
         {
-            if (m_size == 0) return true;
+            if (m_Size == 0) return true;
 
-            if (m_offset <= i && m_offset + m_size > i)
+            if (m_Offset <= i && m_Offset + m_Size > i)
             {
                 return true;
             }

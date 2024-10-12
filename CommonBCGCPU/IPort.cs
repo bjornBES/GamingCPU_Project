@@ -5,16 +5,18 @@ namespace CommonBCGCPU
 {
     public interface IPort
     {
-        public int m_PortIDStart { get; set; }
-        public int m_PortIDEnd { get; set; }
-        public byte m_InterruptIndex { get; set; }
+        public int PortIDStart { get; set; }
+        public int PortIDEnd { get; set; }
+        public byte InterruptIndex { get; set; }
 
-        public Address m_Address { get; set; }
-        public bool m_ReadRam { get; set; }
-        public bool m_WriteRam { get; set; }
+        public Address Address { get; set; }
+        public bool ReadRam { get; set; }
+        public bool WriteRam { get; set; }
 
-        public ushort m_Databus { get; set; }
-        public ushort m_Outputbus { get; set; }
+        public ushort Databus { get; set; }
+        public ushort Outputbus { get; set; }
+
+        public CPUBus BUS { get; set; }
 
         public void Tick();
         public void Reset();

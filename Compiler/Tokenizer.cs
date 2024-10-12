@@ -1,9 +1,12 @@
-﻿public class Tokenizer
+﻿using System.Text.RegularExpressions;
+
+public class Tokenizer
 {
     string m_src;
     int m_index;
-    string buf = "";
-    int line_count = 0;
+    string m_buf = "";
+    int m_lineNumber = 0;
+    int m_colNumber = 0;
     List<Token> m_tokens = new List<Token>();
 
     public Tokenizer(string src)
@@ -14,35 +17,15 @@
 
     public Token[] Tokenize()
     {
+        m_colNumber = 1;
+        m_lineNumber = 1;
         while (peek().HasValue)
         {
-            buf = "";
-            if (peek().Value == '/' && peek(1).HasValue && peek(1).Value == '/')
-            {
-                while (peek().HasValue && peek().Value != '\n')
-                {
-                    consume();
-                }
-            }
-            if (peek().Value == '/' && peek(1).HasValue && peek(1).Value == '*')
+            m_buf = "";
+            if (peek().Value == '\'')
             {
                 consume();
-                consume();
-                while (peek().HasValue)
-                {
-                    if (peek().Value == '*' && peek(1).HasValue && peek(1).Value == '/')
-                    {
-                        break;
-                    }
-                    consume();
-                }
-                consume();
-                consume();
-            }
-            else if (peek().Value == '\'')
-            {
-                consume();
-                buf = Convert.ToByte(consume()).ToString();
+                m_buf = Convert.ToByte(consume()).ToString();
                 if (!(peek().HasValue && peek().Value == '\''))
                 {
                     throw new NotImplementedException();
@@ -50,8 +33,7 @@
                 addToken(TokenType.int_lit);
                 consume();
             }
-            if (peek().Value == '0' &&
-                peek(1).HasValue && peek(1).Value == 'x')
+            else if (peek().Value == '0' && peek(1).HasValue && peek(1).Value == 'x')
             {
                 consume();
                 consume();
@@ -62,59 +44,68 @@
                         consume();
                         continue;
                     }
-                    buf += consume();
+                    m_buf += consume();
                 }
 
-                buf = Convert.ToString(Convert.ToInt32(buf, 16));
+                m_buf = Convert.ToString(Convert.ToInt32(m_buf, 16));
 
                 addToken(TokenType.int_lit);
 
             }
-            if (char.IsLetter(peek().Value) || peek().Value == '_')
+            else if (char.IsLetter(peek().Value) || peek().Value == '_')
             {
-                buf += consume();
+                m_buf += consume();
                 while (peek().HasValue && (char.IsLetterOrDigit(peek().Value) || peek().Value == '_'))
                 {
-                    buf += consume();
+                    m_buf += consume();
                 }
 
-                switch (buf.ToLower())
+                switch (m_buf.ToLower())
                 {
                     case "struct":  addToken(TokenType._struct);    break;
+                    case "program": addToken(TokenType.program);    break;
                     
                     case "end":     addToken(TokenType.end);        break;
-                    case "asm":     addToken(TokenType._asm);       break;
+                    case "asm":     aSMTokenize();                  break;
                     case "sizeof":  addToken(TokenType._sizeof);    break;
                     case "call":    addToken(TokenType.call);       break;
                     
                     case "return":  addToken(TokenType._return);    break;
 
+                    case "near":    addToken(TokenType._nearPointer);      break;
+                    case "short":   addToken(TokenType._shortPointer);     break;
+                    case "long":    addToken(TokenType._longPointer);      break;
+                    case "far":     addToken(TokenType._farPointer);       break;
+                    
+                    case "function":addToken(TokenType.function);   break;
+                    case "func":    addToken(TokenType.function);   break;
+
+                    case "section": addToken(TokenType.Section);    break;
+
+                    case "text":    addToken(TokenType.SectionText);    break;
+                    case "data":    addToken(TokenType.SectionData);    break;
+                    case "string":  addToken(TokenType.SectionString);  break;
+
+                    case "char":    addToken(TokenType.uint8);      break;
+                    case "byte":    addToken(TokenType.uint8);      break;
+                    case "sbyte":   addToken(TokenType.int8);       break;
+
+                    case "ushort":  addToken(TokenType.uint16);     break;
+                    case "word":    addToken(TokenType.uint16);     break;
+                    case "sword":   addToken(TokenType.int16);      break;
+                    
+                    case "dword":   addToken(TokenType.uint32);     break;
+                    case "int":     addToken(TokenType.int32);      break;
+                    case "uint":    addToken(TokenType.uint32);     break;
+
                     case "public":  addToken(TokenType._public);    break;
-
-                    case "near":    addToken(TokenType._near);      break;
-                    case "short":   addToken(TokenType._short);     break;
-                    case "long":    addToken(TokenType._long);      break;
-                    case "far":     addToken(TokenType._far);       break;
-                    
-                    case "void":    addToken(TokenType._void);      break;
-
-                    case "char":    addToken(TokenType._char);      break;
-                    case "uint8":   addToken(TokenType.uint8);      break;
-                    case "int8":    addToken(TokenType.int8);       break;
-
-                    case "uint16":  addToken(TokenType.uint16);     break;
-                    case "int16":   addToken(TokenType.int16);      break;
-                    
-                    case "tbyte":   addToken(TokenType.uint24);     break;
-                    case "uint24":  addToken(TokenType.uint24);     break;
-                    case "sint24":  addToken(TokenType.int24);      break;
-                    
-                    case "uint32":  addToken(TokenType.uint32);     break;
-                    case "sint32":  addToken(TokenType.int32);      break;
-
-                    case "string":  addToken(TokenType._string);    break;
-
                     case "const":   addToken(TokenType._const);     break;
+
+                    case "endfunc": 
+                    case "endfunction": 
+                        addToken(TokenType.end); addToken(TokenType.function); break;
+                    case "endprogram":
+                        addToken(TokenType.end); addToken(TokenType.program); break;
 
                     default:
                         addToken(TokenType.ident);
@@ -123,16 +114,28 @@
             }
             else if (new string("0123456789").Contains(peek().Value))
             {
-                buf += consume();
-                while (peek().HasValue && (char.IsDigit(peek().Value) || peek().Value == '.'))
+                m_buf += consume();
+                while (peek().HasValue && char.IsDigit(peek().Value))
                 {
-                    buf += consume();
+                    m_buf += consume();
                 }
                 addToken(TokenType.int_lit);
             }
             else if (char.IsSeparator(peek().Value))
             {
                 consume();
+            }
+            else if (peek().Value == '\\' && peek(1).HasValue && peek(1).Value == '\\')
+            {
+                consume();
+                consume();
+            }
+            else if (peek().Value == '@' && m_colNumber == 1)
+            {
+                while (peek().HasValue && peek().Value != '\n')
+                {
+                    consume();
+                }
             }
             else
             {
@@ -206,31 +209,58 @@
                         consume();
                         addToken(TokenType.comma);
                         break;
+                    case '.':
+                        consume();
+                        addToken(TokenType.period);
+                        break;
                     case '\"':
                         consume();
                         addToken(TokenType.quotation_mark);
                         while (peek().HasValue && peek().Value != '\"')
                         {
-                            buf += consume();
+                            m_buf += consume();
                         }
                         addToken(TokenType.ident);
-                        buf = "";
+                        m_buf = "";
                         consume();
                         addToken(TokenType.quotation_mark);
                         break;
                     case '\n':
                         consume();
-                        line_count++;
+                        m_colNumber = 1;
+                        m_lineNumber++;
                         break;
-                    default: break;
+                    default:
+                        break;
                 }
             }
         }
         return m_tokens.ToArray();
     }
+
+    void aSMTokenize()
+    {
+        string buffer = "";
+
+        if (char.IsLetterOrDigit(peek().Value))
+        {
+            while (peek().HasValue && peek().Value != '\n')
+            {
+                buffer += consume();
+            }
+
+            buffer = buffer.Trim(' ');
+            buffer = Regex.Replace(buffer, @" +", " ");
+            addToken(TokenType._asm, buffer);
+        }
+    }
     void addToken(TokenType type)
     {
-        m_tokens.Add(new Token() { Type = type, value = buf, line = line_count });
+        addToken(type, m_buf);
+    }
+    void addToken(TokenType type, string line)
+    {
+        m_tokens.Add(new Token() { m_Type = type, m_Value = line, m_Line = m_lineNumber });
     }
     char? peek(int offset = 0)
     {
@@ -239,6 +269,7 @@
     }
     char consume()
     {
+        m_colNumber++;
         return m_src[m_index++];
     }
 }

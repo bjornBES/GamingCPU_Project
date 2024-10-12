@@ -8,8 +8,8 @@ namespace filesystem
     {
         public FileSystemFAT12()
         {
-            m_FormatFunction = FormatDisk;
-            m_LoadFile = FAT12Loadfile;
+            m_formatFunction = FormatDisk;
+            m_loadFile = FAT12Loadfile;
         }
 
         public const ushort entrySize =     32;
@@ -24,24 +24,27 @@ namespace filesystem
         public void FormatDisk(Disk disk)
         {
             CreateDisk(disk);
-            int newOffset = 0;
+            if (Program.m_Admin)
+            {
+                int newOffset = 0;
 
-            newOffset = 3;
-            newOffset = WriteToDisk("MSWIN4.1".PadRight(8, ' '), newOffset);              // OEM Name
-            newOffset = WriteToDisk(BytesPerSector, newOffset);                           // Bytes pre sector
-            newOffset = WriteToDisk((byte)2, newOffset);                                  // Sectors per cluster
-            newOffset = WriteToDisk((ushort)1, newOffset);                                // Reserved sectors count
-            newOffset = WriteToDisk((byte)2, newOffset);                                  // Number of FAT
-            newOffset = WriteToDisk((ushort)2, newOffset);                                // Maximum number of root directory entries
-            newOffset = WriteToDisk(TotalSectors, newOffset);                             // Number of sectors
-            newOffset = WriteToDisk((byte)0xF0, newOffset);                               // Media descriptor
-            newOffset = WriteToDisk((ushort)0x0009, newOffset);                           // Sectors per FAT
-            newOffset = WriteToDisk((ushort)SectorsPerTracks, newOffset);                 // Sectors per track
-            newOffset = WriteToDisk((ushort)heads, newOffset);                            // Number of heads
-            newOffset = WriteToDisk(0x00000000, newOffset);                               // Hidden sectors
-            newOffset = WriteToDisk(0x00000000, newOffset);                               // Total sectors
+                newOffset = 3;
+                newOffset = WriteToDisk("MSWIN4.1".PadRight(8, ' '), newOffset);              // OEM Name
+                newOffset = WriteToDisk(m_BytesPerSector, newOffset);                           // Bytes pre sector
+                newOffset = WriteToDisk((byte)2, newOffset);                                  // Sectors per cluster
+                newOffset = WriteToDisk((ushort)1, newOffset);                                // Reserved sectors count
+                newOffset = WriteToDisk((byte)2, newOffset);                                  // Number of FAT
+                newOffset = WriteToDisk((ushort)2, newOffset);                                // Maximum number of root directory entries
+                newOffset = WriteToDisk(m_TotalSectors, newOffset);                             // Number of sectors
+                newOffset = WriteToDisk((byte)0xF0, newOffset);                               // Media descriptor
+                newOffset = WriteToDisk((ushort)0x0009, newOffset);                           // Sectors per FAT
+                newOffset = WriteToDisk((ushort)m_SectorsPerTracks, newOffset);                 // Sectors per track
+                newOffset = WriteToDisk((ushort)m_Heads, newOffset);                            // Number of heads
+                newOffset = WriteToDisk(0x00000000, newOffset);                               // Hidden sectors
+                newOffset = WriteToDisk(0x00000000, newOffset);                               // Total sectors
 
-            CreateFile("\\test.txt", 1);
+                CreateFile("\\test.txt", 1);
+            }
         }
 
         public void FAT12Loadfile(Disk disk)
@@ -86,11 +89,11 @@ namespace filesystem
 
         public ushort FAT12findFreeFAT(int sizeInSectors = 1)
         {
-            if (m_Disk.FileSystemFormat == FileSystemType.FAT12)
+            if (m_Disk.m_FileSystemFormat == FileSystemType.FAT12)
             {
-                byte SectorsPerCluster = DiskBuffer[0x0D];
-                int ClusterSize = SectorsPerCluster * BytesPerSector;
-                int FileSizeInBytes = sizeInSectors * BytesPerSector;
+                byte SectorsPerCluster = m_DiskBuffer[0x0D];
+                int ClusterSize = SectorsPerCluster * m_BytesPerSector;
+                int FileSizeInBytes = sizeInSectors * m_BytesPerSector;
                 int FileSizeInClusters = (int)MathF.Round((float)FileSizeInBytes / ClusterSize, MidpointRounding.ToPositiveInfinity);
 
                 int FATIndex = FAT12ReadFAT(FileSizeInClusters);
@@ -103,12 +106,12 @@ namespace filesystem
         // Function to read the FAT and find a sequence of free clusters
         public int FAT12ReadFAT(int numClustersToFind)
         {
-            ushort SectorsPerFAT = BitConverter.ToUInt16(DiskBuffer[0x16..0x18]);
-            byte FATCount = DiskBuffer[0x10];
-            int FATAddress = BytesPerSector * SectorsPerFAT;
-            int FATSize = (FATCount * SectorsPerFAT) * BytesPerSector;
+            ushort SectorsPerFAT = BitConverter.ToUInt16(m_DiskBuffer[0x16..0x18]);
+            byte FATCount = m_DiskBuffer[0x10];
+            int FATAddress = m_BytesPerSector * SectorsPerFAT;
+            int FATSize = (FATCount * SectorsPerFAT) * m_BytesPerSector;
             int FATEnd = FATAddress + FATSize;
-            byte[] buffer = DiskBuffer[FATAddress..FATEnd];
+            byte[] buffer = m_DiskBuffer[FATAddress..FATEnd];
 
             int freeClusterCount = 0;
             int startClusterIndex = -1;
@@ -162,11 +165,11 @@ namespace filesystem
 
             if (clusterIndex % 2 == 0)
             {
-                entry = DiskBuffer[byteOffset] | ((DiskBuffer[byteOffset + 1] & 0x0F) << 8);
+                entry = m_DiskBuffer[byteOffset] | ((m_DiskBuffer[byteOffset + 1] & 0x0F) << 8);
             }
             else
             {
-                entry = ((DiskBuffer[byteOffset] & 0xF0) >> 4) | (DiskBuffer[byteOffset + 1] << 4);
+                entry = ((m_DiskBuffer[byteOffset] & 0xF0) >> 4) | (m_DiskBuffer[byteOffset + 1] << 4);
             }
 
             return entry;
@@ -175,12 +178,12 @@ namespace filesystem
         // Function to write a 12-bit FAT entry to the FAT table
         private void FAT12WriteFATEntry(int clusterIndex, int value)
         {
-            ushort SectorsPerFAT = BitConverter.ToUInt16(DiskBuffer[0x16..0x18]);
-            byte FATCount = DiskBuffer[0x10];
-            int FATAddress = BytesPerSector * SectorsPerFAT;
-            int FATSize = (FATCount * SectorsPerFAT) * BytesPerSector;
+            ushort SectorsPerFAT = BitConverter.ToUInt16(m_DiskBuffer[0x16..0x18]);
+            byte FATCount = m_DiskBuffer[0x10];
+            int FATAddress = m_BytesPerSector * SectorsPerFAT;
+            int FATSize = (FATCount * SectorsPerFAT) * m_BytesPerSector;
             int FATEnd = FATAddress + FATSize;
-            byte[] buffer = DiskBuffer[FATAddress..FATEnd];
+            byte[] buffer = m_DiskBuffer[FATAddress..FATEnd];
 
             int byteOffset = (clusterIndex * 3) / 2;
 
@@ -196,14 +199,14 @@ namespace filesystem
                 buffer[byteOffset] = (byte)((buffer[byteOffset] & 0x0F) | ((value << 4) & 0xF0)); // Lower 4 bits
                 buffer[byteOffset + 1] = (byte)((value >> 4) & 0xFF); // Upper 8 bits
             }
-            Array.Copy(buffer, 0, DiskBuffer, FATAddress, FATSize);
+            Array.Copy(buffer, 0, m_DiskBuffer, FATAddress, FATSize);
         }
 
         private int GetFirstRootDirectorySector()
         {
-            ushort ReservedSectors = BitConverter.ToUInt16(DiskBuffer[0x0E..0x0F]);
-            ushort SectorsPerFAT = BitConverter.ToUInt16(DiskBuffer[0x16..0x18]);
-            byte FATCount = DiskBuffer[0x10];
+            ushort ReservedSectors = BitConverter.ToUInt16(m_DiskBuffer[0x0E..0x0F]);
+            ushort SectorsPerFAT = BitConverter.ToUInt16(m_DiskBuffer[0x16..0x18]);
+            byte FATCount = m_DiskBuffer[0x10];
 
             return ReservedSectors + (FATCount * SectorsPerFAT);
         }
@@ -223,7 +226,7 @@ namespace filesystem
                 parentDirectory = null;
             }
 
-            if (m_Disk.FileSystemFormat == FileSystemType.FAT12)
+            if (m_Disk.m_FileSystemFormat == FileSystemType.FAT12)
             {
                 if (fileName.Length > 0xB)
                 {

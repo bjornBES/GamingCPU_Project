@@ -12,17 +12,17 @@ namespace filesystem
         public const int _144MB = 2880 * 512;
         public const int _20MB = (1024 * 1024) * 20;
 
-        public Encoding DefualtEncoder = Encoding.ASCII;
-        public ushort rootAddress = 0x280;
+        public Encoding m_DefualtEncoder = Encoding.ASCII;
+        public ushort m_RootAddress = 0x300;
 
-        public int DiskSize;
-        public byte[] DiskBuffer;
-        public ushort BytesPerSector;
-        public byte heads;
-        public ushort TotalSectors;
-        public byte SectorsPerTracks;
-        public ushort TotalTracks;
-        public ushort TracksPerHead;
+        public int m_DiskSize;
+        public byte[] m_DiskBuffer;
+        public ushort m_BytesPerSector;
+        public byte m_Heads;
+        public ushort m_TotalSectors;
+        public byte m_SectorsPerTracks;
+        public ushort m_TotalTracks;
+        public ushort m_TracksPerHead;
 
         public Disk m_Disk;
 
@@ -36,17 +36,17 @@ namespace filesystem
         internal delegate byte[] ReadSector(byte head, ushort track, ushort sector);
         internal delegate void WriteSector(byte head, ushort track, ushort sector, byte[] bytes);
 
-        internal FormatFunction m_FormatFunction;
-        internal FormatFunction m_LoadFile;
-        internal ReadSector m_ReadSector;
-        internal WriteSector m_WriteSector;
+        internal FormatFunction m_formatFunction;
+        internal FormatFunction m_loadFile;
+        internal ReadSector m_readSector;
+        internal WriteSector m_writeSector;
 
-        public int GetAddressFromLBA(int lba) => lba * BytesPerSector;
-        public int GetLBA(byte head, ushort track, ushort sector) => (track * TracksPerHead + head) * SectorsPerTracks + (sector - 1);
+        public int GetAddressFromLBA(int lba) => lba * m_BytesPerSector;
+        public int GetLBA(byte head, ushort track, ushort sector) => (track * m_TracksPerHead + head) * m_SectorsPerTracks + (sector - 1);
 
         public void Format(Disk disk)
         {
-            m_FormatFunction(disk);
+            m_formatFunction(disk);
         }
         public void CreateDisk(Disk disk)
         {
@@ -58,14 +58,14 @@ namespace filesystem
 
             m_Disk = disk;
 
-            BytesPerSector = 0x200;
-            rootAddress = 0x400;
+            m_BytesPerSector = 0x200;
+            m_RootAddress = 0x300;
             switch (disk.m_DiskSize)
             {
                 case filesystem.DiskSize._20MB:
-                    heads = 4;
-                    DiskSize = _20MB; // 20 MB
-                    TracksPerHead = 80;
+                    m_Heads = 4;
+                    m_DiskSize = _20MB; // 20 MB
+                    m_TracksPerHead = 80;
                     break;
                 case filesystem.DiskSize._40MB:
                     break;
@@ -74,58 +74,62 @@ namespace filesystem
                 case filesystem.DiskSize._F5MB:
                     break;
                 case filesystem.DiskSize._F3MB:
-                    heads = 2;
-                    DiskSize = _144MB; // 1,44 MB
-                    TracksPerHead = 80;
+                    m_Heads = 2;
+                    m_DiskSize = _144MB; // 1,44 MB
+                    m_TracksPerHead = 80;
                     break;
                 default:
                     break;
             }
 
-            TotalTracks = (ushort)(TracksPerHead * heads);
-            TotalSectors = (ushort)(DiskSize / BytesPerSector);
-            SectorsPerTracks = (byte)(TotalSectors / TotalTracks);
+            m_TotalTracks = (ushort)(m_TracksPerHead * m_Heads);
+            m_TotalSectors = (ushort)(m_DiskSize / m_BytesPerSector);
+            m_SectorsPerTracks = (byte)(m_TotalSectors / m_TotalTracks);
 
-            DiskBuffer = new byte[DiskSize];
-            DiskBuffer.Initialize();
+            m_DiskBuffer = new byte[m_DiskSize];
+            m_DiskBuffer.Initialize();
         }
         public byte[] ReadDiskSector(byte head, ushort track, ushort sector)
         {
-            return m_ReadSector(head, track, sector);
+            return m_readSector(head, track, sector);
         }
         public void SaveFile()
         {
-            File.WriteAllBytes(m_Disk.m_DiskPath, DiskBuffer);
+            File.WriteAllBytes(m_Disk.m_DiskPath, m_DiskBuffer);
         }
         public void LoadFile(Disk disk)
         {
             if (disk == null)
             {
-                m_FormatFunction(disk);
+                m_formatFunction(disk);
             }
 
             m_Disk = disk;
-            DiskBuffer = File.ReadAllBytes(disk.m_DiskPath);
+            m_DiskBuffer = File.ReadAllBytes(disk.m_DiskPath);
 
-            m_LoadFile(disk);
+            m_loadFile(disk);
         }
 
-        public int WriteToDisk(byte day, byte month, ushort year, byte hour, byte minute, int offset = 0)
+        public int WriteToDisk(byte day, byte month, ushort year, byte hour, byte minute, byte seconds, int offset = 0)
         {
-            offset = WriteToDisk(day, offset, false);
-            offset = WriteToDisk(month, offset, false);
-            offset = WriteToDisk(year, offset, false);
-            offset = WriteToDisk(hour, offset, false);
-            offset = WriteToDisk(minute, offset, false);
+            ushort time;
+            ushort date;
+
+            time = (ushort)((hour & 0b1_1111) << 11);
+            time |= (ushort)(minute << 5);
+            time |= (ushort)(seconds / 2);
+
+            date = (ushort)((year & 0b1111111) << 9);
+            date |= (ushort)(month << 5);
+            date |= day;
+
+            offset = WriteToDisk(time, offset, false);
+            offset = WriteToDisk(date, offset, false);
             return offset;
         }
         public int WriteToDisk(System.DateTime dateTime, int offset = 0)
         {
-            offset = WriteToDisk((byte)dateTime.Day, offset, false);
-            offset = WriteToDisk((byte)dateTime.Month, offset, false);
-            offset = WriteToDisk((ushort)dateTime.Year, offset, false);
-            offset = WriteToDisk((byte)dateTime.Hour, offset, false);
-            offset = WriteToDisk((byte)dateTime.Minute, offset, false);
+            offset = WriteToDisk((byte)dateTime.Day, (byte)dateTime.Month, (ushort)(dateTime.Year - 2024), (byte)dateTime.Hour, (byte)dateTime.Minute, (byte)dateTime.Second, offset);
             return offset;
         }
         public int WriteToDisk(ushort data, int offset = 0, bool inline = false)
@@ -175,7 +179,7 @@ namespace filesystem
         }
         public int WriteToDisk(string data, int offset = 0)
         {
-            byte[] buffer = DefualtEncoder.GetBytes(data);
+            byte[] buffer = m_DefualtEncoder.GetBytes(data);
             return WriteToDisk(buffer, offset);
         }
         public int WriteToDisk(byte[] data, int offset = 0)
@@ -183,7 +187,7 @@ namespace filesystem
             int i;
             for (i = 0; i < data.Length; i++)
             {
-                DiskBuffer[i + offset] = data[i];
+                m_DiskBuffer[i + offset] = data[i];
             }
             return i + offset;
         }
@@ -191,11 +195,11 @@ namespace filesystem
         public DateTime ReadDisk(ref int offset)
         {
             DateTime dateTime = new DateTime();
-            dateTime.Day = ReadDisk(ref offset, out byte _, false);
-            dateTime.Month = ReadDisk(ref offset, out byte _, false);
-            dateTime.Year = ReadDisk(ref offset, out byte _, false);
-            dateTime.Hour = ReadDisk(ref offset, out byte _, false);
-            dateTime.Minute = ReadDisk(ref offset, out byte _, false);
+            dateTime.m_Day = ReadDisk(ref offset, out byte _, false);
+            dateTime.m_Month = ReadDisk(ref offset, out byte _, false);
+            dateTime.m_Year = ReadDisk(ref offset, out byte _, false);
+            dateTime.m_Hour = ReadDisk(ref offset, out byte _, false);
+            dateTime.m_Minute = ReadDisk(ref offset, out byte _, false);
             return dateTime;
         }
         public int ReadDisk(ref int offset, out int result, bool inline = false)
@@ -203,7 +207,7 @@ namespace filesystem
             byte[] bytestr = ReadDisk(ref offset, 4);
             if (inline)
             {
-                result = Convert.ToInt32(DefualtEncoder.GetString(bytestr));
+                result = Convert.ToInt32(m_DefualtEncoder.GetString(bytestr));
                 return result;
             }
             else
@@ -217,7 +221,7 @@ namespace filesystem
             byte[] bytestr = ReadDisk(ref offset, 2);
             if (inline)
             {
-                result = Convert.ToUInt16(DefualtEncoder.GetString(bytestr));
+                result = Convert.ToUInt16(m_DefualtEncoder.GetString(bytestr));
                 return result;
             }
             else
@@ -231,7 +235,7 @@ namespace filesystem
             byte[] bytestr = ReadDisk(ref offset, 1);
             if (inline)
             {
-                result = Convert.ToByte(DefualtEncoder.GetString(bytestr));
+                result = Convert.ToByte(m_DefualtEncoder.GetString(bytestr));
                 return result;
             }
             else
@@ -243,7 +247,7 @@ namespace filesystem
         public string ReadDisk(ref int offset, int count, out string result)
         {
             byte[] bytestr = ReadDisk(ref offset, count);
-            result = DefualtEncoder.GetString(bytestr);
+            result = m_DefualtEncoder.GetString(bytestr);
             return result;
         }
         public byte[] ReadDisk(ref int offset, int count)
@@ -252,7 +256,7 @@ namespace filesystem
             List<byte> buffer = new List<byte>();
             for (i = 0; i < count; i++)
             {
-                buffer.Add(DiskBuffer[i + offset]);
+                buffer.Add(m_DiskBuffer[i + offset]);
             }
             offset += count;
             return buffer.ToArray();
@@ -263,11 +267,10 @@ namespace filesystem
             List<byte> buffer = new List<byte>();
             for (i = 0; i < count; i++)
             {
-                buffer.Add(DiskBuffer[i + offset]);
+                buffer.Add(m_DiskBuffer[i + offset]);
             }
             return buffer.ToArray();
         }
-
 
     }
 }

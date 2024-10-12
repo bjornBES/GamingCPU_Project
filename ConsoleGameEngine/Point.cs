@@ -19,7 +19,7 @@ namespace ConsoleGameEngine {
 			this.Y = y;
 		}
 
-		public Vector ToVector() => new Vector((float)X, (float)Y);
+		public VectorF ToVector() => new VectorF((float)X, (float)Y);
 		public override string ToString() => String.Format("({0}, {1})", X, Y);
 
 		public static Point operator +(Point a, Point b) {

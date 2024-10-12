@@ -1,0 +1,123 @@
+.setcpu "BC16CE"
+
+.section text
+
+.org 0x7C00
+
+Entry:
+    mov     AL,             CR0
+    or      A,              0x10
+    mov     CR0,            AL                  ; enabling extended mode
+
+    mov     R1,             D                   ; saving the boot drive in R1 (not in use)
+
+    mov     B,              0x03                ; sectors = 3
+    sez     DH                                  ; heads = 0
+    sez     C                                   ; track = 0
+    mov     AX,             @Bootloader         ; destination = Bootloader
+    call    rel [ReadSector]                    ; reading the root directory
+
+    mov     HL,             @Stage2_Name        ; HL = Stage2 Name
+    mov     C,              16                  ; times for the CMPL instruction
+
+; find the stage2 file
+FindStage2File:
+    CMPL                                        ; Compare the AX and HL values in memory for C times
+    je      rel [ExitFindStage2]                ; yes
+    add     AX,             0x20                ; next file in root
+    jmp     rel [FindStage2File]                ; loop next
+ExitFindStage2:                                 ; now we have found the stage 2 Bootloader file
+    add     AX,             16                  ; pointing to the starting sector 
+    sez     C                                   ; track = 0
+    mov     B,              [AX]                ; B = starting sector
+    call    rel [OFS]                           ; overflowing sector into tracks/heads
+LoadStage2:                                     ; loading the first sector of the stage 2 Bootloader
+    add     AX,             0x2                 ; AX offset is 0x11
+    sez     D                                   ; D = 0
+    mov     DH,             [AX]                ; DH = file size in sectors 
+    mov     L,              D                   ; L = file size in sectors from D
+    mov     D,              R1                  ; D = drive number
+    mov     AX,             @Bootloader         ; AX = Bootloader address
+    sez     B                                   ; head = 0
+    call    rel [ReadSector]
+LoadStage2Loop:
+    add     AX,             0x200               ; next sector in memory
+    inc     B                                   ; next sector on disk
+    call    rel [OFS]                           ; overflowing
+Load:
+    call    rel [ReadSector]                    ; reading the sector
+    dec     L                                   ; L--
+    jnz     rel [LoadStage2Loop]                ; looping til done
+    mov     D,              R1                  ; D = drive number
+    mov     HL,             far @Bootloader
+    push    HL
+    retl
+
+;
+; parameters
+;   AX:         destination
+;   B:          sectors
+;   C:          track
+;   DL:         drive
+;   DH:         head
+;
+ReadSector:
+    pushr                                       ; pushing AX, BX, CX, DX, H, L
+
+    swap    AX,             HL                  ; AX = HL & HL = AX swaping the destination address
+    swap    DH,             AL                  ; DH = AL & AL = DH swaping the heads
+    mov     AH,             0x01                ; instruction read sector
+    int     0x13                                ; calling the disk interrupt services
+
+    jnc     rel [ExitReadSector]                ; Good
+
+    mov     DS,             high @ErrorMessageReading
+    mov     B,              LOW @ErrorMessageReading
+    jmp     rel [Error]
+
+ExitReadSector:
+    popr
+    retz
+
+;
+; return and parameters
+;   B   sectors
+;   CL  track
+;
+; overflow sectors
+;
+OFS:
+    push    A
+    mov     A,          B
+OFSLOOP:
+    cmp     A,          19              ; A <= 19
+    jle     rel [ExitOFS]               ; yes
+    sub     A,          18              ; no A -= 18
+    inc     C                           ; C(tracks)++
+    jmp     rel [OFSLOOP]               ; loop :D
+ExitOFS:
+    mov     B,          A
+    pop     A
+    retz                                ; done
+
+ErrorMessageReading:
+.db "Error reading sector",0
+
+;
+; parameters
+;   DS:         segment address to the message
+;   B:          offset address to the message
+;
+Error:
+    mov         AH,         0x02
+    int         0x10
+
+    jmp         near $
+
+Stage2_Name:
+.db "STAGE2\0\0\0\0\0"
+.db "BIN\0\0"
+
+.org 0x7DFE
+.dw 0x55AA
+Bootloader:

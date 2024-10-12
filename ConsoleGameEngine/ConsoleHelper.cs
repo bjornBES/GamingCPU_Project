@@ -1,11 +1,12 @@
 ﻿namespace ConsoleGameEngine {
     using System;
+    using System.Data.SqlTypes;
     using System.IO;
     using System.Runtime.InteropServices;
     using Microsoft.Win32.SafeHandles;
 
     // En helper klass för att wrappa User32 och Kernel32 dll
-    class NativeMethods {
+    public class NativeMethods {
         #region Signatures
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -54,7 +55,15 @@
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetStdHandle(int nStdHandle);
         [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleCursorInfo(IntPtr hConsoleOutput, IntPtr lpConsoleCursorInfo);
+        [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetConsoleWindow();
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleTitle(string title);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleScreenBufferSize(IntPtr hWnd, Coord dwSize);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleWindowInfo(IntPtr hWnd, bool bAbsolute, [In] ref SmallRect lpConsoleWindow);
 
 
         public delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
@@ -125,11 +134,25 @@
             public int Bottom;
         }
         [StructLayout(LayoutKind.Sequential)]
+        public struct ConsoleCursorInfo
+        {
+            public int dwSize;
+            public bool bVisible;
+        }
+        [StructLayout(LayoutKind.Sequential)]
         public struct SmallRect {
             public short Left;
             public short Top;
             public short Right;
             public short Bottom;
+
+            public SmallRect(short left, short top, short right, short bottom)
+            {
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
+            }
         }
 
         // Tecken, används av buffern

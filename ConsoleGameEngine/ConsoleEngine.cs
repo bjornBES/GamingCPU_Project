@@ -52,11 +52,20 @@
             if (fontW < 1 || fontH < 1)
                 throw new ArgumentOutOfRangeException();
 
-            Console.Title = "Untitled console application";
-            Console.CursorVisible = false;
+            NativeMethods.ConsoleCursorInfo consoleCursorInfo = new NativeMethods.ConsoleCursorInfo()
+            {
+                bVisible = false,
+                dwSize = 100,
+            };
+
+            NativeMethods.SetConsoleTitle("test");
+            unsafe
+            {
+                NativeMethods.SetConsoleCursorInfo(stdOutputHandle, (IntPtr)(&consoleCursorInfo));
+            }
 
             //sets console location to 0,0 to try and avoid the error where the console is to big
-            Console.SetWindowPosition(0, 0);
+            NativeMethods.SetWindowPos(consoleHandle, 0, 0, 0, 0, 0, 0x0046);
 
             // Sets font size and forces Raster (Terminal) / Consolas
             // This must be done after SetBufferSize, otherwise it throws an IOException
@@ -75,8 +84,15 @@
 
             // sets the window and buffer size
             // the buffer must be set after the window, as it must never be smaller than the screen
-            Console.SetWindowSize(width, height);
-            Console.SetBufferSize(width, height);
+            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            Console.SetBufferSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            
+            NativeMethods.Coord size = new NativeMethods.Coord((short)width, (short)height);
+            NativeMethods.SetConsoleScreenBufferSize(stdOutputHandle, size);
+
+            NativeMethods.SmallRect windowsize = new NativeMethods.SmallRect(0, 0, (short)(width - 1), (short)(height - 1));
+            NativeMethods.SetConsoleWindowInfo(stdOutputHandle, true, ref windowsize);
+
 
             // here we make it so we can have more then 16 colors
             if (NativeMethods.GetConsoleMode(stdOutputHandle, out uint mode))
@@ -88,6 +104,9 @@
 
             SetPalette(colorsPalette);
             SetBackground(0);
+
+            SetPixel(new Point(width - 1, height - 1), 1);
+            DisplayBuffer();
         }
 
         // Rita
@@ -624,15 +643,15 @@
 
         /// <summary>Checks to see if the console is in focus </summary>
         /// <returns>True if Console is in focus</returns>
-        private bool ConsoleFocused()
+        public bool ConsoleFocused()
         {
             return NativeMethods.GetConsoleWindow() == NativeMethods.GetForegroundWindow();
         }
 
         /// <summary> Checks if specified key is pressed. </summary>
-		/// <param name="key">The key to check.</param>
-		/// <returns>True if key is pressed</returns>
-		public bool GetKey(ConsoleKey key)
+        /// <param name="key">The key to check.</param>
+        /// <returns>True if key is pressed</returns>
+        public bool GetKey(ConsoleKey key)
         {
             short s = NativeMethods.GetAsyncKeyState((int)key);
             return (s & 0x8000) > 0 && ConsoleFocused();

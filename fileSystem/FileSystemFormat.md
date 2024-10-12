@@ -47,12 +47,12 @@ More [here](../CPU/Floppy%20disk%20controller/BFDCG12.md)
 |`0x20A`|   `0x002`     |ushort   |Number of total sectors                  |  false  |The number of total sectors
 |`0x20C`|   `0x001`     |byte     |Number of sectors per track              |  false  |The number of sectors per track
 |`0x20D`|   `0x002`     |ushort   |Bytes per sector                         |  false  |The number of bytes in a sector
-|`0x20F`|   `0x004`     |string   |root directory                           |  true   |the address of the root directory
-|`0x213`|   `0x002`     |ushort   |Maximum number of root directory entries |  false  |here is the maximum number of root directory entries
-|`0x215`|   `0x001`     |byte     |Allocated FAT                            |  false  |here is the allocated FAT in sectors
-|`0x216`|   `0x010`     |string   |Volume label                             |  true   |Volume label
-|`0x226`|   `0x1DA`     |string   |metadata                                 |  true   |some more metadata
-|`0x400`|   `0x200`     |entries  |entries                                  |         |more info in the [entries Formatting](#entry-format)
+|`0x20F`|   `0x002`     |ushort   |root directory                           |  false  |the address of the root directory
+|`0x211`|   `0x002`     |ushort   |Maximum number of root directory entries |  false  |here is the maximum number of root directory entries
+|`0x213`|   `0x001`     |byte     |Allocated FAT                            |  false  |here is the allocated FAT in sectors
+|`0x214`|   `0x010`     |string   |Volume label                             |  true   |Volume label
+|`0x224`|   `0x0DC`     |string   |metadata                                 |  true   |some more metadata
+|`0x300`|   `0x300`     |entries  |entries                                  |         |more info in the [entries Formatting](#entry-format)
 
 inline: ``if something is inline that means that it uses ascii chars to make its value if some is not inline that means that the value is in the cell itself``
 
@@ -73,15 +73,14 @@ inline: ``if something is inline that means that it uses ascii chars to make its
 
 |offset|size in bytes  |type    |inline  |name
 |------|---------------|--------|--------|-
-|`0x00`|     `0x0C`    |string  |  true  |File name
-|`0x0C`|     `0x03`    |string  |  true  |File type
-|`0x0F`|     `0x02`    |ushort  |  false |Starting Sector
-|`0x11`|     `0x01`    |byte    |  false |File size in Sectors
-|`0x12`|     `0x01`    |byte    |  false |[flags](#flags)
+|`0x00`|     `0x0B`    |string  |  true  |File name
+|`0x0B`|     `0x05`    |string  |  true  |File type
+|`0x10`|     `0x02`    |ushort  |  false |Starting Sector
+|`0x12`|     `0x01`    |byte    |  false |File size in Sectors
+|`0x13`|     `0x01`    |byte    |  false |[flags](#flags)
 |`0x14`|     `0x02`    |ushort  |  false |Create Date
 |`0x16`|     `0x02`    |ushort  |  false |Create Time
-|`0x18`|     `0x02`    |ushort  |  false |Continue Address
-|`0x1A`|     `0x06`    |byte[]  |  true  |unused
+|`0x18`|     `0x08`    |byte[]  |  true  |unused
 
 inline: ``if something is inline that means that it uses ascii chars to make its value if some is not inline that means that the value is in the cell itself``
 

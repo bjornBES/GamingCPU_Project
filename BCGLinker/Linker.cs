@@ -16,65 +16,48 @@ namespace BCGLinker
     {
         string[] m_src;
 
-        public List<string> m_DataOutput = new List<string>();
         public List<string> m_Output = new List<string>();
         public List<byte> m_OutputBin = new List<byte>();
-        List<Label> m_Labels = new List<Label>();
-        List<Struct> m_Structs = new List<Struct>();
-        List<Section> m_Sections = new List<Section>();
-        int i;
+        public List<string> m_InlinedFiles = new List<string>();
+        List<Label> m_labels = new List<Label>();
+        int m_i;
 
-        int m_BPX_ref = 0;
-        int m_SPX_ref = 0;
+        bool m_hasAllLabel;
 
-        string m_CurrFile = "";
+        string m_currFile = "";
         int m_pc = 0;
+
+        public void BuildLabels(string src)
+        {
+            m_i = 0;
+            m_src = src.Split(Environment.NewLine);
+            m_hasAllLabel = false;
+            m_pc = 0;
+
+            buildText();
+        }
 
         public void BuildSrc(string src)
         {
-            i = 0;
-            m_DataOutput.Clear();
-
-            //m_Output.Add("_TEXT SECTION".PadRight(16, '\0'));
-
-            m_src = src.Split(Environment.NewLine);
-
-            m_pc = 0;
-
-            //BuildRdata();
-            
-            //BuildData();
-            
-            //BuildBss();
-            
-            BuildText();
-
-            m_pc = 0;
-            i = 0;
-            m_src = src.Split(Environment.NewLine);
-            m_DataOutput.Clear();
             m_Output.Clear();
-            m_BPX_ref = m_SPX_ref = 0;
+            m_i = 0;
+            m_pc = 0;
+            m_src = src.Split(Environment.NewLine);
 
-            //BuildRdata();
+            buildText();
 
-            //BuildData();
-            //BuildBss();
-
+            m_Output.Clear();
+            m_hasAllLabel = true;
+            m_i = 0;
+            m_src = src.Split(Environment.NewLine);
             m_pc = 0;
 
-            BuildText();
+            buildText();
 
             List<string> tempList = new List<string>();
 
             string[] m_Output_ARRAY = m_Output.ToArray();
             m_Output_ARRAY = SortHexStrings(m_Output_ARRAY);
-
-            //string[] m_Output_BSS_ARRAY = m_Output_BSS.ToArray();F
-            //m_Output_BSS_ARRAY = sortHexStrings(m_Output_BSS_ARRAY);
-
-            string[] m_Output_DATA_ARRAY = m_DataOutput.ToArray();
-            m_Output_DATA_ARRAY = SortHexStrings(m_Output_DATA_ARRAY);
 
             switch (LinkerSettings.OutputFormat)
             {
@@ -85,9 +68,6 @@ namespace BCGLinker
                     tempList.Add("_TEXT SECTION".PadRight(16, '\0'));
                     tempList.AddRange(m_Output_ARRAY);
 
-                    tempList.Add("_DATA SECTION".PadRight(16, '\0'));
-                    tempList.AddRange(m_Output_DATA_ARRAY);
-
                     tempList.Add("_SYMBOLS".PadRight(16, '\0'));
                     break;
                 case OutputFormats.fbin:
@@ -95,9 +75,6 @@ namespace BCGLinker
                     DebugWriter.Writeline("Output Format Bin");
                     // tempList.Add("_TEXT SECTION".PadRight(16, '\0'));
                     tempList.AddRange(m_Output_ARRAY);
-
-                    // tempList.Add("_DATA SECTION".PadRight(16, '\0'));
-                    tempList.AddRange(m_Output_DATA_ARRAY);
                     break;
                 default:
                     break;
@@ -125,7 +102,7 @@ namespace BCGLinker
 
                 if (!line.Contains(":\t"))
                 {
-                    continue;
+                     continue;
                 }
                 string Full_address = m_pre_Output[i].Split(":\t")[0];
                 string address = Full_address;
@@ -173,48 +150,39 @@ namespace BCGLinker
             }
         }
 
+        public void BuildSectionInclude(string src)
+        {
+            m_i = 0;
+            m_src = src.Split(Environment.NewLine);
+
+            buildInclude();
+        }
         public void BuildSectionSymbols(string src)
         {
-            i = 0;
+            m_i = 0;
             m_src = src.Split(Environment.NewLine);
 
-            BuildSymbols();
+            buildSymbols();
         }
 
-        public void BuildSectionStruct(string src)
+        int m_instrOffset = 0;
+        int m_lineNumber = 0;
+        void buildText()
         {
-            i = 0;
-            m_src = src.Split(Environment.NewLine);
-
-            BuildStruct();
-        }
-
-        public void BuildSectionSection(string src)
-        {
-            i = 0;
-            m_src = src.Split(Environment.NewLine);
-
-            BuildSections();
-        }
-
-        int m_InstrOffset = 0;
-        int lineNumber = 0;
-        void BuildText()
-        {
-            for (i = 0; i < m_src.Length; i++)
+            for (m_i = 0; m_i < m_src.Length; m_i++)
             {
-                if (m_src[i] == "TEXT HEADER")
+                if (m_src[m_i] == "TEXT HEADER")
                 {
-                    i++;
-                    for (; i < m_src.Length; i++)
+                    m_i++;
+                    for (; m_i < m_src.Length; m_i++)
                     {
-                        string line = m_src[i];
+                        string line = m_src[m_i].Trim('\n', '\r');
                         if (string.IsNullOrEmpty(line))
                         {
                             continue;
                         }
 
-                        ParseLine(line, out bool Exit);
+                        parseLine(line, out bool Exit);
                         if (Exit)
                         {
                             break;
@@ -225,29 +193,26 @@ namespace BCGLinker
             }
         }
 
-        private void ParseLine(string line, out bool Exit)
+        private void parseLine(string line, out bool Exit)
         {
             Exit = false;
             if (line == "_NEWLINE_")
             {
-                m_InstrOffset = 0;
-                lineNumber++;
+                m_instrOffset = 0;
+                m_lineNumber++;
                 return;
             }
             else if (line.StartsWith("_FILE_"))
             {
                 string file = line.Split(' ').Last();
-                m_CurrFile = file.Trim('"');
-                lineNumber = 0;
+                m_currFile = file.Trim('"');
+                m_lineNumber = 0;
                 return;
             }
             else if (line.StartsWith("_REF_"))
             {
-                string[] s_line = m_src[i].Split(' ');
+                string[] s_line = m_src[m_i].Split(' ');
                 string name;
-                bool IsGolbal;
-                string Hex_address;
-                int address;
                 string file;
                 string[] Ident;
                 if (s_line[0] == "_REF_")
@@ -257,11 +222,9 @@ namespace BCGLinker
                         case "LABEL":
                             Ident = s_line[2].Split(',');
                             name = Ident[0];
-                            Hex_address = s_line[3].Trim('[', ']').Replace("0x", "");
-                            address = Convert.ToInt32(Hex_address, 16);
-                            file = s_line[4];
+                            file = s_line[3];
 
-                            int index = m_Labels.FindIndex(label =>
+                            int index = m_labels.FindIndex(label =>
                             {
                                 if (label.m_Name == name)
                                 {
@@ -270,7 +233,7 @@ namespace BCGLinker
                                 return false;
                             });
 
-                            m_Labels[index].m_Address = m_pc;
+                            m_labels[index].m_Address = m_pc;
 
                             break;
                         default:
@@ -280,36 +243,23 @@ namespace BCGLinker
             }
             else if (line.StartsWith("_DEL_"))
             {
-                m_InstrOffset = 0;
+                m_instrOffset = 0;
                 return;
-            }
-            else if (line.StartsWith("_INC_FILE_"))
-            {
-
             }
             else if (line.StartsWith("_OFF_"))
             {
                 int offset = Convert.ToInt32(line.Replace("_OFF_ ", ""), 16);
                 m_pc = offset;
             }
-            else if (line.StartsWith("_SET_"))
+            else if (line.StartsWith("_RES_"))
             {
-                line = line.Replace("_SET_ ", "");
-                string register = line.Split(' ').First();
-                int number = int.Parse(line.Split(" ").Last());
+                string Lineoffset = line.Replace("_RES_ ", "");
+                string bin_type = Lineoffset.Split(' ', 2).First();
+                string expr = Lineoffset.Split(" ", 2).Last();
+                string result = gen_expr(expr, bin_type);
 
-                switch (register)
-                {
-                    case "BPX":
-                        m_BPX_ref = number;
-                        break;
-                    case "SPX":
-                        m_SPX_ref = number;
-                        break;
-
-                    default:
-                        break;
-                }
+                int offset = Convert.ToInt32(result, 16);
+                m_pc += offset;
             }
             else if (line.EndsWith("HEADER"))
             {
@@ -334,14 +284,14 @@ namespace BCGLinker
 
                 for (int i = 0; i < hex.Length; i++)
                 {
-                    AddString(hex[i]);
+                    addString(hex[i]);
                 }
             }
             else if (gen_term(line, out string[] expr))
             {
                 for (int i = 0; i < expr.Length; i++)
                 {
-                    AddString(expr[i]);
+                    addString(expr[i]);
                 }
             }
             else if (line.StartsWith("_TIMES_"))
@@ -372,7 +322,7 @@ namespace BCGLinker
                     result = "";
                 }
 
-                int times = Convert.ToInt32(result, 16) + 1;
+                int times = Convert.ToInt32(result, 16);
                 int size = int.Parse(line.Split('.').Last());
 
                 string[] ResultStr = SplitHexString(Instr, size);
@@ -381,26 +331,31 @@ namespace BCGLinker
                 {
                     for (int i = 0; i < ResultStr.Length; i++)
                     {
-                        AddString(ResultStr[i]);
+                        addString(ResultStr[i]);
                     }
                 }
             }
             else
             {
-                AddString(line);
+                addString(line);
             }
         }
 
         bool gen_term(string line, out string[] expr)
         {
-            if (line.StartsWith("_S") || line.StartsWith("_L") || line.StartsWith("_F"))
+            if (line.StartsWith("REL_"))
             {
-                expr = DoAddress(line);
+                expr = doAddress(line.Replace("REL_", ""), true);
                 return true;
             }
-            else if (line.StartsWith("I_"))
+            else if (line.StartsWith("_N") || line.StartsWith("_S") || line.StartsWith("_L") || line.StartsWith("_F"))
             {
-                string data = line.Replace("I_", "");
+                expr = doAddress(line);
+                return true;
+            }
+            else if (line.StartsWith("i_"))
+            {
+                string data = line.Replace("I_", "", StringComparison.OrdinalIgnoreCase);
                 expr = SplitHexString(data);
                 return true;
             }
@@ -409,71 +364,11 @@ namespace BCGLinker
                 expr = SplitHexString(line);
                 return true;
             }
-            else if (line.StartsWith("SLSM_"))
-            {
-                line = line.Replace("SLSM_", "");
-
-                string[] layers = line.Split('.');
-
-                string Labelname = layers[0];
-                if (!GetLabel(Labelname, out Label label))
-                {
-                    Console.WriteLine($"LINKER ERROR: {Labelname} label not found as symbol");
-                }
-
-                Struct _struct = label.m_Struct;
-
-                StructMembers[] structMembers = _struct.m_StructMembers.ToArray();
-
-                for (int i = 0; i < structMembers.Length; i++)
-                {
-                    if (structMembers[i].m_Name == layers[1])
-                    {
-                        expr = label.GetAddress(structMembers[i]);
-                        return true;
-                    }
-                }
-                expr = null;
-                return false;
-            }
-            else if (line.StartsWith("_SSO_"))
-            {
-                line = line.Replace("_SSO_", "");
-
-                string[] layers = line.Split('.');
-
-                string Structname = layers[0];
-                if (!GetStruct(Structname, out Struct _struct))
-                {
-                    Console.WriteLine($"LINKER ERROR: {Structname} struct not found as symbol");
-                }
-
-                if (layers.Length > 1)
-                {
-                    StructMembers[] structMembers = _struct.m_StructMembers.ToArray();
-
-                    for (int i = 0; i < structMembers.Length; i++)
-                    {
-                        if (structMembers[i].m_Name == layers[1])
-                        {
-                            expr = structMembers[i].GetSize();
-                            return true;
-                        }
-                    }
-                }
-                else if (layers.Length <= 1)
-                {
-                    expr = _struct.GetSize();
-                    return true;
-                }
-                expr = null;
-                return false;
-            }
             expr = null;
             return false;
         }
 
-        string[] DoAddress(string line)
+        string[] doAddress(string line, bool rel = false)
         {
             string[] Outputaddress;
             int address = 0;
@@ -483,23 +378,55 @@ namespace BCGLinker
 
             if (line.StartsWith("_SCS_") || line.StartsWith("_LCS_") || line.StartsWith("_FCS_"))
             {
-                address = (m_pc - m_InstrOffset) % 0x200;
+                address = (m_pc - m_instrOffset) % 0x200;
             }
             else if (line.StartsWith("_SCA_") || line.StartsWith("_LCA_") || line.StartsWith("_FCA_"))
             {
-                address = m_pc - m_InstrOffset;
+                address = m_pc - m_instrOffset;
             }
             else if (line.StartsWith("_SL_") || line.StartsWith("_LL_") || line.StartsWith("_FL_"))
             {
                 string name = line.Replace("_FL_", "").Replace("_LL_", "").Replace("_SL_", "");
-                if (!GetLabel(name, out Label label))
+                if (!getLabel(name, out Label label))
                 {
                     Console.WriteLine($"LINKER ERROR: {name} not found as symbol");
-                    Console.WriteLine($"{m_CurrFile}:{lineNumber + 1}");
+                    Console.WriteLine($"{m_currFile}:{m_lineNumber + 1}");
                     Environment.Exit(-1);
                 }
 
-                address = label.m_Address;
+                if (label.m_IsGlobal)
+                {
+                    address = label.m_Address;
+                }
+                else if (label.m_IsLocal)
+                {
+                    if (label.m_File == m_currFile)
+                    {
+                        address = label.m_Address;
+                    }
+                }
+                else
+                {
+                    if (m_hasAllLabel)
+                    {
+                        string inputFileName = LinkerSettings.InputFile.Split(Path.DirectorySeparatorChar).Last().Split('.')[0];
+                        string labelFileName = label.m_File.Split(Path.DirectorySeparatorChar).Last().Split('.')[0];
+                        if (labelFileName == inputFileName || m_InlinedFiles.Contains(label.m_File))
+                        {
+                            address = label.m_Address;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"LINKER ERROR: file {label.m_File} is not include inlined with .includeil");
+                            Console.WriteLine($"{m_currFile}:{m_lineNumber}");
+                            Environment.Exit(1);
+                        }
+                    }
+                    else
+                    {
+                        address = label.m_Address;
+                    }
+                }
             }
 
             if (Mask == "MH")
@@ -512,7 +439,20 @@ namespace BCGLinker
                 address = address & 0x0000FFFF;
             }
 
-            if (line.StartsWith("_N"))
+            if (rel == true)
+            {
+                if (m_hasAllLabel)
+                {
+                    address -= m_pc;
+                    if (address > 0xFF)
+                    {
+                        Console.WriteLine($"the relative address in over 0xFF {m_currFile}:{m_lineNumber}");
+                        Environment.Exit(1);
+                    }
+                }
+                Outputaddress = SplitHexString(Convert.ToString(address, 16), 1);
+            }
+            else if (line.StartsWith("_N"))
             {
                 Outputaddress = SplitHexString(Convert.ToString(address, 16), 1);
             }
@@ -539,7 +479,7 @@ namespace BCGLinker
 
         string gen_expr(string binExpr, string binType)
         {
-            string[] expr = binExpr.Split(' ', StringSplitOptions.RemoveEmptyEntries).Reverse().ToArray();
+            string[] expr = binExpr.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
 
             Stack<int> SolverStack = new Stack<int>();
@@ -561,9 +501,9 @@ namespace BCGLinker
                         fullExpr += data[d];
                     }
 
-                    if (term.StartsWith("I_"))
+                    if (term.StartsWith("i_"))
                     {
-                        SolverStack.Push(Convert.ToInt32(fullExpr));
+                        SolverStack.Push(Convert.ToInt32(fullExpr, 16));
                     }
                     else if (term.StartsWith("SL_") || term.StartsWith("LL_") || term.StartsWith("FL_"))
                     {
@@ -573,20 +513,6 @@ namespace BCGLinker
                     {
                         SolverStack.Push(Convert.ToInt32(fullExpr, 16));
                     }
-                }
-                else if (term.StartsWith("R_"))
-                {
-                    string register = term.Replace("R_", "");
-                    switch (register)
-                    {
-                        case "BPX":
-                        case "BP":
-                            SolverStack.Push(m_BPX_ref);
-                            break;
-                        default:
-                            break;
-                    }
-                    //pushOut = true;
                 }
                 else
                 {
@@ -600,8 +526,8 @@ namespace BCGLinker
 
                             if (pushOut)
                             {
-                                AddString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
-                                AddString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
                                 break;
                             }
 
@@ -613,8 +539,8 @@ namespace BCGLinker
 
                             if (pushOut)
                             {
-                                AddString(Convert.ToString((byte)-rsh, 16).PadLeft(2, '0'));
-                                AddString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString((byte)-rsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
                                 //break;
                             }
 
@@ -626,8 +552,8 @@ namespace BCGLinker
 
                             if (pushOut)
                             {
-                                AddString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
-                                AddString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
                                 break;
                             }
 
@@ -639,8 +565,8 @@ namespace BCGLinker
 
                             if (pushOut)
                             {
-                                AddString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
-                                AddString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
                                 break;
                             }
 
@@ -652,8 +578,8 @@ namespace BCGLinker
 
                             if (pushOut)
                             {
-                                AddString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
-                                AddString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(lsh, 16).PadLeft(2, '0'));
                                 break;
                             }
 
@@ -664,7 +590,7 @@ namespace BCGLinker
 
                             if (pushOut)
                             {
-                                AddString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
+                                addString(Convert.ToString(rsh, 16).PadLeft(2, '0'));
                                 break;
                             }
 
@@ -707,98 +633,87 @@ namespace BCGLinker
             return hexString;
         }
 
-        void AddString(string line)
+        string getPCHex()
         {
-            for (int i = 0; i < m_Sections.Count; i++)
-            {
-                Section section = m_Sections[i];
-                bool IsIn = section.InSection(m_pc);
-                bool DoBreak = false;
-                if (IsIn)
-                {
-                    switch (section.m_Name)
-                    {
-                        case "_text":
-                            m_Output.Add($"{GetPCOffset(section)}\t{line}");
-                            DoBreak = true;
-                            m_pc++;
-                            m_InstrOffset++;
-                            break;
-                        case "_data":
-                            m_DataOutput.Add($"{GetPCOffset(section)}\t{line}");
-                            DoBreak = true;
-                            m_pc++;
-                            break;
-                        default:
-                            break;
-                    }
-                    if (DoBreak)
-                    {
-                        break;
-                    }
-                }
-            }
+            return Convert.ToString(m_pc, 16).PadLeft(6, '0');
         }
-        bool GetLabel(string name, out Label label)
+
+        void addString(string line)
         {
-            for (int i = 0; i < m_Labels.Count; i++)
+            if (m_hasAllLabel)
             {
-                if (m_Labels[i].m_Name == name)
+                m_Output.Add($"{getPCHex()}:\t{line}");
+            }
+            m_pc++;
+            m_instrOffset++;
+        }
+        bool getLabel(string name, out Label label)
+        {
+            for (int i = 0; i < m_labels.Count; i++)
+            {
+                if (m_labels[i].m_Name == name)
                 {
-                    label = m_Labels[i];
+                    label = m_labels[i];
                     return true;
                 }
             }
             label = new Label();
             return false;
         }
-        bool GetStruct(string name, out Struct result)
-        {
-            for (int i = 0; i < m_Structs.Count; i++)
-            {
-                if (m_Structs[i].m_Name == name)
-                {
-                    result = m_Structs[i];
-                    return true;
-                }
-            }
-            result = null;
-            return false;
-        }
-        string GetPCOffset(Section section)
-        {
-            int offset = m_pc + section.m_offset;
-            if (m_pc > section.m_offset - 1)
-            {
-                offset -= section.m_offset;
-            }
-            return $"{Convert.ToString(offset, 16).PadLeft(6, '0')}:";
-        }
 
-        void BuildSymbols()
+        void buildInclude()
         {
-            for (i = 0; i < m_src.Length; i++)
+            for (m_i = 0; m_i < m_src.Length; m_i++)
             {
-                if (m_src[i] == "SYMBOLS HEADER")
+                if (m_src[m_i] == "INCLUDE HEADER")
                 {
-                    i++;
-                    for (; i < m_src.Length; i++)
+                    m_i++;
+                    for (; m_i < m_src.Length; m_i++)
                     {
-                        if (string.IsNullOrEmpty(m_src[i]))
+                        if (string.IsNullOrEmpty(m_src[m_i]))
                         {
                             continue;
                         }
 
-                        string[] line = m_src[i].Split(' ');
+                        string[] line = m_src[m_i].Split(' ');
+                        if (line[0].StartsWith("INCINIL"))
+                        {
+                            m_InlinedFiles.Add(line[1]);
+                        }
+
+                        if (m_src[m_i].EndsWith("HEADER"))
+                        {
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        void buildSymbols()
+        {
+            for (m_i = 0; m_i < m_src.Length; m_i++)
+            {
+                if (m_src[m_i] == "SYMBOLS HEADER")
+                {
+                    m_i++;
+                    for (; m_i < m_src.Length; m_i++)
+                    {
+                        if (string.IsNullOrEmpty(m_src[m_i]))
+                        {
+                            continue;
+                        }
+
+
+                        string[] line = m_src[m_i].Trim('\n', '\r').Split(' ');
                         string name;
-                        string labelName;
                         bool IsGolbal;
-                        int size;
-                        string Hex_address;
-                        int address;
+                        bool IsLocal;
                         string file;
                         string[] Ident;
-                                    bool Con = false;
+                        string[] Flags;
+                        bool Con = false;
+
                         if (line[0] == "_REF_")
                         {
                             switch (line[1])
@@ -806,12 +721,12 @@ namespace BCGLinker
                                 case "LABEL":
                                     Ident = line[2].Split(',');
                                     name = Ident[0];
-                                    IsGolbal = bool.Parse(Ident[1]);
-                                    Hex_address = line[3].Trim('[', ']').Replace("0x", "");
-                                    address = Convert.ToInt32(Hex_address, 16);
-                                    file = line[4];
+                                    Flags = Ident[1].Split('.');
+                                    IsGolbal = bool.Parse(Flags[0]);
+                                    IsLocal = bool.Parse(Flags[1]);
+                                    file = line[3];
 
-                                    m_Labels.ForEach(label =>
+                                    m_labels.ForEach(label =>
                                     {
                                         if (label.m_Name == name)
                                         {
@@ -824,45 +739,20 @@ namespace BCGLinker
                                         continue;
                                     }
 
-                                    m_Labels.Add(
+                                    m_labels.Add(
                                         new Label()
                                         {
                                             m_Name = name,
                                             m_IsGlobal = IsGolbal,
-                                            m_Address = address,
+                                            m_IsLocal = IsLocal,
                                             m_File = file
                                         });
-                                    break;
-                                case "STRUCT":
-                                    Ident = line[2].Split(',');
-                                    name = Ident[0];
-                                    size = Convert.ToInt32(Ident[1], 16);
-                                    labelName = line[3];
-
-                                    if (GetLabel(labelName, out Label result))
-                                    {
-                                        int index = m_Labels.IndexOf(result);
-                                        if (GetStruct(name, out Struct Structresult))
-                                        {
-                                            m_Labels[index].m_HaveStruct = true;
-                                            m_Labels[index].m_Struct = Structresult;
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine($"LINKER ERROR: {name} struct not found as symbol");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine($"LINKER ERROR: {name} label not found as symbol");
-                                    }
-
                                     break;
                                 default:
                                     break;
                             }
                         }
-                        else if (m_src[i].EndsWith("HEADER"))
+                        else if (m_src[m_i].EndsWith("HEADER"))
                         {
                             break;
                         }
@@ -871,179 +761,28 @@ namespace BCGLinker
                 }
             }
         }
-        void BuildSections()
-        {
-            for (i = 0; i < m_src.Length; i++)
-            {
-                if (m_src[i] == "SECTION HEADER")
-                {
-                    i++;
-                    for (; i < m_src.Length; i++)
-                    {
-                        if (m_src[i].EndsWith("HEADER"))
-                        {
-                            break;
-                        }
 
-                        if (string.IsNullOrEmpty(m_src[i]))
-                        {
-                            continue;
-                        }
-
-                        string[] line = m_src[i].Split(' ');
-                        string sectionName = FindName(line.First());
-                        string Hex_offset = line[1].Trim('[', ']').Replace("0x", "");
-                        string file = line[2];
-                        int offset = Convert.ToInt32(Hex_offset, 16);
-
-                        m_Sections.Add(new Section()
-                        {
-                            m_Name = sectionName,
-                            m_offset = offset,
-                        });
-                    }
-
-                    int size = 0;
-                    List<Section> sections = new List<Section>(m_Sections);
-                    m_Sections.Clear();
-                    for (int i = 0; i < sections.Count; i++)
-                    {
-                        Section Section = sections[i];
-                        int index = sections.IndexOf(Section);
-                        if (sections.Count <= index)
-                        {
-                            m_Sections.Add(Section);
-                            continue;
-                        }
-                        if (sections.Count <= index + 1)
-                        {
-                            m_Sections.Add(Section);
-                            continue;
-                        }
-
-                        Section.m_size = sections[index + 1].m_offset - size;
-                        size += Section.m_size;
-
-                        m_Sections.Add(Section);
-                    }
-                }
-            }
-        }
-        void BuildStruct()
-        {
-            for (i = 0; i < m_src.Length; i++)
-            {
-                if (m_src[i] == "STRUCT HEADER")
-                {
-                    i++;
-                    int MemberAddress = 0;
-                    for (; i < m_src.Length; i++)
-                    {
-                        if (m_src[i].EndsWith("HEADER"))
-                        {
-                            break;
-                        }
-
-                        if (string.IsNullOrEmpty(m_src[i]))
-                        {
-                            continue;
-                        }
-
-                        Struct TempStruct = new Struct();
-
-                        string[] line = m_src[i].Split(' ', 4);
-                        string StructName = line[0];
-                        string ResBytes = line[2];
-                        string[] StructMembers = line[3].Trim('{', '}').Split(",");
-
-                        TempStruct.m_Name = StructName;
-                        TempStruct.m_Size = Convert.ToInt32(ResBytes, 16);
-
-                        for (int i = 0; i < StructMembers.Length; i++)
-                        {
-                            string[] member = StructMembers[i].Split(' ');
-                            string MemberName = member[0];
-                            string MemberResBytes = member[2];
-
-                            int memberSize = Convert.ToInt32(MemberResBytes, 16);
-
-                            TempStruct.m_StructMembers.Add(new StructMembers()
-                            {
-                                m_Name = MemberName,
-                                m_Size = memberSize,
-                                m_offset = MemberAddress
-                            });
-                            MemberAddress += memberSize;
-                        }
-
-                        m_Structs.Add(TempStruct);
-                    }
-                }
-            }
-        }
-
-        string FindName(string name)
-        {
-            if (name.Contains(LinkerSettings.TextSection, StringComparison.OrdinalIgnoreCase))
-            {
-                return "_text";
-            }
-            else if (name.Contains(LinkerSettings.DataSection, StringComparison.OrdinalIgnoreCase))
-            {
-                return "_data";
-            }
-            else if (name.Contains(LinkerSettings.RDataSection, StringComparison.OrdinalIgnoreCase))
-            {
-                return "_rdata";
-            }
-            else if (name.Contains(LinkerSettings.BSSSection, StringComparison.OrdinalIgnoreCase))
-            {
-                return "_bss";
-            }
-            else if (name.Contains(LinkerSettings.HeaderSection, StringComparison.OrdinalIgnoreCase))
-            {
-                return "_header";
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        List<string> mapFile = new List<string>();
+        List<string> m_mapFile = new List<string>();
         public string[] GenerateMapFile()
         {
 
-            mapFile.Add("Offset\t\t:\tsize\t\t\tName");
-            mapFile.Add("");
+            m_mapFile.Add("");
+            m_mapFile.Add("Address\t:\toffset\t\t" + "Name".PadRight(25, ' ') + "File");
+            m_mapFile.Add("");
 
-            for (int i = 0; i < m_Sections.Count; i++)
+            for (int i = 0; i < m_labels.Count; i++)
             {
-                Section currSection = m_Sections[i];
+                string address = Convert.ToString(m_labels[i].m_Address, 16).PadLeft(8, '0');
 
-                string offset = Convert.ToString(currSection.m_offset, 16).PadLeft(8, '0');
-                string size = Convert.ToString(currSection.m_size, 16).PadLeft(8, '0');
-
-                mapFile.Add($"{offset}\t:\t{size}\t\t" + $"{currSection.m_Name}");
-            }
-
-            mapFile.Add("");
-            mapFile.Add("Address\t:\toffset\t\t" + "Name".PadRight(25, ' ') + "File");
-            mapFile.Add("");
-
-            for (int i = 0; i < m_Labels.Count; i++)
-            {
-                string address = Convert.ToString(m_Labels[i].m_Address, 16).PadLeft(8, '0');
-
-                string file = m_Labels[i].m_File.Replace(Environment.CurrentDirectory, "");
+                string file = m_labels[i].m_File.Replace(Environment.CurrentDirectory, "");
 
                 string segment = address.Substring(0, 4);
                 string offset = address.Substring(4);
 
-                mapFile.Add($"{segment}\t:\t{offset}\t\t"+ $"{m_Labels[i].m_Name}".PadRight(25, ' ') + $"{file}");
+                m_mapFile.Add($"{segment}\t:\t{offset}\t\t"+ $"{m_labels[i].m_Name}".PadRight(25, ' ') + $"{file}");
             }
 
-            return mapFile.ToArray();
+            return m_mapFile.ToArray();
         }
     }
 }

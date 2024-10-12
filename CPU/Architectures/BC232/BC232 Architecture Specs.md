@@ -3,6 +3,8 @@
 - [CPU Specifications](#cpu-specifications)
   - [Architecture overview](#architecture-overview)
   - [CPUs](#cpus)
+    - [BC32](#bc32)
+    - [Note](#note)
   - [INSTRUCTIONS](#instructions)
     - [INSTRUCTION SET](#instruction-set)
     - [INSTRUCTION LAYOUT](#instruction-layout)
@@ -14,19 +16,15 @@
     - [Interrupt descriptor table entres](#interrupt-descriptor-table-entres)
       - [interrupt](#interrupt)
       - [exception](#exception)
-  - [Global descriptor table](#global-descriptor-table)
-    - [Layout](#layout-1)
-      - [Flags](#flags)
   - [Caches](#caches)
   - [Floating values](#floating-values)
+    - [Floating-Point Registers](#floating-point-registers)
   - [Virtual mode](#virtual-mode)
   - [Extended mode](#extended-mode)
   - [Protected mode](#protected-mode)
   - [Memory](#memory)
-    - [Memory Management unit (MMU)](#memory-management-unit-mmu)
     - [Memory layout](#memory-layout)
   - [REGISTERS](#registers)
-    - [Extended registers](#extended-registers)
     - [Protected registers](#protected-registers)
 
 ## Architecture overview
@@ -39,7 +37,20 @@
 ## CPUs
 
 - BC32          Base 32 bit CPU
-- BC32X         Starts in Protected mode
+- BC3203        Starts in Protected mode
+- BC32F         The BC32 CPU with in built float registers and functions
+- BC3203F       The BC3203 CPU with in built float registers and functions
+- BC3203FD      The BC3203 CPU with in built float and double registers and functions
+
+### BC32
+
+- Starts in [virtual mode](#virtual-mode)
+- Can enable [extended mode](#extended-mode) in CR0
+- Can enable [protected mode](#protected-mode) in CR0 after [extended mode](#extended-mode) has been enabled
+
+### Note
+
+if the CPU name has a `F` in its name it has builtin float functions
 
 ## INSTRUCTIONS
 
@@ -56,38 +67,55 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 
 ### ARGUMENT MODE
 
-- 0x00: immediate byte              number
-- 0x01: immediate word              number
-- 0x02: immediate tbyte             number
-- 0x03: immediate dword             number
-- 0x04: immediate_float             numberf
-- 0x05: immediate tword             number
-- 0x06: immediate_double            double numberf
-- 0x10: register                    register
-- 0x11: register address            address [register]
-- 0x18: register A                  A
-- 0x19: register B                  B
-- 0x1A: register C                  C
-- 0x1B: register D                  D
-- 0x1C: register H                  H
-- 0x1D: register L                  L
-- 0x1E: address register HL         [HL]
-- 0x1F: register MB                 MB
-- 0x30: register AX                 AX
-- 0x31: register BX                 BX
-- 0x32: register CX                 CX
-- 0x33: register DX                 DX
-- 0x50: Relative address            [byte address]      an 8 bit offset to the PC
-- 0x51: Near address                Near [address]      a 8 bit address
-- 0x52: Short address               short [address]     a 16 bit address
-- 0x53: long address                long [address]      a 24 bit address
-- 0x54: Far address                 far [address]       an 32 bit address
-- 0x58: SP relative address         [SP - number]/[SP + number]
-- 0x59: BP relative address         [BP - number]/[BP + number]
-- 0x5A: 32 bit segment address      [register:register]
-- 0x5B: 32 bit segment DS register  [DS:register]
-- 0x5C: 32 bit segment DS B         [DS:B]
-- 0x5D: 32 bit segment ES register  [ES:register]
+- 0x00: immediate byte:             number
+- 0x01: immediate word:             number
+- 0x02: immediate tbyte:            number
+- 0x03: immediate dword:            number
+- 0x04: immediate_float:            numberf
+- 0x05: immediate qword:            number
+- 0x06: immediate_double:           double numberf
+- 0x0A: register:                   register
+- 0x0B: register address:           address [register]
+- 0x10: register A:                 A
+- 0x11: register B:                 B
+- 0x12: register C:                 C
+- 0x13: register D:                 D
+- 0x14: register H:                 H
+- 0x15: register L:                 L
+- 0x16: address register HL:        [HL]
+- 0x17: register MB:                MB
+- 0x20: register AX:                AX
+- 0x21: register BX:                BX
+- 0x22: register CX:                CX
+- 0x23: register DX:                DX
+- 0x24: register EX:                EX
+- 0x25: register FX:                FX
+- 0x26: register GX:                GX
+- 0x27: register HX:                HX
+- 0x50: Relative address:           [byte address]      an 8 bit offset to the PC
+- 0x51: Near address:               Near [address]      a 8 bit address
+- 0x52: Short address:              short [address]     a 16 bit address
+- 0x53: long address:               long [address]      a 24 bit address
+- 0x54: Far address:                far [address]       a 32 bit address
+- 0x55: Short X indexed address:    [short address],X
+- 0x56: Short Y indexed address:    [short address],Y
+- 0x60: SP relative address byte:   [SP + sbyte number]
+- 0x61: BP relative address byte:   [BP + sbyte number]
+- 0x62: 32 bit segment address:     [register:register]
+- 0x63: 32 bit segment DS register: [DS:register]
+- 0x64: 32 bit segment DS B:        [DS:B]
+- 0x65: 32 bit segment ES register: [ES:register]
+- 0x66: 32 bit segment ES B:        [ES:B]
+- 0x6E: SPX relative address word:  [SPX +- sword number]
+- 0x6F: BPX relative address word:  [BPX +- sword number]
+- 0x70: register AF:                AF
+- 0x71: register BF:                BF
+- 0x72: register CF:                CF
+- 0x73: register DF:                DF
+- 0x78: register AD:                AD
+- 0x79: register BD:                BD
+- 0x7A: register CD:                CD
+- 0x7B: register DD:                DD
 
 ## Interrupt descriptor table
 
@@ -95,13 +123,13 @@ The Interrupt descriptor table is 16 KB in size
 
 ### Layout
 
-|Offset |Size   |Name                     |Description
-|-------|-      |-                        |-
-|`0x00` |`0x32` |Offset                   | this is the offset to the interrupt function
-|`0x32` |`0x16` |Segment                  | this is the segment to the interrupt function
-|`0x48` |`0x01` |CPU Privilege level      | this is the privilege level [more here](#privilege-level)
-|`0x49` |`0x01` |Gate type                | this is the Gate type [more here](#gate-type)
-|`0x4A` |`0x14` |reserved                 | reserved NOT IN USE
+|Offset |Size |Name                     |Description
+|-------|-    |-                        |-
+|`00`   |`32` |Offset                   | this is the offset to the interrupt function
+|`32`   |`20` |Segment                  | this is the segment to the interrupt function
+|`52`   |`01` |CPU Privilege level      | this is the privilege level [more here](#privilege-level)
+|`53`   |`01` |Gate type                | this is the Gate type [more here](#gate-type)
+|`54`   |`10` |reserved                 | reserved NOT IN USE
 
 #### privilege level
 
@@ -111,18 +139,20 @@ The Interrupt descriptor table is 16 KB in size
 
 |Function                   |Interupt number|Type             |Is User defined|Related instructions
 |---------------------------|---------------|-----------------|---------------|-
-|Divide error               |0              |Fault exception  |true           |DIV
+|Divide error               |0              |Fault exception  |true           |DIV or DIVF
 |NMI interrupt              |1              |interrupt        |true           |INT 2 or NMI pin
 |BRK interrupt              |2              |interrupt        |true           |BRK
 |invalid opcode             |6              |Abort exception  |false          |Any undefined opcode
-|User defined IRQ interrupt |16-31          |interrupt        |true           |The IRQ pin
-|User defined interrupts    |32             |interrupt        |true           |INT 0x03
+|Keyboard IRQ               |16             |interrupt        |false          |Keyboard IRQ0
+|User defined IRQ interrupt |17-30          |interrupt        |true           |The IRQ pin
+|FDC IRQ                    |31             |interrupt        |true           |FDC IRQ15
+|reserved                   |32             |interrupt        |false          |Unused
 |User defined interrupts    |33             |interrupt        |true           |INT 0x04
 |User defined interrupts    |34             |interrupt        |true           |INT 0x05
 |User defined interrupts    |35             |interrupt        |true           |INT 0x06
-|User defined interrupts    |36             |interrupt        |true           |INT 0x07
-|User defined interrupts    |37             |interrupt        |true           |INT 0x10
-|Stack overflow             |38             |Abort exception  |false          |If the stack overflows
+|User defined interrupts    |36             |interrupt        |true           |INT 0x10
+|User defined interrupts    |37             |interrupt        |true           |INT 0x13
+|Stack overflow             |38             |Abort exception  |true           |If the stack overflows
 |reserved                   |39-255         |interrupt        |true           |DO NOT USE
 
 #### interrupt
@@ -137,29 +167,18 @@ when the BC232 Architecture gets an Abort exception it will stop and the Halt fl
 
 when the BC232 Architecture gets an Fault exception it will skip that instruction and continue
 
-## Global descriptor table
-
-### Layout
-
-|Offset |Size   |Name                     |Description
-|-------|-      |-                        |-
-|`00`   |`32`   |Base address             | this is the Base address to the interrupt function
-|`32`   |`20`   |Segment limit            | this is the segment limit to the interrupt function
-|`52`   |`01`   |Flags                    | [More here](#flags)
-|`53`   |`11`   |reserved                 | reserved NOT IN USE
-
-#### Flags
-
-|Offset |Size   |Name                     |Description
-|-------|-      |-                        |-
-|`0`    |`01`   |Granularity              | this is the granularity bit if 1 the Segment limit is specified in 4k blocks
-|`1`    |`01`   |Executable               | if 0 the entry is a Data segment and 1 it's a Code segment
-|`2`    |`01`   |Read write               | if Executable bit is 0 then if this is 1 it is Read only and 1 read and write
-|`3`    |`02`   |Gate type                | this is the Gate type [more here](#gate-type)
-
 ## Caches
 
 ## Floating values
+
+The BC232 architecture supports floating-point operations through specialized registers and instructions. The floating-point unit (FPU) can handle both single-precision and double-precision values. Below are the key components and capabilities related to floating-point operations.
+
+### Floating-Point Registers
+
+The architecture provides several dedicated floating-point registers:
+
+- AF, BF, CF, DF: 32-bit single-precision floating-point registers.
+- AD, BD, CD, DD: 64-bit double-precision floating-point registers.
 
 ## Virtual mode
 
@@ -177,11 +196,13 @@ in Extended mode the CPU will get
 - 24 bit address bus
 - 16 bit data bus
 - a 4 KB IVT
-- Make use of the extended registers [List here](#extended-registers)
+- Make use of the extended registers
+- Long and Far address argument modes
+- PC becomes a 24 bit register
 
 ## Protected mode
 
-in Extended mode the CPU will get
+in Protected mode the CPU will get
 
 - 32 bit address bus
 - 32 bit data bus
@@ -190,8 +211,6 @@ in Extended mode the CPU will get
 
 ## Memory
 
-### Memory Management unit (MMU)
-
 ### Memory layout
 
 - Address bus: 16 bits to a max of 32 bits
@@ -199,17 +218,13 @@ in Extended mode the CPU will get
 |Base Address |Size         |Name                       |Description
 |-------------|-------------|---------------------------|-
 |`0x0000_0000`|`0x0000_4000`| Interrupt descriptor table| Interrupt descriptor table more [here](#interrupt-descriptor-table)
-|`0x0000_4000`|`0x0000_0200`| global descriptor table   | global descriptor table more [here](#global-descriptor-table)
-|`0x0000_4200`|`0x0000_0200`| IO ports                  | this is where the Ports is at
-|`0x0000_4400`|`0x0000_BC00`| RAM                       | RAM in the first segment
-|`0x0001_0000`|`0x0002_8000`| RAM                       | RAM
-|`0x0003_8000`|`0x0000_8000`| Char set                  | Char set
-|`0x0004_0000`|`0x0004_0000`| VRAM                      | video ram
-|`0x0008_0000`|`0x0008_0000`| RAM Banked                | this is the data/prgram is at but banked
-|`0x0010_0000`|`0x00F0_0000`| RAM                       | this is the data/prgram is at
-|`0x0100_0000`|`0xFF00_0000`| RAM                       | this is the data/prgram is at
+|`0x0000_4400`|`0x0000_0200`| IO ports                  | this is where the Ports is at
+|`0x0000_4600`|`0x0000_BA00`| RAM                       | RAM in the first segment
+|`0x0001_0000`|`0x0002_0000`| VRAM                      | video ram
+|`0x0003_0000`|`0x000B_0000`| RAM Banked                | this is the data/prgram is at but banked
+|`0x0010_0000`|`0xFFF5_0000`| RAM                       | RAM
 
-the end is `0xFFFFFF`/`0x1000000`
+the end is `0x10000_0000`
 
 ## REGISTERS
 
@@ -239,6 +254,11 @@ the end is `0xFFFFFF`/`0x1000000`
 - CF:             32  bit float register
 - DF:             32  bit float register
 
+- AD:             64  bit float register
+- BD:             64  bit float register
+- CD:             64  bit float register
+- DD:             64  bit float register
+
 - R1:             16  bit temp register
 - R2:             16  bit temp register
 - R3:             16  bit temp register
@@ -251,9 +271,9 @@ the end is `0xFFFFFF`/`0x1000000`
 - MB:             16  bit bank register
 
 - CR0:            16  bit control register
-  - 0x0001
-  - 0x0002
-  - 0x0004
+  - 0x0001 Boot mode
+  - 0x0002 FPU enabled
+  - 0x0004 Low power Mode
   - 0x0008
   - 0x0010 Enable extended mode             Enableing [extended mode](#extended-mode)
   - 0x0020
@@ -295,8 +315,8 @@ the end is `0xFFFFFF`/`0x1000000`
   - 0x000020 less
   - 0x000040 interrupt enable
   - 0x000080 HALT
-  - 0x000100
-  - 0x000200
+  - 0x000100 emulate BC8
+  - 0x000200 under flow
   - 0x000400
   - 0x000800
   - 0x001000
@@ -312,6 +332,12 @@ the end is `0xFFFFFF`/`0x1000000`
   - 0x400000
   - 0x800000
 
-### Extended registers
-
 ### Protected registers
+
+- X:              32 bit index register
+- Y:              32 bit index register
+
+- EX              32 bit general purpose register
+- FX              32 bit general purpose register
+- GX              32 bit general purpose register
+- HX              32 bit general purpose register

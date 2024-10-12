@@ -1,0 +1,517 @@
+INCLUDE HEADER
+
+
+SECTION HEADER
+_text C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+
+
+SYMBOLS HEADER
+_REF_ LABEL Entry,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL FindStage2File,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ExitFindStage2,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL LoadStage2,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL LoadStage2Loop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Load,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ExitReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL OFS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL OFSLOOP,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ExitOFS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ErrorMessageReading,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Error,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Stage2_Name,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Bootloader,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+
+
+TEXT HEADER
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_OFF_ 7C00
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Entry C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ mov AL, CR0
+01
+00
+0c
+0a
+21
+_NEWLINE_
+_DEL_ or A, 0x10
+20
+71
+01
+00
+10
+_NEWLINE_
+_DEL_ mov CR0, AL
+00
+06
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov R1, D
+01
+00
+0a
+13
+10
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov B, 0x03
+01
+02
+01
+00
+03
+_NEWLINE_
+_DEL_ sez DH
+0a
+00
+0a
+43
+_NEWLINE_
+_DEL_ sez C
+0a
+07
+_NEWLINE_
+_DEL_ mov AX, @Bootloader
+03
+01
+01
+_SL_Bootloader
+_NEWLINE_
+_DEL_ call rel [ReadSector]
+07
+00
+50
+REL__SL_ReadSector
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov HL, @Stage2_Name
+00
+00
+0a
+01
+c7
+_SL_Stage2_Name
+_NEWLINE_
+_DEL_ mov C, 16
+01
+03
+01
+00
+10
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL FindStage2File C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ CMPL
+40
+10
+_NEWLINE_
+_DEL_ je rel [ExitFindStage2]
+30
+30
+50
+REL__SL_ExitFindStage2
+_NEWLINE_
+_DEL_ add AX, 0x20
+20
+22
+05
+00
+00
+20
+_NEWLINE_
+_DEL_ jmp rel [FindStage2File]
+30
+00
+50
+REL__SL_FindStage2File
+_NEWLINE_
+_REF_ LABEL ExitFindStage2 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ add AX, 16
+20
+22
+05
+00
+00
+10
+_NEWLINE_
+_DEL_ sez C
+0a
+07
+_NEWLINE_
+_DEL_ mov B, [AX]
+01
+02
+0b
+c0
+_NEWLINE_
+_DEL_ call rel [OFS]
+07
+00
+50
+REL__SL_OFS
+_NEWLINE_
+_REF_ LABEL LoadStage2 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ add AX, 0x2
+20
+22
+05
+00
+00
+02
+_NEWLINE_
+_DEL_ sez D
+0a
+08
+_NEWLINE_
+_DEL_ mov DH, [AX]
+01
+00
+0a
+0b
+43
+c0
+_NEWLINE_
+_DEL_ mov L, D
+01
+00
+15
+13
+_NEWLINE_
+_DEL_ mov D, R1
+02
+08
+13
+0a
+10
+_NEWLINE_
+_DEL_ mov AX, @Bootloader
+03
+01
+01
+_SL_Bootloader
+_NEWLINE_
+_DEL_ sez B
+0a
+06
+_NEWLINE_
+_DEL_ call rel [ReadSector]
+07
+00
+50
+REL__SL_ReadSector
+_NEWLINE_
+_REF_ LABEL LoadStage2Loop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ add AX, 0x200
+20
+22
+05
+00
+02
+00
+_NEWLINE_
+_DEL_ inc B
+20
+f0
+11
+_NEWLINE_
+_DEL_ call rel [OFS]
+07
+00
+50
+REL__SL_OFS
+_NEWLINE_
+_REF_ LABEL Load C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ call rel [ReadSector]
+07
+00
+50
+REL__SL_ReadSector
+_NEWLINE_
+_DEL_ dec L
+21
+00
+15
+_NEWLINE_
+_DEL_ jnz rel [LoadStage2Loop]
+30
+11
+50
+REL__SL_LoadStage2Loop
+_NEWLINE_
+_DEL_ mov D, R1
+02
+08
+13
+0a
+10
+_NEWLINE_
+_DEL_ mov HL, far @Bootloader
+00
+00
+0a
+03
+c7
+_FL_Bootloader
+_NEWLINE_
+_DEL_ push HL
+05
+00
+0a
+c7
+_NEWLINE_
+_DEL_ retl
+08
+01
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ReadSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ swap AX, HL
+0c
+00
+20
+0a
+c7
+_NEWLINE_
+_DEL_ swap DH, AL
+0c
+00
+0a
+0c
+43
+_NEWLINE_
+_DEL_ mov AH, 0x01
+01
+00
+0a
+01
+40
+00
+01
+_NEWLINE_
+_DEL_ int 0x13
+f0
+40
+00
+13
+_NEWLINE_
+_NEWLINE_
+_DEL_ jnc rel [ExitReadSector]
+30
+41
+50
+REL__SL_ExitReadSector
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov DS, high @ErrorMessageReading
+02
+08
+0a
+01
+05
+_SL_ErrorMessageReading,MH
+_NEWLINE_
+_DEL_ mov B, LOW @ErrorMessageReading
+01
+02
+01
+_SL_ErrorMessageReading,ML
+_NEWLINE_
+_DEL_ jmp rel [Error]
+30
+00
+50
+REL__SL_Error
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ExitReadSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL OFS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ push A
+05
+00
+10
+_NEWLINE_
+_DEL_ mov A, B
+01
+01
+11
+_NEWLINE_
+_REF_ LABEL OFSLOOP C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ cmp A, 19
+04
+02
+01
+00
+13
+_NEWLINE_
+_DEL_ jle rel [ExitOFS]
+30
+92
+50
+REL__SL_ExitOFS
+_NEWLINE_
+_DEL_ sub A, 18
+20
+31
+01
+00
+12
+_NEWLINE_
+_DEL_ inc C
+20
+f0
+12
+_NEWLINE_
+_DEL_ jmp rel [OFSLOOP]
+30
+00
+50
+REL__SL_OFSLOOP
+_NEWLINE_
+_REF_ LABEL ExitOFS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ mov B, A
+01
+02
+10
+_NEWLINE_
+_DEL_ pop A
+06
+00
+10
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ErrorMessageReading C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+45
+72
+72
+6f
+72
+20
+72
+65
+61
+64
+69
+6e
+67
+20
+73
+65
+63
+74
+6f
+72
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Error C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+_DEL_ mov AH, 0x02
+01
+00
+0a
+01
+40
+00
+02
+_NEWLINE_
+_DEL_ int 0x10
+f0
+40
+00
+10
+_NEWLINE_
+_NEWLINE_
+_DEL_ jmp near $
+30
+00
+00
+_NCA_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Stage2_Name C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_NEWLINE_
+53
+54
+41
+47
+45
+32
+00
+00
+00
+00
+00
+_NEWLINE_
+42
+49
+4e
+00
+00
+_NEWLINE_
+_NEWLINE_
+_OFF_ 7DFE
+_NEWLINE_
+55
+AA
+_NEWLINE_
+_REF_ LABEL Bootloader C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage1\newBootloader.acl

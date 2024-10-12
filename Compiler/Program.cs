@@ -2,7 +2,7 @@
 
 public class Program : ArgumentFunctions
 {
-    Dictionary<string, VoidFunction> Arguments = new Dictionary<string, VoidFunction>()
+    Dictionary<string, VoidFunction> m_arguments = new Dictionary<string, VoidFunction>()
     {
         {"-i", GetInputFile },
 
@@ -22,9 +22,9 @@ public class Program : ArgumentFunctions
     }
     Program(string[] args)
     {
-        DecodeArguments(args);
+        decodeArguments(args);
 
-        if (InputFile == "\0" || !File.Exists(InputFile))
+        if (m_InputFile == "\0" || !File.Exists(m_InputFile))
         {
             Console.WriteLine("ERORR: invalid input file");
             Environment.Exit(1);
@@ -32,9 +32,9 @@ public class Program : ArgumentFunctions
 
         string FullSrc = "";
 
-        for (int f = 0; f < Files.Count; f++)
+        for (int f = 0; f < m_Files.Count; f++)
         {
-            string FileContents = File.ReadAllText(Files[f].FullName);
+            string FileContents = File.ReadAllText(m_Files[f].FullName);
 
             FileContents = FileContents.Replace("\r\n", "\n");
 
@@ -47,21 +47,21 @@ public class Program : ArgumentFunctions
         FullSrc = FullSrc.Replace("\r\n", "\n");
 
         CompilerCCL compiler = new CompilerCCL(FullSrc);
-        File.WriteAllLines(OutputFile, compiler.m_output);
+        File.WriteAllLines(m_OutputFile, compiler.m_Output);
     }
 
-    static int i;
-    void DecodeArguments(string[] args)
+    static int m_i;
+    void decodeArguments(string[] args)
     {
-        for (i = 0; i < args.Length; i++)
+        for (m_i = 0; m_i < args.Length; m_i++)
         {
-            if (Arguments.ContainsKey(args[i]))
+            if (m_arguments.ContainsKey(args[m_i]))
             {
-                Arguments[args[i]](args, ref i);
+                m_arguments[args[m_i]](args, ref m_i);
             }
             else
             {
-                Files.Add(new FileInfo(Path.GetFullPath(args[i])));
+                m_Files.Add(new FileInfo(Path.GetFullPath(args[m_i])));
             }
         }
     }

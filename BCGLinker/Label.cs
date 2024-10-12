@@ -9,6 +9,7 @@ namespace BCGLinker
         public string m_Name;
         public int m_Address;
         public bool m_IsGlobal;
+        public bool m_IsLocal;
         public string m_File;
 
         public bool m_HaveStruct = false;

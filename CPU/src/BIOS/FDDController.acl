@@ -1,0 +1,250 @@
+$STR                = 0x100
+$MSR                = 0x102
+
+$DRS                = 0x103
+$DATA               = 0x104
+
+; 5,25" 512 sector size
+$FloppyGPL1         = 0x2A
+
+; 3,5" 512 sector size
+$FloppyGPL2         = 0x1B
+
+$SectorSize0x080    = 0x00
+$SectorSize0x100    = 0x01
+$SectorSize0x200    = 0x02
+$SectorSize0x400    = 0x03
+$SectorSize0x600    = 0x04
+
+$Drive1 = 0x00
+$Drive2 = 0x01
+$Drive3 = 0x02
+$Drive4 = 0x03
+
+$CommandRead        = 0x01
+$CommandWrite       = 0x02
+$CommandRecalibrate = 0x03
+$CommandSeek        = 0x04
+
+.local Metadata
+.local Buffer
+
+; Arguments:
+; uint16 Drive             [BP - 16]
+;
+;
+;
+; void InitializeDrive(uint16 drive);
+InitializeDrive:
+    enter
+
+    mov     B,                          2                   ; B = 0002
+    mov     [Format.Head],              BL                  ; TotalHeads = 2
+    mov     B,                          160                 ; B = 160
+    mov     [Format.TotalTracks],       B                   ; TotalTracks = 160
+
+    ; TracksPerHead = TotalHeads / TotalTracks = 80
+    mov     A,                          2880                ; A = TotalSectors
+    mov     [Format.TotalSector],       A                   ; TotalSector = 2880
+    div     A,                          B                   ; SectorsPerTrack = TotalSectors / TotalTracks
+    mov     [Format.SectorsPerTrack],   A                   ; SectorsPerTrack = 36
+    mov     A,                          0x200               ; A = 0x200
+    mov     [Format.BytesPerSector],    A                   ; BytesPerSector = 0x200
+
+    mov     AL,                         [BP - 16]
+    push    AL
+    call    [Recalibrate]
+
+    leave
+    ret     1
+
+; Arguments:
+; uint16 drive              [BP - 16]
+; uint16 head               [BP - 18]
+; uint16_t track            [BP - 20]
+; uint16 sector             [BP - 22]
+; uint16 data_length        [BP - 24]
+;
+; Read data from a specified sector of a floppy disk
+;
+; void Read_Data(uint16 data_length, uint16 sector, uint16_t cylinder, uint16 head, uint16 drive);
+
+Read_Data:
+    enter
+
+    mov     AL,             %CommandRead        ; command code for Read data
+    outb    %DATA,          AL                  ; write the command to the FDC command register
+
+    mov     A,              [BP - 16]           ; drive number
+    and     AL,             0x0F                ; masking the 0b0000_1111
+
+    rol     AL,             4                   ; rolling AL 4 times 0b1111_0000
+    mov     B,              [BP - 18]           ; getting the Head
+    or      AL,             BL                  ; now it's 0bDDDD_HHHH
+    outb    %DATA,          AL                  ; Outputing the head and drive
+        
+    mov     A,              [BP - 20]           ; track number
+    outb    %DATA,          A                   ; writing the track number
+
+    mov     A,              [BP - 22]           ; Sector
+    outb    %DATA,          AL                  ; writing the Sector
+
+    mov     A,              [BP - 24]           ; data_length
+    outb    %DATA,          AL                  ; writing the data_length
+
+    mov     A,              0x0004              ; checking the busy bit in the MSR
+    call    [WaitForMSR]
+
+    leave
+    ret     6
+
+; Arguments:
+; uint16 drive              [BP - 16]
+; uint16 head               [BP - 18]
+; uint16_t track            [BP - 20]
+; uint16 sector             [BP - 22]
+; uint16 data_length        [BP - 24]
+; far uint8* data           [BP - 26]
+;
+; Write data to a specified sector of a floppy disk
+;
+; void Write_Data(const uint8* data, uint16 data_length, uint16 sector, uint16_t track, uint16 head, uint16 drive);
+
+Write_Data:
+    enter
+
+    mov     AL,             %CommandWrite       ; command code for Write data
+    outb    %DATA,          AL                  ; write the command to the FDC command register
+
+    mov     A,              [BP - 16]           ; drive number
+    and     AL,             0x03                ; masking the 0b0000_0011
+
+    rol     AL,             4                   ; rolling AL 4 times 0b1100_0000
+    mov     B,              [BP - 18]           ; getting the Head
+    or      AL,             BL                  ; now it's 0bDD00_HHHH
+    outb    %DATA,          AL                  ; Outputing the head and drive
+        
+    mov     A,              [BP - 20]           ; track number
+    outb    %DATA,          A                   ; writing the track number
+
+    mov     A,              [BP - 22]           ; Sector
+    outb    %DATA,          AL                  ; writing the Sector
+
+    mov     A,              [BP - 24]           ; data_length
+    outb    %DATA,          AL                  ; writing the data_length 
+
+    mov     A,              0x0004              ; checking the busy bit in the MSR
+    call    [WaitForMSR]
+
+    leave
+    ret     10
+
+; Arguments:
+; uint16 drive              [BP - 16]
+; uint16_t track            [BP - 18]
+;
+; Move the read/write head to a specific track
+;
+; void Seek(uint16 drive, uint16_t track);
+.global Seek
+Seek:
+    enter
+
+; Arguments:
+; uint16 Drive             [BP - 16]
+;
+; Recalibrate the drive (move the head to track 0)
+;
+; void Recalibrate(uint16 drive);
+.global Recalibrate
+Recalibrate:
+    enter
+
+    mov     AL,             %CommandRecalibrate ; command code for Read data
+    outb    %DATA,          AL                  ; write the command to the FDC command register
+
+    mov     A,              [BP - 16]           ; drive number
+    outb    %DATA,          AL
+
+    call    [WaitForIRQ] 
+
+    leave
+    ret     1
+
+; Arguments:
+; uint16 drive             [BP - 16]
+;
+; void Format(uint16 drive)
+Format:
+    enter
+
+    mov     HL,             far @Buffer         ; loading the Buffer address
+    push    HL                                  ; writing the data address
+
+    sez     A
+    mov     AL,             %SectorSize0x400    ; loading the size
+    push    A                                   ; writing the size
+
+    mov     AL,             2
+    push    A                                   ; writing the sector
+
+    sez     A                                   ; A = 0
+    push    A                                   ; writing the track
+    push    A                                   ; head
+
+    mov     A,              [BP - 16]           ; loading the drive
+    push    A                                   ; writing the drive
+
+    call    [Write_Data]
+
+    leave
+    ret     1
+
+
+FloppyInterruptHandler:
+    cli
+    mov     [ReceivedIRQ],  0x80                    ; in the ReceivedIRQ variabel 0x80 bit is the FDD interrupt
+    sei
+    reti
+
+WaitForIRQ:
+    CLB     [ReceivedIRQ],  0x80                    ; in the ReceivedIRQ variabel 0x80 bit is the FDD interrupt
+WaitForIRQLoop:
+    mov     AL,             [ReceivedIRQ]
+    and     AL,             0x80
+    jnz     [WaitForIRQLoop]
+    retz
+
+WaitForMSR:
+    push    B
+    inb     %MSR,           B
+    and     B,              A
+    jz      [WaitForMSR]
+    pop     B
+
+.struct FilesystemFormat
+
+Head: .resb
+TotalTracks: .resw
+TotalSector: resw
+SectorsPerTrack: .resb
+BytesPerSector: .resw
+
+.endstruct
+
+Buffer:
+.db         "BFS01 "                                ; header
+.db         0                                       ; disk letter
+.struct FilesystemFormat Format:
+; .db         2                                       ; Total head
+; .dw         160                                     ; Total tracks
+; .dw         2880                                    ; Total sectors
+; .db         18                                      ; Sectors per track
+; .dw         0x200                                   ; bytes per sector
+
+.dw         0x400                                   ; root address
+.dw         0x10                                    ; max number of entries in root directory
+.db         1                                       ; fat allocated
+.db         "FSBGC01", 1, 1, 1, 1, 1, 1, 1, 1, 1    ; volume label with padding
+Metadata:
+.times      0x1DA .db 0                             ; metadata

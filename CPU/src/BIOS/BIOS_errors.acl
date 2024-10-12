@@ -1,0 +1,11 @@
+; short char* str           DS:B
+Disk_Read_error:
+Error_Invalid_BootDisk:
+    sez     B
+    push    BL
+    push    A
+    call    [PrintStr]
+
+    
+
+.db "Error:", 0

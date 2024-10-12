@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "DisAssemblerBCG16/1.0.0": {
+        "runtime": {
+          "DisAssemblerBCG16.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DisAssemblerBCG16/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

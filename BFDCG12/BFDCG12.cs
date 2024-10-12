@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonBCGCPU;
@@ -12,13 +13,16 @@ namespace _BFDCG12
     {
         public BFDCG12()
         {
-            m_PortIDStart = 0x100;
-            m_PortIDEnd = 0x107;
+            m_commandRegister = 0;
+            m_argumentCommandCount = 0;
+            InterruptIndex = 0xF;            // IRQ15
+            PortIDStart = 0x100;
+            PortIDEnd = 0x107;
         }
 
         public void ConnectBus(CPUBus bus)
         {
-            m_BUS = bus;
+            BUS = bus;
         }
 
         Drive m_drive1;
@@ -30,121 +34,131 @@ namespace _BFDCG12
         public ushort m_MasterStatusRegister;
         public ushort m_DataRateSelectRegister;
         public ushort m_DataRegister;
+        ushort m_bufferIndex;
 
-        ushort m_CurrentSector = 0;
-        ushort m_CurrentTrack = 0;
-        byte m_CurrentHead = 0;
+        ushort m_trackRegister;
 
-        ushort CommandRegister;
-        ushort ArgumentCommandCount;
+        ushort m_currentSector = 0;
+        ushort m_currentTrack = 0;
+        byte m_currentHead = 0;
 
-        bool Enabled;
+        ushort m_commandRegister;
+        ushort m_argumentCommandCount;
 
-        List<ushort> m_Arguments = new List<ushort>();
+        bool m_enabled;
+        byte[] m_byteBuffer;
 
-        public byte m_InterruptIndex { get; set; }
-        public Address m_Address { get => throw new Exception(); set => throw new Exception(); }
-        public bool m_ReadRam { get => throw new Exception(); set => throw new Exception(); }
-        public bool m_WriteRam { get => throw new Exception(); set => throw new Exception(); }
-        public ushort m_Databus { get => throw new Exception(); set => throw new Exception(); }
-        public ushort m_Outputbus { get => throw new Exception(); set => throw new Exception(); }
-        public int m_PortIDStart { get; set; }
-        public int m_PortIDEnd { get; set; }
+        List<ushort> m_arguments = new List<ushort>();
 
-        CPUBus m_BUS;
+        public byte InterruptIndex { get; set; }
+        public Address Address { get => throw new Exception(); set => throw new Exception(); }
+        public bool ReadRam { get => throw new Exception(); set => throw new Exception(); }
+        public bool WriteRam { get => throw new Exception(); set => throw new Exception(); }
+        public ushort Databus { get => throw new Exception(); set => throw new Exception(); }
+        public ushort Outputbus { get => throw new Exception(); set => throw new Exception(); }
+        public int PortIDStart { get; set; }
+        public int PortIDEnd { get; set; }
+
+        public CPUBus BUS { get; set; }
 
         public byte Read(out byte data, ushort Port)
         {
-            data = (byte)ReadRegister(Port);
+            data = (byte)readRegister(Port);
             return data;
         }
         public ushort Read(out ushort data, ushort Port)
         {
-            data = ReadRegister(Port);
+            data = readRegister(Port);
             return data;
         }
         public void Write(byte data, ushort Port)
         {
-            WriteRegister(Port, data);
+            writeRegister(Port, data);
         }
         public void Write(ushort data, ushort Port)
         {
-            WriteRegister(Port, data);
+            writeRegister(Port, data);
         }
 
         public void Tick()
         {
-            if (CommandRegister == 0)
+            if (m_commandRegister == 0)
             {
                 switch (m_DataRegister)
                 {
                     case 0:
                         return;
                     case 0x01:
-                        CommandRegister = m_DataRegister;
-                        return;
+                    case 0x02:
                     case 0x03:
-                        CommandRegister = m_DataRegister;
+                    case 0x04:
+                        m_commandRegister = m_DataRegister;
+                        setFlag(ref m_MasterStatusRegister, 0x0001, true);
                         return;
                     default:
                         break;
                 }
             }
 
-            switch (CommandRegister)
+            switch (m_commandRegister)
             {
                 case 0x01:
-                    if (m_Arguments.Count == 4)
+                    if (m_arguments.Count == 4)
                     {
-                        byte head = (byte)(m_Arguments[0] & 0x0F);
-                        byte drive = (byte)((m_Arguments[0] & 0xC0) >> 6);
-                        ReadDisk(drive, (Size)m_Arguments[3], head, m_Arguments[1], (byte)m_Arguments[2]);
+                        byte head = (byte)(m_arguments[0] & 0x0F);
+                        byte drive = (byte)((m_arguments[0] & 0xC0) >> 6);
+                        readDisk(drive, (Size)m_arguments[3], head, m_arguments[1], (byte)m_arguments[2]);
 
-                        m_Arguments.Clear();
-                        CommandRegister = 0;
-                        break;
+                        m_arguments.Clear();
+                        m_commandRegister = 0;
+                        setFlag(ref m_MasterStatusRegister, 0x0001, false);
+                        return;
                     }
-
-                    if (GetFlag(m_MasterStatusRegister, 0x0001) == true)
+                    break;
+                case 0x02:
+                    if (m_arguments.Count == 4)
                     {
-                        m_Arguments.Add(m_DataRegister);
-                        SetFlag(ref m_MasterStatusRegister, 0x0001, false);
-                    }
+                        byte head = (byte)(m_arguments[0] & 0x0F);
+                        byte drive = (byte)((m_arguments[0] & 0xC0) >> 6);
+                        writeDisk(drive, (Size)m_arguments[3], head, m_arguments[1], (byte)m_arguments[2]);
 
+                        m_arguments.Clear();
+                        m_commandRegister = 0;
+                        setFlag(ref m_MasterStatusRegister, 0x0001, false);
+                        return;
+                    }
                     break;
                 case 0x03:
-                    if (m_Arguments.Count == 1)
+                    if (m_arguments.Count == 1)
                     {
-                        byte head = (byte)(m_Arguments[0] & 0x0F);
-                        byte drive = (byte)((m_Arguments[0] & 0xC0) >> 6);
-                        Recalibrate(drive, head);
-
-                        m_Arguments.Clear();
-                        CommandRegister = 0;
-                        break;
+                        byte drive = (byte)m_arguments[0];
+                        recalibrate(drive);
+                        m_arguments.Clear();
+                        m_commandRegister = 0;
+                        setFlag(ref m_MasterStatusRegister, 0x0001, false);
+                        return;
                     }
-
-                    if (GetFlag(m_MasterStatusRegister, 0x0001) == true)
-                    {
-                        m_Arguments.Add(m_DataRegister);
-                        SetFlag(ref m_MasterStatusRegister, 0x0001, false);
-                    }
-
                     break;
                 default:
                     break;
+            }
+
+            if (getFlag(m_MasterStatusRegister, 0x0001) == true)
+            {
+                m_arguments.Add(m_DataRegister);
             }
         }
 
         public void Reset()
         {
-            CommandRegister = 0;
-            ArgumentCommandCount = 0;
+            m_bufferIndex = 0;
+            m_commandRegister = 0;
+            m_argumentCommandCount = 0;
 
-            m_InterruptIndex = 0x01;            // IRQ1
+            InterruptIndex = 0x00;            // IRQ0
 
-            m_PortIDStart = 0x100;
-            m_PortIDEnd = 0x107;
+            PortIDStart = 0x100;
+            PortIDEnd = 0x107;
         }
 
 
@@ -153,24 +167,24 @@ namespace _BFDCG12
             switch (diskSlot)
             {
                 case 1:
-                    AddDiskDrive(ref m_drive1, disk);
+                    addDiskDrive(ref m_drive1, disk, diskSlot);
                     break;
                 case 2:
-                    AddDiskDrive(ref m_drive2, disk);
+                    addDiskDrive(ref m_drive2, disk, diskSlot);
                     break;
                 case 3:
-                    AddDiskDrive(ref m_drive3, disk);
+                    addDiskDrive(ref m_drive3, disk, diskSlot);
                     break;
                 case 4:
-                    AddDiskDrive(ref m_drive4, disk);
+                    addDiskDrive(ref m_drive4, disk, diskSlot);
                     break;
                 default:
                     break;
             }
         }
-        void AddDiskDrive(ref Drive drive, Disk disk)
+        void addDiskDrive(ref Drive drive, Disk disk, int diskSlot)
         {
-            drive = new Drive(disk.Is80Track, disk.FileSystemFormat);
+            drive = new Drive(disk.m_Is80Track, disk.m_FileSystemFormat, diskSlot);
 
             if (!drive.m_DiskSlotInUse)
             {
@@ -186,6 +200,7 @@ namespace _BFDCG12
 
         public void RemoveDisk(Disk disk)
         {
+            /*
             if (m_drive1.m_DiskSlotInUse && m_drive1.m_DiskSlot.m_Disk == disk)
             {
                 RemoveDiskDrive(ref m_drive1);
@@ -194,19 +209,20 @@ namespace _BFDCG12
             {
                 RemoveDiskDrive(ref m_drive2);
             }
+             */
         }
-        void RemoveDiskDrive(ref Drive drive)
+        void removeDiskDrive(ref Drive drive)
         {
-            drive.m_DiskSlot.SaveFile();
-            drive.m_DiskSlot = null;
-            drive.m_DiskSlotInUse = false;
+            //drive.m_DiskSlot.SaveFile();
+            //drive.m_DiskSlot = null;
+            //drive.m_DiskSlotInUse = false;
         }
 
-        void WriteRegister(ushort index, byte data)
+        void writeRegister(ushort index, byte data)
         {
-            WriteRegister(index, (ushort)data);
+            writeRegister(index, (ushort)data);
         }
-        void WriteRegister(ushort index, ushort data)
+        void writeRegister(ushort index, ushort data)
         {
             switch (index)
             {
@@ -215,14 +231,30 @@ namespace _BFDCG12
                     break;
                 case 0x104:
                     m_DataRegister = data;
-                    SetFlag(ref m_MasterStatusRegister, 0x0001, true);
+                    setFlag(ref m_MasterStatusRegister, 0x0001, true);
                     break;
                 default:
                     break;
             }
         }
 
-        ushort ReadRegister(ushort index)
+        bool getFlag(ushort register, int flag)
+        {
+            return (register & flag) == flag;
+        }
+        void setFlag(ref ushort register, int flag, bool value)
+        {
+            if (value)
+            {
+                register |= (ushort)flag;
+            }
+            else
+            {
+                register &= (ushort)~(ushort)flag;
+            }
+        }
+
+        ushort readRegister(ushort index)
         {
             ushort result;
             switch (index)
@@ -234,12 +266,21 @@ namespace _BFDCG12
                     break;
                 case 0x102:
                     result = m_MasterStatusRegister;
-                    if (GetFlag(m_MasterStatusRegister, 0x0100) == true)
+                    if (getFlag(m_MasterStatusRegister, 0x0100) == true)
                     {
-                        SetFlag(ref m_MasterStatusRegister, 0x0100, false);
+                        setFlag(ref m_MasterStatusRegister, 0x0100, false);
                     }
                     return result;
                 case 0x104:
+                    if (getFlag(m_MasterStatusRegister, 0x0200))
+                    {
+                        if (m_byteBuffer.Length == m_bufferIndex)
+                        {
+                            setFlag(ref m_MasterStatusRegister, 0x0200, false);
+                            return m_DataRegister;
+                        }
+                        return m_byteBuffer[m_bufferIndex++];
+                    }
                     return m_DataRegister;
                 default:
                     break;
@@ -247,106 +288,190 @@ namespace _BFDCG12
             return 0;
         }
 
-        void ReadDisk(byte drive, Size Size, byte head, ushort track, byte sector)
+        void writeDisk(byte driveIndex, Size Size, byte head, ushort track, byte sector)
         {
-            Seek(head, track, drive);
 
-            while (GetFlag(m_MasterStatusRegister, 0x0100) == false)
+        }
+        void readDisk(byte driveIndex, Size Size, byte head, ushort track, byte sector)
+        {
+            seek(track, driveIndex);
+
+            while (getFlag(m_MasterStatusRegister, 0x0100) == false)
             {
 
             }
 
-            SetFlag(ref m_MasterStatusRegister, 0x0100, true);
+            setFlag(ref m_MasterStatusRegister, 0x0100, true);
+
+            ushort sizeInBytes = 0;
 
             switch (Size)
             {
                 case Size._128Bytes:
+                    sizeInBytes = 128;
                     break;
                 case Size._256Bytes:
+                    sizeInBytes = 256;
                     break;
                 case Size._512Bytes:
-                    ReadData(drive, 512);
+                    sizeInBytes = 512;
+                    //ReadData(drive, 512, head, sector);
                     break;
                 case Size._1024Bytes:
+                    sizeInBytes = 1024;
                     break;
                 default:
                     break;
             }
-        }
 
-        void Recalibrate(byte driveIndex, byte head)
-        {
-            Drive drive = GetDrive(driveIndex);
+            Drive drive = getDrive(driveIndex);
 
-
-        }
-
-        async void ReadData(byte driveIndex, ushort size)
-        {
-            List<byte> buffer = new List<byte>(size);
-            Drive drive = GetDrive(driveIndex);
-
-            byte Head = 0;
-            ushort Track = drive.m_CurrentTrack;
-            ushort Sector = drive.m_CurrentSector;
-
-            float SectorCountF = size / 0x200;
-            int SectorCount = (int)Math.Round(SectorCountF, MidpointRounding.ToPositiveInfinity);
-
-            SetFlag(ref m_MasterStatusRegister, 0x0100, false);
-            for (int i = 0; i < SectorCount; i++)
+            if (head == 0)
             {
-                buffer.AddRange(drive.m_DiskSlot.ReadDiskSector(Head, Track, Sector));
+                drive.m_HeadSelect = false;
             }
-            await Task.Delay(50);
-            SetFlag(ref m_MasterStatusRegister, 0x0100, true);
-            m_BUS.IRQ(this);
+            else
+            {
+                drive.m_HeadSelect = true;
+            }
+
+            drive.m_DriveSelA = true;
+            drive.m_Load = false;
+
+            drive.m_ReadEnable = true;
+            drive.m_WriteData = 0xF0;
+
+            while(drive.m_Clk == false) { }
+
+            byte currnetDriveSector = drive.m_ReadData[0];
+        
+            drive.m_ReadEnable = false;
+            
+            while (currnetDriveSector != sector)
+            {
+                if (sector == 1)
+                {
+                    break;
+                }
+                drive.m_Load = true;
+                Thread.Sleep(11);
+                while (drive.m_Clk == true && drive.m_DiskChange == true)
+                { 
+                }
+                drive.m_Load = false;
+                Thread.Sleep(11);
+                drive.m_ReadEnable = true;
+                drive.m_WriteData = 0xF0;
+                while (drive.m_Clk == false)
+                { 
+                }
+                currnetDriveSector = drive.m_ReadData[0];
+                drive.m_ReadEnable = false;
+            }
+            drive.m_Load = false;
+
+            readData(driveIndex, sizeInBytes);
+        }
+
+        void recalibrate(byte driveIndex)
+        {
+            Drive drive = getDrive(driveIndex);
+            drive.m_Direction = true;
+            while (!drive.m_Track0)
+            {
+                drive.Step();
+            }
+        }
+
+        async void readData(byte driveIndex, ushort size)
+        {
+            Drive drive = getDrive(driveIndex);
+            List<byte> bytes = new List<byte>();
+
+            await Task.Run(() =>
+            {
+                drive.m_Load = true;
+                drive.m_ReadEnable = true;
+
+                while (bytes.Count < size)
+                {
+                    if (drive.m_Clk == true)
+                    {
+                        if (drive.m_ReadData == null)
+                        {
+                            continue;
+                        }
+                        bytes.AddRange(drive.m_ReadData);
+                        drive.m_ReadEnable = false;
+                        break;
+                    }
+                }
+                return;
+            });
+
+            setFlag(ref m_MasterStatusRegister, 0x0100, true);
+            setFlag(ref m_MasterStatusRegister, 0x0200, true);
+            if (BUS != null)
+            {
+                BUS.IRQ(this);
+            }
+            m_bufferIndex = 0;
+            m_byteBuffer = bytes.ToArray();
 
             return;
         }
 
-        async void StepTrack(byte head, byte drive)
+        void seek(ushort Track, byte drive)
         {
-            await Task.Run(() =>
-            {
-                Drive d = GetDrive(drive);
-                d.Step();
-            });
+            setFlag(ref m_MasterStatusRegister, 0x0100, false);
+
+            Drive result = getDrive(drive);
+
+            m_preTrack = Track;
+
+            doSeek(result);
         }
-
-
-        void Seek(byte Head, ushort Track, byte drive)
+        ushort m_preTrack;
+        async void doSeek(Drive drive)
         {
-            SetFlag(ref m_MasterStatusRegister, 0x0100, false);
-
-            Drive result = GetDrive(drive);
-
-            PreTrack = Track;
-
-            DoSeek(result, Head);
-        }
-        byte PreHead;
-        ushort PreTrack;
-        ushort PreSector;
-        async void DoSeek(Drive drive, byte head)
-        {
-            float time = 0;
-
-            if (PreTrack - m_CurrentTrack < 0)
+            if (drive.m_Track0)
             {
-                time += (m_CurrentTrack - PreTrack) * 0.01f;
+                await Task.Run(() =>
+                {
+                    drive.m_Direction = false;
+                    for (int i = 0; i < m_preTrack; i++)
+                    {
+                        m_trackRegister++;
+                        drive.Step();
+                    }
+                });
             }
             else
             {
-                time += (PreTrack - m_CurrentTrack) * 0.01f;
+                // TrackRegister = Track right now
+                // PreTrack = Track we need
+                for (int i = 0; i < 80; i++)
+                {
+                    if (m_trackRegister == m_preTrack)
+                    {
+                        break;
+                    }
+
+                    if (m_trackRegister < m_preTrack)
+                    {
+                        drive.m_Direction = false;
+                    }
+                    else
+                    {
+                        drive.m_Direction = true;
+                    }
+                    drive.Step();
+                }
             }
 
-            await Task.Delay((int)time);
-            drive.m_CurrentTrack = PreTrack;
-            SetFlag(ref m_MasterStatusRegister, 0x0100, true);
+            setFlag(ref m_MasterStatusRegister, 0x0100, true);
         }
-
-        Drive GetDrive(int drive)
+        Drive getDrive(int drive)
         {
             switch (drive)
             {
@@ -363,35 +488,6 @@ namespace _BFDCG12
             }
             return null;
         }
-
-        bool GetFlag(ushort register, int flag)
-        {
-            return (register & flag) == flag;
-        }
-        void SetFlag(ref ushort register, int flag, bool value)
-        {
-            if (value)
-            {
-                register |= (ushort)flag;
-            }
-            else
-            {
-                register &= (ushort)~(ushort)flag;
-            }
-        }
-
-        async void Update(byte drive)
-        {
-            await Task.Run(() =>
-            {
-                while (Enabled)
-                {
-
-                    Drive d = GetDrive(drive);
-                    d.m_CurrentSector++;
-                }
-            });
-        }
     }
 
     public enum Size
@@ -403,100 +499,5 @@ namespace _BFDCG12
         _2048Bytes,
         _4096Bytes,
         _8192Bytes,
-    }
-
-    public class Drive
-    {
-        bool m_Use80Track;
-
-        public bool Enable;
-
-        public bool m_DiskSlotInUse = false;
-        public FileSystemBase m_DiskSlot;
-
-        public ushort m_CurrentSector = 0;
-        public ushort m_CurrentTrack = 0;
-
-        // Input to FDC
-        bool MotorEnableA;
-        bool DriveSelB;
-        bool DriveSelA;
-        bool MotorEnableB;
-        public bool Direction;
-        bool WriteData;
-        bool FloppyWriteEnable;
-        bool HeadSelect;
-
-        // Output from FDC
-        public bool Index;
-        public bool Track0;
-        public bool WriteProtect;
-        public bool ReadData;
-        public bool DiskChange;
-
-        public Drive(bool Use80Track, FileSystemType fileSystemType)
-        {
-            if (fileSystemType == FileSystemType.BFS01)
-            {
-                m_DiskSlot = new FileSystemBFS01();
-            }
-            else
-            {
-                m_DiskSlot = new FileSystemFAT12();
-            }
-
-            Enable = true;
-
-            Update();
-        }
-
-        public async void Update()
-        {
-            await Task.Run(() =>
-            {
-                while (Enable)
-                {
-                    Track0 = m_CurrentTrack == 0;
-                    if (m_DiskSlotInUse)
-                    {
-                        WriteProtect = m_DiskSlot.m_Disk.WriteEnable == 0;
-                    }
-                    Index = false;
-                    Task.Delay(500);
-                    Index = true;
-                }
-            });
-        }
-
-        public void Step()
-        {
-            if (Direction)
-            {
-                if (m_Use80Track)
-                {
-                    Thread.Sleep(100);
-                    if (m_CurrentTrack < 80)
-                    {
-                        m_CurrentTrack++;
-                    }
-                }
-                else
-                {
-                    Thread.Sleep(100);
-                    if (m_CurrentTrack < 40)
-                    {
-                        m_CurrentTrack++;
-                    }
-                }
-            }
-            else if (!Direction)
-            {
-                Thread.Sleep(100);
-                if (m_CurrentTrack > 0)
-                {
-                    m_CurrentTrack--;
-                }
-            }
-        }
     }
 }

@@ -1,13 +1,10 @@
-Offset		:	size			Name
-
-00000000	:	00010000		_text
-00010000	:	00000000		_bss
 
 Address	:	offset		Name                     File
 
-0000	:	1200		Entry                    \CPU\src\DOS\dos.acl
-0000	:	1227		KeybIn                   \CPU\src\DOS\dos.acl
-0000	:	1237		NMI_Interrupt_Handler    \CPU\src\DOS\dos.acl
-0000	:	1239		BRK_Interrupt_Handler    \CPU\src\DOS\dos.acl
-0001	:	0000		Start_BSS                \CPU\src\DOS\dos.acl
-0001	:	0000		IRQ1                     \CPU\src\DOS\dos.acl
+0000	:	0028		L0000000                 \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+0000	:	0028		L0000001                 \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+0000	:	0028		_cstart                  \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+0000	:	003c		L0000500                 \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+0000	:	004a		Exit_cstart              \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+0000	:	004e		L0002000                 \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+0000	:	0014		Start                    \CPU\src\DOS\src\Bootloader\stage2\stage2.acl

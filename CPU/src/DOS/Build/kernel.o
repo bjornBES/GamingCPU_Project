@@ -1,0 +1,541 @@
+INCLUDE HEADER
+INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+
+
+SECTION HEADER
+_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\kernel.acl
+_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\kernel.acl
+
+
+SYMBOLS HEADER
+_REF_ LABEL Entry,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\kernel.acl
+_REF_ LABEL _GetFileHandler,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL FindFileLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL _GetEntryes,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL MoveEntryesLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL ExitMoveEntryes,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL _GetEntry,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL GetEntryLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL _ReadRootDirectory,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL _ReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL Buffer,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_REF_ LABEL DriveNumber,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\kernel.acl
+
+
+TEXT HEADER
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\kernel.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_OFF_ 0B0000
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Entry C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\kernel.acl
+_NEWLINE_
+_DEL_ mov [DriveNumber], DL
+00
+00
+52
+0f
+_SL_DriveNumber
+_NEWLINE_
+_DEL_ mov A, 0x0002
+01
+01
+01
+00
+02
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez SP
+0a
+00
+0a
+09
+_NEWLINE_
+_DEL_ mov SS, A
+01
+00
+0a
+10
+06
+_NEWLINE_
+_DEL_ mov DS, A
+01
+00
+0a
+10
+05
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _GetFileHandler C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ mov B, 3
+01
+02
+01
+00
+03
+_NEWLINE_
+_NEWLINE_
+_DEL_ call [_ReadRootDirectory]
+07
+00
+52
+_SL__ReadRootDirectory
+_NEWLINE_
+_DEL_ inc HL
+20
+f0
+0a
+c7
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov DS, HIGH @Buffer
+02
+08
+0a
+01
+05
+_SL_Buffer,MH
+_NEWLINE_
+_DEL_ mov B, LOW @Buffer
+01
+02
+01
+_SL_Buffer,ML
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL FindFileLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ mov C, 15
+01
+03
+01
+00
+0f
+_NEWLINE_
+_DEL_ cmpl
+40
+10
+_NEWLINE_
+_DEL_ je
+30
+30
+_NEWLINE_
+_DEL_ add HL, 0x20
+20
+20
+0a
+05
+c7
+00
+00
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _GetEntryes C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ push DS
+05
+00
+0a
+05
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 18]
+03
+01
+05
+00
+_NEWLINE_
+_DEL_ push AX
+05
+00
+20
+_NEWLINE_
+_DEL_ call [_ReadSector]
+07
+00
+52
+_SL__ReadSector
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov DS, HIGH @Buffer
+02
+08
+0a
+01
+05
+_SL_Buffer,MH
+_NEWLINE_
+_DEL_ mov B, LOW @Buffer
+01
+02
+01
+_SL_Buffer,ML
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL MoveEntryesLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ mov AX, [DS:B]
+03
+01
+64
+_NEWLINE_
+_DEL_ jz [ExitMoveEntryes]
+30
+10
+52
+_SL_ExitMoveEntryes
+_NEWLINE_
+_DEL_ mov [HL], AX
+03
+00
+16
+20
+_NEWLINE_
+_DEL_ add HL, 0x4
+20
+20
+0a
+05
+c7
+00
+00
+04
+_NEWLINE_
+_DEL_ add B, 0x4
+20
+20
+11
+01
+00
+04
+_NEWLINE_
+_DEL_ jmp [MoveEntryesLoop]
+30
+00
+52
+_SL_MoveEntryesLoop
+_NEWLINE_
+_REF_ LABEL ExitMoveEntryes C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ pop DS
+06
+00
+0a
+05
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 4
+08
+00
+00
+04
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _GetEntry C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov HL, [BP - 24]
+00
+00
+0a
+05
+c7
+00
+_NEWLINE_
+_DEL_ mov DS, [BP - 18]
+02
+08
+0a
+03
+05
+00
+_NEWLINE_
+_DEL_ mov B, [BP - 20]
+01
+02
+6f
+14
+_NEWLINE_
+_DEL_ mov CL, 0x20
+00
+03
+00
+20
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GetEntryLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ mov AX, [DS:B]
+03
+01
+64
+_NEWLINE_
+_DEL_ mov [HL], AX
+03
+00
+16
+20
+_NEWLINE_
+_DEL_ sub CL, 4
+20
+30
+0e
+00
+04
+_NEWLINE_
+_DEL_ jnz [GetEntryLoop]
+30
+11
+52
+_SL_GetEntryLoop
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ mov HL, [BP - 24]
+00
+00
+0a
+05
+c7
+00
+_NEWLINE_
+_DEL_ pop BP
+06
+00
+0a
+08
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+08
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ReadRootDirectory C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWLINE_
+_DEL_ mov B, 0x03
+01
+02
+01
+00
+03
+_NEWLINE_
+_DEL_ sez C
+0a
+07
+_NEWLINE_
+_DEL_ mov DL, [DriveNumber]
+00
+04
+52
+_SL_DriveNumber
+_NEWLINE_
+_DEL_ push AL
+05
+00
+0c
+_NEWLINE_
+_DEL_ push B
+05
+00
+11
+_NEWLINE_
+_DEL_ push C
+05
+00
+12
+_NEWLINE_
+_DEL_ push DL
+05
+00
+0f
+_NEWLINE_
+_DEL_ call [_ReadSector]
+07
+00
+52
+_SL__ReadSector
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ReadSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, [BP - 23]
+00
+01
+61
+17
+_NEWLINE_
+_DEL_ mov B, [BP - 19]
+01
+02
+6f
+13
+_NEWLINE_
+_DEL_ mov C, [BP - 21]
+01
+03
+6f
+15
+_NEWLINE_
+_DEL_ mov DL, [BP - 18]
+00
+04
+61
+12
+_NEWLINE_
+_DEL_ mov HL, far @Buffer
+00
+00
+0a
+03
+c7
+_FL_Buffer
+_NEWLINE_
+_DEL_ mov AH, 0x01
+01
+00
+0a
+01
+40
+00
+01
+_NEWLINE_
+_DEL_ int 0x13
+f0
+40
+00
+13
+_NEWLINE_
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 6
+08
+00
+00
+06
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Buffer C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\Filesystem.acl
+_NEWLINE_
+_RES_ 0200
+_NEWLINE_
+_RES_ 0200
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL DriveNumber C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\kernel\kernel.acl
+_NEWLINE_
+_RES_ 0001

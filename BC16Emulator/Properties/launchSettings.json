@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "BCG16CPUEmulator": {
+      "commandName": "Project",
+      "commandLineArgs": "-i ./a.bin",
+      "workingDirectory": "../"
+    },
+    "BCG16CPUEmulator BIOS": {
+      "commandName": "Project",
+      "commandLineArgs": "-i ./CPU/src/BIOSBin/Bin/BIOS.bin -d { index 1, Ut80, WE, BFS1, F } ./CPU/src/DOS/build/disk.img",
+      "workingDirectory": "../"
+    }
+  }
+}

@@ -1,200 +1,203 @@
-
 INCLUDE HEADER
+INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+
+INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
+
 
 
 SECTION HEADER
-_text 0x0 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_BSS 0x10000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-
-
-STRUCT HEADER
+_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL Entry,True [1200] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL KeybIn,False [1226] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL NMI_Interrupt_Handler,False [1236] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL BRK_Interrupt_Handler,False [1238] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL Start_BSS,False [10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_REF_ LABEL IRQ1,False [10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
+
+_REF_ LABEL L0000000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000001,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL _cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000500,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL Exit_cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0002000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+
+
+
+
+_REF_ LABEL _cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
+_REF_ LABEL Start,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
+
+
+
+_REF_ LABEL _cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
+_REF_ LABEL Start,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
 
 
 TEXT HEADER
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl"
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl"
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL Start C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
 _NEWLINE_
-_OFF_ 1200
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Entry [0x1200] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_DEL_mov AL, CR0
-_SET_ BPX 0
-_SET_ SPX 0
+_DEL_ mov AL, CR0
 01
-04
-20
+00
 0c
-_SET_ BPX 0
-_SET_ SPX 0
+0a
+21
 _NEWLINE_
-_DEL_or AL, 0x10
-_SET_ BPX 0
-_SET_ SPX 0
+_DEL_ or AL, 0x08
 20
 70
-04
-01
-20
-00
-10
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_DEL_mov CR0, AL
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
-11
 0c
-20
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_DEL_mov SS, 0x0010
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
-01
-15
 00
-10
-_SET_ BPX 0
-_SET_ SPX 0
+08
 _NEWLINE_
-_DEL_sez SP
-_SET_ BPX 0
-_SET_ SPX 0
+_DEL_ mov CR0, AL
+00
+06
+_NEWLINE_
+_NEWLINE_
+_DEL_ push D
+05
+00
+13
+_NEWLINE_
+_DEL_ call [_cstart]
 07
 00
-04
-38
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_DEL_mov ES, high @Start_BSS
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
-01
-65
-_SL_Start_BSS,MH
-_SET_ BPX 0
-_SET_ SPX 0
-_NEWLINE_
-_NEWLINE_
-_DEL_mov near [0x64], far @KeybIn
-_SET_ BPX 0
-_SET_ SPX 0
-00
-00
-03
+52
+_SL__cstart
 
-_FL_KeybIn
-_SET_ BPX 0
-_SET_ SPX 0
+
+
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl"
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL Start C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\src\Bootloader\stage2\stage2.acl
 _NEWLINE_
-_REF_ LABEL KeybIn [0x1226] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
+_DEL_ mov AL, CR0
+01
+00
+0c
+0a
+21
 _NEWLINE_
-_DEL_pushr
-_SET_ BPX 0
-_SET_ SPX 0
-f0
+_DEL_ or AL, 0x08
 20
-_SET_ BPX 0
-_SET_ SPX 0
+70
+0c
+00
+08
 _NEWLINE_
-_DEL_mov B, LOW @IRQ1
-_SET_ BPX 0
-_SET_ SPX 0
-04
-04
-01
-01
-_SL_IRQ1,ML
-_SET_ BPX 0
-_SET_ SPX 0
+_DEL_ mov CR0, AL
+00
+06
 _NEWLINE_
-_DEL_mov [ES:B], 1
-_SET_ BPX 0
-_SET_ SPX 0
+_NEWLINE_
+_DEL_ push D
+05
+00
+13
+_NEWLINE_
+_DEL_ call [_cstart]
+07
+00
+52
+_SL__cstart
+
+
+
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL L0000000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_REF_ LABEL L0000001 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_REF_ LABEL _cstart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ push BP
+05
 00
 0a
-00
-65
-01
-01
-_SET_ BPX 0
-_SET_ SPX 0
+08
 _NEWLINE_
-_DEL_reti
-_SET_ BPX 0
-_SET_ SPX 0
+_DEL_ mov BP, SP
+02
+08
+0a
+0a
+08
+09
+_NEWLINE_
+_DEL_ pushr
 f0
+20
+_NEWLINE_
+_DEL_ mov DS, 0x000b
+02
+08
+0a
+03
+05
 00
-_SET_ BPX 0
-_SET_ SPX 0
+00
+0b
 _NEWLINE_
+_REF_ LABEL L0000500 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
 _NEWLINE_
+_DEL_ mov R1, 0
+02
+08
+0a
+03
+10
+00
+00
+00
 _NEWLINE_
-_REF_ LABEL NMI_Interrupt_Handler [0x1236] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_DEL_reti
-_SET_ BPX 0
-_SET_ SPX 0
+_DEL_ popr
 f0
+30
+_NEWLINE_
+_DEL_ pop BP
+06
 00
-_SET_ BPX 0
-_SET_ SPX 0
+0a
+08
 _NEWLINE_
-_REF_ LABEL BRK_Interrupt_Handler [0x1238] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
+_REF_ LABEL Exit_cstart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
 _NEWLINE_
-_DEL_reti
-_SET_ BPX 0
-_SET_ SPX 0
-f0
+_DEL_ ret 2
+08
 00
-_SET_ BPX 0
-_SET_ SPX 0
+00
+02
+_NEWLINE_
+_REF_ LABEL L0002000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ add SP, 2
+20
+20
+0a
+03
+09
+00
+00
+02
 _NEWLINE_
 _NEWLINE_
-_OFF_ 00010000
 _NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Start_BSS [0x10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL IRQ1 [0x10000] C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\CPU\src\DOS\dos.acl
-_NEWLINE_
-_OFF_ 10001

@@ -1,81 +1,53 @@
+.setcpu "BC8"
 .section TEXT
-_START_PROG:
-	mov DS, 0x0008
-	; WIP
-	mov SS, 0x0001
-	sez SP
-	sez BP
-	call [_main]
-	rts
-
-_000002: ; void main()
-
+L0000000:
+L0000001:
+	mov   DS,                      0x000b
+	; _test is at DS:0
+	mov   B,                       0x0002
+L0000002:
+	sez   B
+	; _testt is at DS:0
+	mov   B,                       0x0002
+L0000010:
 _main:
-	push BP
-	mov BP, SP
+	push  BP
+	mov   BP,                      SP
 	pushr
-
-	; _UB with 1 bytes
-	mov A, 0x55aa
-	; SP = 14
-	push A
-	; SP = 16
-
-	; _UW with 2 bytes
-	mov A, 0x1000
-	; SP = 16
-	push A
-	; SP = 18
-
-	; _SB with 1 bytes
-	mov A, 0x55ff
-	; SP = 18
-	push A
-	; SP = 20
-
-	; _SW with 2 bytes
-	mov A, 0xffff
-	; SP = 20
-	push A
-	; SP = 22
-
-	; _NPUB with 1 bytes
-	mov A, 
-	; SP = 22
-	push A
-	; SP = 24
-
-	; _SPUB with 1 bytes
-	mov A, 0xffff
-	; SP = 24
-	push A
-	; SP = 26
-
-	; _PUB with 1 bytes
-	mov A, 0xffff
-	; SP = 26
-	push A
-	; SP = 28
-
-	; _LPUB with 1 bytes
-	mov A, 0xffffff
-	; SP = 28
-	push A
-	; SP = 30
-
-	; _FPUB with 1 bytes
-	mov A, 0xffffffff
-	; SP = 30
-	push A
-	; SP = 32
-
-	add SP, 18
+	sez   B
+L0000011:
+	mov   A,                       85
+	mov   [DS:B],                  A
+	; _test = 85
+L0000012:
+	mov   A,                       85
+	mov   [DS:B],                  A
+	; _testt = 85
+L0000015:
+	mov   A,                       [DS:B]
+	push  A
+L0000020:
+	mov   A,                       10
+	push  A
+L0000025:
+	mov   HL,                      10
+	push  H
+	push  L
+L0000030:
+	mov   AL,                      [SP - 8]
+	mov   R1,                      AL
+	pop   BP
 	popr
-	pop BP
+	mov   A,                       R1
+	jmp   [Exit_main]
+L0000035:
+	mov   R1,                      0
+	popr
+	pop   BP
+Exit_main:
+	add   SP,                      6
 	retz
-
-.section DATA
-
-.section RDATA
+L0000040:
+	add   SP,                      6
 
 .section BSS

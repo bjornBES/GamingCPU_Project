@@ -1,5 +1,4 @@
-﻿using Compiler.ParserNodes;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection.Metadata;
@@ -9,6 +8,7 @@ using static HexLibrary.HexConverter;
 
 public class Generator
 {
+    /*
     public List<string> m_output = new List<string>();
     public List<string> m_output_rdata = new List<string>();
     public List<string> m_output_bss = new List<string>();
@@ -51,7 +51,6 @@ public class Generator
             NodeTerm term = (NodeTerm)expr.var.Get<NodeTerm>();
             return gen_term(term);
         }
-        /*
         else if (expr.var.Get<NodeBinExpr>() != null)
         {
             BinExprIndex++;
@@ -63,7 +62,6 @@ public class Generator
         }
 
         return null;
-        */
         return null;
     }
     string gen_term(NodeTerm term)
@@ -123,7 +121,6 @@ public class Generator
             }
             return nodeTermIntLit.int_lit.value;
         }
-        /*
         else if (term.var.Get<NodeTermIdent>() != null)
         {
             NodeTermIdent nodeTermIdent = (NodeTermIdent)term.var.Get<NodeTermIdent>();
@@ -286,13 +283,11 @@ public class Generator
                 return $"@_{nodeTermPointer.ident.value}";
             }
         }
-        */
 
         return null;
     }
     void gen_binexpr(NodeBinExpr expr)
     {
-        /*
         if (expr.var.Get<NodeBinExprAdd>() != null)
         {
             NodeBinExprAdd exprAdd = (NodeBinExprAdd)expr.var.Get<NodeBinExprAdd>();
@@ -339,7 +334,6 @@ public class Generator
             AddLine("div ABX, HL");
         }
         Push("ABX");
-        */
     }
     _Size GetSize(int size)
     {
@@ -429,7 +423,6 @@ public class Generator
     }
     void gen_endFunction(NodeStmtEndFunction nodeStmtEndFunction)
     {
-        /*
         if (m_function.Last().m_Name == nodeStmtEndFunction.ident.value)
         {
             if (LastStmt.var.Get<NodeStmtReturn>() != null)
@@ -446,7 +439,6 @@ public class Generator
         {
             throw new NotImplementedException();
         }
-        */
     }
     void gen_newVariable(NodeStmtDeclareVariabel declareVariabel)
     {
@@ -470,7 +462,6 @@ public class Generator
     }
     void gen_ReassignVariable(NodeStmtReAssingnVariabel declareVariabel)
     {
-        /*
         string name = $"_{declareVariabel.ident.value}";
         NodeExpr expr = declareVariabel.expr;
         AssignmentOperators assignmentOperators = declareVariabel._operator;
@@ -538,11 +529,9 @@ public class Generator
                     break;
             }
         }
-        */
     }
     void gen_return(NodeStmtReturn nodeStmtReturn)
     {
-        /*
         object term = gen_expr(nodeStmtReturn.ReturnExpr);
 
         string termHex;
@@ -559,11 +548,9 @@ public class Generator
 
         AddLine($"mov R1, {termHex}");
         AddLine($"jmp [_END_{m_function.Last().m_Name}]");
-        */
     }
     void gen_pointer(NodeStmtPointer nodeStmtPointer)
     {
-        /*
         string name = $"_{nodeStmtPointer.name.value}";
         NodeExpr expr = nodeStmtPointer.Expr;
         AssignmentOperators assignmentOperators = nodeStmtPointer._operator;
@@ -681,11 +668,9 @@ public class Generator
                 AddLine($"mov [{address}], {termHex}");
             }
         }
-        */
     }
     void gen_callFunction(NodeStmtCallFunction nodeStmtCallFunction)
     {
-        /*
         string funcName = $"_{nodeStmtCallFunction.FunctionName.value}";
         if (!GetFunction($"{nodeStmtCallFunction.FunctionName.value}", out Function result))
         {
@@ -737,7 +722,6 @@ public class Generator
         }
         AddLine($"call [{funcName}]");
         //AddLine($"mov AX, R1");
-        */
     }
     #endregion
     void gen_stmt(NodeStmt nodeStmt)
@@ -775,7 +759,7 @@ public class Generator
     public void gen_prog(ProgNode progNode)
     {
         AddLine(".section TEXT", 0);
-        if (DoEntry)
+        if (m_DoEntry)
         {
             AddLine("_START_PROG:", 0);
             setDataSegmentRegister(0x0008);
@@ -1013,7 +997,6 @@ public class Generator
     void NewVariabelBss(NodeStmtDeclareVariabel DeclareVariabel)
     {
         bool IsTopScope = m_scopes.Count == 0;
-        /*
         _Size size = GetSize(type.TypeSize);
 
         switch (size)
@@ -1086,7 +1069,6 @@ public class Generator
         AddLine($"", 0, section: Section.bss);
 
         m_var.Add(new Var($"_{name}", type, $"_{name}", IsTopScope, DeclareVariabel));
-        */
     }
     void NewVariabelData(NodeStmtDeclareVariabel DeclareVariabel)
     {
@@ -1129,7 +1111,7 @@ public class Generator
         m_var.Add(new Var(name, type, address));
 
 
-        /*
+        
         string termHex;
 
         if (long.TryParse(term.ToString(), out long result) || string.IsNullOrWhiteSpace(term.ToString()))
@@ -1204,12 +1186,11 @@ public class Generator
         }
 
         m_VariabelCount += type.TypeSize;
-        */
     }
     private void NewVariabelRDATA(NodeStmtDeclareVariabel DeclareVariabel)
     {
         bool IsTopScope = m_scopes.Count == 0;
-        /*
+        
         object term = gen_expr(expr);
         string address = $"str_{Convert.ToString(m_Strings.Count, 16).PadLeft(4, '0')}";
 
@@ -1235,18 +1216,17 @@ public class Generator
         //m_var.Add(var);
 
         NewVariabelData(name, type, new NodeExpr() { var = new NodeTerm() { var = new NodeTermReference() { reference = new Token() { value = address } } } }, isTopScope, DeclareVariabel);
-        */
     }
     private void NewVariabelLocal(string name, _Type type)
     {
-        /*
         AddLine($"; _{name} with {type.TypeSize} bytes", section: Section.text);
 
         m_var.Add(new Var($"_{name}", type, m_ArgsStackSize, false));
         m_ArgsStackSize += type.TypeSize;
-        */
     }
+*/
 }
+/*
 public struct Var
 {
     public string m_Name;
@@ -1283,18 +1263,4 @@ struct Function
     public int m_NumOfArguments;
     public int m_size;
 }
-enum Section
-{
-    bss,
-    rdata,
-    data,
-    text,
-    loacl,
-}
-enum _Size
-{
-    _byte = 1,
-    _short = 2,
-    _tbyte = 3,
-    _int = 4,
-}
+ */

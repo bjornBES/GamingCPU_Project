@@ -1,0 +1,19 @@
+.setcpu "BC16CE"
+.section TEXT
+L0000000:
+L0000001:
+_cstart:
+	push  BP
+	mov   BP,                      SP
+	pushr
+	mov   DS,                      0x000b
+L0000500:
+	mov   R1,                      0
+	popr
+	pop   BP
+Exit_cstart:
+	ret   2
+L0002000:
+	add   SP,                      2
+
+.section BSS

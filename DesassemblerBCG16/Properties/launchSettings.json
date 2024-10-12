@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "DesassemblerBCG16": {
+      "commandName": "Project",
+      "commandLineArgs": "./CPU/src/BIOSBIN/bin/bios.bin",
+      "workingDirectory": "../"
+    }
+  }
+}

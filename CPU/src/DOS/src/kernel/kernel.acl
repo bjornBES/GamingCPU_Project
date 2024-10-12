@@ -1,0 +1,24 @@
+; 2nd segment
+.setcpu "BC16C"
+.section TEXT
+.org 0xB0000
+
+;
+; disk              DL
+;
+; void entry(byte disk)
+;
+Entry:
+    mov         [DriveNumber],      DL
+    mov         A,                  0x0002
+    
+    sez         SP
+    mov         SS,                 A
+    mov         DS,                 A
+    
+
+.includeil "./Filesystem.acl"
+
+.section BSS
+DriveNumber:
+.res 1

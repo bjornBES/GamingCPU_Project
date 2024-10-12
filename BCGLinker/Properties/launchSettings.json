@@ -18,7 +18,7 @@
     "Link Bootloader": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/ACL/bin/Bootloader.o -o ./CPU/src/ACL/bin/Bootloader.bin -f fbin"
+      "commandLineArgs": "-i ./CPU/src/DOS/build/Bootloader/stage1/newBootloader.o -o ./CPU/src/DOS/build/Bootloader/stage1/Bootloader.bin -fbin"
     },
     "Link DOS": {
       "commandName": "Project",

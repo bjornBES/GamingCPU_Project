@@ -37,7 +37,7 @@ namespace BCGLinker
                 Environment.Exit(1);
             }
 
-            DecodeArguments(args);
+            decodeArguments(args);
 
             if (InputFile == "\0")
             {
@@ -82,30 +82,81 @@ namespace BCGLinker
 
             Linker linker = new Linker();
             string FullSrc = "";
+            List<string> src = File.ReadAllText(InputFile).Split(Environment.NewLine).ToList();
             for (int i = 0; i < Files.Count; i++)
             {
                 string filename = Path.GetFullPath(Files[i].FullName);
-
-                string src = $"{Environment.NewLine}{File.ReadAllText(filename)}";
-                /*
-                src = src.Replace(".String", ".Str");
-                if (Files[i].Extension == ".bin")
+                if (filename == InputFile)
                 {
-                    string TempSrc = ".byte ";
-                    byte[] bytes = File.ReadAllBytes(Files[i].FullName);
-                    for (int a = 0; a < bytes.Length; a++)
-                    {
-                        TempSrc += "0x" + Convert.ToString(bytes[a], 16).PadLeft(2, '0') + ", ";
-                    }
-                    TempSrc = TempSrc.TrimEnd(' ').TrimEnd(',');
-                    src = $"{Environment.NewLine}.newfile {filename}{Environment.NewLine}{TempSrc}";
-                    src = src.Replace(".String", ".Str");
+
                 }
-                 */
-                FullSrc += src;
-                linker.BuildSectionStruct(src);
+
+                for (int l = 0; l < src.Count; l++)
+                {
+                    if (src[l].StartsWith("INCLUDE HEADER"))
+                    {
+                        string fileSrc = File.ReadAllText(filename);
+                        string[] fileSrcLine = fileSrc.Split(Environment.NewLine);
+
+                        int FILEIndex = 0;
+                        for (int n = 0; n < fileSrcLine.Length; n++)
+                        {
+                            if (fileSrcLine[n].StartsWith("_FILE_"))
+                            {
+                                FILEIndex = n;
+                                break;
+                            }
+                        }
+                        string srcFileName = fileSrcLine[FILEIndex].Replace("_FILE_ ", "").Trim('"');
+
+                        src.Insert(l + 1, $"INCINIL {srcFileName}{Environment.NewLine}");
+                        
+                        int fileTextIndex = fileSrc.IndexOf("TEXT HEADER");
+                        int fileSymbolsIndex = fileSrc.IndexOf("SYMBOLS HEADER");
+                        string textFileSrc = fileSrc.Substring(fileTextIndex + 12);
+                        src.Add(Environment.NewLine + textFileSrc);
+                    }
+                    else if (src[l].StartsWith("SYMBOLS HEADER"))
+                    {
+                        string fileSrc = File.ReadAllText(filename);
+
+                        int fileTextIndex = fileSrc.IndexOf("TEXT HEADER");
+                        int fileSymbolsIndex = fileSrc.IndexOf("SYMBOLS HEADER");
+                        string symbolsFileSrc = fileSrc.Substring(fileSymbolsIndex + 15, fileTextIndex - (fileSymbolsIndex + 15));
+                        src.Insert(l + 1, symbolsFileSrc);
+                    }
+                }
+                if (filename != InputFile)
+                {
+                    Files.RemoveAt(i);
+                }
+
+                /*
+                linker.BuildSectionInclude(src);
                 linker.BuildSectionSymbols(src);
-                linker.BuildSectionSection(src);
+                linker.BuildLabels(src);
+
+                int indexOfText = src.IndexOf("TEXT HEADER");
+
+                src = src.Substring(indexOfText);
+
+                FullSrc += src;
+                 */
+            }
+
+            for (int i = 0; i < src.Count; i++)
+            {
+                FullSrc += src[i] + Environment.NewLine;
+            }
+
+            FullSrc = FullSrc.Trim('\n');
+            FullSrc = FullSrc.Trim('\r');
+
+
+            for (int i = 0; i < Files.Count; i++)
+            {
+                linker.BuildSectionSymbols(FullSrc);
+                linker.BuildSectionInclude(FullSrc);
             }
 
             File.WriteAllText("./PreLinkerSrc.txt", FullSrc);
@@ -129,7 +180,7 @@ namespace BCGLinker
             File.WriteAllLines("./Map.map", linker.GenerateMapFile());
         }
 
-        void DecodeArguments(string[] args)
+        void decodeArguments(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
             {
