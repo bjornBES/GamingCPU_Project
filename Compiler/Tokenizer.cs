@@ -63,6 +63,8 @@ public class Tokenizer
                 switch (m_buf.ToLower())
                 {
                     case "struct":  addToken(TokenType._struct);    break;
+
+                    case "prog":
                     case "program": addToken(TokenType.program);    break;
                     
                     case "end":     addToken(TokenType.end);        break;
@@ -70,17 +72,33 @@ public class Tokenizer
                     case "sizeof":  addToken(TokenType._sizeof);    break;
                     case "call":    addToken(TokenType.call);       break;
                     
+                    case "retf":
+                    case "ret":
+                    case "retu":
                     case "return":  addToken(TokenType._return);    break;
+
+                    case "exit":    addToken(TokenType._exit);      break;
+
+                    case "if":      addToken(TokenType._if);      break;
+                    case "then":    addToken(TokenType._then);    break;
+                    case "elseif":
+                    case "elif":    addToken(TokenType._elif);      break;
+                    case "else":    addToken(TokenType._else);      break;
+                    
+                    case "display": addToken(TokenType.display);    break;
+
+                    case "res":     addToken(TokenType._res);       break;
 
                     case "near":    addToken(TokenType._nearPointer);      break;
                     case "short":   addToken(TokenType._shortPointer);     break;
                     case "long":    addToken(TokenType._longPointer);      break;
                     case "far":     addToken(TokenType._farPointer);       break;
                     
+                    case "func":
                     case "function":addToken(TokenType.function);   break;
-                    case "func":    addToken(TokenType.function);   break;
 
                     case "section": addToken(TokenType.Section);    break;
+                    case "invoke":  addToken(TokenType.invoke);     break;
 
                     case "text":    addToken(TokenType.SectionText);    break;
                     case "data":    addToken(TokenType.SectionData);    break;
@@ -104,7 +122,11 @@ public class Tokenizer
                     case "endfunc": 
                     case "endfunction": 
                         addToken(TokenType.end); addToken(TokenType.function); break;
+                    case "endif":
+                    case "enif":
+                        addToken(TokenType.end); addToken(TokenType._if); break;
                     case "endprogram":
+                    case "endprog":
                         addToken(TokenType.end); addToken(TokenType.program); break;
 
                     default:
@@ -200,6 +222,10 @@ public class Tokenizer
                     case ']':
                         consume();
                         addToken(TokenType.close_square);
+                        break;
+                    case '@':
+                        consume();
+                        addToken(TokenType.at);
                         break;
                     case '&':
                         consume();

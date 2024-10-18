@@ -41,29 +41,36 @@ namespace BCG16CPUEmulator
                 {
                     SetRegisterValue(DestinationRegister.Value, ImmSource.Value);
                 }
-                Compare(DestinationRegister.Value, DestinationRegister.Value);
+                Compare(DestinationRegister.Value, DestinationRegister.Value, FL_S, FL_Z);
             }
             else if (DestinationAddress.HasValue)
             {
                 if (ImmSource.HasValue)
                 {
+                    int OldValue = 0;
                     switch (InstructionSize)
                     {
                         case Size._byte:
+                            OldValue = m_BUS.m_Memory.ReadByte(DestinationAddress.Value);
                             m_BUS.m_Memory.WriteByte(DestinationAddress.Value, (byte)ImmSource.Value);
                             break;
                         case Size._word:
+                            OldValue = m_BUS.m_Memory.ReadWord(DestinationAddress.Value);
                             m_BUS.m_Memory.WriteWord(DestinationAddress.Value, (ushort)ImmSource.Value);
                             break;
                         case Size._tbyte:
+                            OldValue = (int)m_BUS.m_Memory.ReadTByte(DestinationAddress.Value);
                             m_BUS.m_Memory.WriteTByte(DestinationAddress.Value, (uint)ImmSource.Value);
                             break;
                         case Size._dword:
+                            OldValue = m_BUS.m_Memory.ReadDWord(DestinationAddress.Value);
                             m_BUS.m_Memory.WriteDWord(DestinationAddress.Value, (uint)ImmSource.Value);
                             break;
                         default:
                             break;
                     }
+
+                    Compare(ImmSource.Value, OldValue, FL_S, FL_Z);
                 }
             }
 
@@ -78,14 +85,18 @@ namespace BCG16CPUEmulator
 
             if (ImmSource.HasValue)
             {
+                int OldValue = GetRegisterValue(destination);
                 SetRegisterValue(destination, ImmSource.Value);
-                Compare(Register.AL, Register.AL);
+                Compare(OldValue, ImmSource.Value, FL_S, FL_Z);
             }
         }
         public void Move(Register destination, Register source)
         {
             SetRegisterValue(destination, GetRegisterValue(source));
+            int OldValue = GetRegisterValue(destination);
+            Compare(OldValue, destination, FL_S, FL_Z);
         }
+
         public void Cmp(ArgumentMode operand1, ArgumentMode operand2)
         {
             if (getSourceAll(operand1, Size._word, out int? ImmSource1))
@@ -101,13 +112,25 @@ namespace BCG16CPUEmulator
             {
                 if (ImmSource2.HasValue)
                 {
-                    Compare(ImmSource1.Value, ImmSource2.Value);
+                    Compare(ImmSource1.Value, ImmSource2.Value, FL_E, FL_Z, FL_S, FL_C);
                 }
             }
         }
+        public void Cmp(Register operand1, ArgumentMode operand2)
+        {
+            if (getSourceAll(operand2, Size._word, out int? ImmSource2))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource2.HasValue)
+            {
+                Compare(operand1, ImmSource2.Value, FL_E, FL_Z, FL_S, FL_C);
+            }
+        }
+
         public void Push(Size size, ArgumentMode source)
         {
-            int? ImmSource = null;
             Register? DestinationRegister = null;
             if (getSource(source, ArgumentType.Register, out object result))
             {
@@ -128,23 +151,9 @@ namespace BCG16CPUEmulator
 
             if (DestinationRegister.HasValue)
             {
-                switch (InstructionSize)
-                {
-                    case Size._byte:
-                        byte popResult = Pop(out byte _);
-                        SetRegisterValue(DestinationRegister.Value, popResult);
-                        break;
-                    case Size._word:
-                        ushort WpopResult = Pop(out ushort _);
-                        SetRegisterValue(DestinationRegister.Value, WpopResult);
-                        break;
-                    case Size._tbyte:
-                        break;
-                    case Size._dword:
-                        break;
-                    default:
-                        break;
-                }
+                int OldValue = GetRegisterValue(DestinationRegister.Value);
+                Pop(DestinationRegister.Value);
+                Compare(OldValue, DestinationRegister.Value, FL_S, FL_Z);
             }
         }
         public void Call(ArgumentMode destination)
@@ -180,7 +189,9 @@ namespace BCG16CPUEmulator
 
             if (DestinationRegister.HasValue)
             {
+                int OldValue = GetRegisterValue(DestinationRegister.Value);
                 SetRegisterValue(DestinationRegister.Value, 0);
+                Compare(OldValue, DestinationRegister.Value, FL_S, FL_Z);
             }
             else if (DestinationAddress.HasValue)
             {
@@ -201,10 +212,11 @@ namespace BCG16CPUEmulator
             else if (DestinationAddress.HasValue)
             {
                 byte b = m_BUS.m_Memory.ReadByte(DestinationAddress.Value);
-                Compare(b, b);
+                Compare(b, b, FL_E, FL_Z, FL_S, FL_C);
             }
         }
-        public void Add(ArgumentMode destination, ArgumentMode source)
+
+        public void Add(ArgumentMode destination, ArgumentMode source, bool carry)
         {
             if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
             {
@@ -219,8 +231,144 @@ namespace BCG16CPUEmulator
             {
                 if (ImmSource.HasValue)
                 {
-                    SetRegisterValue(DestinationRegister.Value, ALU_Add(DestinationRegister.Value, ImmSource.Value, out _));
+                    SetRegisterValue(DestinationRegister.Value, ALU_Add(DestinationRegister.Value, ImmSource.Value, carry, out _));
                 }
+            }
+        }
+        public void Add(Register destination, ArgumentMode source, bool carry)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_Add(destination, ImmSource.Value, carry, out _));
+            }
+        }
+        public void Sub(ArgumentMode destination, ArgumentMode source, bool carry)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_Sub(DestinationRegister.Value, ImmSource.Value, carry, out _));
+                }
+            }
+        }
+        public void Sub(Register destination, ArgumentMode source, bool carry)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_Sub(destination, ImmSource.Value, carry, out _));
+            }
+        }
+        public void Mul(ArgumentMode destination, ArgumentMode source)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_Mul(DestinationRegister.Value, ImmSource.Value, out _));
+                }
+            }
+        }
+        public void Mul(Register destination, ArgumentMode source)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_Mul(destination, ImmSource.Value, out _));
+            }
+        }
+        public void Div(ArgumentMode destination, ArgumentMode source)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_Div(DestinationRegister.Value, ImmSource.Value, out _));
+                }
+            }
+        }
+        public void Div(Register destination, ArgumentMode source)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_Div(destination, ImmSource.Value, out _));
+            }
+        }
+        public void And(ArgumentMode destination, ArgumentMode source)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_And(DestinationRegister.Value, ImmSource.Value, out _));
+                }
+            }
+        }
+        public void And(Register destination, ArgumentMode source)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_And(destination, ImmSource.Value, out _));
             }
         }
         public void Or(ArgumentMode destination, ArgumentMode source)
@@ -242,6 +390,96 @@ namespace BCG16CPUEmulator
                 }
             }
         }
+        public void Or(Register destination, ArgumentMode source)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_Or(destination, ImmSource.Value, out _));
+            }
+        }
+        public void Nor(ArgumentMode destination, ArgumentMode source)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_Nor(DestinationRegister.Value, ImmSource.Value, out _));
+                }
+            }
+        }
+        public void Nor(Register destination, ArgumentMode source)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_Nor(destination, ImmSource.Value, out _));
+            }
+        }
+        public void Xor(ArgumentMode destination, ArgumentMode source)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                if (ImmSource.HasValue)
+                {
+                    SetRegisterValue(DestinationRegister.Value, ALU_Xor(DestinationRegister.Value, ImmSource.Value, out _));
+                }
+            }
+        }
+        public void Xor(Register destination, ArgumentMode source)
+        {
+            if (getSourceAll(source, Size._word, out int? ImmSource))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (ImmSource.HasValue)
+            {
+                SetRegisterValue(destination, ALU_Xor(destination, ImmSource.Value, out _));
+            }
+        }
+        public void Not(ArgumentMode destination)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                SetRegisterValue(DestinationRegister.Value, ALU_Not(DestinationRegister.Value, out _));
+            }
+        }
+        public void Not(Register destination)
+        {
+            SetRegisterValue(destination, ALU_Not(destination, out _));
+        }
         public void Inc(ArgumentMode destination)
         {
             if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
@@ -251,7 +489,7 @@ namespace BCG16CPUEmulator
 
             if (DestinationRegister.HasValue)
             {
-                SetRegisterValue(DestinationRegister.Value, ALU_Add(DestinationRegister.Value, 1, out int _));
+                SetRegisterValue(DestinationRegister.Value, ALU_Add(DestinationRegister.Value, 1, false, out int _));
             }
         }
         public void Dec(ArgumentMode destination)
@@ -263,9 +501,34 @@ namespace BCG16CPUEmulator
 
             if (DestinationRegister.HasValue)
             {
-                SetRegisterValue(DestinationRegister.Value, ALU_Sub(DestinationRegister.Value, 1, out _));
+                SetRegisterValue(DestinationRegister.Value, ALU_Sub(DestinationRegister.Value, 1, false, out _));
             }
         }
+        public void Neg(ArgumentMode destination)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                SetRegisterValue(DestinationRegister.Value, ALU_Neg(DestinationRegister.Value, out _));
+            }
+        }
+        public void Rng(ArgumentMode destination)
+        {
+            if (getDestinationAll(destination, Size._byte, out Register? DestinationRegister, out Address? DestinationAddress))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (DestinationRegister.HasValue)
+            {
+                SetRegisterValue(DestinationRegister.Value, ALU_RNG());
+            }
+        }
+
         public void Out(Size InstructionSize, ArgumentMode port, ArgumentMode source)
         {
             if (getSourceAll(port, InstructionSize, out int? ImmPort))
@@ -285,6 +548,11 @@ namespace BCG16CPUEmulator
                     {
                         case ArgumentMode.immediate_byte:
                         case ArgumentMode.register:
+                        case ArgumentMode.register_AL:
+                        case ArgumentMode.register_BL:
+                        case ArgumentMode.register_CL:
+                        case ArgumentMode.register_DL:
+                        case ArgumentMode.register_MB:
                             m_BUS.OutPort(ImmPort.Value, (byte)ImmSource.Value);
                             break;
                         case ArgumentMode.immediate_word:
@@ -292,9 +560,9 @@ namespace BCG16CPUEmulator
                         case ArgumentMode.register_B:
                         case ArgumentMode.register_C:
                         case ArgumentMode.register_D:
+                        case ArgumentMode.register_H:
+                        case ArgumentMode.register_L:
                             m_BUS.OutPort(ImmPort.Value, (ushort)ImmSource.Value);
-                            break;
-                        case ArgumentMode.None:
                             break;
                         default:
                             break;
@@ -360,36 +628,10 @@ namespace BCG16CPUEmulator
                 }
             }
         }
-        public void Rti()
+        public void Reti()
         {
             Pop(Register.F);
-
-            Pop(Register.PC);
-
-            Pop(Register.CS);
-            Pop(Register.SS);
-            Pop(Register.ES);
-            Pop(Register.FS);
-            Pop(Register.DS);
-            SetFlag(FL_I, false);
-        }
-        public void Pushr()
-        {
-            Push(Register.A);
-            Push(Register.B);
-            Push(Register.C);
-            Push(Register.D);
-            Push(Register.H);
-            Push(Register.L);
-        }
-        public void Popr()
-        {
-            Pop(Register.L);
-            Pop(Register.H);
-            Pop(Register.D);
-            Pop(Register.C);
-            Pop(Register.B);
-            Pop(Register.A);
+            PopPC();
         }
         public void Int(ArgumentMode source)
         {
@@ -412,91 +654,6 @@ namespace BCG16CPUEmulator
             int reg;
             switch (Destination)
             {
-                case ArgumentMode.register_A:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.A;
-                    return true;
-                case ArgumentMode.register_B:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.B;
-                    return true;
-                case ArgumentMode.register_C:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.C;
-                    return true;
-                case ArgumentMode.register_D:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.D;
-                    return true;
-                case ArgumentMode.register_L:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.L;
-                    return true;
-                case ArgumentMode.register_H:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.H;
-                    return true;
-                case ArgumentMode.register_MB:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.MB;
-                    return true;
-                case ArgumentMode.register_AX:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.AX;
-                    return true;
-                case ArgumentMode.register_BX:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.BX;
-                    return true;
-                case ArgumentMode.register_CX:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.CX;
-                    return true;
-                case ArgumentMode.register_DX:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.DX;
-                    return true;
-                case ArgumentMode.register_address_HL:
-                    if (type != ArgumentType.Address)
-                    {
-                        return false;
-                    }
-                    result = (Address)GetRegisterValue(Register.HL);
-                    return true;
-
                 case ArgumentMode.register:
                     if (type != ArgumentType.Register)
                     {
@@ -511,7 +668,7 @@ namespace BCG16CPUEmulator
                         return false;
                     }
                     Register registerAddress = (Register)FetchByte();
-                    result = GetRegisterValue(registerAddress);
+                    result = (Address)GetRegisterValue(registerAddress);
                     return true;
 
                 case ArgumentMode.near_address:
@@ -537,14 +694,6 @@ namespace BCG16CPUEmulator
                     }
                     Address addressLong = FetchTByte();
                     result = addressLong;
-                    return true;
-                case ArgumentMode.far_address:
-                    if (type != ArgumentType.Address)
-                    {
-                        return false;
-                    }
-                    Address addressFar = FetchDWord();
-                    result = addressFar;
                     return true;
                 case ArgumentMode.relative_address:
                     if (type != ArgumentType.Address)
@@ -594,8 +743,136 @@ namespace BCG16CPUEmulator
 
                     result = GetSegment(Register.ES, Offset);
                     return true;
+                case ArgumentMode.segment_ES_B:
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
 
-                case ArgumentMode.BP_Offset_Address:
+                    result = GetSegment(Register.ES, Register.B);
+                    return true;
+
+                case ArgumentMode.register_AL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.AL;
+                    return true;
+                case ArgumentMode.register_BL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.BL;
+                    return true;
+                case ArgumentMode.register_CL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.CL;
+                    return true;
+                case ArgumentMode.register_DL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.DL;
+                    return true;
+                case ArgumentMode.register_A:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.A;
+                    return true;
+                case ArgumentMode.register_B:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.B;
+                    return true;
+                case ArgumentMode.register_C:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.C;
+                    return true;
+                case ArgumentMode.register_D:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.D;
+                    return true;
+                case ArgumentMode.register_L:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.L;
+                    return true;
+                case ArgumentMode.register_H:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.H;
+                    return true;
+                case ArgumentMode.register_AX:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.AX;
+                    return true;
+                case ArgumentMode.register_BX:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.BX;
+                    return true;
+                case ArgumentMode.register_CX:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.CX;
+                    return true;
+                case ArgumentMode.register_DX:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.DX;
+                    return true;
+                case ArgumentMode.register_AF:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.AF;
+                    return true;
+                case ArgumentMode.register_BF:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.BF;
+                    return true;
+                case ArgumentMode.register_address_HL:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    result = (Address)GetRegisterValue(Register.HL);
+                    return true;
+
+                case ArgumentMode.BP_rel_address_byte:
                     if (type != ArgumentType.Address)
                     {
                         return false;
@@ -605,7 +882,7 @@ namespace BCG16CPUEmulator
                     reg += offsetW;
                     result = GetSegment(Register.SS, reg);
                     return true;
-                case ArgumentMode.SP_Offset_Address:
+                case ArgumentMode.SP_rel_address_byte:
                     if (type != ArgumentType.Address)
                     {
                         return false;
@@ -615,7 +892,28 @@ namespace BCG16CPUEmulator
                     reg += offset;
                     result = GetSegment(Register.SS, reg);
                     return true;
+                case ArgumentMode.X_indexed_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
 
+                    address = FetchWord();
+                    address += m_X;
+                    result = address;
+                    return true;
+                case ArgumentMode.Y_indexed_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+
+                    address = FetchWord();
+                    address += m_Y;
+                    result = address;
+                    return true;
+                case ArgumentMode.None:
+                    break;
                 default:
                     break;
             }
@@ -758,7 +1056,43 @@ namespace BCG16CPUEmulator
 
                     result = GetSegment(Register.ES, Offset);
                     return true;
+                case ArgumentMode.segment_ES_B:
+                    if (type != ArgumentType.SegmentAddress)
+                    {
+                        return false;
+                    }
 
+                    result = GetSegment(Register.ES, Register.B);
+                    return true;
+
+                case ArgumentMode.register_AL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.AL;
+                    return true;
+                case ArgumentMode.register_BL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.BL;
+                    return true;
+                case ArgumentMode.register_CL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.CL;
+                    return true;
+                case ArgumentMode.register_DL:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.DL;
+                    return true;
                 case ArgumentMode.register_A:
                     if (type != ArgumentType.Register)
                     {
@@ -801,13 +1135,6 @@ namespace BCG16CPUEmulator
                     }
                     result = Register.H;
                     return true;
-                case ArgumentMode.register_MB:
-                    if (type != ArgumentType.Register)
-                    {
-                        return false;
-                    }
-                    result = Register.MB;
-                    return true;
                 case ArgumentMode.register_AX:
                     if (type != ArgumentType.Register)
                     {
@@ -836,27 +1163,70 @@ namespace BCG16CPUEmulator
                     }
                     result = Register.DX;
                     return true;
+                case ArgumentMode.register_AF:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.AF;
+                    return true;
+                case ArgumentMode.register_BF:
+                    if (type != ArgumentType.Register)
+                    {
+                        return false;
+                    }
+                    result = Register.BF;
+                    return true;
+                case ArgumentMode.register_address_HL:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+                    result = (Address)GetRegisterValue(Register.HL);
+                    return true;
 
-                case ArgumentMode.BP_Offset_Address:
+                case ArgumentMode.BP_rel_address_byte:
                     if (type != ArgumentType.Address)
                     {
                         return false;
                     }
                     reg = GetRegisterValue(Register.BP);
-                    short offsetW = (short)FetchWord();
-                    reg += offsetW;
+                    sbyte offsetW = (sbyte)FetchByte();
+                    reg += offsetW + 1;
                     result = GetSegment(Register.SS, reg);
                     return true;
-                case ArgumentMode.SP_Offset_Address:
+                case ArgumentMode.SP_rel_address_byte:
                     if (type != ArgumentType.Address)
                     {
                         return false;
                     }
                     reg = GetRegisterValue(Register.SP);
-                    short offset = (short)FetchWord();
+                    byte offset = FetchByte();
                     reg += offset;
                     result = GetSegment(Register.SS, reg);
                     return true;
+                case ArgumentMode.X_indexed_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+
+                    address = FetchWord();
+                    address += m_X;
+                    result = address;
+                    return true;
+                case ArgumentMode.Y_indexed_address:
+                    if (type != ArgumentType.Address)
+                    {
+                        return false;
+                    }
+
+                    address = FetchWord();
+                    address += m_Y;
+                    result = address;
+                    return true;
+                case ArgumentMode.None:
+                    break;
                 default:
                     break;
             }

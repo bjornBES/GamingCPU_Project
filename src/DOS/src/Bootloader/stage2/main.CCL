@@ -1,0 +1,19 @@
+@#inc   "./filesystem.CCL"
+
+SECTION:DATA
+       :SECTOR RES 0x400
+       :KERNEL RES 0x8000
+
+SECTION:STRING
+       :HELLO "HELLO WORLD"
+
+
+SECTION:TEXT
+0000000:program test.                                                   \\
+0000001:func cstart(word drive).                                        \\
+0000005:uint Sdat=&SECTOR.                                              \\
+0000015:uint str=HELLO.                                                 \\
+@0000020:if str==HELLO.then.ret 1.elif drive==1.then.ret 1.enif.ret 0.   \\
+0000500:endfunc.                                                        \\
+
+0002000:endprogram.                                                     \\

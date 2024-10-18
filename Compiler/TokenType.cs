@@ -39,6 +39,15 @@
     _sizeof,
     call,
 
+    _exit,
+
+    _res,
+
+    _if,
+    _elif,
+    _else,
+    _then,
+
     _return,
 
     _while,
@@ -58,6 +67,8 @@
     _const,
     _public,
 
+    invoke,
+
     _nearPointer,
     _shortPointer,
     _longPointer,
@@ -74,4 +85,5 @@
     SectionText,
     SectionData,
     SectionString,
+    display,
 }

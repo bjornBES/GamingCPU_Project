@@ -43,5 +43,15 @@ namespace BCGLinker
         {
             OutputFormat = OutputFormats.lib;
         }
+        public static void SetLinkerScript(string[] args, ref int i)
+        {
+            i++;
+            LinkerScriptPath = args[i];
+        }
+        public static void SetMapFilePath(string[] args, ref int i)
+        {
+            i++;
+            MapFilePath = args[i];
+        }
     }
 }

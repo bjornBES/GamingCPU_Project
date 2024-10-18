@@ -399,7 +399,6 @@ namespace AssemblerBCG
                 Register.GX => ArgumentMode.register_GX,
                 Register.HX => ArgumentMode.register_HX,
 
-                Register.MB => ArgumentMode.register_MB,
                 _ => ArgumentMode.register,
             };
         }
@@ -420,14 +419,20 @@ namespace AssemblerBCG
                 case 4:
                     HexNumber = HexNumber.PadLeft(4, '0');
                     return ArgumentMode.immediate_word;
-                case 5:
-                    HexNumber = HexNumber.PadLeft(5, '0');
-                    return ArgumentMode.immediate_tbyte;
                 case 6:
                     HexNumber = HexNumber.PadLeft(6, '0');
+                    return ArgumentMode.immediate_tbyte;
+                case 8:
+                    HexNumber = HexNumber.PadLeft(8, '0');
                     return ArgumentMode.immediate_dword;
                 default:
-                    HexNumber = HexNumber.Substring(HexNumber.Length - 6);
+                    //Console.WriteLine($"Qword {m_file}:{Linenumber}");
+                    HexNumber = HexNumber.PadLeft(16, '0').Substring(0, 16);
+                    if (m_CPUType < CPUType.BC32)
+                    {
+                        HexNumber = HexNumber.Substring(8, 8);
+                        return ArgumentMode.immediate_dword;
+                    }
                     return ArgumentMode.immediate_qword;
             }
         }
@@ -442,12 +447,12 @@ namespace AssemblerBCG
                     Console.WriteLine("Error: 00010 Nope");
                 }
                 char Operator = addressTerm.Split(' ')[1][0];
-                if (!ParseTerm(addressTerm.Split(" ")[2], ref alignment, out argumentMode, out string[] datas))
+                SizeAlignment Newalignment = SizeAlignment._byte;
+                if (!ParseTerm(addressTerm.Split(" ")[2], ref Newalignment, out argumentMode, out string[] datas))
                 {
                     Console.WriteLine("Error: 00011 Nope");
                 }
                 string data = "";
-                int number = 0;
 
                 for (int i = 0; i < datas.Length; i++)
                 {
@@ -456,18 +461,25 @@ namespace AssemblerBCG
 
                 if (argumentMode == ArgumentMode.immediate_byte)
                 {
-                    number = Convert.ToByte(data, 16);
+                    byte number = Convert.ToByte(data, 16);
                     argumentMode = ArgumentMode.BP_rel_address_byte;
+                    number = (byte)(Operator == '-' ? -number : number);
+                    _out = SplitHexString(ToHexString(number));
                 }
                 else if (argumentMode == ArgumentMode.immediate_word)
                 {
-                    number = Convert.ToUInt16(data, 16);
+                    ushort number = Convert.ToUInt16(data, 16);
                     argumentMode = ArgumentMode.BPX_rel_address_word;
+                    number = (ushort)(Operator == '-' ? -number : number);
+                    _out = SplitHexString(ToHexString(number));
+                }
+                else
+                {
+                    _out = null;
+                    return false;
                 }
 
 
-                number = (Operator == '_' ? -number : number);
-                _out = SplitHexString(ToHexString(number));
                 return true;
             }
             else if (addressTerm.StartsWith("[SP ") && addressTerm.EndsWith(']') || addressTerm.StartsWith("[SPX ") && addressTerm.EndsWith(']'))
@@ -478,12 +490,12 @@ namespace AssemblerBCG
                     Console.WriteLine("Error: 00010 Nope");
                 }
                 char Operator = addressTerm.Split(' ')[1][0];
-                if (!ParseTerm(addressTerm.Split(" ")[2], ref alignment, out argumentMode, out string[] datas))
+                SizeAlignment Newalignment = SizeAlignment._byte;
+                if (!ParseTerm(addressTerm.Split(" ")[2], ref Newalignment, out argumentMode, out string[] datas))
                 {
                     Console.WriteLine("Error: 00011 Nope");
                 }
                 string data = "";
-                int number = 0;
 
                 for (int i = 0; i < datas.Length; i++)
                 {
@@ -492,18 +504,25 @@ namespace AssemblerBCG
 
                 if (argumentMode == ArgumentMode.immediate_byte)
                 {
-                    number = Convert.ToByte(data, 16);
+                    byte number = Convert.ToByte(data, 16);
                     argumentMode = ArgumentMode.SP_rel_address_byte;
+                    number = (byte)(Operator == '-' ? -number : number);
+                    _out = SplitHexString(ToHexString(number));
                 }
                 else if (argumentMode == ArgumentMode.immediate_word)
                 {
-                    number = Convert.ToUInt16(data, 16);
+                    ushort number = Convert.ToUInt16(data, 16);
                     argumentMode = ArgumentMode.SPX_rel_address_word;
+                    number = (ushort)(Operator == '-' ? -number : number);
+                    _out = SplitHexString(ToHexString(number));
+                }
+                else
+                {
+                    _out = null;
+                    return false;
                 }
 
 
-                number = (Operator == '_' ? -number : number);
-                _out = SplitHexString(ToHexString(number));
                 return true;
             }
             else if (addressTerm.StartsWith('[') && addressTerm.EndsWith(']') && addressTerm.Contains(':'))

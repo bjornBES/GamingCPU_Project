@@ -16,7 +16,6 @@
   - [MEMORY](#memory)
     - [MEMORY LAYOUT](#memory-layout)
   - [REGISTERS](#registers)
-    - [Extended registers](#extended-registers)
 
 ## Architecture overview
 
@@ -29,7 +28,6 @@
 
 - BC8           Base 8 bit CPU
 - BC816         With a 20 bit address bus
-- BC810680      With some [extended registers](#extended-registers)
 
 ## INSTRUCTIONS
 
@@ -49,24 +47,22 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 - 0x00: immediate byte              number
 - 0x01: immediate word              number
 - 0x10: register                    register
-- 0x11: register address            address [register]
-- 0x18: register A                  A
-- 0x19: register B                  B
-- 0x1A: register C                  C
-- 0x1B: register D                  D
-- 0x1C: register H                  H
-- 0x1D: register L                  L
-- 0x1E: address register HL         [HL]
-- 0x1F: register MB                 MB
-- 0x50: Relative address            [byte address]      an 8 bit offset to the PC
-- 0x51: Near address                Near [address]      a 8 bit address
-- 0x52: Short address               short [address]     a 16 bit address
-- 0x53: long address                long [address]      a 24 bit address
-- 0x58: SP relative address byte:   [SP + sbyte number]
-- 0x59: BP relative address byte:   [BP + sbyte number]
-- 0x5A: 32 bit segment address      [register:register]
-- 0x5B: 32 bit segment DS register  [DS:register]
-- 0x5C: 32 bit segment DS B         [DS:B]
+- 0x11: register AL:                AL
+- 0x12: register BL:                BL
+- 0x13: register CL:                CL
+- 0x14: register DL:                DL
+- 0x15: register H:                 H
+- 0x16: register L:                 L
+- 0x20: register address:           address [register]
+- 0x21: address register HL:        [HL]
+- 0x30: Relative address:           [byte address]      an 8 bit offset to the PC
+- 0x31: Near address:               Near [address]      a 8 bit address
+- 0x32: Short address:              short [address]     a 16 bit address
+- 0x38: SP relative address byte:   [SP + sbyte number]
+- 0x39: BP relative address byte:   [BP + sbyte number]
+- 0x3A: 32 bit segment address:     [register:register]
+- 0x3B: 32 bit segment DS register: [DS:register]
+- 0x3C: 32 bit segment DS B:        [DS:B]s
 
 ## Interrupt vector table
 
@@ -80,15 +76,23 @@ The second word is the Address offset for the routine
 
 ### Interrupt vector assignments
 
-|Function                   |Interupt number|Size |Type             |IVT address      |Is User defined|Related instructions
-|---------------------------|---------------|-----|-----------------|-----------------|---------------|-
-|Divide error               |0              |1    |Fault exception  |`0x0000`         |true           |DIV
-|NMI interrupt              |1              |1    |interrupt        |`0x0004`         |true           |INT 2 or NMI pin
-|BRK interrupt              |2              |1    |interrupt        |`0x0008`         |true           |BRK
-|invalid opcode             |6              |1    |Abort exception  |`0x0018`         |false          |Any undefined opcode
-|User defined IRQ interrupt |16-31          |15   |interrupt        |`0x0064`-`0x0124`|true           |-
-|User defined interrupts    |32-255         |223  |interrupt        |`0x0080`-`0x03FC`|true           |INT 0x04
-|INT 0x10 interrupts        |256-281        |25   |interrupt        |`0x0400`-`0x0464`|true           |INT 0x0F
+|Function                   |Interupt number|Type             |IVT address      |Is User defined|Related instructions
+|---------------------------|---------------|-----------------|-----------------|---------------|-
+|Divide error               |0              |Fault exception  |`0x0000`         |true           |DIV or DIVF
+|NMI interrupt              |1              |interrupt        |`0x0004`         |true           |INT 2 or NMI pin
+|BRK interrupt              |2              |interrupt        |`0x0008`         |true           |BRK
+|invalid opcode             |6              |Abort exception  |`0x0018`         |false          |Any undefined opcode
+|Keyboard IRQ               |16             |interrupt        |`0x0040`         |false          |Keyboard IRQ0
+|User defined IRQ interrupt |17-30          |interrupt        |`0x0044`         |true           |The IRQ pin
+|FDC IRQ                    |31             |interrupt        |`0x007C`         |true           |FDC IRQ15
+|reserved                   |32             |interrupt        |`0x0080`         |false          |Unused
+|User defined interrupts    |33             |interrupt        |`0x0084`         |true           |INT 0x04
+|User defined interrupts    |34             |interrupt        |`0x0088`         |true           |INT 0x05
+|User defined interrupts    |35             |interrupt        |`0x008C`         |true           |INT 0x06
+|User defined interrupts    |36             |interrupt        |`0x0090`         |true           |INT 0x10
+|User defined interrupts    |37             |interrupt        |`0x0094`         |true           |INT 0x13
+|User defined interrupts    |37             |interrupt        |`0x0098`         |true           |if the stack overflows
+|reserved                   |38-255         |interrupt        |`0x009C`         |true           |DO NOT USE
 
 #### interrupt
 
@@ -161,12 +165,3 @@ the end is `0x10_0000`
   - 0x0020 less
   - 0x0040 interrupt enable
   - 0x0080 HALT
-
-### Extended registers
-
-- A (AH + AL):    16 bit general purpose register
-- B (BH + BL):    16 bit general purpose register
-- C (CH + CL):    16 bit general purpose register
-- D (DH + DL):    16 bit general purpose register
-
-- PC:             24 bit program counter

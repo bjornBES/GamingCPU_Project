@@ -128,8 +128,7 @@
 - `0x2140`: RNG:    destination             `Generates a random byte and puts the value into the destination`
 - `0x2150`: SEB:    source, operand1        `Sets a bit in the source specified by the operand1`
 - `0x2160`: CLB:    source, operand1        `Clears a bit in the source specified by the operand1`
-- `0x2170`: TOB:    source, operand1        `Toggles a bit in the source specified by the operand1`
-- `0x2180`: MOD:    destination, source     `WIP`
+- `0x2170`: MOD:    destination, source     `WIP`
 
 # Single-Precision Float Arithmetic Operations
 

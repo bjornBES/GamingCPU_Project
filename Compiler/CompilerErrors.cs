@@ -12,14 +12,14 @@ public static class CompilerErrors
         exitOut();
     }
     
-    public static void Error_expected(Token line, string msg)
+    public static void Error_expected(Token line, string[] lineNumbers, string msg)
     {
-        Console.WriteLine($"Expected {msg} on line {line.m_Line}");
+        Console.WriteLine($"Expected {msg} on line {lineNumbers.Last()}");
         exitOut();
     }
-    public static void Error_expected(Token line, TokenType msg)
+    public static void Error_expected(Token line, string[] lineNumbers, TokenType msg)
     {
-        Console.WriteLine($"Expected {msg} on line {line.m_Line}");
+        Console.WriteLine($"Expected {msg} on line {lineNumbers.Last()}");
         exitOut();
     }
 

@@ -17,6 +17,8 @@ namespace BCGLinker
             {"-ffbin", SetFormatFbin },
             {"-fbin", SetFormatBin },
             {"-flib", SetFormatLib },
+            {"-ls", SetLinkerScript },
+            {"-m", SetMapFilePath }
             // {"-d", SetDebugMode },
             // {"-p", SetProjectPath },
             // {"-df", SetErrorFile },
@@ -81,6 +83,11 @@ namespace BCGLinker
             }
 
             Linker linker = new Linker();
+
+            LinkerScript linkerScript = new LinkerScript();
+            linkerScript.m_Linker = linker;
+            linkerScript.BuildLS(LinkerScriptPath);
+
             string FullSrc = "";
             List<string> src = File.ReadAllText(InputFile).Split(Environment.NewLine).ToList();
             for (int i = 0; i < Files.Count; i++)
@@ -88,7 +95,7 @@ namespace BCGLinker
                 string filename = Path.GetFullPath(Files[i].FullName);
                 if (filename == InputFile)
                 {
-
+                    continue;
                 }
 
                 for (int l = 0; l < src.Count; l++)
@@ -177,7 +184,10 @@ namespace BCGLinker
                 Environment.Exit(1);
             }
 
-            File.WriteAllLines("./Map.map", linker.GenerateMapFile());
+            if(MapFilePath != "")
+            {
+                File.WriteAllLines(MapFilePath, linker.GenerateMapFile());
+            }
         }
 
         void decodeArguments(string[] args)

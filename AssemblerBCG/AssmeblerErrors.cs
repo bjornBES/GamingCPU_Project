@@ -35,13 +35,13 @@ public class AssmeblerErrors : AssemblerVariabels
 
         printError(errorMessage);
     }
-    public void E_InvalidCPUFeature(CPUType NeededCPU)
+    public void E_InvalidCPUFeature(CPUType NeededCPU, ArgumentMode argumentMode)
     {
         string errorMessage = "";
 
         errorMessage += sTDErrorPrintStart();
 
-        errorMessage += $"|\tBGC-ASL16 Error: this feature is not available using the {m_CPUType}{Environment.NewLine}";
+        errorMessage += $"|\tBGC-ASL16 Error: this feature {argumentMode} is not available using the {m_CPUType}{Environment.NewLine}";
         errorMessage += $"|\tYou need to use something this or the veriant over the {NeededCPU} to get the feature. You can do this by putting .SETCPU \"{NeededCPU}\"";
 
         errorMessage += sTDErrorPrintEnd();

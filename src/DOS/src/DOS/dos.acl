@@ -1,0 +1,20 @@
+.setcpu "BC16CE"
+
+.section BSS
+DriveIndex:
+.res 1
+
+.section TEXT
+
+; disk              DL
+;
+; void entry(byte disk)
+;
+Entry:
+    mov         [DriveIndex],      DL
+
+    sez         SP
+    mov         FS,                 high @__BSSSTART
+    mov         DS,                 high @__DATASTART
+
+.includeil "./Filesystem.acl"

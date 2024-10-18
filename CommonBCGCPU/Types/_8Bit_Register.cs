@@ -135,6 +135,10 @@ namespace CommonBCGCPU.Types
             return new _8Bit_Register(value);
         }
 
+        public static implicit operator string (_8Bit_Register register)
+        {
+            return register.ToHex();
+        }
         public static implicit operator byte(_8Bit_Register register)
         {
             return register.m_Value;

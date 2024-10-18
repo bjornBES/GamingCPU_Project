@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using _BFDCG12;
 using filesystem;
+using BC16CPUEmulator;
 
 namespace BCG16CPUEmulator
 {
@@ -37,6 +38,7 @@ namespace BCG16CPUEmulator
             m_CPUBus.ReadMemory = m_Memory.ReadByte;
             m_CPUBus.ReadBytes = m_Memory.ReadBytes;
             m_CPUBus.WriteMemory = m_Memory.WriteByte;
+            m_CPUBus.WriteBytes = m_Memory.WriteBytes;
 
             VideoPort videoPort = new VideoPort();
             videoPort.ConnectBus(m_CPUBus);
@@ -64,6 +66,7 @@ namespace BCG16CPUEmulator
             }
 
             m_Ports.Add(bfdcg12);
+
             //Environment.Exit(0);
         }
 
@@ -74,18 +77,17 @@ namespace BCG16CPUEmulator
 
         public void Tick()
         {
-            tick();
+            Thread thread = new Thread(new ThreadStart(tick));
+            thread.Start();
 
             m_Ports.ForEach(p =>
             {
                 p.Tick();
             });
 
-            for (int i = 0; i < 0x080000; i++)
+            while (thread.ThreadState == ThreadState.Running)
             {
-                Address address = 0x0040000 + i;
-                Random random = new Random();
-                m_Memory.m_Mem[address] = (byte)random.Next('A', 'Z');
+
             }
         }
 
@@ -223,7 +225,7 @@ namespace BCG16CPUEmulator
             {
                 if (p.InterruptIndex == port)
                 {
-                    p.Write(0x7F55, 0);
+                    p.INTA();
                 }
             });
         }

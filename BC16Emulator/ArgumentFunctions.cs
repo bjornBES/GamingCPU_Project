@@ -24,18 +24,18 @@ namespace BCG16CPUEmulator
         public static void SetDriveBinary(string[] args, ref int i)
         {
             i++;
-            if (args[i] != "{")
+            if (args[i] != "[")
             {
 
             }
             i++;
             string setting = "";
-            while (args[i] != "}")
+            while (args[i] != "]")
             {
-                setting += args[i].Trim(' ');
+                setting += args[i].Trim(' ') + ",";
                 i++;
             }
-            if (args[i] != "}")
+            if (args[i] != "]")
             {
 
             }
@@ -59,7 +59,7 @@ namespace BCG16CPUEmulator
                 Console.WriteLine("where path is the path to the disk binary");
                 Environment.Exit(1);
             }
-
+                
             Disk disk = new Disk()
             {
                 m_DiskPath = Path.GetFullPath(path),
@@ -81,12 +81,20 @@ namespace BCG16CPUEmulator
             writeEnable = false;
             fileSystemType = FileSystemType.BFS01;
             diskSize = DiskSize._F3MB;
-
             for (int i = 0; i < settings.Length; i++)
             {
                 if (settings[i].StartsWith("index", StringComparison.OrdinalIgnoreCase))
                 {
-                    index = Convert.ToInt32(settings[i].Replace("index", ""));
+                    settings[i] = settings[i].Replace("index", "");
+                    if (string.IsNullOrEmpty(settings[i]))
+                    {
+                        i++;
+                        index = Convert.ToInt32(settings[i].Replace("index", ""));
+                    }
+                    else
+                    {
+                        index = Convert.ToInt32(settings[i].Replace("index", ""));
+                    }
                 }
                 else if (settings[i].StartsWith("ut80", StringComparison.OrdinalIgnoreCase))
                 {

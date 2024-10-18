@@ -11,6 +11,7 @@ namespace BCGLinker
         public bool m_IsGlobal;
         public bool m_IsLocal;
         public string m_File;
+        public Section m_Section;
 
         public bool m_HaveStruct = false;
         public Struct m_Struct;

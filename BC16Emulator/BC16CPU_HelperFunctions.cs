@@ -5,6 +5,7 @@ using System.Text;
 using static HexLibrary.SplitFunctions;
 using static HexLibrary.HexConverter;
 using System.Windows.Markup;
+using System.Linq;
 
 namespace BCG16CPUEmulator
 {
@@ -18,7 +19,7 @@ namespace BCG16CPUEmulator
         }
         public Address GetSegment(Address segment, Address offset)
         {
-            return (segment << 16) | offset;
+            return (segment * 16) | offset;
         }
         public Address GetSegment(Register segment, Register offset)
         {
@@ -32,6 +33,49 @@ namespace BCG16CPUEmulator
             return GetSegment(Vsegment, offset);
         }
 
+        public void Pushr()
+        {
+            if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+            {
+                Push(Register.AX);
+                Push(Register.BX);
+                Push(Register.CX);
+                Push(Register.DX);
+                Push(Register.H);
+                Push(Register.L);
+            }
+            else
+            {
+                Push(Register.A);
+                Push(Register.B);
+                Push(Register.C);
+                Push(Register.D);
+                Push(Register.H);
+                Push(Register.L);
+            }
+        }
+        public void Popr()
+        {
+            if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+            {
+                Pop(Register.L);
+                Pop(Register.H);
+                Pop(Register.DX);
+                Pop(Register.CX);
+                Pop(Register.BX);
+                Pop(Register.AX);
+            }
+            else
+            {
+                Pop(Register.L);
+                Pop(Register.H);
+                Pop(Register.D);
+                Pop(Register.C);
+                Pop(Register.B);
+                Pop(Register.A);
+            }
+        }
+
         public byte FetchByte()
         {
             byte result = m_BUS.m_Memory.ReadByte(m_PC);
@@ -41,23 +85,26 @@ namespace BCG16CPUEmulator
         }
         public ushort FetchWord()
         {
-            ushort result = m_BUS.m_Memory.ReadWord(m_PC);
+            byte[] bytes = BitConverter.GetBytes(m_BUS.m_Memory.ReadWord(m_PC));
             m_argumentOffset += 2;
             m_PC += 2;
+            ushort result = BitConverter.ToUInt16(bytes.Reverse().ToArray());
             return result;
         }
         public uint FetchTByte()
         {
-            uint result = m_BUS.m_Memory.ReadTByte(m_PC);
+            byte[] bytes = BitConverter.GetBytes(m_BUS.m_Memory.ReadTByte(m_PC));
             m_argumentOffset += 3;
             m_PC += 3;
+            uint result = BitConverter.ToUInt32(bytes.Reverse().ToArray());
             return result;
         }
         public int FetchDWord()
         {
-            int result = m_BUS.m_Memory.ReadDWord(m_PC);
+            byte[] bytes = BitConverter.GetBytes(m_BUS.m_Memory.ReadDWord(m_PC));
             m_argumentOffset += 4;
             m_PC += 4;
+            int result = BitConverter.ToInt32(bytes.Reverse().ToArray());
             return result;
         }
         public float FetchFloat()
@@ -93,44 +140,121 @@ namespace BCG16CPUEmulator
                 switch (register)
                 {
                     case Register.AX:
-                        return m_AX;
+                        return m_AX[false];
                     case Register.BX:
                         return m_BX;
                     case Register.CX:
                         return m_CX;
                     case Register.DX:
                         return m_DX;
+
+                    case Register.PC:
+                        return m_PC;
+
+                    case Register.R1:   return m_R1;
+                    case Register.R2:   return m_R2;
+                    case Register.R3:   return m_R3;
+                    case Register.R4:   return m_R4;
+                    case Register.R5:   return m_R5;
+                    case Register.R6:   return m_R6;
+                    case Register.R7:   return m_R7;
+                    case Register.R8:   return m_R8;
+                    case Register.R9:   return m_R9;
+                    case Register.R10:  return m_R10;
+                    case Register.R11:  return m_R11;
+                    case Register.R12:  return m_R12;
+                    case Register.R13:  return m_R13;
+                    case Register.R14:  return m_R14;
+                    case Register.R15:  return m_R15;
+                    case Register.R16:  return m_R16;
+                    case Register.R17:  return m_R17;
+                    case Register.R18:  return m_R18;
+                    case Register.R19:  return m_R19;
+                    case Register.R20:  return m_R20;
+                }
+            }
+            else
+            {
+                switch (register)
+                {
+                    case Register.PC:
+                        return m_PC[false];
+                    case Register.R1:
+                        return m_R1[false];
+                    case Register.R2:
+                        return m_R2[false];
+                    case Register.R3:
+                        return m_R3[false];
+                    case Register.R4:
+                        return m_R4[false];
+                    case Register.R5:
+                        return m_R5[false];
+                    case Register.R6:
+                        return m_R6[false];
+                    case Register.R7:
+                        return m_R7[false];
+                    case Register.R8:
+                        return m_R8[false];
+                    case Register.R9:
+                        return m_R9[false];
+                    case Register.R10:
+                        return m_R10[false];
+                    case Register.R11:
+                        return m_R11[false];
+                    case Register.R12:
+                        return m_R12[false];
+                    case Register.R13:
+                        return m_R13[false];
+                    case Register.R14:
+                        return m_R14[false];
+                    case Register.R15:
+                        return m_R15[false];
+                    case Register.R16:
+                        return m_R16[false];
+                    case Register.R17:
+                        return m_R17[false];
+                    case Register.R18:
+                        return m_R18[false];
+                    case Register.R19:
+                        return m_R19[false];
+                    case Register.R20:
+                        return m_R20[false];
                 }
             }
 
             return register switch
             {
-                Register.A => m_A,
-                Register.AH => m_A[true],
-                Register.AL => m_A[false],
+                Register.AH => m_AX[false][true],
+                Register.AL => m_AX[false][false],
+                Register.A => m_AX[false],
+                Register.AX => m_AX,
 
-                Register.B => m_B,
-                Register.BH => m_B[true],
-                Register.BL => m_B[false],
+                Register.BH => m_BX[false][true],
+                Register.BL => m_BX[false][false],
+                Register.B => m_BX[false],
+                Register.BX => m_BX,
 
-                Register.C => m_C,
-                Register.CH => m_C[true],
-                Register.CL => m_C[false],
+                Register.CH => m_CX[false][true],
+                Register.CL => m_CX[false][false],
+                Register.C => m_CX[false],
+                Register.CX => m_CX,
 
-                Register.D => m_D,
-                Register.DH => m_D[true],
-                Register.DL => m_D[false],
-
-                Register.HL => m_HL,
-                Register.H => m_H,
-                Register.L => m_L,
+                Register.DH => m_DX[false][true],
+                Register.DL => m_DX[false][false],
+                Register.D => m_DX[false],
+                Register.DX => m_DX,
 
                 Register.CS => m_CS,
                 Register.SS => m_SS,
                 Register.DS => m_DS,
                 Register.ES => m_ES,
+                Register.FS => m_FS,
 
                 Register.PC => m_PC,
+
+                Register.HL => m_HL,
+                Register.H => m_HL[true],
+                Register.L => m_HL[false],
 
                 Register.AF => m_AF,
                 Register.BF => m_BF,
@@ -138,20 +262,13 @@ namespace BCG16CPUEmulator
                 Register.SP => m_SP,
                 Register.BP => m_BP,
 
-                Register.R1 => m_R1,
-                Register.R2 => m_R2,
-                Register.R3 => m_R3,
-                Register.R4 => m_R4,
-                Register.R5 => m_R5,
-                Register.R6 => m_R6,
-
-                Register.MB => m_MB,
+                Register.X => m_X,
+                Register.Y => m_Y,
 
                 Register.CR0 => m_CR0,
                 Register.CR1 => m_CR1,
 
                 Register.F => m_F,
-
                 _ => throw new NotImplementedException()
             };
         }
@@ -167,7 +284,6 @@ namespace BCG16CPUEmulator
                 case Register.CL:
                 case Register.DH:
                 case Register.DL:
-                case Register.MB:
                 case Register.CR0:
                 case Register.CR1:
                     return 1;
@@ -181,18 +297,22 @@ namespace BCG16CPUEmulator
                 case Register.SS:
                 case Register.DS:
                 case Register.ES:
+                case Register.FS:
                 case Register.BP:
                 case Register.SP:
-                case Register.R1:
-                case Register.R2:
-                case Register.R3:
-                case Register.R4:
-                case Register.R5:
-                case Register.R6:
                 case Register.F:
+                case Register.X:
+                case Register.Y:
                     return 2;
                 case Register.PC:
-                    return 3;
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        return 3;
+                    }
+                    else
+                    {
+                        return 2;
+                    }
                 case Register.HL:
                 case Register.AF:
                 case Register.BF:
@@ -201,6 +321,34 @@ namespace BCG16CPUEmulator
                 case Register.CX:
                 case Register.DX:
                     return 4;
+                case Register.R1:
+                case Register.R2:
+                case Register.R3:
+                case Register.R4:
+                case Register.R5:
+                case Register.R6:
+                case Register.R7:
+                case Register.R8:
+                case Register.R9:
+                case Register.R10:
+                case Register.R11:
+                case Register.R12:
+                case Register.R13:
+                case Register.R14:
+                case Register.R15:
+                case Register.R16:
+                case Register.R17:
+                case Register.R18:
+                case Register.R19:
+                case Register.R20:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        return 4;
+                    }
+                    else
+                    {
+                        return 2;
+                    }
                 case Register.none:
                 default:
                     throw new NotImplementedException();
@@ -208,80 +356,79 @@ namespace BCG16CPUEmulator
         }
         public void SetRegisterValue(Register register, int value)
         {
+            int OldValue = GetRegisterValue(register);
+            Compare(OldValue, value, FL_S, FL_Z);
+
             switch (register)
             {
                 case Register.A:
-                    m_A = value;
+                    m_AX[false] = value;
                     break;
                 case Register.AH:
-                    m_A[true] = value;
+                    m_AX[4] = (byte)value;
                     break;
                 case Register.AL:
-                    m_A[false] = value;
+                    m_AX[3] = (byte)value;
                     break;
                 case Register.B:
-                    m_B = value;
+                    m_BX[false] = value;
                     break;
                 case Register.BH:
-                    m_B[true] = value;
+                    m_BX[4] = value;
                     break;
                 case Register.BL:
-                    m_B[false] = value;
+                    m_BX[3] = value;
                     break;
                 case Register.C:
-                    m_C = value;
+                    m_CX[false] = value;
                     break;
                 case Register.CH:
-                    m_C[true] = value;
+                    m_CX[4] = value;
                     break;
                 case Register.CL:
-                    m_C[false] = value;
+                    m_CX[3] = value;
                     break;
                 case Register.D:
-                    m_D = value;
+                    m_DX[false] = value;
                     break;
                 case Register.DH:
-                    m_D[true] = value;
+                    m_DX[4] = value;
                     break;
                 case Register.DL:
-                    m_D[false] = value;
+                    m_DX[3] = value;
                     break;
                 case Register.AX:
                     if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
                     {
                         m_AX = value;
-                        m_A = m_AX[false];
                     }
                     break;
                 case Register.BX:
                     if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
                     {
                         m_BX = value;
-                        m_B = m_BX[false];
                     }
                     break;
                 case Register.CX:
                     if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
                     {
                         m_CX = value;
-                        m_C = m_CX[false];
                     }
                     break;
                 case Register.DX:
                     if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
                     {
                         m_DX = value;
-                        m_D = m_DX[false];
                     }
                     break;
                 case Register.HL:
                     m_HL = value;
                     break;
                 case Register.H:
-                    m_H = value;
+                    m_HL[true] = value;
                     break;
                 case Register.L:
-                    m_L = value;
+                    m_HL[false] = value;
                     break;
                 case Register.CS:
                     m_CS = value;
@@ -294,6 +441,9 @@ namespace BCG16CPUEmulator
                     break;
                 case Register.ES:
                     m_ES = value;
+                    break;
+                case Register.FS:
+                    m_FS = value;
                     break;
                 case Register.PC:
                     m_PC = value;
@@ -310,27 +460,6 @@ namespace BCG16CPUEmulator
                 case Register.SP:
                     m_SP = value;
                     break;
-                case Register.R1:
-                    m_R1 = value;
-                    break;
-                case Register.R2:
-                    m_R2 = value;
-                    break;
-                case Register.R3:
-                    m_R3 = value;
-                    break;
-                case Register.R4:
-                    m_R4 = value;
-                    break;
-                case Register.R5:
-                    m_R5 = value;
-                    break;
-                case Register.R6:
-                    m_R6 = value;
-                    break;
-                case Register.MB:
-                    m_MB = value;
-                    break;
                 case Register.F:
                     m_F = value;
                     break;
@@ -340,6 +469,212 @@ namespace BCG16CPUEmulator
                 case Register.CR1:
                     m_CR1 = value;
                     break;
+                case Register.X:
+                    m_X = value;
+                    break;
+                case Register.Y:
+                    m_Y = value;
+                    break;
+                case Register.R1:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R1 = value; 
+                    }
+                    else 
+                    {
+                        m_R1[false] = value; 
+                    } 
+                    break;
+                case Register.R2:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R2 = value; 
+                    }
+                    else 
+                    {
+                        m_R2[false] = value; 
+                    } 
+                    break;
+                case Register.R3:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R3 = value; 
+                    }
+                    else 
+                    {
+                        m_R3[false] = value; 
+                    } 
+                    break;
+                case Register.R4:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R4 = value; 
+                    }
+                    else 
+                    {
+                        m_R4[false] = value; 
+                    } 
+                    break;
+                case Register.R5:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R5 = value; 
+                    }
+                    else 
+                    {
+                        m_R5[false] = value; 
+                    } 
+                    break;
+                case Register.R6:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R6 = value; 
+                    }
+                    else 
+                    {
+                        m_R6[false] = value; 
+                    } 
+                    break;
+                case Register.R7:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R7 = value; 
+                    }
+                    else 
+                    {
+                        m_R7[false] = value; 
+                    } 
+                    break;
+                case Register.R8:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R8 = value; 
+                    }
+                    else 
+                    {
+                        m_R8[false] = value; 
+                    } 
+                    break;
+                case Register.R9:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R9 = value; 
+                    }
+                    else 
+                    {
+                        m_R9[false] = value; 
+                    } 
+                    break;
+                case Register.R10:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R10 = value; 
+                    }
+                    else 
+                    {
+                        m_R10[false] = value; 
+                    } 
+                    break;
+                case Register.R11:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R11 = value; 
+                    }
+                    else 
+                    {
+                        m_R11[false] = value; 
+                    } 
+                    break;
+                case Register.R12:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R12 = value; 
+                    }
+                    else 
+                    {
+                        m_R12[false] = value; 
+                    } 
+                    break;
+                case Register.R13:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R13 = value; 
+                    }
+                    else 
+                    {
+                        m_R13[false] = value; 
+                    } 
+                    break;
+                case Register.R14:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R14 = value; 
+                    }
+                    else 
+                    {
+                        m_R14[false] = value; 
+                    } 
+                    break;
+                case Register.R15:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R15 = value; 
+                    }
+                    else 
+                    {
+                        m_R15[false] = value; 
+                    } 
+                    break;
+                case Register.R16:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R16 = value; 
+                    }
+                    else 
+                    {
+                        m_R16[false] = value; 
+                    } 
+                    break;
+                case Register.R17:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R17 = value; 
+                    }
+                    else 
+                    {
+                        m_R17[false] = value; 
+                    } 
+                    break;
+                case Register.R18:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R18 = value; 
+                    }
+                    else 
+                    {
+                        m_R18[false] = value; 
+                    } 
+                    break;
+                case Register.R19:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R19 = value; 
+                    }
+                    else 
+                    {
+                        m_R19[false] = value; 
+                    } 
+                    break;
+                case Register.R20:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        m_R20 = value; 
+                    }
+                    else 
+                    {
+                        m_R20[false] = value; 
+                    } 
+                    break;
             }
         }
         public void SetRegisterValue(Register register, Register value)
@@ -347,147 +682,78 @@ namespace BCG16CPUEmulator
             SetRegisterValue(register, GetRegisterValue(value));
         }
 
-        public void ALU_Sef(int flag)
-        {
-            SetFlag(flag, true);
-        }
-
-        public void ALU_Clf(int flag)
-        {
-            SetFlag(flag, false);
-        }
-
-        public void ALU_Add(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = V + source;
-            SetRegisterValue(destination, result);
-        }
-        public int ALU_Add(Register arg1, Register arg2)
-        {
-            int V1 = GetRegisterValue(arg1);
-            int V2 = GetRegisterValue(arg2);
-
-            return V1 + V2;
-        }
-        public int ALU_Add(Register destination, int source, out int result)
-        {
-            int V = GetRegisterValue(destination);
-            result = V + source;
-            return result;
-        }
-
-        public void ALU_Sub(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = V - source;
-            SetRegisterValue(destination, result);
-        }
-        public int ALU_Sub(Register destination, int source, out int result)
-        {
-            int V = GetRegisterValue(destination);
-            result = V - source;
-            return result;
-        }
-
-        public void ALU_Mul(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = V - source;
-            SetRegisterValue(destination, result);
-        }
-
-        public void ALU_Div(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = V / source;
-            SetRegisterValue(destination, result);
-        }
-
-        public void ALU_And(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = V & source;
-            SetRegisterValue(destination, result);
-        }
-
-        public void ALU_Or(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = V | source;
-            SetRegisterValue(destination, result);
-        }
-        public int ALU_Or(Register destination, int source, out int result)
-        {
-            int V = GetRegisterValue(destination);
-            result = V | source;
-            return result;
-        }
-
-        public void ALU_Nor(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = ~(V | source);
-            SetRegisterValue(destination, result);
-        }
-
-        public void ALU_Xor(Register destination, int source)
-        {
-            int V = GetRegisterValue(destination);
-            int result = V ^ source;
-            SetRegisterValue(destination, result);
-        }
-
-        public void ALU_Not(Register destination)
-        {
-            int V = GetRegisterValue(destination);
-            int result = ~V;
-            SetRegisterValue(destination, result);
-        }
-
-        public void ALU_Neg(Register destination)
-        {
-            int V = GetRegisterValue(destination);
-            int result = -V;
-            SetRegisterValue(destination, result);
-        }
-
-        public void ALU_RNG(Register destination)
-        {
-            int V = new Random().Next(0, 0xFF);
-            SetRegisterValue(destination, V);
-        }
-
         public void Return(int offset)
         {
-            Pop(Register.PC);
+            PopPC();
             m_SP -= offset;
         }
-        public void Compare(Register operand1, Register operand2)
+
+        public void PopPC()
+        {
+            if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+            {
+                Pop(out uint result);
+                SetRegisterValue(Register.PC, (int)result);
+            }
+            else
+            {
+                Pop(out ushort result);                     // PC
+                SetRegisterValue(Register.PC, result);
+                Pop(out result);                            // CS
+                SetRegisterValue(Register.CS, result);
+
+            }
+        }
+        public void PushPC()
+        {
+            if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+            {
+                Push(Register.PC);
+            }
+            else
+            {
+                Push(Register.CS);
+                Push(Register.PC);
+
+            }
+        }
+
+        public void Sez(Register operand1)
+        {
+            SetRegisterValue(operand1, 0);
+        }
+        public void Test(Register operand1)
+        {
+            int Roperand1 = GetRegisterValue(operand1);
+            int Roperand2 = GetRegisterValue(operand1);
+
+            Compare(Roperand1, Roperand2, FL_S, FL_Z, FL_C, FL_E);
+        }
+        public void Compare(Register operand1, Register operand2, params int[] flags)
         {
             int Roperand1 = GetRegisterValue(operand1);
             int Roperand2 = GetRegisterValue(operand2);
 
-            Compare(Roperand1, Roperand2);
+            Compare(Roperand1, Roperand2, flags);
         }
-        public void Compare(Register operand1, int operand2)
+        public void Compare(Register operand1, int operand2, params int[] flags)
         {
             int Roperand1 = GetRegisterValue(operand1);
 
-            Compare(Roperand1, operand2);
+            Compare(Roperand1, operand2, flags);
         }
-        public void Compare(int operand1, Register operand2)
+        public void Compare(int operand1, Register operand2, params int[] flags)
         {
             int Roperand2 = GetRegisterValue(operand2);
 
-            Compare(operand1, Roperand2);
+            Compare(operand1, Roperand2, flags);
         }
-        public void Compare(int operand1, int operand2)
+        public void Compare(int operand1, int operand2, params int[] flags)
         {
-            Compare(operand1, operand2, FL_Z);
-            Compare(operand1, operand2, FL_E);
-            Compare(operand1, operand2, m_FS);
-            Compare(operand1, operand2, FL_L);
+            for (int i = 0; i < flags.Length; i++)
+            {
+                Compare(operand1, operand2, flags[i]);
+            }
         }
         public void Compare(int operand1, int operand2, int Flag)
         {
@@ -510,6 +776,27 @@ namespace BCG16CPUEmulator
                     result = operand1 < operand2;
                     SetFlag(Flag, result);
                     break;
+                case FL_C:
+                case FL_O:
+                    try
+                    {
+                        int a = operand1 + operand2;
+                    }
+                    catch (OverflowException)
+                    {
+                        SetFlag(Flag, true);
+                    }
+                    break;
+                case FL_U:
+                    try
+                    {
+                        int a = operand1 - operand2;
+                    }
+                    catch (OverflowException)
+                    {
+                        SetFlag(Flag, true);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -521,14 +808,7 @@ namespace BCG16CPUEmulator
 
             m_BUS.m_Memory.WriteByte(StackAddress, value);
 
-            try
-            {
-                m_SP++;
-            }
-            catch (OverflowException)
-            {
-                m_SP = 0;
-            }
+            m_SP++;
         }
         public void Push(ushort value)
         {
@@ -556,33 +836,17 @@ namespace BCG16CPUEmulator
                 Push(bytes[i]);
             }
         }
-        public void Push(int value, ArgumentMode source)
-        {
-            switch (source)
-            {
-                case ArgumentMode.immediate_byte:
-                    Push((byte)value);
-                    break;
-                case ArgumentMode.immediate_word:
-                    Push((ushort)value);
-                    break;
-                case ArgumentMode.immediate_tbyte:
-                    Push((uint)value & 0x00FF_FFFF);
-                    break;
-                case ArgumentMode.immediate_dword:
-                    Push((uint)value);
-                    break;
-            }
-        }
+
         public void Push(Register register)
         {
             int RegisterSize = GetRegisterSize(register);
             int RegisterValue = GetRegisterValue(register);
 
+
             string RegisterHex = ToHexString(RegisterValue);
             string[] HexString = SplitHexString(RegisterHex, RegisterSize);
 
-            for (int i = 0; i < HexString.Length; i++)
+            for (int i = 0 ; i < RegisterSize; i++)
             {
                 byte v = Convert.ToByte(HexString[i], 16);
                 Push(v);
@@ -659,7 +923,7 @@ namespace BCG16CPUEmulator
                     SetRegisterValue(result, (int)Pop(out uint _));
                     break;
                 case Size._dword:
-                    SetRegisterValue(result, (int)Pop(out int _));
+                    SetRegisterValue(result, Pop(out int _));
                     break;
             }
         }
@@ -671,20 +935,26 @@ namespace BCG16CPUEmulator
         }
         public void Call(Address address)
         {
-            Push(Register.PC);
+            PushPC();
             Jump(address);
         }
         public void PushInterrupt()
         {
-            Push(Register.DS);
-            Push(Register.ES);
-            Push(Register.FS);
-            Push(Register.SS);
-            Push(Register.CS);
-
-            Push(Register.PC);
-
+            PushPC();
             Push(Register.F);
+        }
+        public static int ChsToLba(int cylinder, int head, int sector, int headsPerCylinder, int sectorsPerTrack)
+        {
+            return (cylinder * headsPerCylinder + head) * sectorsPerTrack + (sector - 1);
+        }
+
+        public static (int cylinder, int head, int sector) LbaToChs(int lba, int headsPerCylinder, int sectorsPerTrack)
+        {
+            int cylinder = lba / (headsPerCylinder * sectorsPerTrack);
+            int temp = lba % (headsPerCylinder * sectorsPerTrack);
+            int head = temp / sectorsPerTrack;
+            int sector = (temp % sectorsPerTrack) + 1;
+            return (cylinder, head, sector);
         }
     }
 }

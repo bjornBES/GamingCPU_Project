@@ -54,6 +54,8 @@ public class CompilerSettings
     public const bool ISSIGNED = true;
     public const bool ISUNSIGNED = false;
 
+    public static bool m_DoRaw = false;
+
     public enum AssignmentOperators
     {
         none,

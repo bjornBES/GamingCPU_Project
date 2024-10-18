@@ -25,7 +25,6 @@ public enum ArgumentMode
     register_H                      = 0x14,
     register_L                      = 0x15,
     register_address_HL             = 0x16,
-    register_MB                     = 0x17,
     register_AX                     = 0x20,
     register_BX                     = 0x21,
     register_CX                     = 0x22,

@@ -8,7 +8,7 @@
     "Link BIOS": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/BIOSBin/OBJ/BIOS.o -o ./BIOSBin/Bin/BIOS.bin"
+      "commandLineArgs": "-i ./CPU/src/BIOSBin/OBJ/BIOS.o -o ./BIOSBin/Bin/BIOS.bin -f fbin -ls ./Linker.conf"
     },
     "Try link BIOS": {
       "commandName": "Project",
@@ -18,12 +18,12 @@
     "Link Bootloader": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/DOS/build/Bootloader/stage1/newBootloader.o -o ./CPU/src/DOS/build/Bootloader/stage1/Bootloader.bin -fbin"
+      "commandLineArgs": "-i ./src/DOS/build/Bootloader/stage2/stage2.o ./src/DOS/build/Bootloader/stage2/main.o ./src/DOS/build/Bootloader/stage2/stage2.bin -fbin -ls ./src/DOS/src/Bootloader/stage2/stage2.conf"
     },
     "Link DOS": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/DOS/build/DOS.o -o ./CPU/src/DOS/build/DOS.bin -fbin"
+      "commandLineArgs": "-i ./CPU/src/DOS/Build/DOS/DOS.o -o ./CPU/src/DOS/build/DOS/DOS.bin -fbin -ls ./CPU/src/DOS/src/DOS/DOS.conf"
     }
   }
 }

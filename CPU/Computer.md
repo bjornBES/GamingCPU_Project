@@ -11,7 +11,7 @@
     - [ATA HDD](#ata-hdd)
   - [Screen](#screen)
     - [Modes](#modes)
-    - [Writing to the screen](#writing-to-the-screen)
+    - [Commands](#commands)
     - [Video Layout](#video-layout)
       - [Mode 0, 1](#mode-0-1)
 
@@ -29,7 +29,7 @@ Mouse port at `0x01`
 
 ### VGA Screen port (more in [Screen](#screen))
 
-The VGA Screen port is at `0x02-0x04`
+The VGA Screen port is at `0x02`
 
 ## Parallel Port
 
@@ -70,9 +70,14 @@ The screens default mode is 360×400 VGA screen with 16 colors
 |12   |640 x 480  |16     |G    |8 x 16     | 80 x 30
 |13   |320 x 200  |256    |G    |8 x 8      | 40 x 25
 
-### Writing to the screen
+### Commands
 
-to write to the screen you can use the [INT 0x10 interrupt routine](./interrupts.md#int-0x10-services) or write to the video memory at `0x0A18100 - 0x0A63100`
+|Command  |Name               |argument1|argument2|argument3|Description|number of ticks
+|-        |-                  |-        |-        |-        |-          |-
+|0x0005   |Clear buffer       |&nbsp;   |&nbsp;   |&nbsp;   |Will clear the buffers|2
+|0x0010   |Get resolution     |&nbsp;   |&nbsp;   |&nbsp;   |Will load the screen resolution and font size into the outputBuffer|2
+|0x0011   |Set Mode           |Mode     |&nbsp;   |&nbsp;   |Will set the graphic cards mode to the mode|3
+|0x8001   |reset output index |&nbsp;   |&nbsp;   |&nbsp;   |Will reset the outputIndex to zero|1
 
 ### Video Layout
 

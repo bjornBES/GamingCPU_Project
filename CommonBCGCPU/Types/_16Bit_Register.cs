@@ -144,6 +144,10 @@ namespace CommonBCGCPU.Types
             return new _16Bit_Register(value, false);
         }
 
+        public static implicit operator string(_16Bit_Register register)
+        {
+            return register.ToHex();
+        }
         public static implicit operator int(_16Bit_Register register)
         {
             return register.m_Value;

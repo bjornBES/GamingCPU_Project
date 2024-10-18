@@ -39,6 +39,11 @@ namespace BCG16CPUEmulator
             BUS = bus;
         }
 
+        public void INTA()
+        {
+
+        }
+
         public byte Read(out byte data, ushort Port)
         {
             data = (byte)m_key;

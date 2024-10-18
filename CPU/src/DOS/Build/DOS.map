@@ -1,0 +1,29 @@
+Sections:
+Start	Size		Name                     File
+
+100000	50000		TEXT                     
+f50000	10000		Stack                    
+f60000	50000		BSS                      
+f60000	50000		DATA                     
+
+Name                                         Address	Section             File
+
+__CODESTART                                  00100000	TEXT                %O
+__STACKSTART                                 00f50000	Stack               
+__STACKEND                                   00f60000	Stack               
+__BSSSTART                                   00f60000	BSS                 
+__BSSEND                                     00fb0000	BSS                 
+__DATASTART                                  00f60000	DATA                %O
+__DATAEND                                    00fb0000	DATA                %O
+DriveIndex                                   00f60000	BSS                 \src\DOS\src\DOS\dos.acl
+Entry                                        00100000	TEXT                \src\DOS\src\DOS\dos.acl
+_GetFileHandler                              00100018	TEXT                \src\DOS\src\DOS\Filesystem.acl
+FindFileLoop                                 0010002f	TEXT                \src\DOS\src\DOS\Filesystem.acl
+_GetEntres                                   00100041	TEXT                \src\DOS\src\DOS\Filesystem.acl
+MoveEntryesLoop                              0010005f	TEXT                \src\DOS\src\DOS\Filesystem.acl
+ExitMoveEntryes                              0010007f	TEXT                \src\DOS\src\DOS\Filesystem.acl
+_GetEntry                                    00100089	TEXT                \src\DOS\src\DOS\Filesystem.acl
+GetEntryLoop                                 0010009f	TEXT                \src\DOS\src\DOS\Filesystem.acl
+_ReadRootDirectory                           001000c0	TEXT                \src\DOS\src\DOS\Filesystem.acl
+_ReadSector                                  001000e5	TEXT                \src\DOS\src\DOS\Filesystem.acl
+Buffer                                       00100111	TEXT                \src\DOS\src\DOS\Filesystem.acl

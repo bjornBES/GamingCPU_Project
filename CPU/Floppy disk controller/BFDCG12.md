@@ -1,7 +1,7 @@
 # FDC Specifications
 
 - Name: **BFDCG** or **BEs Floppy disk controller Gaming**
-- Interrupt Index: 0x01
+- Interrupt Index: 15
 
 ## Register
 
@@ -15,35 +15,6 @@
 |1 |0 |1 | R |Unused
 |0 |1 |1 | R |Unused
 |1 |1 |1 | R |Unused
-|0 |0 |0 | R |Unused
-|1 |0 |0 | R |Unused
-|0 |1 |0 | R |Unused
-|1 |1 |0 | R |Unused
-|0 |0 |1 | R |Unused
-|1 |0 |1 | R |Unused
-|0 |1 |1 | R |Unused
-|1 |1 |1 | R |Unused
-
-### Status Register
-
-|Index  |Name
-|-------|-
-|0x0001 |Unused
-|0x0002 |Unused
-|0x0004 |Unused
-|0x0008 |Unused
-|0x0010 |Unused
-|0x0020 |Unused
-|0x0040 |Unused
-|0x0080 |Unused
-|0x0100 |Unused
-|0x0200 |Unused
-|0x0400 |Unused
-|0x0800 |Unused
-|0x1000 |Unused
-|0x2000 |Unused
-|0x4000 |Unused
-|0x8000 |Unused
 
 ### Master Status Register
 
@@ -56,15 +27,15 @@
 |0x0010 |Unused           | Unused
 |0x0020 |Unused           | Unused
 |0x0040 |WP               | like the control line it is 1 the disk is write protected
-|0x0080 |DIR              | like the control line it is 1 the head steps towards the center
-|0x0100 |Index            | like the control line it is 1 if the head is passing the index hole
-|0x0200 |Track 0          | like the control line it is 1 if the head is on track 0
+|0x0080 |Unused           | Unused
+|0x0100 |Unused           | Unused
+|0x0200 |Unused           | Unused
 |0x0400 |Unused           | Unused
 |0x0800 |Unused           | Unused
-|0x1000 |DRS1             | \|
-|0x2000 |DRS2             | \|
-|0x4000 |DRS3             | \|
-|0x8000 |DRS4             | data rate
+|0x1000 |Unused           | Unused
+|0x2000 |Unused           | Unused
+|0x4000 |Unused           | Unused
+|0x8000 |Unused           | Unused
 
 ### Data Register
 
@@ -98,7 +69,7 @@ Reads data from a disk
 
 - Send the command (0x00) to the [Data register](#data-register)
 - Send the [Drive number](#drive-number) + Head to the [Data register](#data-register)
-  - DD00HHHH
+  - 0000DDDD_0000HHHH
   - D = drive
   - H = head
 - Send the track number (0x0000-0xFFFF) to the [Data register](#data-register)
@@ -117,9 +88,9 @@ Writes data to a disk
 
 #### Calling
 
-- Send the command (0x01) to the [Data register](#data-register)
+- Send the command (0x02) to the [Data register](#data-register)
 - Send the [Drive number](#drive-number) + Head to the [Data register](#data-register)
-  - DD00HHHH
+  - 0000DDDD_0000HHHH
   - D = drive
   - H = head
 - Send the track number (0x0000-0xFFFF) to the [Data register](#data-register)
@@ -127,26 +98,22 @@ Writes data to a disk
 - Send the size in multiple of 128 bytes
 - Send the data to the [Data register](#data-register) for 512 times
 
-### Recalibrate 0x03
+### Read Drive Parameters 0x03
 
 #### Description
 
-Moves the head back to track 0
+Reads the drives parameters
 
 #### Calling
 
 - Send the command (0x03) to the [Data register](#data-register)
 - Send the [Drive number](#drive-number)
-
-### Seek 0x04
-
-Moves the head to the track
-
-#### Calling
-
-- Send the command (0x04) to the [Data register](#data-register)
-- Send the [Drive number](#drive-number) + Head to the [Data register](#data-register)
-  - DD00HHHH
-  - D = drive
-  - H = head
-- Send the track number (0x0000-0xFFFF) to the [Data register](#data-register)
+- Returns
+  - number of heads on the disk in the drive as a word
+  - number of tracks on the disk in the drive as a word
+  - number of sectors on the disk in the drive as a word
+  - [disk type/size](../../fileSystem/FileSystemFormat.md#disk-sizes) on the disk in the drive as a word
+  - drive info as a word
+    - 0000DDDD_0000MMMM
+    - D = number of drives taken as a number
+    - M = masking the drives taken as a bit map

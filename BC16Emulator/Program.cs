@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BC16CPUEmulator;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace BCG16CPUEmulator
@@ -9,6 +11,7 @@ namespace BCG16CPUEmulator
     {
         public Dictionary<string, VoidFunction> m_Arguments = new Dictionary<string, VoidFunction>()
         {
+            {"-ibin", GetInputFile },
             {"-i", GetInputFile },
             // {"-o", GetOutputFile },
             {"-d", SetDriveBinary },
@@ -18,6 +21,7 @@ namespace BCG16CPUEmulator
         public delegate void VoidFunction(string[] args, ref int i);
         static int Main(string[] args)
         {
+            Console.WriteLine("CPU");
             new Program(args);
             return 0;
         }
@@ -39,10 +43,18 @@ namespace BCG16CPUEmulator
             }
 
             m_InputFile = Path.GetFullPath(m_InputFile);
-            
+
+
             BUS bUS = new BUS();
 
             bUS.Reset();
+
+            //Screen screen = new Screen();
+            //screen.Instantiate();
+
+            //Environment.Exit(1);
+
+            writeInfo(bUS.m_CPU);
 
             byte[] BinFileContents = File.ReadAllBytes(m_InputFile);
 
@@ -58,30 +70,34 @@ namespace BCG16CPUEmulator
 
         void writeInfo(BC16CPU cpu)
         {
-            Console.WriteLine($"A:\t0x{cpu.m_A.ToHex()}" + $" B:\t0x{cpu.m_B.ToHex()}");
-            Console.WriteLine($"C:\t0x{cpu.m_C.ToHex()}" + $" D:\t0x{cpu.m_D.ToHex()}");
-            Console.WriteLine($"");
-            Console.WriteLine($"HL:\t0x{cpu.m_H.ToHex()}:{cpu.m_L.ToHex()}");
+            Console.WriteLine($"AX:\t0x{cpu.m_AX.ToHex()}" + $" BX:\t0x{cpu.m_BX.ToHex()}");
+            Console.WriteLine($"CX:\t0x{cpu.m_CX.ToHex()}" + $" DX:\t0x{cpu.m_DX.ToHex()}");
             Console.WriteLine($"");
             Console.WriteLine($"DS:\t0x{cpu.m_DS.ToHex()} ES:\t0x{cpu.m_ES.ToHex()}");
-            Console.WriteLine($"SS:\t0x{cpu.m_SS.ToHex()} S:\t0x{cpu.m_CS.ToHex()}");
+            Console.WriteLine($"SS:\t0x{cpu.m_SS.ToHex()} CS:\t0x{cpu.m_CS.ToHex()}");
             Console.WriteLine($"");
             Console.WriteLine($"PC:\t0x{cpu.m_PC.ToHex()}");
             Console.WriteLine($"");
+            Console.WriteLine($"HL:\t0x{cpu.m_HL.ToHex()}");
+            Console.WriteLine($"");
             Console.WriteLine($"SP:\t0x{cpu.m_SP.ToHex()}" + $" BP:\t0x{cpu.m_BP.ToHex()}");
             Console.WriteLine($"");
-            Console.WriteLine($"AF:\t{cpu.m_AF.m_Value}f".PadRight(11, ' ') + $"BF:\t{cpu.m_BF.m_Value}f");
+            Console.WriteLine($"AF:\t{cpu.m_AF.m_Value}f");
+            Console.WriteLine($"BF:\t{cpu.m_BF.m_Value}f");
             Console.WriteLine($"");
             Console.WriteLine($"R1:\t0x{cpu.m_R1.ToHex()}" + $" R2:\t0x{cpu.m_R2.ToHex()}");
+            Console.WriteLine($"R3:\t0x{cpu.m_R3.ToHex()}" + $" R4:\t0x{cpu.m_R4.ToHex()}");
+            Console.WriteLine($"R5:\t0x{cpu.m_R5.ToHex()}" + $" R6:\t0x{cpu.m_R6.ToHex()}");
             Console.WriteLine($"");
-            Console.WriteLine($"MB:\t0x{cpu.m_MB.ToHex()}");
+            Console.WriteLine($"X:\t0x{cpu.m_X.ToHex()}" + $" Y:\t0x{cpu.m_Y.ToHex()}");
             Console.WriteLine($"");
             Console.WriteLine($"CR0:\t0b{cpu.m_CR0.ToBin()}" + $" CR1:\t0b{cpu.m_CR1.ToBin()}");
             Console.WriteLine($"");
-            Console.WriteLine($"\t  F     F    FFFFFF");
-            Console.WriteLine($"\t  H     I    LOCSEZ");
-            Console.WriteLine($"\t  A     E    EFYIQO");
-            Console.WriteLine($"F:\t0x{cpu.m_F.ToBin()}");
+            Console.WriteLine($"\t       FFF:FFFFFFFF");
+            Console.WriteLine($"\t       EUR:HILOCSEZ");
+            Console.WriteLine($"\t       8FJ:AEEFYIQO");
+            Console.WriteLine($"\t  76543210:76543210");
+            Console.WriteLine($"F:\t0b{cpu.m_F.ToBin()}");
         }
 
         void decodeArguments(string[] args)

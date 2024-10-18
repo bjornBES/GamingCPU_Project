@@ -9,13 +9,6 @@ namespace CommonBCGCPU
         public int PortIDEnd { get; set; }
         public byte InterruptIndex { get; set; }
 
-        public Address Address { get; set; }
-        public bool ReadRam { get; set; }
-        public bool WriteRam { get; set; }
-
-        public ushort Databus { get; set; }
-        public ushort Outputbus { get; set; }
-
         public CPUBus BUS { get; set; }
 
         public void Tick();
@@ -28,5 +21,6 @@ namespace CommonBCGCPU
         public ushort Read(out ushort data, ushort Port);
 
         public void ConnectBus(CPUBus bus);
+        public void INTA();
     }
 }

@@ -1,0 +1,50 @@
+.SETCPU "BC16"
+
+$StackSegment = 0x000B
+$BSSSegment = 0x000C            ; in bank 0
+
+.section TEXT
+
+.org    0x1200
+
+L_HEADER:
+
+    mov         A,              0x55AA
+    mov         AL,             0x99
+    mov         AH,             0x66
+
+    mov         AL,             CR0
+    or          AL,             0x18            ; Enable extended mode and extended registers
+    mov         CR0,            AL
+
+    mov         SS,             %StackSegment
+
+    rng         A
+    rng         H
+    movd        L,              0x55AA
+    push        HL                              ; far uint8* string
+    push        A                               ; uint16 length
+    nor         HL,             HL
+    neg         HL
+    not         HL
+    nor         HL,             HL
+    not         HL
+    push        HL                              ; far COLOR* colors
+    call        [Function]
+
+
+; arguments
+;   far uint8* string       [BP - 16]
+;   uint16 length           [BP - 12]
+;   far COLOR* colors       [BP - 10]
+Function:
+    enter
+
+    movd        BX,             [BP - 16]
+    movw        C,              [BP - 12]
+    movd        DX,             [BP - 10]
+
+    leave
+    ret         10    
+
+.section BSS

@@ -23,6 +23,7 @@ namespace filesystem
         public byte m_SectorsPerTracks;
         public ushort m_TotalTracks;
         public ushort m_TracksPerHead;
+        public ushort m_HeadsPerCylinder;
 
         public Disk m_Disk;
 
@@ -42,7 +43,7 @@ namespace filesystem
         internal WriteSector m_writeSector;
 
         public int GetAddressFromLBA(int lba) => lba * m_BytesPerSector;
-        public int GetLBA(byte head, ushort track, ushort sector) => (track * m_TracksPerHead + head) * m_SectorsPerTracks + (sector - 1);
+        public int GetLBA(byte head, ushort track, ushort sector) => (track * m_HeadsPerCylinder + head) * m_SectorsPerTracks + (sector - 1);
 
         public void Format(Disk disk)
         {
@@ -60,6 +61,7 @@ namespace filesystem
 
             m_BytesPerSector = 0x200;
             m_RootAddress = 0x300;
+            m_HeadsPerCylinder = 2;
             switch (disk.m_DiskSize)
             {
                 case filesystem.DiskSize._20MB:
@@ -92,6 +94,10 @@ namespace filesystem
         public byte[] ReadDiskSector(byte head, ushort track, ushort sector)
         {
             return m_readSector(head, track, sector);
+        }
+        public void WriteDiskSector(byte head, ushort track, ushort sector, byte[] data)
+        {
+            m_writeSector(head, track, sector, data);
         }
         public void SaveFile()
         {

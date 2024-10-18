@@ -5,7 +5,7 @@ using static HexLibrary.HexConverter;
 
 namespace AssemblerBCG
 {
-    public class AssemblerStructs : AssemblerVariabels
+    public class AssemblerStructs : AssmeblerErrors
     {
         List<Struct> m_structs = new List<Struct>();
 

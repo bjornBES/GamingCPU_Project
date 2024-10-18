@@ -20,13 +20,12 @@
   - [Caches](#caches)
   - [Floating values](#floating-values)
     - [Floating-Point Registers](#floating-point-registers)
-  - [Calling convention](#calling-convention)
-    - [Caller](#caller)
-    - [Callee](#callee)
   - [Virtual mode](#virtual-mode)
   - [Extended mode](#extended-mode)
+  - [Protected mode](#protected-mode)
   - [Memory](#memory)
     - [Memory layout](#memory-layout)
+  - [The Stack](#the-stack)
   - [REGISTERS](#registers)
     - [Extended registers](#extended-registers)
     - [Bigger registers](#bigger-registers)
@@ -91,45 +90,46 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 
 ### ARGUMENT MODE
 
-- 0x00: immediate byte:             number
-- 0x01: immediate word:             number
+- 0x00: immediate byte              number
+- 0x01: immediate word              number
 - 0x02: immediate tbyte:            number
 - 0x03: immediate dword:            number
-- 0x04: immediate_float:            numberf
-- 0x0A: register:                   register
-- 0x0B: register address:           address [register]
-- 0x0C: register AL:                AL
-- 0x0D: register BL:                BL
-- 0x0E: register CL:                CL
-- 0x0F: register DL:                DL
-- 0x10: register A:                 A
-- 0x11: register B:                 B
-- 0x12: register C:                 C
-- 0x13: register D:                 D
-- 0x14: register H:                 H
-- 0x15: register L:                 L
-- 0x16: address register HL:        [HL]
-- 0x17: register MB:                MB
+- 0x08: immediate_float:            numberf
+- 0x10: register                    register
+- 0x11: register AL:                AL
+- 0x12: register BL:                BL
+- 0x13: register CL:                CL
+- 0x14: register DL:                DL
+- 0x15: register H:                 H
+- 0x16: register L:                 L
+- 0x17: register A                  A
+- 0x18: register B                  B
+- 0x19: register C                  C
+- 0x1A: register D                  D
 - 0x20: register AX:                AX
 - 0x21: register BX:                BX
 - 0x22: register CX:                CX
 - 0x23: register DX:                DX
-- 0x50: Relative address:           [byte address]      an 8 bit offset to the PC
-- 0x51: Near address:               Near [address]      a 8 bit address
-- 0x52: Short address:              short [address]     a 16 bit address
-- 0x53: long address:               long [address]      a 24 bit address
-- 0x54: Far address:                far [address]       a 32 bit address
-- 0x55: Short X indexed address:    [short address],X
-- 0x56: Short Y indexed address:    [short address],Y
-- 0x60: SP relative address byte:   [SP + sbyte number]
-- 0x61: BP relative address byte:   [BP + sbyte number]
-- 0x62: 32 bit segment address:     [register:register]
-- 0x63: 32 bit segment DS register: [DS:register]
-- 0x64: 32 bit segment DS B:        [DS:B]
-- 0x65: 32 bit segment ES register: [ES:register]
-- 0x66: 32 bit segment ES B:        [ES:B]
-- 0x70: register AF:                AF
-- 0x71: register BF:                BF
+- 0x20: register address:           address [register]
+- 0x21: address register HL:        [HL]
+- 0x30: Relative address:           [byte address]      an 8 bit offset to the PC
+- 0x31: Near address:               Near [address]      a 8 bit address
+- 0x32: Short address:              short [address]     a 16 bit address
+- 0x33: long address:               long [address]      a 24 bit address
+- 0x34: Far address:                far [address]       a 32 bit address
+- 0x36: Short X indexed address:    [short address],X
+- 0x37: Short Y indexed address:    [short address],Y
+- 0x38: SP relative address short:  [SP + short number]
+- 0x39: BP relative address short:  [BP + short number]
+- 0x3A: 32 bit segment address:     [register:register]
+- 0x3B: 32 bit segment DS register: [DS:register]
+- 0x3C: 32 bit segment DS B:        [DS:B]
+- 0x3D: 32 bit segment ES register: [ES:register]
+- 0x3E: 32 bit segment ES B:        [ES:B]
+- 0x60: register AF:                AF
+- 0x61: register BF:                BF
+- 0x62: register CF:                CF
+- 0x63: register DF:                DF
 
 ## Interrupt vector table
 
@@ -143,23 +143,7 @@ The second word is the Address offset for the routine
 
 ### Interrupt vector assignments
 
-|Function                   |Interupt number|Type             |IVT address      |Is User defined|Related instructions
-|---------------------------|---------------|-----------------|-----------------|---------------|-
-|Divide error               |0              |Fault exception  |`0x0000`         |true           |DIV or DIVF
-|NMI interrupt              |1              |interrupt        |`0x0004`         |true           |INT 2 or NMI pin
-|BRK interrupt              |2              |interrupt        |`0x0008`         |true           |BRK
-|invalid opcode             |6              |Abort exception  |`0x0018`         |false          |Any undefined opcode
-|Keyboard IRQ               |16             |interrupt        |`0x0040`         |false          |Keyboard IRQ0
-|User defined IRQ interrupt |17-30          |interrupt        |`0x0044`         |true           |The IRQ pin
-|FDC IRQ                    |31             |interrupt        |`0x007C`         |true           |FDC IRQ15
-|reserved                   |32             |interrupt        |`0x0080`         |false          |Unused
-|User defined interrupts    |33             |interrupt        |`0x0084`         |true           |INT 0x04
-|User defined interrupts    |34             |interrupt        |`0x0088`         |true           |INT 0x05
-|User defined interrupts    |35             |interrupt        |`0x008C`         |true           |INT 0x06
-|User defined interrupts    |36             |interrupt        |`0x0090`         |true           |INT 0x10
-|User defined interrupts    |37             |interrupt        |`0x0094`         |true           |INT 0x13
-|User defined interrupts    |37             |interrupt        |`0x0098`         |true           |if the stack overflows
-|reserved                   |38-255         |interrupt        |`0x009C`         |true           |DO NOT USE
+[Here](../BCG%20arch%20Specs.md#interrupt-entres)
 
 #### interrupt
 
@@ -185,58 +169,17 @@ The architecture provides several dedicated floating-point registers:
 
 - AF, BF: 32-bit single-precision floating-point registers.
 
-## Calling convention
-
-The calling convention for the BCG architecture is as follows:
-
-### Caller
-
-1. Push Argments
-   1. Push all the arguments from rigth to left onto the stack
-2. Call the function using [CALL](./instructions%20BC116.md#special-instructions)
-3. Retrieve Return Value
-   1. The return value will be in either the A/AX or HL register:
-      1. Use the [HL](#registers) register if it's a pointer/address.
-      2. Use the [A](#registers)/[AX](#extended-registers) register if it's an immediate value.
-
-### Callee
-
-This is the sequence within the called function:
-
-1. Save the Base Pointer
-   1. Push the old [BP](#registers) onto the stack
-2. Move the Base Pointer to the Stack Pointer
-   1. Move the [BP](#registers) to [SP](#registers) `mov BP, SP`
-3. Save All Registers
-   1. Push all registers using the [PUSHR](./instructions%20BC116.md#special-instructions) instruction.
-   2. To access arguments, pop them off the stack or reference them using an offset.
-4. Return Value
-   1. Move the return value to the appropriate register:
-      1. HL register if it's a pointer.
-      2. A/AX register if it's an immediate value.
-5. Restore Registers
-   1. Pop all registers using the [POPR](./instructions%20BC116.md#special-instructions) instruction.
-6. Return from Function
-    1. Return from the function with an offset depending on the size of the stack frame using the [RET](./instructions%20BC116.md#general-instructions) instruction.
-
 ## Virtual mode
 
-In virtual mode the CPU has
-
-- 16 bit adderss bus
-- 16 bit data bus
-- a 2 KB [IVT](#interrupt-vector-table)
-- And only has the base registers
+In virtual mode the CPU has [here](../BCG%20arch%20Specs.md#virtual-mode)
 
 ## Extended mode
 
-in Extended mode the CPU will get
+in Extended mode the CPU will get [here](../BCG%20arch%20Specs.md#extended-mode)
 
-- 24 bit address bus
-- 16 bit data bus
-- a 4 KB [IVT](#interrupt-vector-table)
-- Make use of the extended registers [List here](#extended-registers)
-- Long and Far address argument modes
+## Protected mode
+
+in Protected mode the CPU will get [here](../BCG%20arch%20Specs.md#protected-mode)
 
 ## Memory
 
@@ -250,10 +193,13 @@ in Extended mode the CPU will get
 |`0x0000_1000`|`0x00_0200`| IO ports                | this is where the Ports is at
 |`0x0000_1200`|`0x00_EE00`| RAM                     | RAM in the first segment
 |`0x0001_0000`|`0x02_0000`| VRAM                    | video ram
-|`0x0003_0000`|`0x08_0000`| RAM Banked              | this is the data/prgram is at but banked
-|`0x000B_0000`|`0xF5_0000`| RAM                     | RAM
+|`0x0003_0000`|`0xFD_0000`| RAM                     | RAM
 
 the end is `0x100_0000`
+
+## The Stack
+
+The Stack is a 64 KB section set using the [Stack Segment register](#registers) and the SP(Stack pointer) as the offset, you can push data onto the stack using [PUSH](./instructions%20BC116.md) and pop data off the stack using POP, **the stack grows down**
 
 ## REGISTERS
 
@@ -280,34 +226,17 @@ the end is `0x100_0000`
 - AF:             32  bit float register
 - BF:             32  bit float register
 
-- R1:             16  bit temp register
-- R2:             16  bit temp register
-- R3:             16  bit temp register
-- R4:             16  bit temp register
-- R5:             16  bit temp register
-- R6:             16  bit temp register
-
-- MB:             8   bit bank register
+- R1..16:         16  bit general purpose register
 
 - CR0:            8   bit control register
   - 0 0x01 Boot mode
   - 1 0x02 FPU enabled
   - 2 0x04 Low power Mode
-  - 3 0x08 Enable bigger registers        enableing [bigger registers](#bigger-registers)
-  - 4 0x10 Enable extended mode           enableing [extended mode](#extended-mode)
+  - 3 0x08 Enable bigger registers        Enableing [bigger registers](#bigger-registers)
+  - 4 0x10 Enable extended mode           Enableing [extended mode](#extended-mode)
   - 5 0x20
   - 6 0x40
-  - 7 0x80
-
-- CR1:            8   bit control register
-  - 0 0x01
-  - 1 0x02
-  - 2 0x04
-  - 3 0x08
-  - 4 0x10
-  - 5 0x20
-  - 6 0x40
-  - 7 0x80
+  - 7 0x80 Enable Protected mode          Enableing [Protected mode](#protected-mode)
 
 - F:              16: bit (F)lags register
   - 0x0001 zero
@@ -318,14 +247,14 @@ the end is `0x100_0000`
   - 0x0020 less
   - 0x0040 interrupt enable
   - 0x0080 HALT
-  - 0x0100 emulate BC8
+  - 0x0100 reserved
   - 0x0200 under flow
-  - 0x0400
-  - 0x0800
-  - 0x1000
-  - 0x2000
-  - 0x4000
-  - 0x8000
+  - 0x0400 reserved
+  - 0x0800 reserved
+  - 0x1000 reserved
+  - 0x2000 reserved
+  - 0x4000 reserved
+  - 0x8000 reserved
 
 ### Extended registers
 
@@ -339,6 +268,9 @@ the end is `0x100_0000`
 - CX              32 bit general purpose register
 - DX              32 bit general purpose register
 
+- R1..16:         32 bit general purpose register
+
 ### Bigger registers
 
-- MB:             16 bit bank register
+- CF:             32  bit float register
+- DF:             32  bit float register

@@ -1,4 +1,0 @@
-.setcpu "BC16CE"
-.section TEXT
-
-    mov     AX,         0x10

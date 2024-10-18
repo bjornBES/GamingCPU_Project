@@ -1,0 +1,137 @@
+.section TEXT
+
+$BootableDriveNumber = 0x55AA
+
+.SETCPU "BC16"
+
+.org 0x1200
+_BIOSStart:
+
+    sez     SS                                  ; SS = 0
+    mov     SP,             @__STACK            ; SP = @Stack
+
+    mov     HL,             @StartMSG
+    mov     C,              @StartMSGEnd - @StartMSG
+    sez     B
+    call    [PrintStr]
+
+OtherBIOS:
+    movw    [ScreenHeight], 25
+    movw    [ScreenWidth],  80
+
+    sez     A
+    mov     AL,             CR0
+    or      A,              0x01
+    mov     CR0,            AL
+
+    movd    [_IRQ0],        far @KeyBoardIRQ
+    ; movd    [_IRQ15],       far @FloppyInterruptHandler
+    movd    [_INT10h],      far @BIOS_Interrupt10h
+    movd    [_INT13h],      far @BIOS_Interrupt13h
+
+    call    [InitBuffer]
+
+
+    ; this function will use the DL register as the disk index
+    sez     D
+    sei
+
+FindBootDiskLoop:
+    call    [InitializeDrive]
+
+    mov     HL,             far @__BOOTLOADER
+    push    H                                   ; Far uint8_t* HIGH data
+    push    L                                   ; Far uint8_t* LOW data
+    push    D                                   ; uint16_t drive
+    sez     A                                   ; A = 0
+    push    A                                   ; uint16_t head = 0
+    push    A                                   ; uint16_t track = 0
+    mov     A,              1                   ; A = 1
+    push    A                                   ; uint16_t sector = 1
+    call    [Read_Sector]
+
+    mov     A,              R1
+    cmp     AL,             1
+    jne     [FindBootDiskLoop]
+
+    mov     A,              [@__BOOTLOADER + 510]
+    cmp     A,              %BootableDriveNumber
+    je      [Exit_FindDiskLoop]
+    inc     DL
+    cmp     DL,             4   
+    jne     [FindBootDiskLoop]
+    mov     DS,             high @Error_Invalid_BootDisk_Str
+    mov     B,              low @Error_Invalid_BootDisk_Str
+    jmp     [Error_Invalid_BootDisk]
+Exit_FindDiskLoop:
+    cli
+    mov     [DriveNumber],  DL
+
+EndOfBIOS:
+
+    mov     HL,             @INFOMSG_FoundBootableDisk
+    mov     C,              @INFOMSG_FoundBootableDiskEnd - @INFOMSG_FoundBootableDisk
+    sez     B
+    call    [PrintStr]
+
+    mov     AL,             DL
+    add     AL,             '0'
+    call    [COut]
+
+    nop
+
+    sez     A
+    mov     AL,             CR0
+    xor     A,              0x01
+    mov     CR0,            AL
+
+    mov     DL,             [DriveNumber]
+
+    mov     HL,             far @__BOOTLOADER
+    halt
+    jmp     [HL]
+
+    ; not comming back
+
+.includeil "./BIOS_errors.acl"
+.includeil "./IOFunctions.acl"
+.includeil "./Keyboard.acl"
+
+.includeil "./BIOS_Interrupt_Pointer.acl"
+
+.section Stack
+
+.section Bootloader
+
+.section BSS
+
+DriveNumber:
+.resb
+ReceivedIRQ:
+.resb
+Cursorx:
+.resw
+Cursory:
+.resw
+EReg:
+.resd
+ScreenHeight:
+.resw
+ScreenWidth:
+.resw
+KeyBoardChar:
+.resb
+
+.section DATA
+
+.section RODATA
+StartMSG:
+.db "BIOS Start",0
+StartMSGEnd:
+
+Error_Invalid_BootDisk_Str:
+.db "Can't find a bootable disk", 0
+
+INFOMSG_FoundBootableDisk:
+.db 0xA, "Found drive: "
+INFOMSG_FoundBootableDiskEnd:

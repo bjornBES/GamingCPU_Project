@@ -22,8 +22,10 @@
   - [Virtual mode](#virtual-mode)
   - [Extended mode](#extended-mode)
   - [Protected mode](#protected-mode)
+  - [Long mode](#long-mode)
   - [Memory](#memory)
     - [Memory layout](#memory-layout)
+  - [The Stack](#the-stack)
   - [REGISTERS](#registers)
     - [Protected registers](#protected-registers)
 
@@ -67,23 +69,24 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 
 ### ARGUMENT MODE
 
-- 0x00: immediate byte:             number
-- 0x01: immediate word:             number
+- 0x00: immediate byte              number
+- 0x01: immediate word              number
 - 0x02: immediate tbyte:            number
 - 0x03: immediate dword:            number
-- 0x04: immediate_float:            numberf
-- 0x05: immediate qword:            number
-- 0x06: immediate_double:           double numberf
-- 0x0A: register:                   register
-- 0x0B: register address:           address [register]
-- 0x10: register A:                 A
-- 0x11: register B:                 B
-- 0x12: register C:                 C
-- 0x13: register D:                 D
-- 0x14: register H:                 H
-- 0x15: register L:                 L
-- 0x16: address register HL:        [HL]
-- 0x17: register MB:                MB
+- 0x04: immediate qword:            number
+- 0x08: immediate_float:            numberf
+- 0x09: immediate_double:           double numberf
+- 0x10: register                    register
+- 0x11: register AL:                AL
+- 0x12: register BL:                BL
+- 0x13: register CL:                CL
+- 0x14: register DL:                DL
+- 0x15: register H:                 H
+- 0x16: register L:                 L
+- 0x17: register A                  A
+- 0x18: register B                  B
+- 0x19: register C                  C
+- 0x1A: register D                  D
 - 0x20: register AX:                AX
 - 0x21: register BX:                BX
 - 0x22: register CX:                CX
@@ -92,30 +95,30 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 - 0x25: register FX:                FX
 - 0x26: register GX:                GX
 - 0x27: register HX:                HX
-- 0x50: Relative address:           [byte address]      an 8 bit offset to the PC
-- 0x51: Near address:               Near [address]      a 8 bit address
-- 0x52: Short address:              short [address]     a 16 bit address
-- 0x53: long address:               long [address]      a 24 bit address
-- 0x54: Far address:                far [address]       a 32 bit address
-- 0x55: Short X indexed address:    [short address],X
-- 0x56: Short Y indexed address:    [short address],Y
-- 0x60: SP relative address byte:   [SP + sbyte number]
-- 0x61: BP relative address byte:   [BP + sbyte number]
-- 0x62: 32 bit segment address:     [register:register]
-- 0x63: 32 bit segment DS register: [DS:register]
-- 0x64: 32 bit segment DS B:        [DS:B]
-- 0x65: 32 bit segment ES register: [ES:register]
-- 0x66: 32 bit segment ES B:        [ES:B]
-- 0x6E: SPX relative address word:  [SPX +- sword number]
-- 0x6F: BPX relative address word:  [BPX +- sword number]
-- 0x70: register AF:                AF
-- 0x71: register BF:                BF
-- 0x72: register CF:                CF
-- 0x73: register DF:                DF
-- 0x78: register AD:                AD
-- 0x79: register BD:                BD
-- 0x7A: register CD:                CD
-- 0x7B: register DD:                DD
+- 0x20: register address:           address [register]
+- 0x21: address register HL:        [HL]
+- 0x30: Relative address:           [byte address]      an 8 bit offset to the PC
+- 0x31: Near address:               Near [address]      a 8 bit address
+- 0x32: Short address:              short [address]     a 16 bit address
+- 0x33: long address:               long [address]      a 24 bit address
+- 0x34: Far address:                far [address]       a 32 bit address
+- 0x36: Short X indexed address:    [short address],X
+- 0x37: Short Y indexed address:    [short address],Y
+- 0x38: SPX relative address tbyte: [SPX + tbyte number]
+- 0x39: BPX relative address tbyte: [BPX + tbyte number]
+- 0x3A: 32 bit segment address:     [register:register]
+- 0x3B: 32 bit segment DS register: [DS:register]
+- 0x3C: 32 bit segment DS B:        [DS:B]
+- 0x3D: 32 bit segment ES register: [ES:register]
+- 0x3E: 32 bit segment ES B:        [ES:B]
+- 0x60: register AF:                AF
+- 0x61: register BF:                BF
+- 0x62: register CF:                CF
+- 0x63: register DF:                DF
+- 0x70: register AD:                AD
+- 0x71: register BD:                BD
+- 0x72: register CD:                CD
+- 0x73: register DD:                DD
 
 ## Interrupt descriptor table
 
@@ -182,32 +185,19 @@ The architecture provides several dedicated floating-point registers:
 
 ## Virtual mode
 
-In virtual mode the CPU has
-
-- 16 bit adderss bus
-- 16 bit data bus
-- a 2 KB IVT
-- And only has the base registers
+In virtual mode the CPU has [here](../BCG%20arch%20Specs.md#virtual-mode)
 
 ## Extended mode
 
-in Extended mode the CPU will get
-
-- 24 bit address bus
-- 16 bit data bus
-- a 4 KB IVT
-- Make use of the extended registers
-- Long and Far address argument modes
-- PC becomes a 24 bit register
+in Extended mode the CPU will get [here](../BCG%20arch%20Specs.md#extended-mode)
 
 ## Protected mode
 
-in Protected mode the CPU will get
+in Protected mode the CPU will get [here](../BCG%20arch%20Specs.md#protected-mode)
 
-- 32 bit address bus
-- 32 bit data bus
-- a 16 KB [IDT](#interrupt-descriptor-table)
-- Make use of the protected registers [List here](#protected-registers)
+## Long mode
+
+in Long mode the CPU will get [here](../BCG%20arch%20Specs.md#long-mode)
 
 ## Memory
 
@@ -221,10 +211,13 @@ in Protected mode the CPU will get
 |`0x0000_4400`|`0x0000_0200`| IO ports                  | this is where the Ports is at
 |`0x0000_4600`|`0x0000_BA00`| RAM                       | RAM in the first segment
 |`0x0001_0000`|`0x0002_0000`| VRAM                      | video ram
-|`0x0003_0000`|`0x000B_0000`| RAM Banked                | this is the data/prgram is at but banked
-|`0x0010_0000`|`0xFFF5_0000`| RAM                       | RAM
+|`0x0003_0000`|`0xFFFD_0000`| RAM                       | RAM
 
 the end is `0x10000_0000`
+
+## The Stack
+
+The Stack is a 1 MB section set using the [Stack Segment register](#registers) and the SP(Stack pointer) as the offset, you can push data onto the stack using [PUSH](./instructions%20BC116.md) and pop data off the stack using POP, **the stack grows down**
 
 ## REGISTERS
 
@@ -246,8 +239,8 @@ the end is `0x10000_0000`
 - H:              16 bit general purpose address register
 - L:              16 bit general purpose address register
 
-- BPX:            32  bit Stack register
-- SPX:            32  bit Stack register
+- BPX:            20  bit Stack register
+- SPX:            20  bit Stack register
 
 - AF:             32  bit float register
 - BF:             32  bit float register
@@ -259,16 +252,7 @@ the end is `0x10000_0000`
 - CD:             64  bit float register
 - DD:             64  bit float register
 
-- R1:             16  bit temp register
-- R2:             16  bit temp register
-- R3:             16  bit temp register
-- R4:             16  bit temp register
-- R5:             16  bit temp register
-- R6:             16  bit temp register
-- R7:             16  bit temp register
-- R8:             16  bit temp register
-
-- MB:             16  bit bank register
+- R1..16:         32 bit general purpose register
 
 - CR0:            16  bit control register
   - 0x0001 Boot mode
@@ -278,25 +262,7 @@ the end is `0x10000_0000`
   - 0x0010 Enable extended mode             Enableing [extended mode](#extended-mode)
   - 0x0020
   - 0x0040
-  - 0x0080
-  - 0x0100 Enable Protected mode            Enableing [Protected mode](#protected-mode)
-  - 0x0200
-  - 0x0400
-  - 0x0800
-  - 0x1000
-  - 0x2000
-  - 0x4000
-  - 0x8000
-
-- CR1:            16   bit control register
-  - 0x0001
-  - 0x0002
-  - 0x0004
-  - 0x0008
-  - 0x0010
-  - 0x0020
-  - 0x0040
-  - 0x0080
+  - 0x0080 Enable Protected mode            Enableing [Protected mode](#protected-mode)
   - 0x0100
   - 0x0200
   - 0x0400

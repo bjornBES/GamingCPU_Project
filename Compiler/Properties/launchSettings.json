@@ -7,7 +7,7 @@
     },
     "Test Compiler": {
       "commandName": "Project",
-      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL -o ./CPU/src/ACL/CCLOutput.acl",
+      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL -o ./CPU/src/ACL/CCLOutput.acl -cpu BC16",
       "workingDirectory": "./.."
     },
     "Test Bootloader": {

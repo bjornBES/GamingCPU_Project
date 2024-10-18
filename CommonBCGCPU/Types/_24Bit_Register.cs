@@ -177,14 +177,19 @@ namespace CommonBCGCPU.Types
             return new _24Bit_Register(Convert.ToUInt32(value));
         }
 
-        public static implicit operator uint(_24Bit_Register register)
+        public static implicit operator string(_24Bit_Register register)
         {
-            return register.m_Value;
+            return register.ToHex();
         }
 
         public static implicit operator int(_24Bit_Register register)
         {
-            return Convert.ToInt32(register.m_Value);
+            return (int)register.m_Value;
+        }
+
+        public static implicit operator uint(_24Bit_Register register)
+        {
+            return register.m_Value;
         }
 
         public override bool Equals(object obj)

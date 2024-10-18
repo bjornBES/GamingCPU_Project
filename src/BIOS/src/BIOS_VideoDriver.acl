@@ -1,0 +1,61 @@
+.section TEXT
+;
+; Arguments:
+; uint8_t color     [BP - 9]
+; uint8_t c         [BP - 8]
+;
+; void COut(uint8_t color, uint8_t c)
+COut:
+    enter
+    push    A
+    push    HL
+
+    mov     AL,             [BP - 9]
+    mov     AH,             [BP - 8]
+    cmp     AH,             0xA                 ; \n
+    je      [NewLine]
+
+    call    [GetCursorAddress]
+
+    ; writing to VRAM
+    mov     [HL],           A                   ; writing the data
+    mov     word A,         [Cursorx]           ; A = Cursorx
+    inc     A                                   ; A += 1
+    mov     [Cursorx],      A                   ; Cursorx = A
+    cmp     A,              %ScreenHeight       ; A >= ScreenHeight ?
+    jge     [NewLine]                           ; Yes
+    jmp     [ExitCout]
+
+NewLine:
+    sez     A
+    mov     [Cursorx],      A
+    mov     word A,         [Cursory]
+    inc     A
+    mov     [Cursory],      A
+
+ExitCout:
+    pop     HL
+    pop     A
+    leave
+    retz
+
+
+
+;
+; Return in HL
+; 
+; private int* GetCursorAddress()
+.local GetCursorAddress
+GetCursorAddress:
+    push    C
+
+    movd    HL,             0x010000            ; memory address of VRAM
+    mov     word C,         [Cursorx]           ; loading cursorx into C
+    mul     C,              2                   ; C = cursorx * 2
+    add     HL,             C                   ; loading cursorx into HL
+    mov     word C,         [Cursory]           ; loading cursory into C
+    mul     word C,         [ScreenHeight]
+    add     HL,             C                   ; X and Y is now a coord
+
+    pop     C
+    retz

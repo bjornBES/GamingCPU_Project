@@ -1,0 +1,195 @@
+.section TEXT
+
+$STR                = 0x100
+$MSR                = 0x102
+
+$DRS                = 0x103
+$DATA               = 0x104
+
+; 5,25" 512 sector size
+$FloppyGPL1         = 0x2A
+
+; 3,5" 512 sector size
+$FloppyGPL2         = 0x1B
+
+$SectorSize0x080    = 0x00
+$SectorSize0x100    = 0x01
+$SectorSize0x200    = 0x02
+$SectorSize0x400    = 0x03
+$SectorSize0x600    = 0x04
+
+$Drive1 = 0x00
+$Drive2 = 0x01
+$Drive3 = 0x02
+$Drive4 = 0x03
+
+$CommandRead        = 0x01
+$CommandWrite       = 0x02
+
+.local Metadata
+.local Buffer
+
+; Arguments:
+; uint16 Drive             [BP - 18]
+;
+;
+;
+; void InitializeDrive(uint16 drive);
+InitializeDrive:
+    enter
+
+    mov     B,                          2                   ; B = 0002
+    mov     [Format.Head],              BL                  ; TotalHeads = 2
+    mov     B,                          160                 ; B = 160
+    mov     [Format.TotalTracks],       B                   ; TotalTracks = 160
+
+    ; TracksPerHead = TotalHeads / TotalTracks = 80
+    mov     A,                          2880                ; A = TotalSectors
+    mov     [Format.TotalSector],       A                   ; TotalSector = 2880
+    div     A,                          B                   ; SectorsPerTrack = TotalSectors / TotalTracks
+    mov     [Format.SectorsPerTrack],   A                   ; SectorsPerTrack = 36
+    mov     A,                          0x200               ; A = 0x200
+    mov     [Format.BytesPerSector],    A                   ; BytesPerSector = 0x200
+
+    leave
+    ret     2
+
+; Arguments:
+; uint16 drive              [BP - 16]
+; uint16 head               [BP - 14]
+; uint16 track              [BP - 12]
+; uint16 sector             [BP - 10]
+; uint16 data_length        [BP - 8]
+;
+; Read data from a specified sector of a floppy disk
+;
+; void Read_Data(uint16 data_length, uint16 sector, uint16_t cylinder, uint16 head, uint16 drive);
+
+Read_Data:
+    enter
+    pushr
+
+    mov     AL,             %CommandRead        ; command code for Read data
+    outw    %DATA,          AL                  ; write the command to the FDC command register
+
+    movw    A,              [BP - 16]           ; drive number
+    mov     AH,             [BP - 14]           ; getting the Head
+    outw    %DATA,          A                   ; Outputing the head and drive
+        
+    movw    A,              [BP - 12]           ; track number
+    outw    %DATA,          A                   ; writing the track number
+
+    movw    A,              [BP - 10]           ; Sector
+    outw    %DATA,          AL                  ; writing the Sector
+
+    movw    A,              [BP - 8]            ; data_length
+    outw    %DATA,          AL                  ; writing the data_length
+
+    mov     A,              0x0004              ; checking the busy bit in the MSR
+    call    [WaitForMSR]
+
+    popr
+    leave
+    ret     10
+
+; Arguments:
+; far uint8* data           [BP - 20]   4
+; uint16 drive              [BP - 16]   2
+; uint16 head               [BP - 14]   2
+; uint16 track              [BP - 12]   2
+; uint16 sector             [BP - 10]   2
+; uint16 data_length        [BP - 8]    2
+;
+; Write data to a specified sector of a floppy disk
+;
+; void Write_Data(const uint8* data, uint16 data_length, uint16 sector, uint16_t track, uint16 head, uint16 drive);
+
+Write_Data:
+    enter
+    pushr
+
+    mov     AL,             %CommandWrite       ; command code for Write data
+    outb    %DATA,          AL                  ; write the command to the FDC command register
+
+    mov     A,              [BP - 16]           ; drive number
+    mov     AH,             [BP - 14]           ; getting the Head
+    outb    %DATA,          A                   ; Outputing the head and drive
+        
+    mov     A,              [BP - 12]           ; track number
+    outb    %DATA,          A                   ; writing the track number
+
+    mov     A,              [BP - 10]           ; Sector
+    outb    %DATA,          AL                  ; writing the Sector
+
+    mov     A,              [BP - 8]            ; data_length
+    outb    %DATA,          AL                  ; writing the data_length 
+
+    mov     A,              0x0004              ; checking the busy bit in the MSR
+    call    [WaitForMSR]
+
+    popr
+    leave
+    ret     14
+
+; Arguments:
+; uint16 drive             [BP - 8]
+;
+; void Format(uint16 drive)
+Format:
+    enter
+
+    mov     HL,             far @Buffer         ; loading the Buffer address
+    push    HL                                  ; writing the data address
+
+    sez     A
+    mov     AL,             %SectorSize0x400    ; loading the size
+    push    A                                   ; writing the size
+
+    mov     AL,             2
+    push    A                                   ; writing the sector
+
+    sez     A                                   ; A = 0
+    push    A                                   ; writing the track
+    push    A                                   ; head
+
+    mov     A,              [BP - 8]            ; loading the drive
+    push    A                                   ; writing the drive
+
+    call    [Write_Data]
+
+    leave
+    ret     2
+
+WaitForMSR:
+    push    B
+    inb     %MSR,           B
+    and     B,              A
+    jz      [WaitForMSR]
+    pop     B
+    retz
+
+.struct FilesystemFormat
+
+Head: .resb
+TotalTracks: .resw
+TotalSector: resw
+SectorsPerTrack: .resb
+BytesPerSector: .resw
+
+.endstruct
+
+Buffer:
+.db         "BFS01 "                                ; header
+.db         0                                       ; disk letter
+.struct FilesystemFormat Format:
+; .db         2                                       ; Total head
+; .dw         160                                     ; Total tracks
+; .dw         2880                                    ; Total sectors
+; .db         18                                      ; Sectors per track
+; .dw         0x200                                   ; bytes per sector
+
+.dw         0x400                                   ; root address
+.dw         0x10                                    ; max number of entries in root directory
+.db         1                                       ; fat allocated
+.db         "FSBGC01\0\0\0\0\0\0\0\0\0"             ; volume label with padding
+Metadata:

@@ -1,0 +1,3 @@
+﻿  BC16EmulatorC.cpp
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\BC16EmulatorC\BC16EmulatorC.h(16,2): warning C4091: 'typedef ': ignored on left of 'COLOR' when no variable is declared
+  BC16EmulatorC.vcxproj -> C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\x64\Debug\BC16EmulatorC.exe

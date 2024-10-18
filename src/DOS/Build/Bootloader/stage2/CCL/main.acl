@@ -1,0 +1,36 @@
+.setcpu "BC16CE"
+.section TEXT
+L0000000:
+L0000001:
+_cstart:
+	enter
+	pushr
+L0000005:
+	mov   ,
+L0000015:
+	mov   HL,                      HELLO
+	push  HL
+L0000500:
+	mov   R1,                      0
+Exit_cstart:
+	popr
+	sub   SP,                      4
+	leave
+	ret   2
+L0002000:
+
+.section BSS
+SECTOR:
+.res  1024
+KERNEL:
+.res  32768
+
+.section DATA
+.local __DATASTRAT__
+__DATASTRAT__:
+
+.section RODATA
+.local __RODATASTRAT__
+__RODATASTRAT__:
+HELLO:
+.db   "HELLO WORLD", 0

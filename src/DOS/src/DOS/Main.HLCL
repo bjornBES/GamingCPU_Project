@@ -1,0 +1,4 @@
+program main
+    ; comment lines here
+    print OUT, "Hello world"
+endprog main

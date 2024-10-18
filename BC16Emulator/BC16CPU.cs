@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BCG16CPUEmulator
 {
@@ -12,11 +13,11 @@ namespace BCG16CPUEmulator
         Stack<byte> m_portsIRQ = new Stack<byte>(256);
         Stack<byte> m_portsNMI = new Stack<byte>(256);
 
-        const ushort GotInterrupt = 0x7F55;
-        
-        Instruction[] m_instructions = new Instruction[3];
-        ArgumentMode[] m_argumentModes1 = new ArgumentMode[3];
-        ArgumentMode[] m_argumentModes2 = new ArgumentMode[3];
+        Instruction[] m_instructions = new Instruction[5];
+        ArgumentMode[] m_argumentModes1 = new ArgumentMode[5];
+        ArgumentMode[] m_argumentModes2 = new ArgumentMode[5];
+
+
 
         public void IRQ(byte Port)
         {
@@ -43,11 +44,8 @@ namespace BCG16CPUEmulator
             m_argumentModes1.Initialize();
             m_argumentModes2.Initialize();
 
-            m_A = m_B = m_C = m_D = 0;
-            m_H = m_L = 0;
-
-            m_HL[true] = m_H;
-            m_HL[false] = m_L;
+            m_AX = m_BX = m_CX = m_DX = 0;
+            m_HL = 0;
 
             m_DS = 0;
             m_ES = 0;
@@ -60,16 +58,12 @@ namespace BCG16CPUEmulator
 
             m_BP = m_SP = 0;
 
-            m_R1 = 0; 
+            m_R1 = 0;
             m_R2 = 0;
             m_R3 = 0;
             m_R4 = 0;
             m_R5 = 0;
             m_R6 = 0;
-
-            m_MB = 0;
-
-            m_CR0 = m_CR1 = 0xFF;
 
             m_F = 0;
         }
@@ -82,14 +76,6 @@ namespace BCG16CPUEmulator
         ArgumentMode m_argument2;
         public void Tick()
         {
-            m_HL[true] = m_H;
-            m_HL[false] = m_L;
-
-            m_AX[false] = m_A;
-            m_BX[false] = m_B;
-            m_CX[false] = m_C;
-            m_DX[false] = m_D;
-
             if (GetFlag(FL_I) == true)
             {
                 if (m_portsIRQ.TryPop(out byte result) == true)
@@ -99,7 +85,7 @@ namespace BCG16CPUEmulator
                     executeInstruction(m_instructions[1], m_argumentModes1[1], m_argumentModes2[1], ref m_stage2);
                     executeInstruction(m_instructions[2], m_argumentModes1[2], m_argumentModes2[2], ref m_stage3);
 
-                    executionInterrupt(result);
+                    executionInterrupt((byte)(result + 0x0040));
 
                     tickOpertion(0);
                     tickOpertion(1);
@@ -109,7 +95,7 @@ namespace BCG16CPUEmulator
             }
             if (m_portsNMI.TryPop(out byte NMIresult) == true)
             {
-                executionInterrupt(NMIresult);
+                executionInterrupt((byte)(NMIresult + 0x0040));
             }
 
             executeInstruction(m_instructions[0], m_argumentModes1[0], m_argumentModes2[0], ref m_stage1);
@@ -127,14 +113,14 @@ namespace BCG16CPUEmulator
             tickOpertion(2);
         }
 
-        void executionInterrupt(byte port)
+        void executionInterrupt(byte interruptNumber)
         {
-            m_BUS.INTA(port);
+            m_BUS.INTA(interruptNumber);
 
             PushInterrupt();
 
-            Address InterruptAddress = (port * 4) + 0x0040;
-            Address InterruptFunctionAddress = m_BUS.m_Memory.ReadDWord(InterruptAddress, 0x11);
+            Address InterruptAddress = (interruptNumber * 4);
+            Address InterruptFunctionAddress = m_BUS.m_Memory.ReadDWord(InterruptAddress);
 
             m_PC = InterruptFunctionAddress;
         }
@@ -149,13 +135,13 @@ namespace BCG16CPUEmulator
             switch (Opertion)
             {
                 case 0:
-                    tickStage(ref m_stage1,0);
+                    tickStage(ref m_stage1, 0);
                     break;
                 case 1:
-                    tickStage(ref m_stage2,1);
+                    tickStage(ref m_stage2, 1);
                     break;
                 case 2:
-                    tickStage(ref m_stage3,2);
+                    tickStage(ref m_stage3, 2);
                     break;
                 default:
                     break;
@@ -184,7 +170,7 @@ namespace BCG16CPUEmulator
                     stage = 0;
                     return;
             }
-            stage++;
+                    stage++;
         }
 
         private void executeInstruction(Instruction instruction, ArgumentMode Argument1, ArgumentMode Argument2, ref uint stage)
@@ -213,10 +199,10 @@ namespace BCG16CPUEmulator
                 case Instruction.MOVRDL:
                     Move(Size._byte, Register.DL, Argument1);
                     return;
-                case Instruction.MOVWRACR0:
+                case Instruction.MOVRALCR0:
                     Move(Register.AL, Register.CR0);
                     return;
-                case Instruction.MOVWRCR0A:
+                case Instruction.MOVRCR0AL:
                     Move(Register.CR0, Register.AL);
                     return;
 
@@ -244,44 +230,38 @@ namespace BCG16CPUEmulator
                     Move(Size._dword, Argument1, Argument2);
                     return;
                 case Instruction.MOVDRAX:
+                    Move(Size._word, Register.AX, Argument1);
                     return;
-                
+                case Instruction.MOVDRBX:
+                    Move(Size._word, Register.BX, Argument1);
+                    return;
+                case Instruction.MOVDRCX:
+                    Move(Size._word, Register.CX, Argument1);
+                    return;
+                case Instruction.MOVDRDX:
+                    Move(Size._word, Register.DX, Argument1);
+                    return;
+
                 case Instruction.CMP:
                     Cmp(Argument1, Argument2);
+                    return;
+                case Instruction.CMPZ:
+                    break;
+                case Instruction.CMPRA:
+                    Cmp(Register.A, Argument1);
+                    return;
+                case Instruction.CMPRAX:
+                    Cmp(Register.AX, Argument1);
                     return;
 
                 case Instruction.PUSH:
                     Push(Size._byte, Argument1);
                     return;
-                
-                case Instruction.PUSHW:
-                    Push(Size._word, Argument1);
-                    return;
-                
-                case Instruction.PUSHT:
-                    Push(Size._tbyte, Argument1);
-                    return;
-                
-                case Instruction.PUSHD:
-                    Push(Size._dword, Argument1);
-                    return;
-                
+
                 case Instruction.POP:
                     Pop(Size._byte, Argument1);
                     return;
-                
-                case Instruction.POPW:
-                    Pop(Size._word, Argument1);
-                    return;
-                
-                case Instruction.POPT:
-                    Pop(Size._tbyte, Argument1);
-                    return;
-                
-                case Instruction.POPD:
-                    Pop(Size._dword, Argument1);
-                    return;
-                
+
                 case Instruction.CALL:
                     Call(Argument1);
                     return;
@@ -292,36 +272,100 @@ namespace BCG16CPUEmulator
                 case Instruction.RET:
                     Ret(Argument1);
                     return;
-                
+
                 case Instruction.RETZ:
                     Return(0);
                     return;
-                
+                case Instruction.RETL:
+                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
+                    {
+                        PopPC();
+                        return;
+                    }
+                    return;
+
                 case Instruction.SEZ:
                     Sez(Argument1);
                     return;
                 case Instruction.SEZRAL:
-                    SetRegisterValue(Register.AL, 0);
+                    Sez(Register.AL);
+                    return;
+                case Instruction.SEZRBL:
+                    Sez(Register.BL);
+                    return;
+                case Instruction.SEZRCL:
+                    Sez(Register.CL);
+                    return;
+                case Instruction.SEZRDL:
+                    Sez(Register.DL);
                     return;
                 case Instruction.SEZRA:
-                    SetRegisterValue(Register.A, 0);
+                    Sez(Register.A);
+                    return;
+                case Instruction.SEZRB:
+                    Sez(Register.B);
+                    return;
+                case Instruction.SEZRC:
+                    Sez(Register.C);
+                    return;
+                case Instruction.SEZRD:
+                    Sez(Register.D);
                     return;
                 case Instruction.SEZRAX:
-                    SetRegisterValue(Register.AX, 0);
+                    Sez(Register.AX);
+                    return;
+                case Instruction.SEZRBX:
+                    Sez(Register.BX);
+                    return;
+                case Instruction.SEZRCX:
+                    Sez(Register.CX);
+                    return;
+                case Instruction.SEZRDX:
+                    Sez(Register.DX);
                     return;
 
                 case Instruction.TEST:
                     Test(m_argument1);
                     return;
                 case Instruction.TESTRAL:
-                    Compare(Register.AL, Register.AL);
+                    Test(Register.AL);
                     return;
+                case Instruction.TESTRBL:
+                    Test(Register.BL);
+                    break;
+                case Instruction.TESTRCL:
+                    Test(Register.CL);
+                    break;
+                case Instruction.TESTRDL:
+                    Test(Register.DL);
+                    break;
                 case Instruction.TESTRA:
-                    Compare(Register.A, Register.A);
+                    Test(Register.A);
                     return;
+                case Instruction.TESTRB:
+                    Test(Register.B);
+                    break;
+                case Instruction.TESTRC:
+                    Test(Register.C);
+                    break;
+                case Instruction.TESTRD:
+                    Test(Register.D);
+                    break;
                 case Instruction.TESTRAX:
-                    Compare(Register.AX, Register.AX);
+                    Test(Register.AX);
                     return;
+                case Instruction.TESTRBX:
+                    Test(Register.BX);
+                    break;
+                case Instruction.TESTRCX:
+                    Test(Register.CX);
+                    break;
+                case Instruction.TESTRDX:
+                    Test(Register.DX);
+                    break;
+
+                case Instruction.SWAP:
+                    break;
 
                 case Instruction.JMP:
                     Jump(Argument1);
@@ -365,11 +409,17 @@ namespace BCG16CPUEmulator
                 case Instruction.JNV:
                     JumpC(Argument1, FL_O, 0);
                     return;
+                case Instruction.JC:
+                    JumpC(Argument1, FL_C, 1);
+                    return;
+                case Instruction.JNC:
+                    JumpC(Argument1, FL_C, 0);
+                    return;
 
-                case Instruction.INPB:
+                case Instruction.INB:
                     Inp(Size._byte, Argument1, Argument2);
                     return;
-                case Instruction.INPW:
+                case Instruction.INW:
                     Inp(Size._word, Argument1, Argument2);
                     return;
                 case Instruction.OUTB:
@@ -423,25 +473,104 @@ namespace BCG16CPUEmulator
                     return;
 
                 case Instruction.ADD:
-                    Add(m_argument1, m_argument2);
+                    Add(m_argument1, m_argument2, false);
+                    return;
+                case Instruction.ADDRA:
+                    Add(Register.A, Argument1, false);
+                    return;
+                case Instruction.ADDRAX:
+                    Add(Register.AX, Argument1, false);
+                    return;
+                case Instruction.ADC:
+                    Add(m_argument1, m_argument2, true);
+                    return;
+                case Instruction.ADCRA:
+                    Add(Register.A, Argument1, true);
+                    return;
+                case Instruction.ADCRAX:
+                    Sub(Register.AX, Argument1, true);
                     return;
                 case Instruction.SUB:
-                    break;
+                    Sub(m_argument1, m_argument2, false);
+                    return;
+                case Instruction.SUBRA:
+                    Sub(Register.A, Argument1, false);
+                    return;
+                case Instruction.SUBRAX:
+                    Sub(Register.AX, Argument1, false);
+                    return;
+                case Instruction.SBB:
+                    Sub(m_argument1, m_argument2, true);
+                    return;
+                case Instruction.SBBRA:
+                    Sub(Register.A, Argument1, true);
+                    return;
+                case Instruction.SBBRAX:
+                    Sub(Register.AX, Argument1, true);
+                    return;
                 case Instruction.MUL:
-                    break;
+                    Mul(Argument1, Argument2);
+                    return;
+                case Instruction.MULRA:
+                    Mul(Register.A, Argument1);
+                    return;
+                case Instruction.MULRAX:
+                    Mul(Register.AX, Argument1);
+                    return;
                 case Instruction.DIV:
-                    break;
+                    Div(Argument1, Argument2);
+                    return;
+                case Instruction.DIVRA:
+                    Div(Register.A, Argument1);
+                    return;
+                case Instruction.DIVRAX:
+                    Div(Register.AX, Argument1);
+                    return;
                 case Instruction.AND:
-                    break;
+                    And(Argument1, Argument2);
+                    return;
+                case Instruction.ANDRA:
+                    And(Register.A, Argument1);
+                    return;
+                case Instruction.ANDRAX:
+                    And(Register.AX, Argument1);
+                    return;
                 case Instruction.OR:
                     Or(Argument1, Argument2);
                     return;
+                case Instruction.ORRA:
+                    Or(Register.A, Argument1);
+                    return;
+                case Instruction.ORRAX:
+                    Or(Register.AX, Argument1);
+                    return;
                 case Instruction.NOR:
-                    break;
+                    Nor(Argument1, Argument2);
+                    return;
+                case Instruction.NORRA:
+                    Nor(Register.A, Argument1);
+                    return;
+                case Instruction.NORRAX:
+                    Nor(Register.AX, Argument1);
+                    return;
                 case Instruction.XOR:
-                    break;
+                    Xor(Argument1, Argument2);
+                    return;
+                case Instruction.XORRA:
+                    Xor(Register.A, Argument1);
+                    return;
+                case Instruction.XORRAX:
+                    Xor(Register.AX, Argument1);
+                    return;
                 case Instruction.NOT:
-                    break;
+                    Not(Argument1);
+                    return;
+                case Instruction.NOTRA:
+                    Not(Register.A);
+                    return;
+                case Instruction.NOTRAX:
+                    Not(Register.AX);
+                    return;
                 case Instruction.SHL:
                     break;
                 case Instruction.SHR:
@@ -457,13 +586,15 @@ namespace BCG16CPUEmulator
                     Dec(Argument1);
                     return;
                 case Instruction.NEG:
-                    break;
+                    Neg(Argument1);
+                    return;
                 case Instruction.EXP:
                     break;
                 case Instruction.SQRT:
                     break;
                 case Instruction.RNG:
-                    break;
+                    Rng(Argument1);
+                    return;
                 case Instruction.SEB:
                     break;
                 case Instruction.CLB:
@@ -495,7 +626,7 @@ namespace BCG16CPUEmulator
                 case Instruction.MOVF:
                     break;
                 case Instruction.RETI:
-                    Rti();
+                    Reti();
                     return;
                 case Instruction.PUSHR:
                     Pushr();
@@ -518,10 +649,8 @@ namespace BCG16CPUEmulator
                 case Instruction.ENTER:
                     Push(Register.BP);
                     SetRegisterValue(Register.BP, Register.SP);
-                    Pushr();
                     return;
                 case Instruction.LEAVE:
-                    Popr();
                     Pop(Register.BP);
                     return;
                 default:
@@ -543,7 +672,7 @@ namespace BCG16CPUEmulator
             {
                 if (!InstructionArguments.m_Instructions.TryGetValue(result, out InstructionInfo instructionInfo))
                 {
-
+                    executionInterrupt(0x6);
                 }
 
                 for (int i = 0; i < instructionInfo.m_OperandSize; i++)
@@ -557,14 +686,17 @@ namespace BCG16CPUEmulator
                         arg2 = FetchByte();
                     }
                 }
-                if (Enum.TryParse(arg1.ToString(), true, out argument1)) { }
-                if (Enum.TryParse(arg2.ToString(), true, out argument2)) { }
+                if (Enum.TryParse(arg1.ToString(), true, out argument1))
+                { }
+                if (Enum.TryParse(arg2.ToString(), true, out argument2))
+                { }
 
                 return result;
             }
-
-
-
+            else
+            {
+                executionInterrupt(0x6);
+            }
             throw new NotImplementedException();
         }
     }

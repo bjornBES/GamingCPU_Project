@@ -1,0 +1,69 @@
+.setcpu "BC16"
+.section TEXT
+L0000000:
+L0000001:
+	; _pVram is at DS:0
+L0000010:
+_main:
+	enter
+	pushr
+	push  DS
+	mov   DS,                      __DATASTRAT__
+L0000021:
+	push  HL
+	push  A
+	mov   HL,                      MessERS
+	mov   AH,                      0x02
+	int   0x10
+	pop   A
+	pop   HL
+L0000022:
+	mov   HL,                      65536
+	mov   [DS:B],                  HL
+	; _pVram = 65536
+L0000023:
+	mov   R20,                     far @__DATASTRAT__ + 0
+	mov   A,                       85
+	mov   [R20]                    A
+L0000024:
+	mov   HL,                      65536
+	mov   [HL]                     A
+L0000025:
+	mov   HL,                      MessERS
+	push  HL
+L0000026:
+; if
+_Label0:
+	mov   HL,                      [SP - 4]
+	mov   R19,                     HL
+	mov   HL,                      MessERS
+	mov   R20,                     HL
+	cmp   R19,                     R20
+	jne   [_Label0_IfExit]
+	mov   A,                       1
+	jmp   [Exit_main]
+_Label0_IfExit:
+; else
+	mov   A,                       2
+; end if
+Exit_main:
+	pop   DS
+	popr
+	pop		BP
+	leave
+	retz
+L0001000:
+
+.section BSS
+name:
+.res  1024
+
+.section DATA
+.local __DATASTRAT__
+__DATASTRAT__:
+
+.section RODATA
+.local __RODATASTRAT__
+__RODATASTRAT__:
+MessERS:
+.db   "Hello world", 0

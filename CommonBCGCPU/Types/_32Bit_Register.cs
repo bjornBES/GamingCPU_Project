@@ -15,6 +15,10 @@ namespace CommonBCGCPU.Types
         {
             m_Value = value;
         }
+        public _32Bit_Register(int value)
+        {
+            m_Value = (uint)value;
+        }
 
         public _16Bit_Register this[int index]
         {
@@ -27,6 +31,14 @@ namespace CommonBCGCPU.Types
                 else if (index == 2)
                 {
                     return (ushort)(m_Value & 0xFFFF0000) >> 16;
+                }
+                else if (index == 3)
+                {
+                    return m_Value & 0x000000FF;
+                }
+                else if (index == 4)
+                {
+                    return (m_Value & 0x0000FF00) >> 8;
                 }
 
                 return 0;
@@ -42,6 +54,16 @@ namespace CommonBCGCPU.Types
                 {
                     m_Value &= 0x0000FFFF;
                     m_Value |= (ushort)(value << 16);
+                }
+                else if (index == 3)
+                {
+                    m_Value &= 0xFFFFFF00;
+                    m_Value |= (ushort)value;
+                }
+                else if (index == 4)
+                {
+                    m_Value &= 0xFFFF00FF;
+                    m_Value |= (ushort)(value << 8);
                 }
             }
         }
@@ -64,10 +86,12 @@ namespace CommonBCGCPU.Types
             {
                 if (high == false)
                 {
-                    m_Value |= (value & 0xFFFF);
+                    m_Value &= 0xFFFF0000;
+                    m_Value |= value;
                 }
-                else if (high == true)
+                else
                 {
+                    m_Value &= 0x0000FFFF;
                     m_Value |= (uint)(value << 16);
                 }
             }
@@ -116,7 +140,7 @@ namespace CommonBCGCPU.Types
         }
         public static implicit operator _32Bit_Register(int value)
         {
-            return new _32Bit_Register(Convert.ToUInt32(value));
+            return new _32Bit_Register(value);
         }
         public static implicit operator _32Bit_Register(ushort value)
         {
@@ -127,6 +151,10 @@ namespace CommonBCGCPU.Types
             return new _32Bit_Register(value);
         }
 
+        public static implicit operator string(_32Bit_Register register)
+        {
+            return register.ToHex();
+        }
         public static implicit operator uint(_32Bit_Register register)
         {
             return register.m_Value;
@@ -134,7 +162,7 @@ namespace CommonBCGCPU.Types
 
         public static implicit operator int(_32Bit_Register register)
         {
-            return Convert.ToInt32(register.m_Value);
+            return (int)register.m_Value;
         }
 
         public override bool Equals(object obj)

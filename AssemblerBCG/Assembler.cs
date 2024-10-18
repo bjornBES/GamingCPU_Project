@@ -472,6 +472,8 @@ namespace AssemblerBCG
         }
         void directiveSection(string section)
         {
+            AddLine($"_SECTION_ {section}");
+
             if (Enum.TryParse(section, true, out Section result))
             {
                 m_Section = result;

@@ -1,0 +1,64 @@
+INCLUDE HEADER
+
+
+SECTION HEADER
+_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+_DOS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+
+
+SYMBOLS HEADER
+_REF_ LABEL _cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+_REF_ LABEL Start,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+
+
+TEXT HEADER
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_REF_ LABEL Start C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+_NEWLINE_
+_DEL_ mov AL, CR0
+01
+00
+0c
+0a
+_NEWARG_ AL
+_NEWARG_ CR0
+21
+_NEWLINE_
+_DEL_ or AL, 0x08
+20
+70
+0c
+00
+_NEWARG_ AL
+_NEWARG_ 0x08
+08
+_NEWLINE_
+_DEL_ mov CR0, AL
+00
+06
+_NEWLINE_
+_NEWLINE_
+_DEL_ push D
+05
+00
+13
+_NEWARG_ D
+_NEWLINE_
+_DEL_ call [_cstart]
+07
+00
+52
+_NEWARG_ [_cstart]
+_SL__cstart
+_NEWLINE_
+_NEWLINE_
+_SECTION_ DOS

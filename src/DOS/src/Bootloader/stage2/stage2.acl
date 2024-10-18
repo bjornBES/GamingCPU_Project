@@ -1,0 +1,14 @@
+.setcpu "BC16CE"
+
+.extern _cstart
+
+.section TEXT
+Start:
+    mov     AL,                 CR0
+    or      AL,                 0x08
+    mov     CR0,                AL              ; enableing bigger registers
+
+    push    D                                   ; pushing the argument
+    call    [_cstart]                           ; calling the cstart function in CCL
+
+.section DOS

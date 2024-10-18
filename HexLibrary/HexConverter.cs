@@ -84,8 +84,8 @@ namespace HexLibrary
     {
         public const string _LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_";
         public const string _LETTERSAndNUMBER = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_";
-        public const string _NUMBERSDEC = "123456790_";
-        public const string _NUMBERSHEX = "123456790ABCDEFabcdef_";
+        public const string _NUMBERSDEC = "0123456789_";
+        public const string _NUMBERSHEX = "0123456789ABCDEFabcdef_";
         public const string _OPERATORSWS = "+ - * /";
         public const string _OPERATORS = "+-*/";
 

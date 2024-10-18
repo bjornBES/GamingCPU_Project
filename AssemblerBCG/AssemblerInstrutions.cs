@@ -26,7 +26,7 @@ namespace AssemblerBCG
 
             if (!Enum.TryParse(instruction, true, out Instruction result))
             {
-                Console.WriteLine($"Bad Instruction {instruction}");
+                Console.WriteLine($"Bad Instruction {instruction} {m_file}:{Linenumber}");
                 m_WriteOut = true;
                 return;
             }
@@ -37,7 +37,7 @@ namespace AssemblerBCG
             {
                 if (arguments.Length != instructionInfo.m_NumberOfOperands)
                 {
-                    Console.WriteLine($"Invalid Instruction {instruction}");
+                    Console.WriteLine($"Invalid Instruction {instruction} {m_file}:{Linenumber}");
                     m_WriteOut = true;
                     return;
                 }
@@ -126,7 +126,8 @@ namespace AssemblerBCG
                     }
                 }
 
-                if(!ParseTerm(argument, ref sizeAlignment, out ArgumentMode argumentMode, out string[] data))
+                argumentBuffer.Add($"_NEWARG_ {argument}");
+                if (!ParseTerm(argument, ref sizeAlignment, out ArgumentMode argumentMode, out string[] data))
                 {
 
                 }
@@ -186,6 +187,7 @@ namespace AssemblerBCG
                     case ArgumentMode.segment_address:
                     case ArgumentMode.segment_DS_register:
                     case ArgumentMode.segment_ES_register:
+                        Console.WriteLine($"data = {data[0]} {m_file}:{Linenumber}");
                         Register segment = Enum.Parse<Register>(data[0].Split(':')[0], true);
                         Register offset = Enum.Parse<Register>(data[0].Split(':')[1], true);
 
@@ -213,7 +215,6 @@ namespace AssemblerBCG
                     case ArgumentMode.register_H:
                     case ArgumentMode.register_L:
                     case ArgumentMode.register_address_HL:
-                    case ArgumentMode.register_MB:
                     case ArgumentMode.register_AX:
                     case ArgumentMode.register_BX:
                     case ArgumentMode.register_CX:
@@ -248,7 +249,6 @@ namespace AssemblerBCG
                     case ArgumentMode.register_D:
                     case ArgumentMode.register_H:
                     case ArgumentMode.register_L:
-                    case ArgumentMode.register_MB:
                         sizeAlignment = SizeAlignment._word;
                         break;
                     case ArgumentMode.register_CX:
@@ -291,7 +291,6 @@ namespace AssemblerBCG
                         case ArgumentMode.register_D:
                         case ArgumentMode.register_H:
                         case ArgumentMode.register_L:
-                        case ArgumentMode.register_MB:
                         case ArgumentMode.register_AX:
                         case ArgumentMode.register_BX:
                         case ArgumentMode.register_CX:
@@ -710,6 +709,79 @@ namespace AssemblerBCG
 
         void SetArgumentMode(ArgumentMode mode)
         {
+            switch (mode)
+            {
+                case ArgumentMode.immediate_byte:
+                case ArgumentMode.immediate_word:
+                case ArgumentMode.register:
+                case ArgumentMode.register_address:
+                case ArgumentMode.register_AL:
+                case ArgumentMode.register_BL:
+                case ArgumentMode.register_CL:
+                case ArgumentMode.register_DL:
+                case ArgumentMode.register_A:
+                case ArgumentMode.register_B:
+                case ArgumentMode.register_C:
+                case ArgumentMode.register_D:
+                case ArgumentMode.register_H:
+                case ArgumentMode.register_L:
+                case ArgumentMode.register_address_HL:
+                case ArgumentMode.relative_address:
+                case ArgumentMode.near_address:
+                case ArgumentMode.short_address:
+                case ArgumentMode.X_indexed_address:
+                case ArgumentMode.Y_indexed_address:
+                case ArgumentMode.SP_rel_address_byte:
+                case ArgumentMode.BP_rel_address_byte:
+                case ArgumentMode.segment_address:
+                case ArgumentMode.segment_DS_register:
+                case ArgumentMode.segment_DS_B:
+                    if (m_CPUType < CPUType.BC8)
+                    {
+                        E_InvalidCPUFeature(CPUType.BC8, mode);
+                    }
+                    break;
+                case ArgumentMode.immediate_tbyte:
+                case ArgumentMode.immediate_dword:
+                case ArgumentMode.immediate_float:
+                case ArgumentMode.register_AX:
+                case ArgumentMode.register_BX:
+                case ArgumentMode.register_CX:
+                case ArgumentMode.register_DX:
+                case ArgumentMode.long_address:
+                case ArgumentMode.far_address:
+                case ArgumentMode.segment_ES_register:
+                case ArgumentMode.segment_ES_B:
+                case ArgumentMode.register_AF:
+                case ArgumentMode.register_BF:
+                    if (m_CPUType < CPUType.BC16)
+                    {
+                        E_InvalidCPUFeature(CPUType.BC16, mode);
+                    }
+                    break;
+                case ArgumentMode.immediate_qword:
+                case ArgumentMode.immediate_double:
+                case ArgumentMode.register_EX:
+                case ArgumentMode.register_FX:
+                case ArgumentMode.register_GX:
+                case ArgumentMode.register_HX:
+                case ArgumentMode.SPX_rel_address_word:
+                case ArgumentMode.BPX_rel_address_word:
+                case ArgumentMode.register_CF:
+                case ArgumentMode.register_DF:
+                case ArgumentMode.register_AD:
+                case ArgumentMode.register_BD:
+                case ArgumentMode.register_CD:
+                case ArgumentMode.register_DD:
+                    if (m_CPUType < CPUType.BC32)
+                    {
+                        E_InvalidCPUFeature(CPUType.BC32, mode);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
             if (argument1 == ArgumentMode.none)
             {
                 argument1 = mode;

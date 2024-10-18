@@ -1,0 +1,26 @@
+Sections:
+Start	Size		Name                     File
+
+7c00	0200		Bootloader               
+b0000	50000		Stage2                   
+
+Name                                         Address	Section             File
+
+_STAGE2                                      000b0000	Stage2              
+Entry                                        00007c00	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+PrintLoop                                    00007c17	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+ExitPrintLoop                                00007c27	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+FindStage2File                               00007c66	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+ExitFindStage2                               00007c77	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+LoadStage2                                   00007c89	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+LoadStage2Loop                               00007cac	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+Load                                         00007cba	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+ReadSector                                   00007cd9	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+ExitReadSector                               00007d04	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+OFS                                          00007d08	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+OFSLOOP                                      00007d0e	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+ExitOFS                                      00007d23	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+ErrorMessageReading                          00007d2b	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+Error                                        00007d40	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+Message                                      00007d50	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+Stage2_Name                                  00007d5d	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl

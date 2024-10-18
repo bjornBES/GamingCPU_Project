@@ -1,0 +1,170 @@
+.section TEXT
+$STR                = 0x100
+$MSR                = 0x102
+
+$DRS                = 0x103
+$DATA               = 0x104
+
+;
+; Arguments:
+; char* str         HL
+; uint16 length     C
+; uint8 color       BL
+;
+; void PrintStr(char* str)
+.global PrintStr
+PrintStr:
+    enter
+    pushr
+
+    PrintStrLoop:
+    mov     AL,             [HL]
+    cmp     AL,             0
+    je      [ExitPrintStr]
+    call    [COut]
+    inc     HL
+    dec     C
+    jz      [ExitPrintStr]
+    jmp     [PrintStrLoop]
+    ExitPrintStr:
+    popr
+    leave
+    retz
+
+;
+; Arguments:
+;
+; return in AL
+;
+; char ReadCharKey()
+ReadCharKey:
+    call    [ReadBuffer]
+    retz
+
+; Arguments:
+; uint8_t* HIGH address     [BP - 20]   2 bytes
+; uint8_t* LOW address      [BP - 18]   2 bytes
+; uint16_t drive            [BP - 14]   2 byte
+; uint16_t Head             [BP - 12]   2 byte
+; uint16_t track            [BP - 10]   2 bytes
+; uint16_t sector           [BP - 8]    2 byte
+;
+;
+;
+; void Read_Sector(far uint8_t* address, uint16_t drive, uint16_t head, uint16_t track, uint16_t sector)
+.global Read_Sector
+Read_Sector:
+    enter
+    pushr
+
+    movw    A,              [BP - 14]       ; uint16_t drive
+    push    A
+
+    movw    A,              [BP - 12]       ; uint16_t head
+    push    A
+    
+    movw    A,              [BP - 10]       ; uint16_t Track
+    push    A
+    
+    movw    A,              [BP - 8]        ; uint16_t sector
+    push    A
+    
+    mov     A,              0x02            ; data length
+    push    A
+
+    call    [Read_Data]
+
+    mov     ES,             [BP - 6]
+    mov     FS,             [BP - 4]
+    movw    L,              [BP - 18]
+    movw    H,              [BP - 20]
+
+    outw    %DATA,          H
+    outw    %DATA,          L
+    outw    %DATA,          0x0
+
+    inb     %DATA,          A
+    sez     R1
+    test    A
+    jz      [ExitReadSector]
+    inc     R1
+    ExitReadSector:
+    popr
+    leave
+    ret     12
+
+; Arguments:
+; uint32 LBA                [BP - 14]
+; uint16 heads per tracks   [BP - 10]
+; uint16 sectors per track  [BP - 8]
+;
+; Return:
+; R1 = heads,
+; R2 = track,
+; R3 = sector,
+;
+.global LBAtoCHS
+LBAtoCHS:
+    enter
+    pushr
+    movd    HL,             [BP - 14]           ; HL = LBA
+    movw    A,              [BP - 10]           ; A = headsPerTrack
+    mov     R4,             A
+    movw    B,              [BP - 8]            ; B = sectorsPerTrack
+    mov     R5,             B
+
+    mul     A,              B                   ; headsPerTrack * sectorsPerTrack
+    mov     R6,             A                   ; R6 = headsPerTrack * sectorsPerTrack
+    ; R6 = (headsPertrack * sectorsPerTrack)
+    mov     R2,             L                   ; R2 = LBA
+    div     R2,             A                   ; track = lba / (headsPerTrack * sectorsPerTrack)
+    ; int track = lba / R6
+
+    mov     A,              R6                  ; A = headsPerTrack * sectorsPerTrack
+    mov     R7,             L                   ; R7 = LBA
+    mod     R7,             A                   ; R7 = lba % (headsPerTrack * sectorsPerTrack)
+    ; temp = R7 = lba % R6;
+
+    mov     R1,             R7                  ; R1 = temp
+    swap    A,              B                   ; A = B & B = A
+    div     A,              R1                  ; A = temp / sectorsPerTrack
+    swap    A,              R1                  ; R1 = temp / sectorsPerTrack
+    ; R1 = R7 / sectorsPerTrack
+
+    mov     R3,             R7                  ; R3 = temp
+    mov     A,              R5                  ; A = sectorsPerTrack
+    mod     R3,             A                   ; R3 = temp % sectorsPerTrack
+    ; R3 = (R7 % sectorsPerTrack)
+    inc     R3                                  ; R3 = (temp % sectorsPerTrack) + 1
+    ; R3 = (R7 % sectorsPerTrack) + 1
+
+
+
+; Arguments:
+; uint32 LBA                [BP - 16]
+; uint32 heads per tracks   [BP - 12]
+; uint32 sectors per track  [BP - 8]
+;
+; Return:
+; R1 = heads,
+; R2 = track,
+; R3 = sector,
+;
+.global LBAtoCHS32
+LBAtoCHS32:
+    enter
+    push    HL
+    movd    HL,             [BP - 16]           ; LBA
+    push    L
+    movd    HL,             [BP - 14]           ; heads per track
+    push    L
+    movd    HL,             [BP - 8]            ; tracks per sector
+    push    L
+    call    [LBAtoCHS]
+    pop     HL
+    leave
+    ret     12
+    
+
+.includeil "./BIOS_VideoDriver.acl"
+.includeil "./FDDController.acl"

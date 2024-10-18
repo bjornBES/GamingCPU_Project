@@ -1,0 +1,157 @@
+INCLUDE HEADER
+
+
+SECTION HEADER
+_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_DATA C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_RODATA C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+
+
+SYMBOLS HEADER
+_REF_ LABEL L0000000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000001,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL _cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000005,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000015,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000500,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL Exit_cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0002000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL SECTOR,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL KERNEL,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL __DATASTRAT__,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL __RODATASTRAT__,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL HELLO,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+
+
+TEXT HEADER
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl"
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_REF_ LABEL L0000000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_REF_ LABEL L0000001 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_REF_ LABEL _cstart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_REF_ LABEL L0000005 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ mov ,
+00
+00
+_NEWLINE_
+_REF_ LABEL L0000015 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ mov HL, HELLO
+00
+00
+0a
+01
+_NEWARG_ HL
+c7
+_NEWARG_ HELLO
+_SL_HELLO
+_NEWLINE_
+_DEL_ push HL
+05
+00
+0a
+_NEWARG_ HL
+c7
+_NEWLINE_
+_REF_ LABEL L0000500 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ mov R1, 0
+00
+00
+0a
+03
+_NEWARG_ R1
+10
+_NEWARG_ 0
+00
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_cstart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ sub SP, 4
+20
+30
+0a
+02
+_NEWARG_ SP
+09
+_NEWARG_ 4
+00
+00
+04
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 2
+08
+00
+00
+_NEWARG_ 2
+02
+_NEWLINE_
+_REF_ LABEL L0002000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_NEWLINE_
+_SECTION_ BSS
+_NEWLINE_
+_REF_ LABEL SECTOR C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_RES_ 0400
+_NEWLINE_
+_REF_ LABEL KERNEL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_RES_ 8000
+_NEWLINE_
+_NEWLINE_
+_SECTION_ DATA
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL __DATASTRAT__ C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_NEWLINE_
+_SECTION_ RODATA
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL __RODATASTRAT__ C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_REF_ LABEL HELLO C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+48
+45
+4c
+4c
+4f
+20
+57
+4f
+52
+4c
+44
+00
+_NEWLINE_

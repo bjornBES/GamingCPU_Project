@@ -1,21 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+iVLkJ7JEbFUYd1NB8GA6JUuhyxfnR2zB2Yyh2Vc4q89S8pecaYHpJLN8QBZCQYOhXCKYQspkk4+9qOCyqgJ+Q==",
+  "dgSpecHash": "hxiv7I+WEI1XfV56j4NfxdhtnsO2ASAKn3lJIJWnV0BxScjsXHz6Bvs0DeoOA8whPz/I393LAPXcibOgN9i7BA==",
   "success": true,
   "projectFilePath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BFDCG12\\BFDCG12.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\bjorn\\.nuget\\packages\\slimdx\\4.0.13.44\\slimdx.4.0.13.44.nupkg.sha512"
-  ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'SlimDX 4.0.13.44' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "SlimDX",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  "expectedPackageFiles": [],
+  "logs": []
 }

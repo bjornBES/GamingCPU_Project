@@ -1,0 +1,88 @@
+
+.section TEXT
+
+; this is for the IRQs Interrupts
+BIOS_IRQ_Interrupt:
+
+    reti
+
+KeyBoardIRQ:
+    push    C 
+    inb     0x0,            CL                  ; Getting a char from the Keyboard
+    call    [WriteBuffer]                       ; Putting it into the KeyboardBuffer
+    pop     C
+    reti
+
+;
+; AH = interrupt routine
+;
+; Disk interrupt routine
+;
+BIOS_Interrupt13h:
+    cmp     AH,             0x01
+    je      [readsector]
+    cmp     AH,             0x11
+    je      [IntLBAToCHS]
+    reti
+
+;
+; AH = interrupt routine
+;
+; Video interrupt routine
+;
+BIOS_Interrupt10h:
+    cmp     AH,             0x00
+    je      [printchar]
+    cmp     AH,             0x01
+    je      [readkey]
+    reti
+
+.local readkey
+readkey:
+    call    [ReadCharKey]
+    reti
+
+.local printchar
+printchar:
+    call    [COut]
+    reti
+
+; parameters
+; HL = LBA
+; R4 = heads per track,
+; R5 = sectors per track,
+; return
+; R1 = heads,
+; R2 = track,
+; R3 = sector,
+.local IntLBAToCHS
+IntLBAToCHS:
+    push    A
+    push    HL
+    push    R4
+    push    R5
+    mov     AL,     CR0
+    cmp     A,      0x10
+    je      [EEMLBAToCHS32]
+    call    [LBAtoCHS]
+EEMLBAToCHS32:
+    call    [LBAtoCHS32]
+    pop     A
+    reti
+    
+; R1 = heads,
+; R2 = track,
+; R3 = sector,
+; DL = Drive,
+; HL = address of the data buffer,
+.local readsector
+readsector:
+    pushr
+    push    R3                                  ; sector
+    push    R2                                  ; track
+    push    R1                                  ; head
+    push    D                                   ; drive
+    push    HL                                  ; destination address
+    call    [Read_Sector]                       ; calling
+    popr
+    reti

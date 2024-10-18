@@ -39,12 +39,6 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
-          "dependencies": {
-            "SlimDX": {
-              "target": "Package",
-              "version": "[4.0.13.44, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",

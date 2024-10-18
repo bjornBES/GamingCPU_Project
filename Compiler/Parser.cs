@@ -10,6 +10,8 @@ using static CompilerErrors;
 using System.Reflection.Metadata.Ecma335;
 using Compiler;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Diagnostics.Tracing;
 
 namespace Compiler
 {
@@ -22,16 +24,10 @@ namespace Compiler
         List<Function> m_functions = new List<Function>();
         public int m_StackSize;
         List<string> m_lineNumber = new List<string>();
-        int _DS;
-        int m_RegisterDS
-        {
-            get { return _DS; }
-            set
-            {
-                GetSetRegiserValue(ref _DS, value, "DS");
-            }
-        }
+        Token m_lastToken;
         private int _B;
+        List<string> m_lineNumbers = new List<string>();
+        int m_labelCount;
         int m_registerB
         {
             get { return _B; }
@@ -40,36 +36,71 @@ namespace Compiler
                 GetSetRegiserValue(ref _B, value, "B");
             }
         }
+        private string _A;
+        string m_registerA
+        {
+            get { return _A; }
+            set
+            {
+                GetSetRegiserValue(ref _A, value, "A");
+            }
+        }
 
         void GetSetRegiserValue(ref int register, int value, string registerName)
         {
-            if (register == value)
+            if (m_Scopes.Count > 1)
             {
-                return;
+                if (register == value)
+                {
+                    return;
+                }
+                else if (register == value - 1)
+                {
+                    addLine($"inc\t{registerName}");
+                }
+                else if (register == value + 1)
+                {
+                    addLine($"dec\t{registerName}");
+                }
+                else if (value == 0)
+                {
+                    addLine($"sez\t{registerName}");
+                }
+                else
+                {
+                    addLine($"mov\t{registerName},\t0x{Convert.ToString(value, 16).PadLeft(4, '0')}");
+                }
             }
-            else if (register == value - 1)
+            register = value;
+        }
+        void GetSetRegiserValue(ref string register, string value, string registerName)
+        {
+            if (m_Scopes.Count > 1)
             {
-                addLine($"inc\t{registerName}");
-            }
-            else if (register == value + 1)
-            {
-                addLine($"dec\t{registerName}");
-            }
-            else if (value == 0)
-            {
-                addLine($"sez\t{registerName}");
-            }
-            else
-            {
-                addLine($"mov\t{registerName},\t0x{Convert.ToString(value, 16).PadLeft(4, '0')}");
+                if (register == value)
+                {
+                    return;
+                }
+                else if (value == "0")
+                {
+                    addLine($"sez\t{registerName}");
+                }
+                else
+                {
+                    addLine($"mov\t{registerName},\t{value}");
+                }
             }
             register = value;
         }
 
         Section m_section;
 
+        Dictionary<string, string> m_strings = new Dictionary<string, string>();
+
         public List<string> m_Output = new List<string>();
         public List<string> m_OutputBss = new List<string>();
+        public List<string> m_OutputData = new List<string>();
+        public List<string> m_OutputRodata = new List<string>();
         string parseTerm(out string register, TypeData type = null)
         {
                 register = "";
@@ -79,7 +110,7 @@ namespace Compiler
             }
 
             if (peek().Value.m_Type == TokenType.int_lit)
-             {
+            {
                 string term = consume().m_Value;
 
                 uint data = Convert.ToUInt32(term);
@@ -122,7 +153,6 @@ namespace Compiler
                     if (var.m_Address.m_UseDSB)
                     {
                         m_registerB = var.m_Address.m_B;
-                        m_RegisterDS = var.m_Address.m_DS;
                     }
                     string address = $"{var.m_Address.GetAddress(this)}";
                     switch ((Size)var.m_TypeData.m_TypeSize)
@@ -139,6 +169,78 @@ namespace Compiler
                         default:
                             break;
                     }
+                }
+                else if (m_strings.ContainsKey(name))
+                {
+                    register = "HL";
+                    return name;
+                }
+            }
+            else if (peek().Value.m_Type == TokenType.at)
+            {
+                try_consume_error(TokenType.at);
+                register = try_consume_error(TokenType.ident).m_Value;
+                return register;
+            }
+            else if (peek().Value.m_Type == TokenType.ampersand)
+            {
+                try_consume_error(TokenType.ampersand);
+                if (peek().Value.m_Type == TokenType.ident)
+                {
+                    string name = consume().m_Value;
+                    if (isVariabel(name, out Var var))
+                    {
+                        string address = $"{var.m_Address.GetAddressRaw(this)}";
+                        if (m_CPUType < CPUType.BC16)
+                        {
+                            register = "HL";
+                            return address;
+                        }
+                        else
+                        {
+                            register = "R20";
+                            return address;
+                        }
+                    }
+                    else if (m_strings.ContainsKey(name))
+                    {
+                        register = "HL";
+                        return name;
+                    }
+                }
+            }
+
+            return null;
+        }
+        string parseIdent(out string register)
+        {
+            register = "";
+            if (!peek().HasValue)
+            {
+                return null;
+            }
+
+            if (peek().Value.m_Type == TokenType.ident)
+            {
+                string name = consume().m_Value;
+                if (isVariabel(name, out Var var))
+                {
+                    string address = $"{var.m_Address.GetAddressRaw(this)}";
+                    if (m_CPUType < CPUType.BC16)
+                    {
+                        register = "HL";
+                        return address;
+                    }
+                    else
+                    {
+                        register = "R20";
+                        return address;
+                    }
+                }
+                else if (m_strings.ContainsKey(name))
+                {
+                    register = "HL";
+                    return name;
                 }
             }
 
@@ -305,28 +407,14 @@ namespace Compiler
             try_consume_error(TokenType.open_paren);
             List<Argument> args = new List<Argument>();
             addLine($"_{name}:", 0);
-            byte BPoffset = 4;                      // 4 from the return address
-            if (m_CPUType < CPUType.BC32)
-            {
-                push16("BP");
-                addLine($"mov\tBP,\tSP");
-                BPoffset += 2;
-            }
-            else
-            {
-                push32("BPX");
-                addLine($"mov\tBPX,\tSPX");
-                BPoffset += 4;
-            }
+            byte BPoffset = 6;                      // 6 from the return address
+            addLine("enter");
             pushr();
-            BPoffset += 20;                         // AX(4) + BX(4) + CX(4) + DX(4) + H(2) + L(2)
             int sizeOfArgument = 0;
             while (!try_consume(TokenType.close_paren))
             {
                 TypeData type = parseType();
                 string argName = try_consume_error(TokenType.ident).m_Value;
-
-                m_var.Add(new Var(argName, type, BPoffset, true));
 
                 if (type.m_IsPointer)
                 {
@@ -338,6 +426,8 @@ namespace Compiler
                     BPoffset += (byte)type.m_TypeSize;
                     sizeOfArgument += type.m_TypeSize;
                 }
+
+                m_var.Add(new Var(argName, type, BPoffset, true));
 
                 args.Add(new Argument()
                 {
@@ -355,11 +445,13 @@ namespace Compiler
             });
 
             begin_scope();
-            m_RegisterDS = 0xB;
-            if (m_registerB != 0)
+            if (name == "main")
             {
-                m_registerB = 0;
+                push16("DS");
+                addLine("mov\tDS,\t__DATASTRAT__");
+                _B = 0;
             }
+
             while (peek().HasValue &&
                 peek().Value.m_Type != TokenType.end && peek(1).HasValue && peek().Value.m_Type != TokenType.function)
             {
@@ -368,18 +460,18 @@ namespace Compiler
             try_consume_error(TokenType.end);
             try_consume_error(TokenType.function);
             try_consume_error(TokenType.period);
-            addLine($"mov\tR1,\t0");
-            popr();
-            if (m_CPUType < CPUType.BC32)
+            if (m_lastToken.m_Type != TokenType._return)
             {
-                pop16("BP");
-            }
-            else
-            {
-                pop32("BPX");
+                addLine($"mov\tR1,\t0");
             }
             addLine($"Exit_{name}:", 0);
+            if (name == "main")
+            {
+                pop16("DS");
+            }
+            popr();
             end_scope();
+            addLine($"leave");
             if (m_functions.Last().m_ArgumentSize == 0)
             {
                 addLine("retz");
@@ -408,12 +500,67 @@ namespace Compiler
             try_consume_error(TokenType._return);
             string term = parseTerm(out string register);
 
-            addLine($"mov\t{register},\t{term}");
-            addLine($"mov\tR1,\t{register}");
-            pop16("BP");
-            popr();
-            addLine($"mov\tA,\tR1");
+            if (register == "A")
+            {
+                m_registerA = term;
+            }
+            else
+            {
+                addLine($"mov\t{register},\t{term}");
+                addLine($"mov\tR1,\t{register}");
+                addLine($"mov\tA,\tR1");
+            }
             addLine($"jmp\t[Exit_{m_functions.Last().m_Name}]");
+            try_consume_error(TokenType.period);
+        }
+        void parseReference()
+        {
+            try_consume_error(TokenType.star);
+
+            string addressRegister = "";
+            string register;
+
+            if (peek().Value.m_Type == TokenType.ident)
+            {
+                string address = parseIdent(out register);
+                if (register == "A")
+                {
+                    m_registerA = address;
+                }
+                else
+                {
+                    addLine($"mov\t{register},\t{address}");
+                }
+                addressRegister = register;
+            }
+            else if (peek().Value.m_Type == TokenType.int_lit)
+            {
+                string address = parseTerm(out register);
+                if (register == "A")
+                {
+                    m_registerA = address; 
+                }
+                else
+                {
+                    addLine($"mov\t{register},\t{address}");
+                }
+                addressRegister = register;
+            }
+
+            try_consume_error(TokenType.eq);
+            string data = parseTerm(out register);
+
+            if (register == "A")
+            {
+                m_registerA = data;
+            }
+            else
+            {
+                addLine($"mov\t{register},\t{data}");
+            }
+            addLine($"mov\t[{addressRegister}]\t{register}");
+
+
             try_consume_error(TokenType.period);
         }
         void parseReassign()
@@ -428,14 +575,186 @@ namespace Compiler
                 if (var.m_Address.m_UseDSB)
                 {
                     m_registerB = var.m_Address.m_B;
-                    m_RegisterDS = var.m_Address.m_DS;
                 }
 
-                addLine($"mov\t{register},\t{term}");
+                if (register != term)
+                {
+
+                    if (register == "A")
+                    {
+                        m_registerA = term;
+                    }
+                    else
+                    {
+                        addLine($"mov\t{register},\t{term}");
+                    }
+                }
+                else
+                {
+                }
+
                 addLine($"mov\t{var.m_Address.GetAddress(this)},\t{register}");
                 addLine($"; _{name} = {term}");
 
                 try_consume_error(TokenType.period);
+            }
+        }
+        void parseReassignRegister()
+        {
+            try_consume_error(TokenType.at);
+            string register = try_consume_error(TokenType.ident).m_Value;
+            try_consume_error(TokenType.eq);
+            string term = parseTerm(out string dataRegister);
+            if (register == "A")
+            {
+                m_registerA = term;
+            }
+            else
+            {
+                addLine($"mov\t{register},\t{term}");
+            }
+            try_consume_error(TokenType.period);
+        }
+        void parseInvoke()
+        {
+            try_consume_error(TokenType.invoke);
+            try_consume_error(TokenType.open_paren);
+            string Routine = parseTerm(out string routineRegister);
+            try_consume_error(TokenType.comma);
+            string Function = parseTerm(out string functionRegister);
+            addLine($"mov\tAH,\t{Function}");
+            addLine($"int\t{Routine}");
+            try_consume_error(TokenType.close_paren);
+            try_consume_error(TokenType.period);
+        }
+        void parseDisplay()
+        {
+            try_consume_error(TokenType.display);
+            try_consume_error(TokenType.open_paren);
+
+            string term = parseTerm(out string register);
+
+            push32($"{register}");
+            push16("A");
+            if (register == "A")
+            {
+                m_registerA = term;
+            }
+            else
+            {
+                addLine($"mov\t{register},\t{term}");
+            }
+            addLine($"mov\tAH,\t0x02");
+            addLine($"int\t0x10");
+            pop16("A");
+            pop32($"{register}");
+
+
+            try_consume_error(TokenType.close_paren);
+            try_consume_error(TokenType.period);
+        }
+        void parseIf()
+        {
+            Token LastSegment;
+            LastSegment = try_consume_error(TokenType._if);
+            string label = GetLabel();
+            string exitLable = $"{label}_IfExit";
+            string fExitLable = $"{label}_Exit";
+            addLine("; if", 0);
+            addLine(label + ":", 0);
+
+            string term1 = parseTerm(out string RegisterTerm1);
+            if (try_consume(TokenType.eq))
+            {
+                try_consume_error(TokenType.eq);
+                string term2 = parseTerm(out string RegisterTerm2);
+                if (RegisterTerm1 == "A")
+                {
+                    m_registerA = term1;
+                }
+                else
+                {
+                    addLine($"mov\t{RegisterTerm1},\t{term1}");
+                }
+                addLine($"mov\tR19,\t{RegisterTerm1}");
+                if (RegisterTerm2 == "A")
+                {
+                    m_registerA = term2;
+                }
+                else
+                {
+                    addLine($"mov\t{RegisterTerm2},\t{term2}");
+                }
+                addLine($"mov\tR20,\t{RegisterTerm2}");
+
+                addLine($"cmp\tR19,\tR20");
+                addLine($"jne\t[{exitLable}]");
+            }
+            else
+            {
+                if (RegisterTerm1 == "A")
+                {
+                    m_registerA = term1;
+                }
+                else
+                {
+                    addLine($"mov\t{RegisterTerm1},\t{term1}");
+                }
+
+                addLine($"jz\t[{exitLable}]");
+            }
+
+            try_consume_error(TokenType.period);
+            try_consume_error(TokenType._then);
+            try_consume_error(TokenType.period);
+            begin_scope();
+            while (peek().HasValue && peek(1).HasValue && 
+                    peek().Value.m_Type != TokenType.end && peek(1).Value.m_Type != TokenType._if &&
+                    peek().Value.m_Type != TokenType._elif &&
+                    peek().Value.m_Type != TokenType._else)
+            {
+                parse_Stmt();
+            }
+            if (m_lastToken.m_Type != TokenType._return)
+            {
+                addLine($"jmp\t[{fExitLable}]");
+            }
+
+            addLine(exitLable + ":", 0);
+
+            if (peek().Value.m_Type == TokenType._else)
+            {
+                LastSegment = try_consume_error(TokenType._else);
+                addLine("; else", 0);
+                try_consume_error(TokenType.period);
+                try_consume_error(TokenType._then);
+                try_consume_error(TokenType.period);
+                begin_scope();
+                while (peek().HasValue && peek(1).HasValue &&
+                    peek().Value.m_Type != TokenType.end && peek(1).Value.m_Type != TokenType._if)
+                {
+                    parse_Stmt();
+                }
+                if (m_lastToken.m_Type != TokenType._return)
+                {
+                    addLine($"jmp\t[{fExitLable}]");
+                }
+            }
+
+            if (try_consume(TokenType.end))
+            {
+                addLine("; end if", 0);
+                try_consume_error(TokenType._if);
+                try_consume_error(TokenType.period);
+                    addLine(fExitLable + ":", 0);
+                if (m_lastToken.m_Type == TokenType._return || LastSegment.m_Type == TokenType._else)
+                {
+                }
+                else
+                {
+                    popr();
+                    end_scope();
+                }
             }
         }
 
@@ -482,34 +801,106 @@ namespace Compiler
                     try_consume_error(TokenType.colon);
                     m_lineNumber.Add(linenumber);
                     addLine($"L{linenumber}:", 0);
+                    m_lineNumbers.Add(linenumber);
                     return;
                 }
 
                 if (peek().Value.m_Type == TokenType.program && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
                 {
+                    m_lastToken = peek().Value;
                     parseProgram();
+                    return;
                 }
                 else if (peek().Value.m_Type == TokenType.function && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
                 {
+                    m_lastToken = peek().Value;
                     parseFunction();
+                    return;
                 }
                 else if (peek().Value.m_Type == TokenType._return)
                 {
+                    m_lastToken = peek().Value;
                     parseReturn();
+                    return;
                 }
                 else if (isType())
                 {
+                    m_lastToken = peek().Value;
                     TypeData type = parseType();
                     if (peek().HasValue && peek().Value.m_Type == TokenType.ident)
                     {
                         parseVariabel(type);
+                        return;
                     }
                 }
                 else if (peek().Value.m_Type == TokenType.ident && peek(1).HasValue && peek(1).Value.m_Type == TokenType.eq)
                 {
+                    m_lastToken = peek().Value;
                     parseReassign();
+                    return;
+                }
+                else if (peek().Value.m_Type == TokenType.at && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
+                {
+                    m_lastToken = peek().Value;
+                    parseReassignRegister();
+                    return;
+                }
+                else if (peek().Value.m_Type == TokenType.invoke && peek(1).HasValue && peek(1).Value.m_Type == TokenType.open_paren)
+                {
+                    m_lastToken = peek().Value;
+                    parseInvoke();
+                    return;
+                }
+                else if (peek().Value.m_Type == TokenType.display && peek(1).HasValue && peek(1).Value.m_Type == TokenType.open_paren)
+                {
+                    if (!m_DoRaw)
+                    {
+                        m_lastToken = peek().Value;
+                        parseDisplay();
+                        return;
+                    }
+                }
+                else if (peek().Value.m_Type == TokenType.star)
+                {
+                    parseReference();
+                    return;
+                }
+                else if (peek().Value.m_Type == TokenType._if)
+                {
+                    parseIf();
+                    return;
                 }
             }
+            else if (m_section == Section._string)
+            {
+                if (try_consume(TokenType.colon))
+                {
+                    string name = try_consume_error(TokenType.ident).m_Value;
+                    try_consume_error(TokenType.quotation_mark);
+                    string value = try_consume_error(TokenType.ident).m_Value;
+                    try_consume_error(TokenType.quotation_mark);
+                    m_strings.Add(name, value);
+                    addLine($"{name}:", 0, AsmSection.rodata);
+                    addLine($".db\t\"{value}\", 0", 0, AsmSection.rodata);
+                    return;
+                }
+            }
+            else if (m_section == Section.data) // BSS
+            {
+                if (try_consume(TokenType.colon))
+                {
+                    string name = try_consume_error(TokenType.ident).m_Value;
+                    try_consume_error(TokenType._res);
+                    string value = try_consume_error(TokenType.int_lit).m_Value;
+                    addLine($"{name}:", 0, AsmSection.bss);
+                    addLine($".res\t{value}", 0, AsmSection.bss);
+                    return;
+                }
+            }
+
+            Console.WriteLine($"-1 = {peek(-1).Value}");
+            Console.WriteLine($"Need parsing for {peek().Value}");
+            Console.WriteLine($"1 =  {peek(1).Value}");
         }
 
         public void Parse_Prog(Token[] tokens, string[] src)
@@ -525,6 +916,15 @@ namespace Compiler
 
             addLine($"{Environment.NewLine}.section BSS", 0);
             m_Output.AddRange(m_OutputBss);
+
+            addLine($"{Environment.NewLine}.section DATA", 0);
+            addLine($".local __DATASTRAT__", 0);
+            addLine($"__DATASTRAT__:", 0);
+            m_Output.AddRange(m_OutputData);
+            addLine($"{Environment.NewLine}.section RODATA", 0);
+            addLine($".local __RODATASTRAT__", 0);
+            addLine($"__RODATASTRAT__:", 0);
+            m_Output.AddRange(m_OutputRodata);
 
         }
 
@@ -555,10 +955,15 @@ namespace Compiler
             {
                 return consume();
             }
-            Error_expected(peek(-1).Value, type);
+            Error_expected(peek(-1).Value, m_lineNumbers.ToArray(), type);
             throw new NotImplementedException("yes do it you lazy ass implement it now");
         }
         #endregion
+
+        string GetLabel()
+        {
+            return $"_Label{m_labelCount++}";
+        }
 
         void begin_scope()
         {
@@ -566,18 +971,23 @@ namespace Compiler
         }
         void end_scope()
         {
-            int popCount = m_var.Count - m_Scopes.Peek();
-
-            if (popCount != 0)
+            if (m_Scopes.Count > 1)
             {
-                addLine($"add\tSP,\t{popCount * 2}");
+                int popCount = m_var.Count - m_Scopes.Peek();
+
+                if (popCount != 0)
+                {
+                    addLine($"sub\tSP,\t{popCount * 2}");
+                }
+
+                m_StackSize -= popCount;
+
+                m_var.RemoveRange(m_Scopes.Peek(), popCount);
             }
-
-            m_StackSize -= popCount;
-
-            for (int i = m_Scopes.First(); i < m_var.Count; i++)
+            else if (m_Scopes.Count == 1)
             {
-                m_var.RemoveAt(i);
+                int popCount = m_var.Count - m_Scopes.Peek();
+                m_var.RemoveRange(m_Scopes.Peek(), popCount);
             }
 
             m_Scopes.Pop();
@@ -596,7 +1006,7 @@ namespace Compiler
         void pushr()
         {
             addLine($"pushr");
-            m_StackSize += 24;
+            m_StackSize += 20;
         }
 
         void pop16(string reg16)
@@ -612,7 +1022,7 @@ namespace Compiler
         void popr()
         {
             addLine($"popr");
-            m_StackSize -= 24;
+            m_StackSize -= 20;
         }
 
         void declareVariabel(string name, TypeData type, string term = "", string register = "")
@@ -623,7 +1033,11 @@ namespace Compiler
                 addLine($".res {type.m_TypeSize}", section: AsmSection.bss);
                 if (term == "")
                 {
-                    if (term != "A")
+                    if (register == "A")
+                    {
+                        m_registerA = term;
+                    }
+                    else
                     {
                         addLine($"mov\t{register},\t{term}");
                     }
@@ -633,15 +1047,9 @@ namespace Compiler
             }
             else if (m_Scopes.Count == 1)
             {
-                m_RegisterDS = 0xB;
-                if (m_registerB != 0)
-                {
-                    m_registerB = 0;
-                }
-
                 addLine($"; _{name} is at DS:{m_registerB}", section: AsmSection.text);
-                m_var.Add(new Var(name, type, m_RegisterDS, m_registerB));
-                m_registerB += type.m_TypeSize;
+                m_var.Add(new Var(name, type, 0, m_registerB));
+                m_registerB++;
                 //addLine($".res {type.m_TypeSize}", section: AsmSection.bss);
                 /*
                 if (term != "A")
@@ -666,7 +1074,14 @@ namespace Compiler
 
                 m_var.Add(new Var(name, type, m_StackSize));
 
-                addLine($"mov\t{register},\t{term}");
+                if (register == "A")
+                {
+                    m_registerA = term;
+                }
+                else
+                {
+                    addLine($"mov\t{register},\t{term}");
+                }
 
                 if (register == "A")
                 {
@@ -676,8 +1091,15 @@ namespace Compiler
                 else if (register == "HL")
                 {
                     //addLine($"mov\tHL,\t{term}");
-                    push16("H");
-                    push16("L");
+                    if (m_CPUType < CPUType.BC16)
+                    {
+                        push16("H");
+                        push16("L");
+                    }
+                    else
+                    {
+                        push32("HL");
+                    }
                 }
             }
         }
@@ -696,15 +1118,18 @@ namespace Compiler
 
             line = line.TrimEnd();
 
+
             switch (section)
             {
                 case AsmSection.bss:
                     m_OutputBss.Add("".PadLeft(taps, '\t') + line);
                     break;
-                case AsmSection.rdata:
+                case AsmSection.rodata:
+                    m_OutputRodata.Add("".PadLeft(taps, '\t') + line);
                     //m_output_rdata.Add(line);
                     break;
                 case AsmSection.data:
+                    m_OutputData.Add("".PadLeft(taps, '\t') + line);
                     //m_output_data.Add(line.Replace(":|:", $":{Environment.NewLine}\t"));
                     break;
                 case AsmSection.text:
@@ -718,7 +1143,7 @@ namespace Compiler
     enum AsmSection
     {
         bss,
-        rdata,
+        rodata,
         data,
         text,
         loacl,
@@ -843,6 +1268,71 @@ public struct Address
 
         return "";
     }
+    public string GetAddressRaw(Parser parser)
+    {
+        if (m_UseStack == true)
+        {
+            if (m_IsArg)
+            {
+                int address = m_StackLoc;
+                if (address == 0)
+                {
+                    if (m_CPUType < CPUType.BC32)
+                    {
+                        return $"[BP]";
+                    }
+                    else
+                    {
+                        return $"[BPX]";
+                    }
+                }
+                else
+                {
+                    if (m_CPUType < CPUType.BC32)
+                    {
+                        return $"[BP - {address}]";
+                    }
+                    else
+                    {
+                        return $"[BPX- {address}]";
+                    }
+                }
+            }
+            else
+            {
+                int address = parser.m_StackSize - m_StackLoc;
+                if (address == 0)
+                {
+                    if (m_CPUType < CPUType.BC32)
+                    {
+                        return $"[SP]";
+                    }
+                    else
+                    {
+                        return $"[SPX]";
+                    }
+                }
+                else
+                {
+                    if (m_CPUType < CPUType.BC32)
+                    {
+                        return $"[SP - {address}]";
+                    }
+                    else
+                    {
+                        return $"[SPX - {address}]";
+                    }
+                }
+            }
+        }
+        else if (m_UseDSB)
+        {
+            return $"far @__DATASTRAT__ + {m_B}";
+        }
+
+
+        return "";
+    }
 }
 public struct Function
 {
@@ -855,11 +1345,3 @@ public struct Argument
     public string m_Name;
     public TypeData m_Type;
 }
-enum Section
-    {
-        bss,
-        rdata,
-        data,
-        text,
-        loacl,
-    }

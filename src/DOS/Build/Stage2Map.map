@@ -1,0 +1,28 @@
+Sections:
+Start	Size		Name                     File
+
+b0000	50000		TEXT                     
+100000	50000		DOS                      
+f50000	10000		Stack                    
+f60000	50000		BSS                      
+f60000	50000		DATA                     
+
+Name                                         Address	Section             File
+
+__CODESTART                                  000b0000	TEXT                %O
+__DOSSTART                                   00100000	DOS                 
+__DOSEND                                     00150000	DOS                 
+__STACKSTART                                 00f50000	Stack               
+__STACKEND                                   00f60000	Stack               
+__BSSSTART                                   00f60000	BSS                 
+__BSSEND                                     00fb0000	BSS                 
+__DATASTART                                  00f60000	DATA                %O
+__DATAEND                                    00fb0000	DATA                %O
+L0000000                                     000b0014	TEXT                \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+L0000001                                     000b0014	TEXT                \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_cstart                                      000b0014	TEXT                \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+L0000500                                     000b0020	TEXT                \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+Exit_cstart                                  000b002f	TEXT                \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+L0002000                                     000b0033	TEXT                \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+__DATASTRAT__                                00f60000	DATA                \CPU\src\DOS\build\Bootloader\stage2\CCL\main.acl
+Start                                        000b0000	TEXT                \CPU\src\DOS\src\Bootloader\stage2\stage2.acl
