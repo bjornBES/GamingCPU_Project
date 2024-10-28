@@ -161,6 +161,7 @@ namespace BCG16CPUEmulator
         BRK = 0xF050,
         ENTER = 0xF060,
         LEAVE = 0xF070,
+        CPUID = 0xF080,
         HALT = 0xFFF0,
     }
     public class InstructionArguments
@@ -322,6 +323,7 @@ namespace BCG16CPUEmulator
             m_Instructions.Add(Instruction.BRK,                 new InstructionInfo(0));
             m_Instructions.Add(Instruction.ENTER,               new InstructionInfo(0));
             m_Instructions.Add(Instruction.LEAVE,               new InstructionInfo(0));
+            m_Instructions.Add(Instruction.CPUID,               new InstructionInfo(1));
             m_Instructions.Add(Instruction.HALT,                new InstructionInfo(0));
         }
 

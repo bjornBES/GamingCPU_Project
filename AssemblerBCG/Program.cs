@@ -39,7 +39,8 @@ public class Program : ArgumentFunctions
         {"-bssname",    SetBSSSegmentName },
         {"-bn",         SetBSSSegmentName },
         
-        // {"-d", SetDebugMode },
+        {"-d", SetDebugMode },
+        {"-debug", SetDebugMode },
         // {"-p", SetProjectPath },
         
         {"-df", SetErrorFile },

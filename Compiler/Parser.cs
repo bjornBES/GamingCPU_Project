@@ -17,81 +17,19 @@ namespace Compiler
 {
     public class Parser
     {
+        public int m_StackSize;
+        public Stack<int> m_Scopes = new Stack<int>();
+
         Token[] m_tokens;
         int m_index = 0;
-        public Stack<int> m_Scopes = new Stack<int>();
         List<Var> m_var = new List<Var>();
         List<Function> m_functions = new List<Function>();
-        public int m_StackSize;
         List<string> m_lineNumber = new List<string>();
         Token m_lastToken;
-        private int _B;
         List<string> m_lineNumbers = new List<string>();
         int m_labelCount;
-        int m_registerB
-        {
-            get { return _B; }
-            set
-            {
-                GetSetRegiserValue(ref _B, value, "B");
-            }
-        }
-        private string _A;
-        string m_registerA
-        {
-            get { return _A; }
-            set
-            {
-                GetSetRegiserValue(ref _A, value, "A");
-            }
-        }
+        int m_globalVarIndex = 0;
 
-        void GetSetRegiserValue(ref int register, int value, string registerName)
-        {
-            if (m_Scopes.Count > 1)
-            {
-                if (register == value)
-                {
-                    return;
-                }
-                else if (register == value - 1)
-                {
-                    addLine($"inc\t{registerName}");
-                }
-                else if (register == value + 1)
-                {
-                    addLine($"dec\t{registerName}");
-                }
-                else if (value == 0)
-                {
-                    addLine($"sez\t{registerName}");
-                }
-                else
-                {
-                    addLine($"mov\t{registerName},\t0x{Convert.ToString(value, 16).PadLeft(4, '0')}");
-                }
-            }
-            register = value;
-        }
-        void GetSetRegiserValue(ref string register, string value, string registerName)
-        {
-            if (m_Scopes.Count > 1)
-            {
-                if (register == value)
-                {
-                    return;
-                }
-                else if (value == "0")
-                {
-                    addLine($"sez\t{registerName}");
-                }
-                else
-                {
-                    addLine($"mov\t{registerName},\t{value}");
-                }
-            }
-            register = value;
-        }
 
         Section m_section;
 
@@ -115,56 +53,28 @@ namespace Compiler
 
                 uint data = Convert.ToUInt32(term);
 
-                if (data <= 0xFFFF)
-                {
-                    if (type != null)
-                    {
-                        switch ((Size)type.m_TypeSize)
-                        {
-                            case Size._byte:
-                            case Size._short:
-                                register = "A";
-                                return term;
-                            case Size._tbyte:
-                            case Size._int:
-                                register = "HL";
-                                return term;
-                            default:
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        register = "A";
-                        return term;
-                    }
-                }
-                else if (data <= 0xFFFFFFFF)
-                {
-                    register = "HL";
-                    return term;
-                }
+                register = "AX";
+                return $"0x{Convert.ToString(data, 16)}";
             }
             else if (peek().Value.m_Type == TokenType.ident)
             {
                 string name = consume().m_Value;
                 if (isVariabel(name, out Var var))
                 {
-                    if (var.m_Address.m_UseDSB)
+                    if (var.m_Address.m_isGlobal)
                     {
-                        m_registerB = var.m_Address.m_B;
+                        register = "R1L";
+                        return $"{var.m_Address.GetAddress(this)}";
+                        //m_registerB = var.m_Address.m_B;
                     }
                     string address = $"{var.m_Address.GetAddress(this)}";
                     switch ((Size)var.m_TypeData.m_TypeSize)
                     {
                         case Size._byte:
-                            register = "AL";
-                            return $"{address}";
                         case Size._short:
-                            register = "A";
-                            return $"{address}";
+                        case Size._tbyte:
                         case Size._int:
-                            register = "HL";
+                            register = "AX";
                             return $"{address}";
                         default:
                             break;
@@ -172,8 +82,26 @@ namespace Compiler
                 }
                 else if (m_strings.ContainsKey(name))
                 {
+                    int offset = 0;
+
+                    if (try_consume(TokenType.open_square))
+                    {
+                        string strOffset = parseTerm(out _);
+                        offset = Convert.ToInt32(strOffset, 16);
+                        try_consume_error(TokenType.close_square);
+                    }
+
+                    string result = $"far @{name}";
+                    if (offset != 0)
+                    {
+                        result += $" + 0x{Convert.ToString(offset, 16)}";
+                    }
                     register = "HL";
-                    return name;
+                    return result;
+                }
+                else
+                {
+
                 }
             }
             else if (peek().Value.m_Type == TokenType.at)
@@ -185,29 +113,13 @@ namespace Compiler
             else if (peek().Value.m_Type == TokenType.ampersand)
             {
                 try_consume_error(TokenType.ampersand);
-                if (peek().Value.m_Type == TokenType.ident)
-                {
-                    string name = consume().m_Value;
-                    if (isVariabel(name, out Var var))
-                    {
-                        string address = $"{var.m_Address.GetAddressRaw(this)}";
-                        if (m_CPUType < CPUType.BC16)
-                        {
-                            register = "HL";
-                            return address;
-                        }
-                        else
-                        {
-                            register = "R20";
-                            return address;
-                        }
-                    }
-                    else if (m_strings.ContainsKey(name))
-                    {
-                        register = "HL";
-                        return name;
-                    }
-                }
+
+                return parseTerm(out register, type);
+            }
+            else if (peek().Value.m_Type == TokenType.star)
+            {
+                try_consume_error(TokenType.star);
+                return parseTerm(out register, type);
             }
 
             return null;
@@ -226,16 +138,8 @@ namespace Compiler
                 if (isVariabel(name, out Var var))
                 {
                     string address = $"{var.m_Address.GetAddressRaw(this)}";
-                    if (m_CPUType < CPUType.BC16)
-                    {
-                        register = "HL";
-                        return address;
-                    }
-                    else
-                    {
-                        register = "R20";
-                        return address;
-                    }
+                    register = "HL";
+                    return address;
                 }
                 else if (m_strings.ContainsKey(name))
                 {
@@ -305,6 +209,7 @@ namespace Compiler
                     result.m_IsSigned = ISSIGNED;
                     consume();
                     break;
+                case TokenType._shortPointer:
                 case TokenType.uint16:
                     result.m_TypeSize = WORDSIZE;
                     result.m_IsSigned = ISUNSIGNED;
@@ -335,11 +240,6 @@ namespace Compiler
                     result.m_IsSigned = ISUNSIGNED;
                     consume();
                     break;
-            }
-
-            if (result.m_IsPointer)
-            {
-                try_consume_error(TokenType.star);
             }
 
             return result;
@@ -445,11 +345,10 @@ namespace Compiler
             });
 
             begin_scope();
+
             if (name == "main")
             {
-                push16("DS");
-                addLine("mov\tDS,\t__DATASTRAT__");
-                _B = 0;
+                addLine("mov\tR1H,\t0x0003");
             }
 
             while (peek().HasValue &&
@@ -465,10 +364,6 @@ namespace Compiler
                 addLine($"mov\tR1,\t0");
             }
             addLine($"Exit_{name}:", 0);
-            if (name == "main")
-            {
-                pop16("DS");
-            }
             popr();
             end_scope();
             addLine($"leave");
@@ -487,6 +382,23 @@ namespace Compiler
             if (try_consume(TokenType.eq))
             {
                 string term = parseTerm(out string register, type);
+
+                if (type.m_IsPointer)
+                {
+                    term = term.Replace("far ", "");
+                    string pointerSize = "short";
+
+                    switch (type.m_PointerSize)
+                    {
+                        case NEARPOINTERSIZE:   pointerSize = "near"; break; 
+                        case SHORTPOINTERSIZE:  pointerSize = "short"; break; 
+                        case LONGPOINTERSIZE:   pointerSize = "long"; break; 
+                        case FARPOINTERSIZE:    pointerSize = "far"; break; 
+                    }
+
+                    term = pointerSize + " " + term;
+                }
+
                 declareVariabel(name, type, term, register);
             }
             else
@@ -500,9 +412,9 @@ namespace Compiler
             try_consume_error(TokenType._return);
             string term = parseTerm(out string register);
 
-            if (register == "A")
+            if (register == "AX")
             {
-                m_registerA = term;
+                addLine($"mov\tAX,\t{term}");
             }
             else
             {
@@ -523,36 +435,22 @@ namespace Compiler
             if (peek().Value.m_Type == TokenType.ident)
             {
                 string address = parseIdent(out register);
-                if (register == "A")
-                {
-                    m_registerA = address;
-                }
-                else
-                {
-                    addLine($"mov\t{register},\t{address}");
-                }
+                addLine($"mov\tHL,\t{address}");
                 addressRegister = register;
             }
             else if (peek().Value.m_Type == TokenType.int_lit)
             {
                 string address = parseTerm(out register);
-                if (register == "A")
-                {
-                    m_registerA = address; 
-                }
-                else
-                {
-                    addLine($"mov\t{register},\t{address}");
-                }
+                addLine($"mov\tHL,\t{address}");
                 addressRegister = register;
             }
 
             try_consume_error(TokenType.eq);
             string data = parseTerm(out register);
 
-            if (register == "A")
+            if (register == "AX")
             {
-                m_registerA = data;
+                addLine($"mov\tAX,\t{data}");
             }
             else
             {
@@ -571,18 +469,25 @@ namespace Compiler
             {
                 try_consume_error(TokenType.eq);
                 string term = parseTerm(out string register, var.m_TypeData);
+                string address;
 
-                if (var.m_Address.m_UseDSB)
+                if (var.m_Address.m_isGlobal)
                 {
-                    m_registerB = var.m_Address.m_B;
+                    addLine($"mov\tR1L,\t{var.m_Address.GetAddress(this)}");
+                    //m_registerB = var.m_Address.m_B;
+                    address = "[R1L]";
+                }
+                else
+                {
+                    address = var.m_Address.GetAddress(this);
                 }
 
                 if (register != term)
                 {
 
-                    if (register == "A")
+                    if (register == "AX")
                     {
-                        m_registerA = term;
+                        addLine($"mov\tAX,\t{term}");
                     }
                     else
                     {
@@ -593,7 +498,7 @@ namespace Compiler
                 {
                 }
 
-                addLine($"mov\t{var.m_Address.GetAddress(this)},\t{register}");
+                addLine($"mov\t{address},\t{register}");
                 addLine($"; _{name} = {term}");
 
                 try_consume_error(TokenType.period);
@@ -605,9 +510,9 @@ namespace Compiler
             string register = try_consume_error(TokenType.ident).m_Value;
             try_consume_error(TokenType.eq);
             string term = parseTerm(out string dataRegister);
-            if (register == "A")
+            if (register == "AX")
             {
-                m_registerA = term;
+                addLine($"mov\tAX,\t{term}");
             }
             else
             {
@@ -634,19 +539,12 @@ namespace Compiler
 
             string term = parseTerm(out string register);
 
-            push32($"{register}");
-            push16("A");
-            if (register == "A")
-            {
-                m_registerA = term;
-            }
-            else
-            {
-                addLine($"mov\t{register},\t{term}");
-            }
+            push32($"HL");
+            push32($"AX");
+            addLine($"mov\tHL,\t{term}");
             addLine($"mov\tAH,\t0x02");
             addLine($"int\t0x10");
-            pop16("A");
+            pop32("AX");
             pop32($"{register}");
 
 
@@ -668,18 +566,18 @@ namespace Compiler
             {
                 try_consume_error(TokenType.eq);
                 string term2 = parseTerm(out string RegisterTerm2);
-                if (RegisterTerm1 == "A")
+                if (RegisterTerm1 == "AX")
                 {
-                    m_registerA = term1;
+                    addLine($"mov\tAX,\t{term1}");
                 }
                 else
                 {
                     addLine($"mov\t{RegisterTerm1},\t{term1}");
                 }
                 addLine($"mov\tR19,\t{RegisterTerm1}");
-                if (RegisterTerm2 == "A")
+                if (RegisterTerm2 == "AX")
                 {
-                    m_registerA = term2;
+                    addLine($"mov\tAX,\t{term2}");
                 }
                 else
                 {
@@ -692,9 +590,9 @@ namespace Compiler
             }
             else
             {
-                if (RegisterTerm1 == "A")
+                if (RegisterTerm1 == "AX")
                 {
-                    m_registerA = term1;
+                    addLine($"mov\tAX,\t{term1}");
                 }
                 else
                 {
@@ -831,6 +729,10 @@ namespace Compiler
                     {
                         parseVariabel(type);
                         return;
+                    }
+                    else
+                    {
+                        Error_expected(peek(-1).Value, m_lineNumbers.ToArray(), "name");
                     }
                 }
                 else if (peek().Value.m_Type == TokenType.ident && peek(1).HasValue && peek(1).Value.m_Type == TokenType.eq)
@@ -1033,9 +935,9 @@ namespace Compiler
                 addLine($".res {type.m_TypeSize}", section: AsmSection.bss);
                 if (term == "")
                 {
-                    if (register == "A")
+                    if (register == "AX")
                     {
-                        m_registerA = term;
+                        addLine($"mov\tAX,\t{term}");
                     }
                     else
                     {
@@ -1047,59 +949,43 @@ namespace Compiler
             }
             else if (m_Scopes.Count == 1)
             {
-                addLine($"; _{name} is at DS:{m_registerB}", section: AsmSection.text);
-                m_var.Add(new Var(name, type, 0, m_registerB));
-                m_registerB++;
+                addLine($"; _{name} is at 0x0003:{Convert.ToString(m_globalVarIndex)}", section: AsmSection.text);
+                m_var.Add(new Var(name, type, m_globalVarIndex, 0))
+                ;
+                m_globalVarIndex += 4;
                 //addLine($".res {type.m_TypeSize}", section: AsmSection.bss);
                 /*
                 if (term != "A")
                 {
                     addLine($"mov\tA,\t{term}");
-                }
+                }   
                 addLine($"mov\t[_{name}],\tA");
                  */
             }
             else
             {
-                /*
-                if (term != "A")
-                {
-                    addLine($"mov\tA,\t{term}");
-                }
-                else if (term != "HL")
-                {
-                    addLine($"mov\tHL,\t{term}");
-                }
-                 */
-
                 m_var.Add(new Var(name, type, m_StackSize));
 
-                if (register == "A")
+                if (register == "AX")
                 {
-                    m_registerA = term;
+                    addLine($"mov\tAX,\t{term}");
                 }
                 else
                 {
                     addLine($"mov\t{register},\t{term}");
                 }
 
-                if (register == "A")
+                if (register == "AX")
                 {
                     //addLine($"mov\tA,\t{term}");
-                    push16("A");
+                    push32("AX");
                 }
                 else if (register == "HL")
                 {
-                    //addLine($"mov\tHL,\t{term}");
-                    if (m_CPUType < CPUType.BC16)
-                    {
-                        push16("H");
-                        push16("L");
-                    }
-                    else
-                    {
-                        push32("HL");
-                    }
+                    push32("HL");
+                }
+                else
+                {
                 }
             }
         }
@@ -1160,6 +1046,7 @@ namespace Compiler
         _short = 2,
         _tbyte = 3,
         _int = 4,
+        pointer,
     }
 }
 public struct Var
@@ -1184,13 +1071,12 @@ public struct Var
         m_Address.m_StackLoc = stack;
         m_Address.m_IsArg = Isarg;
     }
-    public Var(string name, TypeData typeData, int DS, int B)
+    public Var(string name, TypeData typeData, int address, int a)
     {
         m_Name = name;
         m_TypeData = typeData;
-        m_Address.m_UseDSB = true;
-        m_Address.m_DS = DS;
-        m_Address.m_B = B;
+        m_Address.m_isGlobal = true;
+        m_Address.m_address = address;
     }
 }
 public struct Address
@@ -1199,9 +1085,8 @@ public struct Address
     public bool m_IsArg;
     public int m_StackLoc;
 
-    public bool m_UseDSB;
-    public int m_DS;
-    public int m_B;
+    public bool m_isGlobal;
+    public int m_address;
 
     public string GetAddress(Parser parser)
     {
@@ -1260,9 +1145,10 @@ public struct Address
                 }
             }
         }
-        else if (m_UseDSB)
+        else if (m_isGlobal)
         {
-            return "[DS:B]";
+            string hex = Convert.ToString(m_address, 16).PadLeft(4, '0');
+            return $"0x{hex}";
         }
 
 
@@ -1325,9 +1211,9 @@ public struct Address
                 }
             }
         }
-        else if (m_UseDSB)
+        else if (m_isGlobal)
         {
-            return $"far @__DATASTRAT__ + {m_B}";
+            return $"far @__DATASTRAT__ + {m_address}";
         }
 
 

@@ -52,12 +52,15 @@ namespace BCG16CPUEmulator
         const byte SetMode = 0x11;
 
         byte m_videoMode;
+        Thread VideoThead;
 
         public void Tick()
         {
-            Thread VideoThead = new Thread(new ThreadStart(render));
-            VideoThead.Start();
-
+            if (VideoThead == null || VideoThead.ThreadState != ThreadState.Running)
+            {
+                VideoThead = new Thread(new ThreadStart(render));
+                VideoThead.Start();
+            }
             switch (m_commandRegister)
             {
                 case CommandClearScreen:
@@ -94,7 +97,7 @@ namespace BCG16CPUEmulator
         float DeltaTime;
         void render()
         {
-            byte[] buffer = BUS.ReadBytes(0x0001_0000, 0x002_0000);
+            byte[] buffer = BUS.ReadVRAM(0x002_0000);
 
             DateTime OldTime = DateTime.UtcNow;
 
@@ -239,7 +242,7 @@ namespace BCG16CPUEmulator
             {
                 case 0x8001:
                     _outputIndex = 0;
-                    break;
+                    return;
                 default:
                     break;
             }

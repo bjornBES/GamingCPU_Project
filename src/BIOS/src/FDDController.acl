@@ -30,11 +30,9 @@ $CommandWrite       = 0x02
 .local Buffer
 
 ; Arguments:
-; uint16 Drive             [BP - 18]
 ;
 ;
-;
-; void InitializeDrive(uint16 drive);
+; void InitializeDrive();
 InitializeDrive:
     enter
 
@@ -52,7 +50,7 @@ InitializeDrive:
     mov     [Format.BytesPerSector],    A                   ; BytesPerSector = 0x200
 
     leave
-    ret     2
+    retz
 
 ; Arguments:
 ; uint16 drive              [BP - 16]
@@ -63,7 +61,7 @@ InitializeDrive:
 ;
 ; Read data from a specified sector of a floppy disk
 ;
-; void Read_Data(uint16 data_length, uint16 sector, uint16_t cylinder, uint16 head, uint16 drive);
+; void Read_Data(uint16 data_length, uint16 sector, uint16_t track, uint16 head, uint16 drive);
 
 Read_Data:
     enter
@@ -73,8 +71,9 @@ Read_Data:
     outw    %DATA,          AL                  ; write the command to the FDC command register
 
     movw    A,              [BP - 16]           ; drive number
-    mov     AH,             [BP - 14]           ; getting the Head
-    outw    %DATA,          A                   ; Outputing the head and drive
+    outw    %DATA,          AL                  ; Outputing the drive
+    movw    A,              [BP - 14]           ; getting the Head
+    outw    %DATA,          AL                  ; Outputing the head
         
     movw    A,              [BP - 12]           ; track number
     outw    %DATA,          A                   ; writing the track number

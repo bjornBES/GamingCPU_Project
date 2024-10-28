@@ -2,54 +2,66 @@
 .newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
 .section TEXT
 
-$BootableDriveNumber = 0x55AA
+$VideoCard              = 0x02
+$BootableDriveNumber = 0xAA55
 
 .SETCPU "BC16"
 
 .org 0x1200
 _BIOSStart:
-
     sez     SS                                  ; SS = 0
     mov     SP,             @__STACK            ; SP = @Stack
-
-    mov     HL,             @StartMSG
-    mov     C,              @StartMSGEnd - @StartMSG
-    sez     B
-    call    [PrintStr]
-
-OtherBIOS:
-    movw    [ScreenHeight], 25
-    movw    [ScreenWidth],  80
 
     sez     A
     mov     AL,             CR0
     or      A,              0x01
     mov     CR0,            AL
 
+    mov     HL,             @StartMSG
+    mov     C,              @StartMSGLength
+    sez     B
+    call    [PrintStr]
+
+OtherBIOS:
+    outw    %VideoCard,     0x8001              ; _outputIndex = 0
+    outw    %VideoCard,     0x0010              ; video cammand Get res
+    inpw    %VideoCard,     A                   ; getting screen resolution height
+    mov     [ScreenHeight], A                   ; 
+    inpw    %VideoCard,     A                   ; getting screen resolution width
+    mov     [ScreenWidth],  A                   ;
+    
+    call    [InitBuffer]
+
+    movd    [_INT2h],       far @BreakPoint
+    movd    [_InvalidIns],  far @Error_Invalid_Instruction
     movd    [_IRQ0],        far @KeyBoardIRQ
     ; movd    [_IRQ15],       far @FloppyInterruptHandler
     movd    [_INT10h],      far @BIOS_Interrupt10h
     movd    [_INT13h],      far @BIOS_Interrupt13h
+    
+    sei
 
-    call    [InitBuffer]
-
+    int     0x02
 
     ; this function will use the DL register as the disk index
     sez     D
-    sei
 
 FindBootDiskLoop:
     call    [InitializeDrive]
 
-    mov     HL,             far @__BOOTLOADER
-    push    H                                   ; Far uint8_t* HIGH data
-    push    L                                   ; Far uint8_t* LOW data
-    push    D                                   ; uint16_t drive
-    sez     A                                   ; A = 0
-    push    A                                   ; uint16_t head = 0
-    push    A                                   ; uint16_t track = 0
+    cmp     [IsF12],        0x01                ; IsF12 == 1
+    je      [ShowBIOS]                          ; yes
+
+SetArguments:
     mov     A,              1                   ; A = 1
     push    A                                   ; uint16_t sector = 1
+    sez     A                                   ; A = 0
+    push    A                                   ; uint16_t track = 0
+    push    A                                   ; uint16_t head = 0
+    mov     HL,             far @__BOOTLOADER
+    push    D                                   ; uint16_t drive
+    push    L                                   ; Far uint8_t* LOW data
+    push    H                                   ; Far uint8_t* HIGH data
     call    [Read_Sector]
 
     mov     A,              R1
@@ -62,17 +74,18 @@ FindBootDiskLoop:
     inc     DL
     cmp     DL,             4   
     jne     [FindBootDiskLoop]
-    mov     DS,             high @Error_Invalid_BootDisk_Str
-    mov     B,              low @Error_Invalid_BootDisk_Str
+    mov     HL,             @Error_Invalid_BootDisk_Str
+    mov     C,              @Error_Invalid_BootDisk_StrLength
     jmp     [Error_Invalid_BootDisk]
 Exit_FindDiskLoop:
-    cli
     mov     [DriveNumber],  DL
+
+    int     0x02
 
 EndOfBIOS:
 
-    mov     HL,             @INFOMSG_FoundBootableDisk
-    mov     C,              @INFOMSG_FoundBootableDiskEnd - @INFOMSG_FoundBootableDisk
+    mov     HL,             far @INFOMSG_FoundBootableDisk
+    mov     C,              @INFOMSG_FoundBootableDiskLength
     sez     B
     call    [PrintStr]
 
@@ -95,6 +108,35 @@ EndOfBIOS:
 
     ; not comming back
 
+ShowBIOS:
+    
+BreakPoint:
+    pushr
+    sez     B
+    mov     [Cursorx],      B
+    mov     [Cursory],      B
+    mov     H,              HIGH @BreakPointMSG
+    mov     L,              LOW @BreakPointMSG
+    mov     C,              @BreakPointMSGLength
+    call    [PrintStr]
+
+    nop
+
+BreakpointLoop:
+    call    [BufferSize]                                            ; get keyboard buffer size
+    cmp     A,              0                                       ; A <= 0
+    jle     [BreakpointLoop]                                        ; yes
+    call    [ReadBuffer]                                            ; nope read the key
+    cmp     AL,             'C'                                     ; AL == C
+    jne     [BreakpointLoop]                                        ; no
+    push    BL
+    mov     AL,             'D'
+    push    AL
+    call    [COut]
+    popr                                                            ; yes
+    reti                                                            ; return
+
+
 .includeil "./BIOS_errors.acl"
 .includeil "./IOFunctions.acl"
 .includeil "./Keyboard.acl"
@@ -110,6 +152,8 @@ EndOfBIOS:
 DriveNumber:
 .resb
 ReceivedIRQ:
+.resb
+IsF12:
 .resb
 Cursorx:
 .resw
@@ -127,32 +171,82 @@ KeyBoardChar:
 .section DATA
 
 .section RODATA
+BreakPointMSG:
+.db "Breakpoint\n"
+.db "press C", 0
+BreakPointMSGEnd:
+BreakPointMSGLength:
+.dw @BreakPointMSGEnd - @BreakPointMSG
+
 StartMSG:
-.db "BIOS Start",0
+.db "BIOS"
 StartMSGEnd:
+StartMSGLength:
+.dw @StartMSGEnd - @StartMSG - 1
 
 Error_Invalid_BootDisk_Str:
 .db "Can't find a bootable disk", 0
+Error_Invalid_BootDisk_Strend:
+Error_Invalid_BootDisk_StrLength:
+.dw @Error_Invalid_BootDisk_Strend - @Error_Invalid_BootDisk_Str
 
 INFOMSG_FoundBootableDisk:
 .db 0xA, "Found drive: "
 INFOMSG_FoundBootableDiskEnd:
+INFOMSG_FoundBootableDiskLength:
+.dw @INFOMSG_FoundBootableDiskEnd - @INFOMSG_FoundBootableDisk
 
 .newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
 .section TEXT
+.local JMPErrorLoop
 
-; short char* str           DS:B
-Disk_Read_error:
+; short char* str           HL
+; int length                C
 Error_Invalid_BootDisk:
     sez     B
-    push    BL
-    push    A
+    call    [PrintStr]
+    jmp     [JMPErrorLoop]
+
+Error_Invalid_Instruction:
+    push    HL
+    call    [PrintError]
+    mov     HL,                 @Error_Invalid_InstructionMSG
+    mov     C,                  @Error_Invalid_InstructionLength
     call    [PrintStr]
 
+    pop     HL
+    CBTA    HL,                 [CharBuffer]
+    mov     HL,                 @CharBuffer
+    call    [PrintStr]
     
+JMPErrorLoop:
+    cli
+    jmp     [JMPErrorLoop]
 
-.db "Error:", 0
 
+.local PrintError
+PrintError:
+    sez     B
+    mov     HL,                 @ErrorMSG
+    mov     C,                  @ErrorMSGLength
+    call    [PrintStr]
+    retz
+
+ErrorMSG:
+.db "Error:"
+ErrorMSGend:
+ErrorMSGLength:
+.dw @ErrorMSGend - @ErrorMSG
+
+Error_Invalid_InstructionMSG:
+.db "Invalid instruction at "
+Error_Invalid_InstructionEnd:
+Error_Invalid_InstructionLength:
+.dw @Error_Invalid_InstructionEnd - @Error_Invalid_InstructionMSG
+
+.section BSS
+CharBuffer:
+.res 8                              ; res 8 bytes
 .newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
 .section TEXT
 $STR                = 0x100
@@ -177,6 +271,8 @@ PrintStr:
     mov     AL,             [HL]
     cmp     AL,             0
     je      [ExitPrintStr]
+    push    BL
+    push    AL
     call    [COut]
     inc     HL
     dec     C
@@ -198,12 +294,12 @@ ReadCharKey:
     retz
 
 ; Arguments:
-; uint8_t* HIGH address     [BP - 20]   2 bytes
-; uint8_t* LOW address      [BP - 18]   2 bytes
-; uint16_t drive            [BP - 14]   2 byte
-; uint16_t Head             [BP - 12]   2 byte
-; uint16_t track            [BP - 10]   2 bytes
-; uint16_t sector           [BP - 8]    2 byte
+; uint16_t sector           [BP - 18]   2 byte
+; uint16_t track            [BP - 16]   2 bytes
+; uint16_t Head             [BP - 14]   2 byte
+; uint16_t drive            [BP - 12]   2 byte
+; uint8_t* LOW address      [BP - 10]   2 bytes
+; uint8_t* HIGH address     [BP - 8]    2 bytes
 ;
 ;
 ;
@@ -213,16 +309,16 @@ Read_Sector:
     enter
     pushr
 
-    movw    A,              [BP - 14]       ; uint16_t drive
+    movw    A,              [BP - 12]       ; uint16_t drive
     push    A
 
-    movw    A,              [BP - 12]       ; uint16_t head
+    movw    A,              [BP - 14]       ; uint16_t head
     push    A
     
-    movw    A,              [BP - 10]       ; uint16_t Track
+    movw    A,              [BP - 16]       ; uint16_t Track
     push    A
     
-    movw    A,              [BP - 8]        ; uint16_t sector
+    movw    A,              [BP - 18]       ; uint16_t sector
     push    A
     
     mov     A,              0x02            ; data length
@@ -230,14 +326,11 @@ Read_Sector:
 
     call    [Read_Data]
 
-    mov     ES,             [BP - 6]
-    mov     FS,             [BP - 4]
-    movw    L,              [BP - 18]
-    movw    H,              [BP - 20]
+    movw    L,              [BP - 10]
+    movw    H,              [BP - 8]
 
     outw    %DATA,          H
     outw    %DATA,          L
-    outw    %DATA,          0x0
 
     inb     %DATA,          A
     sez     R1
@@ -419,10 +512,22 @@ BIOS_IRQ_Interrupt:
     reti
 
 KeyBoardIRQ:
-    push    C 
+    push    C
+    push    A 
     inb     0x0,            CL                  ; Getting a char from the Keyboard
     call    [WriteBuffer]                       ; Putting it into the KeyboardBuffer
+    mov     AL,             CR0                 ; A = CR0
+    cmp     A,              0x01                ; are we in boot mode
+    jne     [NotInBoot]                         ; no
+    cmp     C,              0x7b                ; is F12 key
+    jne     rel [NotInBoot]                     ; no
+    mov     A,              0x1                 ; A = 0x1
+    mov     [IsF12],        AL                  ; IsF12 = true
+    call    [ReadBuffer]                        ; take the F12 out
+NotInBoot:
+    pop     A
     pop     C
+    sei
     reti
 
 ;
@@ -444,9 +549,9 @@ BIOS_Interrupt13h:
 ;
 BIOS_Interrupt10h:
     cmp     AH,             0x00
-    je      [printchar]
+    je      rel [printchar]
     cmp     AH,             0x01
-    je      [readkey]
+    je      rel [readkey]
     reti
 
 .local readkey
@@ -511,26 +616,29 @@ COut:
     push    A
     push    HL
 
-    mov     AL,             [BP - 9]
-    mov     AH,             [BP - 8]
-    cmp     AH,             0xA                 ; \n
+    mov     AH,             [BP - 9]
+    mov     AL,             [BP - 8]
+    cmp     AL,             0xA                 ; \n
     je      [NewLine]
+    cmp     AL,             0x0                 ; \0
+    je      [EndOfLoad]
 
     call    [GetCursorAddress]
 
     ; writing to VRAM
     mov     [HL],           A                   ; writing the data
+EndOfLoad:
     mov     word A,         [Cursorx]           ; A = Cursorx
     inc     A                                   ; A += 1
     mov     [Cursorx],      A                   ; Cursorx = A
-    cmp     A,              %ScreenHeight       ; A >= ScreenHeight ?
+    cmp     A,              [ScreenHeight]      ; A >= ScreenHeight ?
     jge     [NewLine]                           ; Yes
     jmp     [ExitCout]
 
 NewLine:
     sez     A
     mov     [Cursorx],      A
-    mov     word A,         [Cursory]
+    movw    A,              [Cursory]
     inc     A
     mov     [Cursory],      A
 
@@ -538,7 +646,7 @@ ExitCout:
     pop     HL
     pop     A
     leave
-    retz
+    ret     2
 
 
 
@@ -550,12 +658,13 @@ ExitCout:
 GetCursorAddress:
     push    C
 
-    movd    HL,             0x010000            ; memory address of VRAM
-    mov     word C,         [Cursorx]           ; loading cursorx into C
-    mul     C,              2                   ; C = cursorx * 2
+    sez     L
+    movd    H,              0x0001              ; memory address of VRAM
+    movw    C,              [Cursorx]           ; loading cursorx into C
+    mul     C,              0x2                 ; C *= 2
     add     HL,             C                   ; loading cursorx into HL
-    mov     word C,         [Cursory]           ; loading cursory into C
-    mul     word C,         [ScreenHeight]
+    movw    C,              [Cursory]           ; loading cursory into C
+    mul     C,              [ScreenWidth]
     add     HL,             C                   ; X and Y is now a coord
 
     pop     C
@@ -593,11 +702,9 @@ $CommandWrite       = 0x02
 .local Buffer
 
 ; Arguments:
-; uint16 Drive             [BP - 18]
 ;
 ;
-;
-; void InitializeDrive(uint16 drive);
+; void InitializeDrive();
 InitializeDrive:
     enter
 
@@ -615,7 +722,7 @@ InitializeDrive:
     mov     [Format.BytesPerSector],    A                   ; BytesPerSector = 0x200
 
     leave
-    ret     2
+    retz
 
 ; Arguments:
 ; uint16 drive              [BP - 16]
@@ -626,7 +733,7 @@ InitializeDrive:
 ;
 ; Read data from a specified sector of a floppy disk
 ;
-; void Read_Data(uint16 data_length, uint16 sector, uint16_t cylinder, uint16 head, uint16 drive);
+; void Read_Data(uint16 data_length, uint16 sector, uint16_t track, uint16 head, uint16 drive);
 
 Read_Data:
     enter
@@ -636,8 +743,9 @@ Read_Data:
     outw    %DATA,          AL                  ; write the command to the FDC command register
 
     movw    A,              [BP - 16]           ; drive number
-    mov     AH,             [BP - 14]           ; getting the Head
-    outw    %DATA,          A                   ; Outputing the head and drive
+    outw    %DATA,          AL                  ; Outputing the drive
+    movw    A,              [BP - 14]           ; getting the Head
+    outw    %DATA,          AL                  ; Outputing the head
         
     movw    A,              [BP - 12]           ; track number
     outw    %DATA,          A                   ; writing the track number

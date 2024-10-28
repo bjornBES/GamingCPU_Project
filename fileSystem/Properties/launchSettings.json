@@ -8,7 +8,7 @@
     "Format Bin file": {
       "commandName": "Project",
       "workingDirectory": "../",
-      "commandLineArgs": "-i [ ./CPU/src/DOS/build/Bootloader/stage2/stage2.bin ./CPU/src/DOS/src/Test.txt ./CPU/src/DOS/build/kernel.bin ./CPU/src/DOS/build/DOS.bin ] -o ./CPU/src/DOS/disk.bin -B ./CPU/src/DOS/build/Bootloader/stage1/Bootloader.bin -S 0x81"
+      "commandLineArgs": "-o ./CPU/src/DOS/disk.bin -O -S 0x81"
     }
   }
 }

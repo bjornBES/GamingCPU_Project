@@ -129,6 +129,32 @@ public class Tokenizer
                     case "endprog":
                         addToken(TokenType.end); addToken(TokenType.program); break;
 
+                    case "shortbyte":
+                        addToken(TokenType._shortPointer);
+                        addToken(TokenType.uint8);
+                        break;
+                    case "shortshort":
+                        addToken(TokenType._shortPointer);
+                        addToken(TokenType.uint16);
+                        break;
+                    case "shortint":
+                        addToken(TokenType._shortPointer);
+                        addToken(TokenType.uint32);
+                        break;
+
+                    case "longbyte":
+                        addToken(TokenType._longPointer);
+                        addToken(TokenType.uint8);
+                        break;
+                    case "longshort":
+                        addToken(TokenType._longPointer);
+                        addToken(TokenType.uint16);
+                        break;
+                    case "longint":
+                        addToken(TokenType._longPointer);
+                        addToken(TokenType.uint32);
+                        break;
+
                     default:
                         addToken(TokenType.ident);
                         break;

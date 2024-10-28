@@ -1,0 +1,30 @@
+Sections:
+Start	Size		Name                     File
+
+b0000	50000		RODATA                   
+b0000	50000		TEXT                     
+f50000	10000		Stack                    
+fb0000	10000		BSS                      
+f60000	50000		DATA                     
+
+Name                                         Address	Section             File
+
+__RODATASTART                                000b0000	RODATA              %O
+__RODATAEND                                  00100000	RODATA              %O
+__STACKSTART                                 00f50000	Stack               
+__STACKEND                                   00f60000	Stack               
+__BSSSTART                                   00fb0000	BSS                 
+__BSSEND                                     00fc0000	BSS                 
+__DATASTART                                  00f60000	DATA                
+__DATAEND                                    00fb0000	DATA                
+Entry                                        000b0000	TEXT                \src\basic\src\basic\basic.acl
+PrintLoop                                    000b0022	TEXT                \src\basic\src\basic\basic.acl
+ExitPrintLoop                                000b003e	TEXT                \src\basic\src\basic\basic.acl
+Message                                      000b0043	TEXT                \src\basic\src\basic\basic.acl
+GetResolution                                000b004f	TEXT                \src\basic\src\basic\display.acl
+PrintC                                       000b0073	TEXT                \src\basic\src\basic\display.acl
+PutC                                         000b00b5	TEXT                \src\basic\src\basic\display.acl
+CursorX                                      000b00d9	TEXT                \src\basic\src\basic\display.acl
+CursorY                                      000b00db	TEXT                \src\basic\src\basic\display.acl
+ScreenHeight                                 000b00dd	TEXT                \src\basic\src\basic\display.acl
+ScreenWidth                                  000b00df	TEXT                \src\basic\src\basic\display.acl

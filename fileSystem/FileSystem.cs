@@ -252,11 +252,10 @@ namespace filesystem
 
         public void BFS01LoadFile(Disk disk)
         {
-            if (m_Disk == null)
+            if (disk == null)
             {
-                FormatDisk(disk);
+                return;
             }
-
             m_Disk = disk;
             m_EntryConut = 0;
             m_DiskBuffer = File.ReadAllBytes(disk.m_DiskPath);
@@ -340,11 +339,12 @@ namespace filesystem
                 offset = WriteToDisk(FileName.PadRight(0x10, '\0'), offset);
             }
             offset = WriteToDisk(page, offset, false);
-            offset = WriteToDisk((byte)sizeInSectors, offset, false);
+            offset = WriteToDisk(sizeInSectors, offset, false);
             offset = WriteToDisk(flag, offset, false);
 
             // original datetime : 02 04 2024, 16 59 59
             offset = WriteToDisk(05, 10, 2024, 17, 20, (byte)(System.DateTime.Now.Second / 2), offset);
+            offset = WriteToDisk((byte)0, offset, false);
             WriteToDisk("".PadRight(EntrySize - (offset - (address)), '\0'), offset);
             EntryConut++;
         }
@@ -440,14 +440,10 @@ namespace filesystem
             result.m_Type = m_DefualtEncoder.GetString(type).TrimEnd('\0');
 
             ReadDisk(ref address, out result.m_StartingPage, false);
-
             ReadDisk(ref address, out result.m_FileSizeInPages, false);
-
             ReadDisk(ref address, out result.m_Flags, false);
-
+            ReadDisk(ref address, out result.m_DateTime);
             ReadDisk(ref address, out result.m_EntryCount, false);
-
-            result.m_DateTime = ReadDisk(ref address);
 
             return result;
         }
@@ -455,8 +451,6 @@ namespace filesystem
         public ushort BFS01findFreeSector(string filename, ushort sizeInSectors = 1)
         {
             int result = -1;
-            if (filename != "fat.disk".PadRight(0xF, '\0'))
-            {
                 byte[] buffer = m_DiskBuffer[0x600..0x800];
                 int doneSize = 0;
                 for (int i = 0; i < buffer.Length; i++)
@@ -492,11 +486,6 @@ namespace filesystem
                     }
                 }
                 Array.Copy(buffer, 0, m_DiskBuffer, 0x600, 0x200);
-            }
-            if (result == -1)
-            {
-                result = 0;
-            }
             return (ushort)(result + 1);
         }
 
@@ -607,7 +596,7 @@ namespace filesystem
             public string m_Type;
             public ushort m_StartingPage;
             public ushort m_FileSizeInPages;
-            public ushort m_Flags;
+            public byte m_Flags;
             public byte m_EntryCount;
             public DateTime m_DateTime;
         }
@@ -620,5 +609,6 @@ namespace filesystem
 
         public byte m_Hour;
         public byte m_Minute;
+        public byte m_Second;
     }
 }

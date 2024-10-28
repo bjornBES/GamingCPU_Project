@@ -14,7 +14,7 @@ namespace BCG16CPUEmulator
         {
             PortIDStart = 0x0;
             PortIDEnd = 0x0;
-            InterruptIndex = 0;                    // IRQ0
+            InterruptIndex = 16;                    // IRQ0
         }
         public int PortIDStart { get; set; }
         public int PortIDEnd { get; set; }
@@ -86,6 +86,7 @@ namespace BCG16CPUEmulator
                 }
 
                 m_keyState = key;
+                BUS.IRQ(this);
 
                 // if key is pressed down
                 if ((m_keyState & 0x0001) == 0x0001)

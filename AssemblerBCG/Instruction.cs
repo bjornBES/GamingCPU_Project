@@ -64,8 +64,9 @@ public enum Instruction : ushort
 
     OUTB =      0x1000,
     OUTW =      0x1004,
+    INP =       0x1010,
     INB =       0x1010,
-    INW =       0x1014,
+    INPW =      0x1014,
     
     SZE =       0x2000,
     SEE =       0x2001,
@@ -168,6 +169,7 @@ public enum Instruction : ushort
     BRK =       0xF050,
     ENTER =     0xF060,
     LEAVE =     0xF070,
+    CPUID =     0xF080,
     HALT =      0xFFF0,
     none,
 }
@@ -314,8 +316,8 @@ public class Instructions
 
             { Instruction.OUTB,         new InstructionInfo(2,Instruction.OUTB, CPUType.BC8)},
             { Instruction.OUTW,         new InstructionInfo(2,Instruction.OUTW, CPUType.BC8)},
-            { Instruction.INB,          new InstructionInfo(2,Instruction.INB, CPUType.BC8)},
-            { Instruction.INW,          new InstructionInfo(2,Instruction.INW, CPUType.BC8)},
+            { Instruction.INP,          new InstructionInfo(2,Instruction.INP, CPUType.BC8)},
+            { Instruction.INPW,          new InstructionInfo(2,Instruction.INPW, CPUType.BC8)},
 
             { Instruction.RETI,         new InstructionInfo(0,Instruction.RETI, CPUType.BC8)},
             { Instruction.NOP,          new InstructionInfo(0,Instruction.NOP, CPUType.BC8)},
@@ -325,6 +327,7 @@ public class Instructions
             { Instruction.BRK,          new InstructionInfo(0,Instruction.BRK, CPUType.BC8)},
             { Instruction.ENTER,        new InstructionInfo(0,Instruction.ENTER, CPUType.BC8)},
             { Instruction.LEAVE,        new InstructionInfo(0,Instruction.LEAVE, CPUType.BC8)},
+            { Instruction.CPUID,        new InstructionInfo(1,Instruction.CPUID, CPUType.BC16)},
             { Instruction.HALT,         new InstructionInfo(0,Instruction.HALT, CPUType.BC8)},
         };
     }

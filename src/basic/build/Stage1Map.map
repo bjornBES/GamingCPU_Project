@@ -1,0 +1,25 @@
+Sections:
+Start	Size		Name                     File
+
+7c00	0200		Bootloader               
+b0000	50000		Stage2                   
+
+Name                                         Address	Section             File
+
+_STAGE2                                      000b0000	Stage2              
+Entry                                        00007c00	Bootloader          \src\basic\src\stage1\Bootloader.acl
+FindStage2File                               00007c4f	Bootloader          \src\basic\src\stage1\Bootloader.acl
+ExitFindStage2                               00007c60	Bootloader          \src\basic\src\stage1\Bootloader.acl
+LoadStage2                                   00007c79	Bootloader          \src\basic\src\stage1\Bootloader.acl
+LoadStage2Loop                               00007c96	Bootloader          \src\basic\src\stage1\Bootloader.acl
+Load                                         00007ca5	Bootloader          \src\basic\src\stage1\Bootloader.acl
+ReadSector                                   00007cc4	Bootloader          \src\basic\src\stage1\Bootloader.acl
+ExitReadSector                               00007ce5	Bootloader          \src\basic\src\stage1\Bootloader.acl
+OFS                                          00007ce9	Bootloader          \src\basic\src\stage1\Bootloader.acl
+OFSLOOP                                      00007cf1	Bootloader          \src\basic\src\stage1\Bootloader.acl
+ExitOFS                                      00007d07	Bootloader          \src\basic\src\stage1\Bootloader.acl
+ErrorMessageReading                          00007d11	Bootloader          \src\basic\src\stage1\Bootloader.acl
+Error                                        00007d26	Bootloader          \src\basic\src\stage1\Bootloader.acl
+PrintLoop                                    00007d2a	Bootloader          \src\basic\src\stage1\Bootloader.acl
+ExitPrintLoop                                00007d3f	Bootloader          \src\basic\src\stage1\Bootloader.acl
+Stage2_Name                                  00007d44	Bootloader          \src\basic\src\stage1\Bootloader.acl

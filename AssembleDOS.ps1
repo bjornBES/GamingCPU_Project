@@ -17,4 +17,4 @@ $compiler = Resolve-Path "./Compiler/build/Compiler.exe"
 & $linker -i $BuildDir/Bootloader/stage2/stage2.o $BuildDir/Bootloader/stage2/main.o -o $BuildDir/Bootloader/stage2/stage2.bin -fbin -ls $SrcDir/Bootloader/stage2/stage2.conf
 
 
-./fileSystem/bin/Debug/netcoreapp3.1/filesystem.exe -i [ $BuildDir/Bootloader/stage2/stage2.bin $SrcDir/Test.txt $BuildDir/DOS/DOS.bin ] -o ./CPU/src/DOS/disk.bin -B $BuildDir/Bootloader/stage1/Bootloader.bin -S 0x81
+./fileSystem/bin/Debug/netcoreapp3.1/filesystem.exe -i [ $BuildDir/Bootloader/stage2/stage2.bin $SrcDir/Test.txt $BuildDir/DOS/DOS.bin ] -o ./src/DOS/disk.bin -B $BuildDir/Bootloader/stage1/Bootloader.bin -S 0x81

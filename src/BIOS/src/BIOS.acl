@@ -1,53 +1,65 @@
 .section TEXT
 
-$BootableDriveNumber = 0x55AA
+$VideoCard              = 0x02
+$BootableDriveNumber = 0xAA55
 
 .SETCPU "BC16"
 
 .org 0x1200
 _BIOSStart:
-
     sez     SS                                  ; SS = 0
     mov     SP,             @__STACK            ; SP = @Stack
-
-    mov     HL,             @StartMSG
-    mov     C,              @StartMSGEnd - @StartMSG
-    sez     B
-    call    [PrintStr]
-
-OtherBIOS:
-    movw    [ScreenHeight], 25
-    movw    [ScreenWidth],  80
 
     sez     A
     mov     AL,             CR0
     or      A,              0x01
     mov     CR0,            AL
 
+    mov     HL,             @StartMSG
+    mov     C,              @StartMSGLength
+    sez     B
+    call    [PrintStr]
+
+OtherBIOS:
+    outw    %VideoCard,     0x8001              ; _outputIndex = 0
+    outw    %VideoCard,     0x0010              ; video cammand Get res
+    inpw    %VideoCard,     A                   ; getting screen resolution height
+    mov     [ScreenHeight], A                   ; 
+    inpw    %VideoCard,     A                   ; getting screen resolution width
+    mov     [ScreenWidth],  A                   ;
+    
+    call    [InitBuffer]
+
+    movd    [_INT2h],       far @BreakPoint
+    movd    [_InvalidIns],  far @Error_Invalid_Instruction
     movd    [_IRQ0],        far @KeyBoardIRQ
     ; movd    [_IRQ15],       far @FloppyInterruptHandler
     movd    [_INT10h],      far @BIOS_Interrupt10h
     movd    [_INT13h],      far @BIOS_Interrupt13h
+    
+    sei
 
-    call    [InitBuffer]
-
+    int     0x02
 
     ; this function will use the DL register as the disk index
     sez     D
-    sei
 
 FindBootDiskLoop:
     call    [InitializeDrive]
 
-    mov     HL,             far @__BOOTLOADER
-    push    H                                   ; Far uint8_t* HIGH data
-    push    L                                   ; Far uint8_t* LOW data
-    push    D                                   ; uint16_t drive
-    sez     A                                   ; A = 0
-    push    A                                   ; uint16_t head = 0
-    push    A                                   ; uint16_t track = 0
+    cmp     [IsF12],        0x01                ; IsF12 == 1
+    je      [ShowBIOS]                          ; yes
+
+SetArguments:
     mov     A,              1                   ; A = 1
     push    A                                   ; uint16_t sector = 1
+    sez     A                                   ; A = 0
+    push    A                                   ; uint16_t track = 0
+    push    A                                   ; uint16_t head = 0
+    mov     HL,             far @__BOOTLOADER
+    push    D                                   ; uint16_t drive
+    push    L                                   ; Far uint8_t* LOW data
+    push    H                                   ; Far uint8_t* HIGH data
     call    [Read_Sector]
 
     mov     A,              R1
@@ -60,17 +72,18 @@ FindBootDiskLoop:
     inc     DL
     cmp     DL,             4   
     jne     [FindBootDiskLoop]
-    mov     DS,             high @Error_Invalid_BootDisk_Str
-    mov     B,              low @Error_Invalid_BootDisk_Str
+    mov     HL,             @Error_Invalid_BootDisk_Str
+    mov     C,              @Error_Invalid_BootDisk_StrLength
     jmp     [Error_Invalid_BootDisk]
 Exit_FindDiskLoop:
-    cli
     mov     [DriveNumber],  DL
+
+    int     0x02
 
 EndOfBIOS:
 
-    mov     HL,             @INFOMSG_FoundBootableDisk
-    mov     C,              @INFOMSG_FoundBootableDiskEnd - @INFOMSG_FoundBootableDisk
+    mov     HL,             far @INFOMSG_FoundBootableDisk
+    mov     C,              @INFOMSG_FoundBootableDiskLength
     sez     B
     call    [PrintStr]
 
@@ -93,6 +106,33 @@ EndOfBIOS:
 
     ; not comming back
 
+ShowBIOS:
+    
+BreakPoint:
+    sez     B
+    mov     [Cursorx],      B
+    mov     [Cursory],      B
+    mov     H,              HIGH @BreakPointMSG
+    mov     L,              LOW @BreakPointMSG
+    mov     C,              @BreakPointMSGLength
+    call    [PrintStr]
+
+    nop
+
+BreakpointLoop:
+    call    [BufferSize]                                            ; get keyboard buffer size
+    cmp     A,              0                                       ; A <= 0
+    jle     [BreakpointLoop]                                        ; yes
+    call    [ReadBuffer]                                            ; nope read the key
+    cmp     AL,             'C'                                     ; AL == C
+    jne     [BreakpointLoop]                                        ; no
+    push    BL
+    mov     AL,             'D'
+    push    AL
+    call    [COut]
+    reti                                                            ; return
+
+
 .includeil "./BIOS_errors.acl"
 .includeil "./IOFunctions.acl"
 .includeil "./Keyboard.acl"
@@ -108,6 +148,8 @@ EndOfBIOS:
 DriveNumber:
 .resb
 ReceivedIRQ:
+.resb
+IsF12:
 .resb
 Cursorx:
 .resw
@@ -125,13 +167,27 @@ KeyBoardChar:
 .section DATA
 
 .section RODATA
+BreakPointMSG:
+.db "Breakpoint\n"
+.db "press C", 0
+BreakPointMSGEnd:
+BreakPointMSGLength:
+.dw @BreakPointMSGEnd - @BreakPointMSG
+
 StartMSG:
-.db "BIOS Start",0
+.db "BIOS"
 StartMSGEnd:
+StartMSGLength:
+.dw @StartMSGEnd - @StartMSG - 1
 
 Error_Invalid_BootDisk_Str:
 .db "Can't find a bootable disk", 0
+Error_Invalid_BootDisk_Strend:
+Error_Invalid_BootDisk_StrLength:
+.dw @Error_Invalid_BootDisk_Strend - @Error_Invalid_BootDisk_Str
 
 INFOMSG_FoundBootableDisk:
 .db 0xA, "Found drive: "
 INFOMSG_FoundBootableDiskEnd:
+INFOMSG_FoundBootableDiskLength:
+.dw @INFOMSG_FoundBootableDiskEnd - @INFOMSG_FoundBootableDisk

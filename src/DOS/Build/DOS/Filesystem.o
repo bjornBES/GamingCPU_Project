@@ -10,6 +10,7 @@ _TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Fil
 
 SYMBOLS HEADER
 _REF_ LABEL DriveIndex,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
+_REF_ LABEL _CStart_,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
 _REF_ LABEL Entry,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
 _REF_ LABEL _GetFileHandler,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Filesystem.acl
 _REF_ LABEL FindFileLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Filesystem.acl
@@ -38,6 +39,8 @@ _RES_ 0001
 _NEWLINE_
 _NEWLINE_
 _SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_

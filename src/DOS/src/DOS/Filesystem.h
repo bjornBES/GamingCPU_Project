@@ -36,3 +36,5 @@ struct FileData
     bool Opened;
     uint32_t FirstSector;
 };
+
+struct FileHandler fileHandlers[0x08];

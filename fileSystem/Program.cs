@@ -13,6 +13,7 @@ namespace filesystem
         static string m_outputFile;
         static string m_bootSectorFile;
         static DiskSize m_diskSize = DiskSize._F3MB;
+        static bool m_openCommandLine = false;
         static int Main(string[] args)
         {
             m_Admin = true;
@@ -22,8 +23,13 @@ namespace filesystem
             result.m_DiskPath = m_outputFile;
             result.m_DiskSize = m_diskSize;
             result.m_FileSystemFormat = FileSystemType.BFS01;
-
             FileSystemBFS01 fileSystem = new FileSystemBFS01();
+
+            if (m_openCommandLine)
+            {
+                openCommandLine(result);
+            }
+
             fileSystem.FormatDiskNoFiles(result);
             byte[] bootsector = File.ReadAllBytes(m_bootSectorFile);
             fileSystem.WriteToDisk(bootsector);
@@ -89,6 +95,67 @@ namespace filesystem
             return 0;
         }
 
+        static void openCommandLine(Disk disk)
+        {
+            FileSystemBFS01 fileSystem = new FileSystemBFS01();
+            fileSystem.BFS01LoadFile(disk);
+
+            string currentDir = "/";
+
+            while (true)
+            {
+                Console.Write($"{currentDir}:");
+                string line = Console.ReadLine();
+                string command = line.Split(' ')[0];
+                string[] arguments = line.Replace(command, "").Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                /*
+                Console.Write(command + "\t");
+                for (int i = 0; i < arguments.Length; i++)
+                {
+                    Console.Write($"argument{i}:{arguments[i]}");
+                }
+                Console.WriteLine();
+                 */
+
+                if (command == "exit")
+                {
+                    break;
+                }
+                else if (command == "cd")
+                {
+                    if (arguments.Length == 0)
+                    {
+                        Console.WriteLine($"{currentDir}");
+                        continue;
+                    }
+                    string path = arguments[0];
+                    Console.WriteLine($"cd to {path}");
+                }
+                else if (command == "dir")
+                {
+                    FileSystemBFS01.Entry[] entries = fileSystem.GetEntrysByPath(currentDir);
+
+                    Console.WriteLine($"\tDirectory: {currentDir}");
+
+                    Console.WriteLine($"\tLastWriteTime\tLength\t    Name");
+                    for (int i = 0; i < entries.Length; i++)
+                    {
+                        int size = entries[i].m_FileSizeInPages * 512;
+                        Console.WriteLine($"\t{entries[i].m_DateTime.m_Day}-{entries[i].m_DateTime.m_Month}-{entries[i].m_DateTime.m_Year}\t\t{size}\t    {entries[i].m_Name.PadRight(0xB, ' ')}.{entries[i].m_Type}");
+                    }
+                    Console.WriteLine();
+                }
+                else if (command == "mkdir")
+                {
+                    string path = currentDir + arguments[0];
+                    fileSystem.CreateDirectory(path);
+                }
+            }
+
+            Environment.Exit(0);
+        }
+
         static void decodeArguments(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
@@ -116,6 +183,10 @@ namespace filesystem
                 {
                     i++;
                     m_diskSize = (DiskSize)Convert.ToByte(args[i].Substring(2), 16);
+                }
+                else if (args[i] == "-O")
+                {
+                    m_openCommandLine = true;
                 }
             }
         }

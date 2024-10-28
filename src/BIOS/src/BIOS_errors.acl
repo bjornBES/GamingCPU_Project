@@ -1,13 +1,50 @@
 .section TEXT
+.local JMPErrorLoop
 
-; short char* str           DS:B
-Disk_Read_error:
+; short char* str           HL
+; int length                C
 Error_Invalid_BootDisk:
     sez     B
-    push    BL
-    push    A
+    call    [PrintStr]
+    jmp     [JMPErrorLoop]
+
+Error_Invalid_Instruction:
+    push    HL
+    call    [PrintError]
+    mov     HL,                 @Error_Invalid_InstructionMSG
+    mov     C,                  @Error_Invalid_InstructionLength
     call    [PrintStr]
 
+    pop     HL
+    CBTA    HL,                 [CharBuffer]
+    mov     HL,                 @CharBuffer
+    call    [PrintStr]
     
+JMPErrorLoop:
+    cli
+    jmp     [JMPErrorLoop]
 
-.db "Error:", 0
+
+.local PrintError
+PrintError:
+    sez     B
+    mov     HL,                 @ErrorMSG
+    mov     C,                  @ErrorMSGLength
+    call    [PrintStr]
+    retz
+
+ErrorMSG:
+.db "Error:"
+ErrorMSGend:
+ErrorMSGLength:
+.dw @ErrorMSGend - @ErrorMSG
+
+Error_Invalid_InstructionMSG:
+.db "Invalid instruction at "
+Error_Invalid_InstructionEnd:
+Error_Invalid_InstructionLength:
+.dw @Error_Invalid_InstructionEnd - @Error_Invalid_InstructionMSG
+
+.section BSS
+CharBuffer:
+.res 8                              ; res 8 bytes

@@ -73,12 +73,7 @@ namespace BCGLinker
             {
                 case OutputFormats.lib:
                     DebugWriter.Writeline("Output Format lib");
-                    tempList.Add("library ACL0.1\0");
-
-                    tempList.Add("_TEXT SECTION".PadRight(16, '\0'));
                     tempList.AddRange(m_Output_ARRAY);
-
-                    tempList.Add("_SYMBOLS".PadRight(16, '\0'));
                     break;
                 case OutputFormats.fbin:
                 case OutputFormats.bin:
@@ -728,6 +723,7 @@ namespace BCGLinker
                     m_Output.Add($"{getPCHex(m_Sections[i])}:\t{line}");
                     m_pc++;
                     m_instrOffset++;
+                    break;
                 }
             }
         }

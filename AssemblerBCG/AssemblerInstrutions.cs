@@ -65,7 +65,7 @@ namespace AssemblerBCG
                 case Instruction.MOVRCL:
                 case Instruction.MOVRDL:
                 case Instruction.OUTB:
-                case Instruction.INB:
+                case Instruction.INP:
                     sizeAlignment = SizeAlignment._byte;
                     break;
                 case Instruction.MOVW:
@@ -76,7 +76,7 @@ namespace AssemblerBCG
                 case Instruction.MOVRALCR0:
                 case Instruction.MOVRCR0AL:
                 case Instruction.OUTW:
-                case Instruction.INW:
+                case Instruction.INPW:
                     sizeAlignment = SizeAlignment._word;
                     break;
                 case Instruction.MOVT:
@@ -159,6 +159,7 @@ namespace AssemblerBCG
                     case ArgumentMode.immediate_tbyte:
                     case ArgumentMode.immediate_dword:
                     case ArgumentMode.immediate_qword:
+                    case ArgumentMode.immediate_dqword:
                     case ArgumentMode.immediate_float:
                     case ArgumentMode.immediate_double:
                     case ArgumentMode.register:
@@ -174,6 +175,12 @@ namespace AssemblerBCG
                     case ArgumentMode.BP_rel_address_byte:
                     case ArgumentMode.SPX_rel_address_word:
                     case ArgumentMode.BPX_rel_address_word:
+                    case ArgumentMode.SP_rel_address_short:
+                    case ArgumentMode.BP_rel_address_short:
+                    case ArgumentMode.SPX_rel_address_tbyte:
+                    case ArgumentMode.BPX_rel_address_tbyte:
+                    case ArgumentMode.SPX_rel_address_int:
+                    case ArgumentMode.BPX_rel_address_int:
                         if (argumentMode == ArgumentMode.register)
                         {
                             sizeAlignment = GetAlignmentFromRegister((Register)Convert.ToInt16(argument1data, 16)) + 1;
@@ -231,6 +238,8 @@ namespace AssemblerBCG
                     case ArgumentMode.register_BD:
                     case ArgumentMode.register_CD:
                     case ArgumentMode.register_DD:
+                    case ArgumentMode.none:
+                    default:
                         SetArgumentMode(argumentMode);
                         break;
                 }
@@ -691,6 +700,8 @@ namespace AssemblerBCG
                     break;
             }
 
+            // Console.WriteLine($"instruction: {instruction} {argument1}, {argument2}");
+
             string instr = Convert.ToString((ushort)instruction, 16).PadLeft(4, '0');
             instructionBytes.AddRange(SplitHexString(instr));
             if (argument1 != ArgumentMode.none)
@@ -707,35 +718,29 @@ namespace AssemblerBCG
             instructionBytes.AddRange(argumentBuffer);
         }
 
-        void SetArgumentMode(ArgumentMode mode)
+        void SetArgumentMode(ArgumentMode mode) 
         {
             switch (mode)
             {
                 case ArgumentMode.immediate_byte:
                 case ArgumentMode.immediate_word:
                 case ArgumentMode.register:
-                case ArgumentMode.register_address:
                 case ArgumentMode.register_AL:
                 case ArgumentMode.register_BL:
                 case ArgumentMode.register_CL:
                 case ArgumentMode.register_DL:
-                case ArgumentMode.register_A:
-                case ArgumentMode.register_B:
-                case ArgumentMode.register_C:
-                case ArgumentMode.register_D:
                 case ArgumentMode.register_H:
                 case ArgumentMode.register_L:
+                case ArgumentMode.register_address:
                 case ArgumentMode.register_address_HL:
                 case ArgumentMode.relative_address:
                 case ArgumentMode.near_address:
                 case ArgumentMode.short_address:
-                case ArgumentMode.X_indexed_address:
-                case ArgumentMode.Y_indexed_address:
-                case ArgumentMode.SP_rel_address_byte:
-                case ArgumentMode.BP_rel_address_byte:
                 case ArgumentMode.segment_address:
                 case ArgumentMode.segment_DS_register:
                 case ArgumentMode.segment_DS_B:
+                case ArgumentMode.SP_rel_address_byte:
+                case ArgumentMode.BP_rel_address_byte:
                     if (m_CPUType < CPUType.BC8)
                     {
                         E_InvalidCPUFeature(CPUType.BC8, mode);
@@ -743,23 +748,34 @@ namespace AssemblerBCG
                     break;
                 case ArgumentMode.immediate_tbyte:
                 case ArgumentMode.immediate_dword:
+                case ArgumentMode.immediate_qword:
                 case ArgumentMode.immediate_float:
+                case ArgumentMode.register_A:
+                case ArgumentMode.register_B:
+                case ArgumentMode.register_C:
+                case ArgumentMode.register_D:
                 case ArgumentMode.register_AX:
                 case ArgumentMode.register_BX:
                 case ArgumentMode.register_CX:
                 case ArgumentMode.register_DX:
                 case ArgumentMode.long_address:
                 case ArgumentMode.far_address:
+                case ArgumentMode.X_indexed_address:
+                case ArgumentMode.Y_indexed_address:
                 case ArgumentMode.segment_ES_register:
                 case ArgumentMode.segment_ES_B:
                 case ArgumentMode.register_AF:
                 case ArgumentMode.register_BF:
+                case ArgumentMode.register_CF:
+                case ArgumentMode.register_DF:
+                case ArgumentMode.SP_rel_address_short:
+                case ArgumentMode.BP_rel_address_short:
                     if (m_CPUType < CPUType.BC16)
                     {
                         E_InvalidCPUFeature(CPUType.BC16, mode);
                     }
                     break;
-                case ArgumentMode.immediate_qword:
+                case ArgumentMode.immediate_dqword:
                 case ArgumentMode.immediate_double:
                 case ArgumentMode.register_EX:
                 case ArgumentMode.register_FX:
@@ -767,16 +783,20 @@ namespace AssemblerBCG
                 case ArgumentMode.register_HX:
                 case ArgumentMode.SPX_rel_address_word:
                 case ArgumentMode.BPX_rel_address_word:
-                case ArgumentMode.register_CF:
-                case ArgumentMode.register_DF:
                 case ArgumentMode.register_AD:
                 case ArgumentMode.register_BD:
                 case ArgumentMode.register_CD:
                 case ArgumentMode.register_DD:
+                case ArgumentMode.SPX_rel_address_tbyte:
+                case ArgumentMode.BPX_rel_address_tbyte:
+                case ArgumentMode.SPX_rel_address_int:
+                case ArgumentMode.BPX_rel_address_int:
                     if (m_CPUType < CPUType.BC32)
                     {
                         E_InvalidCPUFeature(CPUType.BC32, mode);
                     }
+                    break;
+                case ArgumentMode.none:
                     break;
                 default:
                     break;

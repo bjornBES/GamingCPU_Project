@@ -372,11 +372,11 @@ namespace AssemblerBCG
                 Register.BL => ArgumentMode.register_BL,
                 Register.B => ArgumentMode.register_B,
                 Register.BX => ArgumentMode.register_BX,
-                
+
                 Register.CL => ArgumentMode.register_CL,
                 Register.C => ArgumentMode.register_C,
                 Register.CX => ArgumentMode.register_CX,
-                
+
                 Register.DL => ArgumentMode.register_DL,
                 Register.D => ArgumentMode.register_D,
                 Register.DX => ArgumentMode.register_DX,
@@ -398,7 +398,6 @@ namespace AssemblerBCG
                 Register.FX => ArgumentMode.register_FX,
                 Register.GX => ArgumentMode.register_GX,
                 Register.HX => ArgumentMode.register_HX,
-
                 _ => ArgumentMode.register,
             };
         }
@@ -428,7 +427,7 @@ namespace AssemblerBCG
                 default:
                     //Console.WriteLine($"Qword {m_file}:{Linenumber}");
                     HexNumber = HexNumber.PadLeft(16, '0').Substring(0, 16);
-                    if (m_CPUType < CPUType.BC32)
+                    if (m_CPUType < CPUType.BC16)
                     {
                         HexNumber = HexNumber.Substring(8, 8);
                         return ArgumentMode.immediate_dword;
@@ -459,24 +458,56 @@ namespace AssemblerBCG
                     data += datas[i];
                 }
 
-                if (argumentMode == ArgumentMode.immediate_byte)
+                if (register == Register.BP)
                 {
-                    byte number = Convert.ToByte(data, 16);
-                    argumentMode = ArgumentMode.BP_rel_address_byte;
-                    number = (byte)(Operator == '-' ? -number : number);
-                    _out = SplitHexString(ToHexString(number));
-                }
-                else if (argumentMode == ArgumentMode.immediate_word)
-                {
-                    ushort number = Convert.ToUInt16(data, 16);
-                    argumentMode = ArgumentMode.BPX_rel_address_word;
-                    number = (ushort)(Operator == '-' ? -number : number);
-                    _out = SplitHexString(ToHexString(number));
+                    if (argumentMode == ArgumentMode.immediate_byte)
+                    {
+                        byte number = Convert.ToByte(data, 16);
+                        argumentMode = ArgumentMode.BP_rel_address_byte;
+                        number = (byte)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else if (argumentMode == ArgumentMode.immediate_word)
+                    {
+                        ushort number = Convert.ToUInt16(data, 16);
+                        argumentMode = ArgumentMode.BP_rel_address_short;
+                        number = (ushort)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else
+                    {
+                        _out = null;
+                        return false;
+                    }
                 }
                 else
                 {
-                    _out = null;
-                    return false;
+                    if (argumentMode == ArgumentMode.immediate_word)
+                    {
+                        byte number = Convert.ToByte(data, 16);
+                        argumentMode = ArgumentMode.BPX_rel_address_word;
+                        number = (byte)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else if (argumentMode == ArgumentMode.immediate_tbyte)
+                    {
+                        ushort number = Convert.ToUInt16(data, 16);
+                        argumentMode = ArgumentMode.BPX_rel_address_tbyte;
+                        number = (ushort)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else if (argumentMode == ArgumentMode.immediate_dword)
+                    {
+                        ushort number = Convert.ToUInt16(data, 16);
+                        argumentMode = ArgumentMode.BPX_rel_address_int;
+                        number = (ushort)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else
+                    {
+                        _out = null;
+                        return false;
+                    }
                 }
 
 
@@ -502,24 +533,56 @@ namespace AssemblerBCG
                     data += datas[i];
                 }
 
-                if (argumentMode == ArgumentMode.immediate_byte)
+                if (register == Register.SP)
                 {
-                    byte number = Convert.ToByte(data, 16);
-                    argumentMode = ArgumentMode.SP_rel_address_byte;
-                    number = (byte)(Operator == '-' ? -number : number);
-                    _out = SplitHexString(ToHexString(number));
-                }
-                else if (argumentMode == ArgumentMode.immediate_word)
-                {
-                    ushort number = Convert.ToUInt16(data, 16);
-                    argumentMode = ArgumentMode.SPX_rel_address_word;
-                    number = (ushort)(Operator == '-' ? -number : number);
-                    _out = SplitHexString(ToHexString(number));
+                    if (argumentMode == ArgumentMode.immediate_byte)
+                    {
+                        byte number = Convert.ToByte(data, 16);
+                        argumentMode = ArgumentMode.SP_rel_address_byte;
+                        number = (byte)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else if (argumentMode == ArgumentMode.immediate_word)
+                    {
+                        ushort number = Convert.ToUInt16(data, 16);
+                        argumentMode = ArgumentMode.SP_rel_address_short;
+                        number = (ushort)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else
+                    {
+                        _out = null;
+                        return false;
+                    }
                 }
                 else
                 {
-                    _out = null;
-                    return false;
+                    if (argumentMode == ArgumentMode.immediate_word)
+                    {
+                        byte number = Convert.ToByte(data, 16);
+                        argumentMode = ArgumentMode.SPX_rel_address_word;
+                        number = (byte)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else if (argumentMode == ArgumentMode.immediate_tbyte)
+                    {
+                        ushort number = Convert.ToUInt16(data, 16);
+                        argumentMode = ArgumentMode.SPX_rel_address_tbyte;
+                        number = (ushort)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else if (argumentMode == ArgumentMode.immediate_dword)
+                    {
+                        ushort number = Convert.ToUInt16(data, 16);
+                        argumentMode = ArgumentMode.SPX_rel_address_int;
+                        number = (ushort)(Operator == '-' ? -number : number);
+                        _out = SplitHexString(ToHexString(number));
+                    }
+                    else
+                    {
+                        _out = null;
+                        return false;
+                    }
                 }
 
 

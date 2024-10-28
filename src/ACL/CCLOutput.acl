@@ -2,54 +2,64 @@
 .section TEXT
 L0000000:
 L0000001:
-	; _pVram is at DS:0
+	; _pVram is at 0x0003:0
+L0000002:
+	; _bvar is at 0x0003:4
 L0000010:
 _main:
 	enter
 	pushr
-	push  DS
-	mov   DS,                      __DATASTRAT__
+	mov   R1H,                     0x0003
+L0000011:
+	mov   AX,                      short 0x7c00
+	push  AX
 L0000021:
 	push  HL
-	push  A
-	mov   HL,                      MessERS
+	push  AX
+	mov   HL,                      far @MessERS
 	mov   AH,                      0x02
 	int   0x10
-	pop   A
+	pop   AX
 	pop   HL
 L0000022:
-	mov   HL,                      65536
-	mov   [DS:B],                  HL
-	; _pVram = 65536
+	mov   R1L,                     0x0000
+	mov   AX,                      0x10000
+	mov   [R1L],                   AX
+	; _pVram = 0x10000
 L0000023:
-	mov   R20,                     far @__DATASTRAT__ + 0
-	mov   A,                       85
-	mov   [R20]                    A
+	mov   HL,                      far @__DATASTRAT__ + 0
+	mov   AX,                      0x55
+	mov   [HL]                     AX
 L0000024:
-	mov   HL,                      65536
-	mov   [HL]                     A
+	mov   HL,                      0x10000
+	mov   AX,                      0x55
+	mov   [AX]                     AX
 L0000025:
-	mov   HL,                      MessERS
+	mov   HL,                      long @MessERS
 	push  HL
-L0000026:
-; if
-_Label0:
-	mov   HL,                      [SP - 4]
-	mov   R19,                     HL
-	mov   HL,                      MessERS
-	mov   R20,                     HL
-	cmp   R19,                     R20
-	jne   [_Label0_IfExit]
-	mov   A,                       1
+L0000027:
+	mov   AX,                      [SP - 4]
+	push  AX
+L0000028:
+	push  HL
+	push  AX
+	mov   HL,                      [SP - 8]
+	mov   AH,                      0x02
+	int   0x10
+	pop   AX
+	pop   AX
+L0000029:
+	mov   R1L,                     0x0004
+	mov   AX,                      0x55
+	mov   [R1L],                   AX
+	; _bvar = 0x55
+L0000032:
+	mov   AX,                      0x0
 	jmp   [Exit_main]
-_Label0_IfExit:
-; else
-	mov   A,                       2
-; end if
+L0000070:
 Exit_main:
-	pop   DS
 	popr
-	pop		BP
+	sub   SP,                      6
 	leave
 	retz
 L0001000:

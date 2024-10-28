@@ -103,7 +103,23 @@ namespace BCG16CPUEmulator
             }
             else if (MemAddr >= 0 && MemAddr <= MemorySize)
             {
-                return m_Mem[(int)pAddress..(MemAddr + count)];
+                return m_Mem[(int)MemAddr..(MemAddr + count)];
+            }
+            else
+            {
+            }
+            return null;
+        }
+        public byte[] ReadVRAM(int count)
+        {
+            Address MemAddr = 0x00010000;
+
+            if (MemAddr >= 0x1000 && MemAddr <= 0x1200 - 1)
+            {
+            }
+            else if (MemAddr >= 0 && MemAddr <= MemorySize)
+            {
+                return m_Mem[(int)MemAddr..(MemAddr + count)];
             }
             else
             {
@@ -114,22 +130,7 @@ namespace BCG16CPUEmulator
         public void WriteByte(Address pAddress, byte data)
         {
             byte[] byteData = new byte[] { data };
-            Address MemAddr = pAddress ;
-
-            if (MemAddr >= 0x1000 && MemAddr <= 0x1200 - 1)
-            {
-                return;
-            }
-            else if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == 0x00)
-            {
-                MemAddr = MemAddr & 0x00FFFF;
-                pAddress = pAddress & 0x00FFFF;
-            }
-            else if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == BC16CPU_Registers.CR0_EnableExtendedMode)
-            {
-                MemAddr = MemAddr & 0xFFFFFF;
-                pAddress = pAddress & 0xFFFFFF;
-            }
+            Address MemAddr = pAddress;
 
             if (MemAddr >= 0x1000 && MemAddr <= 0x1200 - 1)
             {

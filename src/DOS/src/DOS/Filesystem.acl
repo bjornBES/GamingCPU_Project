@@ -19,7 +19,7 @@ _GetFileHandler:
     mov         DS,                     HIGH @Buffer        ; high part
     mov         B,                      LOW @Buffer         ; low part
     
-    FindFileLoop:
+FindFileLoop:
     mov         C,                      15                  ; 15 times
     cmpl                                                    ; Comparing the names
     je          
@@ -50,14 +50,14 @@ _GetEntres:
     mov         DS,                     HIGH @Buffer
     mov         B,                      LOW @Buffer
 
-    MoveEntryesLoop:
+MoveEntryesLoop:
     mov         AX,                     [DS:B]
     jz          [ExitMoveEntryes]
     mov         [HL],                   AX
     add         HL,                     0x4
     add         B,                      0x4
     jmp         [MoveEntryesLoop]
-    ExitMoveEntryes:
+ExitMoveEntryes:
 
     pop         DS
     leave
@@ -83,7 +83,7 @@ _GetEntry:
     mov         B,                      [BP - 20]           ; B is the lower part of the memory address
     mov         CL,                     0x20
 
-    GetEntryLoop:
+GetEntryLoop:
     mov         AX,                     [DS:B]
     mov         [HL],                   AX
     sub         CL,                     4

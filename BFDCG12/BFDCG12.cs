@@ -93,14 +93,15 @@ namespace _BFDCG12
                 }
             }
 
+
             switch (m_commandRegister)
             {
                 case 0x01:
-                    if (m_arguments.Count == 4)
+                    if (m_arguments.Count == 5)
                     {
-                        byte head = (byte)(m_arguments[0] & 0x00FF);
-                        byte drive = (byte)((m_arguments[0] & 0xFF00) >> 8);
-                        readDisk(drive, (Size)m_arguments[3], head, m_arguments[1], (byte)m_arguments[2]);
+                        byte drive = (byte)m_arguments[0];
+                        byte head = (byte)m_arguments[1];
+                        readDisk(drive, (Size)m_arguments[4], head, m_arguments[2], (byte)m_arguments[3]);
 
                         m_arguments.Clear();
                         m_commandRegister = 0;
@@ -110,11 +111,11 @@ namespace _BFDCG12
                     }
                     break;
                 case 0x02:
-                    if (m_arguments.Count == 4)
+                    if (m_arguments.Count == 5)
                     {
-                        byte head = (byte)(m_arguments[0] & 0x00FF);
-                        byte drive = (byte)((m_arguments[0] & 0xFF00) >> 8);
-                        writeDisk(drive, (Size)m_arguments[3], head, m_arguments[1], (byte)m_arguments[2]);
+                        byte drive = (byte)m_arguments[0];
+                        byte head = (byte)m_arguments[1];
+                        writeDisk(drive, (Size)m_arguments[4], head, m_arguments[2], (byte)m_arguments[3]);
 
                         m_arguments.Clear();
                         m_commandRegister = 0;
@@ -214,7 +215,7 @@ namespace _BFDCG12
                         m_arguments.Add(m_DataRegister);
                         return;
                     }
-                    if (getFlag(m_MasterStatusRegister, 0x0001) && getFlag(m_MasterStatusRegister, 0x0002) && m_commandRegister == 0)
+                    if (getFlag(m_MasterStatusRegister, 0x0001) && getFlag(m_MasterStatusRegister, 0x0002) == false && m_commandRegister == 0)
                     {
                         m_arguments.Add(data);
                     }

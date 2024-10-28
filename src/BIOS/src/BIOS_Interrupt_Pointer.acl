@@ -7,10 +7,22 @@ BIOS_IRQ_Interrupt:
     reti
 
 KeyBoardIRQ:
-    push    C 
+    push    C
+    push    A 
     inb     0x0,            CL                  ; Getting a char from the Keyboard
     call    [WriteBuffer]                       ; Putting it into the KeyboardBuffer
+    mov     AL,             CR0                 ; A = CR0
+    cmp     A,              0x01                ; are we in boot mode
+    jne     [NotInBoot]                         ; no
+    cmp     C,              0x7b                ; is F12 key
+    jne     rel [NotInBoot]                     ; no
+    mov     A,              0x1                 ; A = 0x1
+    mov     [IsF12],        AL                  ; IsF12 = true
+    call    [ReadBuffer]                        ; take the F12 out
+NotInBoot:
+    pop     A
     pop     C
+    sei
     reti
 
 ;
@@ -32,9 +44,9 @@ BIOS_Interrupt13h:
 ;
 BIOS_Interrupt10h:
     cmp     AH,             0x00
-    je      [printchar]
+    je      rel [printchar]
     cmp     AH,             0x01
-    je      [readkey]
+    je      rel [readkey]
     reti
 
 .local readkey

@@ -67,7 +67,7 @@ Reads data from a disk
 
 #### Calling
 
-- Send the command (0x00) to the [Data register](#data-register)
+- Send the command (0x01) to the [Data register](#data-register)
 - Send the [Drive number](#drive-number) + Head to the [Data register](#data-register)
   - 0000DDDD_0000HHHH
   - D = drive

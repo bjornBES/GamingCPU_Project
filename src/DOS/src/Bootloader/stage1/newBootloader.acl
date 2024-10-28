@@ -8,8 +8,11 @@ Entry:
     or      A,              0x10
     mov     CR0,            AL                  ; enabling extended mode
 
+    mov
+
     sez     A
     mov     HL,             far @Message
+    mov     
 PrintLoop:
     mov     AL,             [HL]
     jz      [ExitPrintLoop]
@@ -18,11 +21,11 @@ PrintLoop:
 ExitPrintLoop:
 
     mov     SS,             0x00FA              ; stack is at 0x00FA:XXXXX
-    mov     DS,             HIGH Entry          ; data is in this segment
+    mov     DS,             HIGH @Entry         ; data is in this segment
     sez     SP
 
-    ; outw    0x02,           0x0011
-    ; outb    0x02,           0x02
+    outw    0x02,           0x0011              ; video card switch mode
+    outb    0x02,           0x02                ; set to mode 2
 
     nop
     int     0x02
@@ -76,7 +79,7 @@ Load:
 ;   AX:         destination
 ;   B:          sectors
 ;   C:          track
-;   DL:         drive
+;   DL:         drivea
 ;   DH:         head
 ;
 ReadSector:
@@ -128,7 +131,7 @@ ErrorMessageReading:
 ;
 Error:
     mov         AH,         0x02
-    int         byte 0x10
+    int         0x10
 
     jmp         $
 

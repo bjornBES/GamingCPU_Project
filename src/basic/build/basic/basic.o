@@ -1,0 +1,458 @@
+INCLUDE HEADER
+INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+
+
+SECTION HEADER
+_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+
+
+SYMBOLS HEADER
+_REF_ LABEL Entry,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_REF_ LABEL PrintLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_REF_ LABEL ExitPrintLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_REF_ LABEL Message,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_REF_ LABEL GetResolution,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_REF_ LABEL PrintC,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_REF_ LABEL PutC,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_REF_ LABEL CursorX,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_REF_ LABEL CursorY,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_REF_ LABEL ScreenHeight,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_REF_ LABEL ScreenWidth,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+
+
+TEXT HEADER
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Entry C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_NEWLINE_
+_DEL_ mov AL, CR0
+01
+00
+11
+10
+_NEWARG_ AL
+_NEWARG_ CR0
+21
+_NEWLINE_
+_DEL_ or A, 0x88
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x88
+00
+88
+_NEWLINE_
+_DEL_ mov CR0, AL
+00
+06
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov SS, @__STACKSTART
+02
+08
+10
+01
+_NEWARG_ SS
+06
+_NEWARG_ @__STACKSTART
+_SL___STACKSTART
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez B
+0a
+06
+_NEWARG_ B
+_NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov HL, far @Message
+00
+00
+10
+03
+_NEWARG_ HL
+c7
+_NEWARG_ far @Message
+_FL_Message
+_NEWLINE_
+_DEL_ mov
+00
+00
+_NEWLINE_
+_REF_ LABEL PrintLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_NEWLINE_
+_DEL_ mov AL, [HL]
+00
+01
+21
+_NEWARG_ AL
+_NEWARG_ [HL]
+_NEWLINE_
+_DEL_ jz [ExitPrintLoop]
+30
+10
+32
+_NEWARG_ [ExitPrintLoop]
+_SL_ExitPrintLoop
+_NEWLINE_
+_DEL_ push B
+05
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ call [PrintC]
+07
+00
+32
+_NEWARG_ [PrintC]
+_SL_PrintC
+_NEWLINE_
+_DEL_ inc HL
+20
+f0
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ jmp [PrintLoop]
+30
+00
+32
+_NEWARG_ [PrintLoop]
+_SL_PrintLoop
+_NEWLINE_
+_REF_ LABEL ExitPrintLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ jmp $
+30
+00
+01
+_NEWARG_ $
+_SCA_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Message C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\basic.acl
+_NEWLINE_
+48
+65
+6c
+6c
+6f
+20
+77
+6f
+72
+6c
+64
+00
+_NEWLINE_
+_NEWLINE_
+_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GetResolution C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_NEWLINE_
+_DEL_ outw %VideoCard, 0x8001
+10
+04
+00
+01
+_NEWARG_ %VideoCard
+_NEWARG_ 0x8001
+80
+01
+_NEWLINE_
+_DEL_ outw %VideoCard, 0x0010
+10
+04
+00
+01
+_NEWARG_ %VideoCard
+_NEWARG_ 0x0010
+00
+10
+_NEWLINE_
+_DEL_ nop
+f0
+10
+_NEWLINE_
+_DEL_ inpw %VideoCard, A
+10
+14
+00
+17
+_NEWARG_ %VideoCard
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [ScreenHeight], A
+01
+00
+32
+17
+_NEWARG_ [ScreenHeight]
+_SL_ScreenHeight
+_NEWARG_ A
+_NEWLINE_
+_DEL_ inpw %VideoCard, A
+10
+14
+00
+17
+_NEWARG_ %VideoCard
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [ScreenWidth], A
+01
+00
+32
+17
+_NEWARG_ [ScreenWidth]
+_SL_ScreenWidth
+_NEWARG_ A
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL PrintC C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_DEL_ mov HL, 0x010000
+00
+00
+10
+04
+_NEWARG_ HL
+c7
+_NEWARG_ 0x010000
+00
+00
+00
+00
+00
+01
+00
+00
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov B, [CursorX]
+01
+02
+32
+_NEWARG_ B
+_NEWARG_ [CursorX]
+_SL_CursorX
+_NEWLINE_
+_DEL_ add AX, B
+20
+22
+18
+_NEWARG_ AX
+_NEWARG_ B
+_NEWLINE_
+_DEL_ mov B, [CursorY]
+01
+02
+32
+_NEWARG_ B
+_NEWARG_ [CursorY]
+_SL_CursorY
+_NEWLINE_
+_DEL_ mul B, [ScreenWidth]
+20
+40
+18
+32
+_NEWARG_ B
+_NEWARG_ [ScreenWidth]
+_SL_ScreenWidth
+_NEWLINE_
+_DEL_ add AX, B
+20
+22
+18
+_NEWARG_ AX
+_NEWARG_ B
+_NEWLINE_
+_DEL_ add HL, AX
+20
+20
+10
+1b
+_NEWARG_ HL
+c7
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov BH, [BP - 6]
+01
+00
+10
+41
+_NEWARG_ BH
+41
+_NEWARG_ [BP - 6]
+fa
+_NEWLINE_
+_DEL_ mov BL, [BP - 7]
+00
+02
+41
+_NEWARG_ BL
+_NEWARG_ [BP - 7]
+f9
+_NEWLINE_
+_DEL_ mov [HL], B
+01
+00
+21
+18
+_NEWARG_ [HL]
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 2
+08
+00
+00
+_NEWARG_ 2
+02
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL PutC C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ push B
+05
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov BH, [BP - 6]
+01
+00
+10
+41
+_NEWARG_ BH
+41
+_NEWARG_ [BP - 6]
+fa
+_NEWLINE_
+_DEL_ mov BL, [BP - 8]
+00
+02
+41
+_NEWARG_ BL
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_DEL_ push BL
+05
+00
+12
+_NEWARG_ BL
+_NEWLINE_
+_DEL_ push BH
+05
+00
+10
+_NEWARG_ BH
+41
+_NEWLINE_
+_DEL_ call [PrintC]
+07
+00
+32
+_NEWARG_ [PrintC]
+_SL_PrintC
+_NEWLINE_
+_NEWLINE_
+_DEL_ pop B
+06
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 4
+08
+00
+00
+_NEWARG_ 4
+04
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL CursorX C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_NEWLINE_
+_RES_ 2
+_NEWLINE_
+_REF_ LABEL CursorY C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_NEWLINE_
+_RES_ 2
+_NEWLINE_
+_REF_ LABEL ScreenHeight C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_NEWLINE_
+_RES_ 2
+_NEWLINE_
+_REF_ LABEL ScreenWidth C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\basic\src\basic\display.acl
+_NEWLINE_
+_RES_ 2
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_

@@ -71,16 +71,17 @@ inline: ``if something is inline that means that it uses ascii chars to make its
 
 ## Entry Format
 
-|offset|size in bytes  |type    |inline  |name
-|------|---------------|--------|--------|-
-|`0x00`|     `0x0B`    |string  |  true  |File name
-|`0x0B`|     `0x05`    |string  |  true  |File type
-|`0x10`|     `0x02`    |ushort  |  false |Starting Sector
-|`0x12`|     `0x01`    |byte    |  false |File size in Sectors
-|`0x13`|     `0x01`    |byte    |  false |[flags](#flags)
-|`0x14`|     `0x02`    |ushort  |  false |Create Date
-|`0x16`|     `0x02`    |ushort  |  false |Create Time
-|`0x18`|     `0x08`    |byte[]  |  true  |unused
+|offset|size in bytes |type   |inline  |name
+|------|--------------|-------|-------|-
+|`0x00`|    `0x0B`    |string | true  |File name
+|`0x0B`|    `0x05`    |string | true  |File type
+|`0x10`|    `0x02`    |ushort | false |Starting Sector
+|`0x12`|    `0x02`    |ushort | false |File size in Sectors
+|`0x14`|    `0x01`    |byte   | false |[flags](#flags)
+|`0x15`|    `0x02`    |ushort | false |Create Date
+|`0x17`|    `0x02`    |ushort | false |Create Time
+|`0x19`|    `0x01`    |byte   | false |Entry Count only for directory
+|`0x19`|    `0x06`    |byte[] | true  |unused
 
 inline: ``if something is inline that means that it uses ascii chars to make its value if some is not inline that means that the value is in the cell itself``
 

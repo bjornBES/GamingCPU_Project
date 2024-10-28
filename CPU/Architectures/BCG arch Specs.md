@@ -16,6 +16,7 @@
       - [interrupt](#interrupt)
       - [exception](#exception)
   - [Pipelining](#pipelining)
+  - [CPUID](#cpuid)
   - [Caches](#caches)
   - [Calling convention](#calling-convention)
     - [Caller](#caller)
@@ -51,9 +52,9 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 
 ### Base argument modes from the BC018 architecture
 
-- 0x00: immediate byte              number
-- 0x01: immediate word              number
-- 0x10: register                    register
+- 0x00: immediate byte:             number
+- 0x01: immediate word:             number
+- 0x10: register:                   register
 - 0x11: register AL:                AL
 - 0x12: register BL:                BL
 - 0x13: register CL:                CL
@@ -65,11 +66,11 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 - 0x30: Relative address:           [byte address]      an 8 bit offset to the PC
 - 0x31: Near address:               Near [address]      a 8 bit address
 - 0x32: Short address:              short [address]     a 16 bit address
-- 0x38: SP relative address byte:   [SP + sbyte number]
-- 0x39: BP relative address byte:   [BP + sbyte number]
-- 0x3A: 32 bit segment address:     [register:register]
-- 0x3B: 32 bit segment DS register: [DS:register]
-- 0x3C: 32 bit segment DS B:        [DS:B]
+- 0x39: 32 bit segment address:     [register:register]
+- 0x3A: 32 bit segment DS register: [DS:register]
+- 0x3B: 32 bit segment DS B:        [DS:B]
+- 0x40: SP relative address byte:   [SP + sbyte number]
+- 0x41: BP relative address byte:   [BP + sbyte number]
 
 ## Interrupt tables
 
@@ -108,8 +109,7 @@ The second word is the Address offset for the routine
 |BRK interrupt              |2              |interrupt        |true           |BRK
 |invalid opcode             |6              |Abort exception  |false          |Any undefined opcode
 |Keyboard IRQ               |16             |interrupt        |false          |Keyboard IRQ0
-|User defined IRQ interrupt |17-30          |interrupt        |true           |The IRQ pin
-|FDC IRQ                    |31             |interrupt        |true           |FDC IRQ15
+|User defined IRQ interrupt |17-31          |interrupt        |true           |The IRQ pin
 |reserved                   |32             |interrupt        |false          |Unused
 |User defined interrupts    |33             |interrupt        |true           |INT 0x04
 |User defined interrupts    |34             |interrupt        |true           |INT 0x05
@@ -140,6 +140,12 @@ The BCG arch can do 3 stage pipelining like this
 |Opertion1  |Fetch instruction  |instruction Decoding |instruction execution  |Fetch instruction
 |Opertion2  |                   |Fetch instruction    |instruction Decoding   |instruction execution
 |Opertion2  |                   |                     |Fetch instruction      |instruction Decoding
+
+## CPUID
+
+|Index  |Name |Description
+|-------|-----|-
+|0x0000 |WIP  |WIP
 
 ## Caches
 
@@ -195,6 +201,7 @@ in Extended mode the CPU will get
 - 16 bit data bus
 - Make use of the [extended registers](#extended-registers)
 - PC becomes a 24 bit register
+- BIOS interrupt function no longer work
 - new argument modes
   - 0x02: immediate tbyte:            number
   - 0x03: immediate dword:            number
@@ -203,15 +210,15 @@ in Extended mode the CPU will get
   - 0x18: register B                  B
   - 0x19: register C                  C
   - 0x1A: register D                  D
-  - 0x20: register AX:                AX
-  - 0x21: register BX:                BX
-  - 0x22: register CX:                CX
-  - 0x23: register DX:                DX
+  - 0x1B: register AX:                AX
+  - 0x1C: register BX:                BX
+  - 0x1D: register CX:                CX
+  - 0x1E: register DX:                DX
   - 0x33: long address:               long [address]      a 24 bit address
   - 0x36: Short X indexed address:    [short address],X
   - 0x37: Short Y indexed address:    [short address],Y
-  - 0x3D: 32 bit segment ES register: [ES:register]
-  - 0x3E: 32 bit segment ES B:        [ES:B]
+  - 0x3C: 32 bit segment ES register: [ES:register]
+  - 0x3D: 32 bit segment ES B:        [ES:B]
   - 0x60: register AF:                AF
   - 0x61: register BF:                BF
   - 0x62: register CF:                CF
@@ -226,9 +233,10 @@ in Protected mode the CPU will get
 - Make use of the [protected registers](#protected-registers)
 - PC becomes a 32 bit register
 - new argument modes
+  - 0x04: immediate qword:            number
   - 0x34: Far address:                far [address]       a 32 bit address
-  - 0x38: SP relative address short:  [SP + short number]
-  - 0x39: BP relative address short:  [BP + short number]
+  - 0x42: SP relative address short:  [SP + short number]
+  - 0x43: BP relative address short:  [BP + short number]
 
 ## Long mode
 
@@ -239,14 +247,17 @@ in long mode the CPU will get
 - Make use of the [long registers](#long-mode-registers)
 - a 16 KB [IDT](#interrupt-descriptor-table)
 - new argument modes
-  - 0x04: immediate qword:            number
   - 0x09: immediate_double:           double numberf
   - 0x24: register EX:                EX
   - 0x25: register FX:                FX
   - 0x26: register GX:                GX
   - 0x27: register HX:                HX
-  - 0x38: SPX relative address tbyte: [SPX + tbyte number]
-  - 0x39: BPX relative address tbyte: [BPX + tbyte number]
+  - 0x44: SPX relative address word:  [SPX + word number]
+  - 0x45: BPX relative address word:  [BPX + word number]
+  - 0x46: SPX relative address tbyte: [SPX + tbyte number]
+  - 0x47: BPX relative address tbyte: [BPX + tbyte number]
+  - 0x48: SPX relative address int:   [SPX + int number]
+  - 0x49: BPX relative address int:   [BPX + int number]
   - 0x70: register AD:                AD
   - 0x71: register BD:                BD
   - 0x72: register CD:                CD
@@ -263,8 +274,10 @@ in long long mode the CPU will get
 - \+ Protected mode
 - new argument mode
   - 0x05: immediate dqword:           number
-  - 0x38: SPX relative address int:   [SPX + int number]
-  - 0x39: BPX relative address int:   [BPX + int number]
+  - 0x46: SPX relative address word:  [SPX + word number]
+  - 0x47: BPX relative address word:  [BPX + word number]
+  - 0x48: BPX relative address int:   [BPX + int number]
+  - 0x49: BPX relative address int:   [BPX + int number]
 
 ## MEMORY
 
@@ -358,8 +371,8 @@ in long long mode the CPU will get
   - 0x0080 HALT
   - 0x0100 reserved
   - 0x0200 under flow
-  - 0x0400 reserved
-  - 0x0800 reserved
+  - 0x0400 shift flag
+  - 0x0800 greater
   - 0x1000 reserved
   - 0x2000 reserved
   - 0x4000 reserved
@@ -424,8 +437,8 @@ in long long mode the CPU will get
   - 0x000080 HALT
   - 0x000100 reserved
   - 0x000200 under flow
-  - 0x000400 reserved
-  - 0x000800 reserved
+  - 0x000400 shift flag
+  - 0x000800 greater
   - 0x001000 reserved
   - 0x002000 reserved
   - 0x004000 reserved

@@ -6,6 +6,8 @@ DriveIndex:
 
 .section TEXT
 
+.extern _CStart_
+
 ; disk              DL
 ;
 ; void entry(byte disk)

@@ -85,7 +85,7 @@ namespace BCG16CPUEmulator
                     executeInstruction(m_instructions[1], m_argumentModes1[1], m_argumentModes2[1], ref m_stage2);
                     executeInstruction(m_instructions[2], m_argumentModes1[2], m_argumentModes2[2], ref m_stage3);
 
-                    executionInterrupt((byte)(result + 0x0040));
+                    executionInterrupt((byte)(result));
 
                     tickOpertion(0);
                     tickOpertion(1);
@@ -95,7 +95,7 @@ namespace BCG16CPUEmulator
             }
             if (m_portsNMI.TryPop(out byte NMIresult) == true)
             {
-                executionInterrupt((byte)(NMIresult + 0x0040));
+                executionInterrupt((byte)(NMIresult));
             }
 
             executeInstruction(m_instructions[0], m_argumentModes1[0], m_argumentModes2[0], ref m_stage1);
@@ -115,6 +115,7 @@ namespace BCG16CPUEmulator
 
         void executionInterrupt(byte interruptNumber)
         {
+            SetFlag(FL_I, false);
             m_BUS.INTA(interruptNumber);
 
             PushInterrupt();
@@ -365,6 +366,7 @@ namespace BCG16CPUEmulator
                     break;
 
                 case Instruction.SWAP:
+                    Swap(Argument1, Argument2);
                     break;
 
                 case Instruction.JMP:
@@ -392,19 +394,13 @@ namespace BCG16CPUEmulator
                     JumpC(Argument1, FL_L, 1);
                     return;
                 case Instruction.JG:
-                    JumpC(Argument1, FL_L, 0);
+                    JumpC(Argument1, FL_G, 1);
                     return;
                 case Instruction.JLE:
-                    if (GetFlag(FL_L) == true || GetFlag(FL_E) == true)
-                    {
-                        Jump(Argument1);
-                    }
+                    JumpC(Argument1, FL_L, FL_E, 1, 1);
                     return;
                 case Instruction.JGE:
-                    if (GetFlag(FL_L) == false || GetFlag(FL_E) == true)
-                    {
-                        Jump(Argument1);
-                    }
+                    JumpC(Argument1, FL_G, FL_E, 1, 1);
                     return;
                 case Instruction.JNV:
                     JumpC(Argument1, FL_O, 0);
@@ -572,12 +568,16 @@ namespace BCG16CPUEmulator
                     Not(Register.AX);
                     return;
                 case Instruction.SHL:
+                    Shl(Argument1, Argument2);
                     break;
                 case Instruction.SHR:
+                    Shr(Argument1, Argument2);
                     break;
                 case Instruction.ROL:
+                    Rol(Argument1, Argument2);
                     break;
                 case Instruction.ROR:
+                    Ror(Argument1, Argument2);
                     break;
                 case Instruction.INC:
                     Inc(Argument1);
@@ -589,8 +589,10 @@ namespace BCG16CPUEmulator
                     Neg(Argument1);
                     return;
                 case Instruction.EXP:
+                    Exp(Argument1, Argument2);
                     break;
                 case Instruction.SQRT:
+                    Sqrt(Argument1);
                     break;
                 case Instruction.RNG:
                     Rng(Argument1);
@@ -602,6 +604,7 @@ namespace BCG16CPUEmulator
                 case Instruction.TOB:
                     break;
                 case Instruction.MOD:
+                    Mod(Argument1, Argument2);
                     break;
                 case Instruction.FADD:
                     break;
@@ -622,6 +625,7 @@ namespace BCG16CPUEmulator
                 case Instruction.FNOT:
                     break;
                 case Instruction.CMPL:
+                    Cmpl();
                     break;
                 case Instruction.MOVF:
                     break;
@@ -638,14 +642,16 @@ namespace BCG16CPUEmulator
                     Int(Argument1);
                     return;
                 case Instruction.BRK:
-                    break;
+                    executionInterrupt(0x1);
+                    return;
                 case Instruction.HALT:
                     SetFlag(FL_H, true);
                     return;
                 case Instruction.NOP:
                     return;
                 case Instruction.CBTA:
-                    break;
+                    CBTA(Argument1, Argument2);
+                    return;
                 case Instruction.ENTER:
                     Push(Register.BP);
                     SetRegisterValue(Register.BP, Register.SP);
@@ -653,6 +659,9 @@ namespace BCG16CPUEmulator
                 case Instruction.LEAVE:
                     Pop(Register.BP);
                     return;
+                case Instruction.CPUID:
+                    m_AX[false] = 0b0;
+                    break;
                 default:
                     break;
             }
@@ -665,6 +674,8 @@ namespace BCG16CPUEmulator
             argument1 = ArgumentMode.None;
             argument2 = ArgumentMode.None;
 
+            int orgPC = m_PC;
+
             byte arg1 = 0xFF;
             byte arg2 = 0xFF;
             ushort instrByte = FetchWord();
@@ -672,7 +683,9 @@ namespace BCG16CPUEmulator
             {
                 if (!InstructionArguments.m_Instructions.TryGetValue(result, out InstructionInfo instructionInfo))
                 {
+                    SetRegisterValue(Register.HL, orgPC);
                     executionInterrupt(0x6);
+                    return decodeInstruction(out argument1, out argument2);
                 }
 
                 for (int i = 0; i < instructionInfo.m_OperandSize; i++)
@@ -686,10 +699,18 @@ namespace BCG16CPUEmulator
                         arg2 = FetchByte();
                     }
                 }
-                if (Enum.TryParse(arg1.ToString(), true, out argument1))
-                { }
-                if (Enum.TryParse(arg2.ToString(), true, out argument2))
-                { }
+                if (!Enum.TryParse(arg1.ToString(), true, out argument1))
+                {
+                    SetRegisterValue(Register.HL, orgPC);
+                    executionInterrupt(0x6);
+                    return decodeInstruction(out argument1, out argument2);
+                }
+                if (!Enum.TryParse(arg2.ToString(), true, out argument2))
+                {
+                    SetRegisterValue(Register.HL, orgPC);
+                    executionInterrupt(0x6);
+                    return decodeInstruction(out argument1, out argument2);
+                }
 
                 return result;
             }

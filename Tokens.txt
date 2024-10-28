@@ -1,61 +1,120 @@
-Section             line:00004	SECTION
-colon               line:00004	
-SectionData         line:00004	DATA
+Section             line:00002	SECTION
+colon               line:00002	
+SectionData         line:00002	DATA
+colon               line:00003	
+identifier          line:00003	name
+_res                line:00003	RES
+int literal         line:00003	1024
+Section             line:00005	SECTION
 colon               line:00005	
-identifier          line:00005	SECTOR
-_res                line:00005	RES
-int literal         line:00005	1024
+SectionString       line:00005	STRING
 colon               line:00006	
-identifier          line:00006	KERNEL
-_res                line:00006	RES
-int literal         line:00006	32768
+identifier          line:00006	MessERS
+quotation_mark      line:00006	
+identifier          line:00006	Hello world
+quotation_mark      line:00006	
 Section             line:00008	SECTION
 colon               line:00008	
-SectionString       line:00008	STRING
-colon               line:00009	
-identifier          line:00009	HELLO
-quotation_mark      line:00009	
-identifier          line:00009	HELLO WORLD
-quotation_mark      line:00009	
-Section             line:00012	SECTION
+SectionText         line:00008	TEXT
+int literal         line:00010	0000000
+colon               line:00010	
+program             line:00010	prog
+identifier          line:00010	test
+period              line:00010	
+int literal         line:00011	0000001
+colon               line:00011	
+uint32              line:00011	uint
+identifier          line:00011	pVram
+period              line:00011	
+int literal         line:00012	0000002
 colon               line:00012	
-SectionText         line:00012	TEXT
-int literal         line:00013	0000000
+uint8               line:00012	byte
+identifier          line:00012	bvar
+period              line:00012	
+int literal         line:00013	0000010
 colon               line:00013	
-program             line:00013	program
-identifier          line:00013	test
+function            line:00013	func
+identifier          line:00013	main
+open_paren          line:00013	
+close_paren         line:00013	
 period              line:00013	
-int literal         line:00014	0000001
+int literal         line:00014	0000011
 colon               line:00014	
-function            line:00014	func
-identifier          line:00014	cstart
-open_paren          line:00014	
-uint16              line:00014	word
-identifier          line:00014	drive
-close_paren         line:00014	
+_shortPointer       line:00014	shortshort
+uint16              line:00014	shortshort
+identifier          line:00014	ShByte
+eq                  line:00014	
+int literal         line:00014	31744
 period              line:00014	
-int literal         line:00015	0000005
+int literal         line:00015	0000021
 colon               line:00015	
-uint32              line:00015	uint
-identifier          line:00015	Sdat
-eq                  line:00015	
-ampersand           line:00015	
-identifier          line:00015	SECTOR
+display             line:00015	display
+open_paren          line:00015	
+identifier          line:00015	MessERS
+close_paren         line:00015	
 period              line:00015	
-int literal         line:00016	0000015
+int literal         line:00016	0000022
 colon               line:00016	
-uint32              line:00016	uint
-identifier          line:00016	str
+identifier          line:00016	pVram
 eq                  line:00016	
-identifier          line:00016	HELLO
+int literal         line:00016	65536
 period              line:00016	
-int literal         line:00018	0000500
+int literal         line:00017	0000023
+colon               line:00017	
+star                line:00017	
+identifier          line:00017	pVram
+eq                  line:00017	
+int literal         line:00017	85
+period              line:00017	
+int literal         line:00018	0000024
 colon               line:00018	
-end                 line:00018	endfunc
-function            line:00018	endfunc
+star                line:00018	
+int literal         line:00018	65536
+eq                  line:00018	
+int literal         line:00018	85
 period              line:00018	
-int literal         line:00020	0002000
+int literal         line:00019	0000025
+colon               line:00019	
+_longPointer        line:00019	longbyte
+uint8               line:00019	longbyte
+identifier          line:00019	str
+eq                  line:00019	
+ampersand           line:00019	
+identifier          line:00019	MessERS
+period              line:00019	
+int literal         line:00020	0000027
 colon               line:00020	
-end                 line:00020	endprogram
-program             line:00020	endprogram
+uint8               line:00020	char
+identifier          line:00020	c
+eq                  line:00020	
+star                line:00020	
+identifier          line:00020	str
 period              line:00020	
+int literal         line:00021	0000028
+colon               line:00021	
+display             line:00021	display
+open_paren          line:00021	
+identifier          line:00021	str
+close_paren         line:00021	
+period              line:00021	
+int literal         line:00022	0000029
+colon               line:00022	
+identifier          line:00022	bvar
+eq                  line:00022	
+int literal         line:00022	85
+period              line:00022	
+int literal         line:00023	0000032
+colon               line:00023	
+_return             line:00023	ret
+int literal         line:00023	0
+period              line:00023	
+int literal         line:00024	0000070
+colon               line:00024	
+end                 line:00024	endfunc
+function            line:00024	endfunc
+period              line:00024	
+int literal         line:00025	0001000
+colon               line:00025	
+end                 line:00025	endprog
+program             line:00025	endprog
+period              line:00025	

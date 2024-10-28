@@ -21,6 +21,8 @@ PrintStr:
     mov     AL,             [HL]
     cmp     AL,             0
     je      [ExitPrintStr]
+    push    BL
+    push    AL
     call    [COut]
     inc     HL
     dec     C
@@ -42,12 +44,12 @@ ReadCharKey:
     retz
 
 ; Arguments:
-; uint8_t* HIGH address     [BP - 20]   2 bytes
-; uint8_t* LOW address      [BP - 18]   2 bytes
-; uint16_t drive            [BP - 14]   2 byte
-; uint16_t Head             [BP - 12]   2 byte
-; uint16_t track            [BP - 10]   2 bytes
-; uint16_t sector           [BP - 8]    2 byte
+; uint16_t sector           [BP - 18]   2 byte
+; uint16_t track            [BP - 16]   2 bytes
+; uint16_t Head             [BP - 14]   2 byte
+; uint16_t drive            [BP - 12]   2 byte
+; uint8_t* LOW address      [BP - 10]   2 bytes
+; uint8_t* HIGH address     [BP - 8]    2 bytes
 ;
 ;
 ;
@@ -57,16 +59,16 @@ Read_Sector:
     enter
     pushr
 
-    movw    A,              [BP - 14]       ; uint16_t drive
+    movw    A,              [BP - 12]       ; uint16_t drive
     push    A
 
-    movw    A,              [BP - 12]       ; uint16_t head
+    movw    A,              [BP - 14]       ; uint16_t head
     push    A
     
-    movw    A,              [BP - 10]       ; uint16_t Track
+    movw    A,              [BP - 16]       ; uint16_t Track
     push    A
     
-    movw    A,              [BP - 8]        ; uint16_t sector
+    movw    A,              [BP - 18]       ; uint16_t sector
     push    A
     
     mov     A,              0x02            ; data length
@@ -74,14 +76,11 @@ Read_Sector:
 
     call    [Read_Data]
 
-    mov     ES,             [BP - 6]
-    mov     FS,             [BP - 4]
-    movw    L,              [BP - 18]
-    movw    H,              [BP - 20]
+    movw    L,              [BP - 10]
+    movw    H,              [BP - 8]
 
     outw    %DATA,          H
     outw    %DATA,          L
-    outw    %DATA,          0x0
 
     inb     %DATA,          A
     sez     R1

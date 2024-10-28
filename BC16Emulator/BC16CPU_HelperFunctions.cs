@@ -107,6 +107,17 @@ namespace BCG16CPUEmulator
             int result = BitConverter.ToInt32(bytes.Reverse().ToArray());
             return result;
         }
+        public int FetchQWord()
+        {
+            List<byte> bytes = new List<byte>();
+
+            bytes.AddRange(BitConverter.GetBytes(FetchDWord()));
+            bytes.AddRange(BitConverter.GetBytes(FetchDWord()));
+            m_argumentOffset += 4;
+            m_PC += 4;
+            int result = BitConverter.ToInt32(bytes.ToArray().Reverse().ToArray());
+            return result;
+        }
         public float FetchFloat()
         {
             string hex = ""; //Convert.ToString(m_BUS.m_Memory.ReadDWord(m_PC), 16);
@@ -167,10 +178,6 @@ namespace BCG16CPUEmulator
                     case Register.R14:  return m_R14;
                     case Register.R15:  return m_R15;
                     case Register.R16:  return m_R16;
-                    case Register.R17:  return m_R17;
-                    case Register.R18:  return m_R18;
-                    case Register.R19:  return m_R19;
-                    case Register.R20:  return m_R20;
                 }
             }
             else
@@ -211,14 +218,6 @@ namespace BCG16CPUEmulator
                         return m_R15[false];
                     case Register.R16:
                         return m_R16[false];
-                    case Register.R17:
-                        return m_R17[false];
-                    case Register.R18:
-                        return m_R18[false];
-                    case Register.R19:
-                        return m_R19[false];
-                    case Register.R20:
-                        return m_R20[false];
                 }
             }
 
@@ -337,10 +336,6 @@ namespace BCG16CPUEmulator
                 case Register.R14:
                 case Register.R15:
                 case Register.R16:
-                case Register.R17:
-                case Register.R18:
-                case Register.R19:
-                case Register.R20:
                     if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
                     {
                         return 4;
@@ -635,46 +630,6 @@ namespace BCG16CPUEmulator
                         m_R16[false] = value; 
                     } 
                     break;
-                case Register.R17:
-                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
-                    {
-                        m_R17 = value; 
-                    }
-                    else 
-                    {
-                        m_R17[false] = value; 
-                    } 
-                    break;
-                case Register.R18:
-                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
-                    {
-                        m_R18 = value; 
-                    }
-                    else 
-                    {
-                        m_R18[false] = value; 
-                    } 
-                    break;
-                case Register.R19:
-                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
-                    {
-                        m_R19 = value; 
-                    }
-                    else 
-                    {
-                        m_R19[false] = value; 
-                    } 
-                    break;
-                case Register.R20:
-                    if ((m_CR0 & CR0_EnableExtendedMode) == CR0_EnableExtendedMode)
-                    {
-                        m_R20 = value; 
-                    }
-                    else 
-                    {
-                        m_R20[false] = value; 
-                    } 
-                    break;
             }
         }
         public void SetRegisterValue(Register register, Register value)
@@ -774,6 +729,10 @@ namespace BCG16CPUEmulator
                     break;
                 case FL_L:
                     result = operand1 < operand2;
+                    SetFlag(Flag, result);
+                    break;
+                case FL_G:
+                    result = operand1 > operand2;
                     SetFlag(Flag, result);
                     break;
                 case FL_C:
@@ -940,6 +899,7 @@ namespace BCG16CPUEmulator
         }
         public void PushInterrupt()
         {
+            Pushr();
             PushPC();
             Push(Register.F);
         }

@@ -129,8 +129,8 @@ namespace filesystem
             date |= (ushort)(month << 5);
             date |= day;
 
-            offset = WriteToDisk(time, offset, false);
             offset = WriteToDisk(date, offset, false);
+            offset = WriteToDisk(time, offset, false);
             return offset;
         }
         public int WriteToDisk(System.DateTime dateTime, int offset = 0)
@@ -201,11 +201,33 @@ namespace filesystem
         public DateTime ReadDisk(ref int offset)
         {
             DateTime dateTime = new DateTime();
-            dateTime.m_Day = ReadDisk(ref offset, out byte _, false);
-            dateTime.m_Month = ReadDisk(ref offset, out byte _, false);
-            dateTime.m_Year = ReadDisk(ref offset, out byte _, false);
-            dateTime.m_Hour = ReadDisk(ref offset, out byte _, false);
-            dateTime.m_Minute = ReadDisk(ref offset, out byte _, false);
+
+            ushort date = ReadDisk(ref offset, out ushort _, false);
+            ushort time = ReadDisk(ref offset, out ushort _, false);
+
+            // 17 20 ??
+
+            // 0bYYYYYMMM_MMMSSSSS
+            dateTime.m_Hour = (byte)((time   & 0b11111000_00000000) >> 11);
+            dateTime.m_Minute = (byte)((time & 0b00000111_11100000) >> 5);
+            dateTime.m_Second = (byte)((time & 0b00000000_00011111));
+
+            // 05 10 0000
+
+            dateTime.m_Year = (ushort)((date >> 11) & 0b1111111);
+            dateTime.m_Month = (byte)((date >> 5));
+            dateTime.m_Day = (byte)((date &     0b00000000_00001111));
+
+            /*
+            time = (ushort)((hour & 0b1_1111) << 11);
+            time |= (ushort)(minute << 5);
+            time |= (ushort)(seconds / 2);
+
+            date = (ushort)((year & 0b1111111) << 9);
+            date |= (ushort)(month << 5);
+            date |= day;
+             */
+
             return dateTime;
         }
         public int ReadDisk(ref int offset, out int result, bool inline = false)
@@ -249,6 +271,10 @@ namespace filesystem
                 result = bytestr.First();
                 return result;
             }
+        }
+        public void ReadDisk(ref int offset, out DateTime result)
+        {
+            result = ReadDisk(ref offset);
         }
         public string ReadDisk(ref int offset, int count, out string result)
         {

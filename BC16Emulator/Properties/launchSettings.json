@@ -7,7 +7,7 @@
     },
     "BCG16CPUEmulator BIOS": {
       "commandName": "Project",
-      "commandLineArgs": "-i ./CPU/src/BIOSBin/Bin/BIOS.bin -d [ index 1, Ut80, WE, BFS1, F ] ./CPU/src/DOS/disk.bin",
+      "commandLineArgs": "-i ./src/BIOS/BIOS.bin -d [ index 1, Ut80, WE, BFS1, F ] ./src/DOS/disk.bin",
       "workingDirectory": "../"
     }
   }

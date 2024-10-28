@@ -10,26 +10,29 @@ COut:
     push    A
     push    HL
 
-    mov     AL,             [BP - 9]
-    mov     AH,             [BP - 8]
-    cmp     AH,             0xA                 ; \n
+    mov     AH,             [BP - 9]
+    mov     AL,             [BP - 8]
+    cmp     AL,             0xA                 ; \n
     je      [NewLine]
+    cmp     AL,             0x0                 ; \0
+    je      [EndOfLoad]
 
     call    [GetCursorAddress]
 
     ; writing to VRAM
     mov     [HL],           A                   ; writing the data
+EndOfLoad:
     mov     word A,         [Cursorx]           ; A = Cursorx
     inc     A                                   ; A += 1
     mov     [Cursorx],      A                   ; Cursorx = A
-    cmp     A,              %ScreenHeight       ; A >= ScreenHeight ?
+    cmp     A,              [ScreenHeight]      ; A >= ScreenHeight ?
     jge     [NewLine]                           ; Yes
     jmp     [ExitCout]
 
 NewLine:
     sez     A
     mov     [Cursorx],      A
-    mov     word A,         [Cursory]
+    movw    A,              [Cursory]
     inc     A
     mov     [Cursory],      A
 
@@ -37,7 +40,7 @@ ExitCout:
     pop     HL
     pop     A
     leave
-    retz
+    ret     2
 
 
 
@@ -49,12 +52,13 @@ ExitCout:
 GetCursorAddress:
     push    C
 
-    movd    HL,             0x010000            ; memory address of VRAM
-    mov     word C,         [Cursorx]           ; loading cursorx into C
-    mul     C,              2                   ; C = cursorx * 2
+    sez     L
+    movd    H,              0x0001              ; memory address of VRAM
+    movw    C,              [Cursorx]           ; loading cursorx into C
+    mul     C,              0x2                 ; C *= 2
     add     HL,             C                   ; loading cursorx into HL
-    mov     word C,         [Cursory]           ; loading cursory into C
-    mul     word C,         [ScreenHeight]
+    movw    C,              [Cursory]           ; loading cursory into C
+    mul     C,              [ScreenWidth]
     add     HL,             C                   ; X and Y is now a coord
 
     pop     C

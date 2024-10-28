@@ -8,15 +8,17 @@ SECTION:TEXT
 
 0000000:prog    test.                                                   \\
 0000001:uint    pVram.                                                  \\
+0000002:byte    bvar.                                                   \\
 0000010:func    main().                                                 \\
+0000011:shortshort ShByte = 0x7C00.                                     \\ 
 0000021:display(MessERS).                                               \\
 0000022:pVram=0x010000.                                                 \\
 0000023:*pVram=0x55.                                                    \\
 0000024:*0x010000=0x55.                                                 \\
-0000025:uint str=&MessERS.                                              \\
-0000026:if str==MessERS.then.ret 1.else.then.ret 2.enif.ret 0.          \\
-0000027:if 1.then.                                                      \\
-0000028:display(MessERS).enif.                                          \\
+0000025:longbyte str=&MessERS.                                          \\
+0000027:char c=*str.                                                    \\
+0000028:display(str).                                                   \\
+0000029:bvar=0x55.                                                      \\
 0000032:ret 0.                                                          \\
 0000070:endfunc.                                                        \\
 0001000:endprog.                                                        \\

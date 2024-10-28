@@ -37,6 +37,11 @@ public class ArgumentFunctions : AssmeblerErrors
         m_OutputFormat = OutputFormats.obj;
     }
 
+    public static void SetDebugMode(string[] args, ref int i)
+    {
+        Debug = true;
+    }
+
     public static void SetCPUType(string[] args, ref int i)
     {
         i++;

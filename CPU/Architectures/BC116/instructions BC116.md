@@ -118,7 +118,7 @@
 - `0x20A2`: NOT:    AX                      `Performs a bitwise NOT operation on the AX register.`
 - `0x20B0`: SHL:    destination, operand1   `Shifts all the bits left in the destination by specified operand1. The shift flag is the overflowing bit, and the next bit is zero.`
 - `0x20C0`: SHR:    destination, operand1   `Shifts all the bits rigth in the destination by specified by operand1. The shift flag is the overflowing bit, and the next bit is zero.`
-- `0x20D0`: ROL:    destination, operand1   `Rotates all the bits left in the destination by specified by operand1. The shift flag is used as the next bit, and the overflowing bit.`
+  - `0x20D0`: ROL:    destination, operand1   `Rotates all the bits left in the destination by specified by operand1. The shift flag is used as the next bit, and the overflowing bit.`
 - `0x20E0`: ROR:    destination, operand1   `Rotates all the bits right in the destination by specified by operand1. The shift flag is used as the next bit, and the overflowing bit.`
 - `0x20F0`: INC:    register                `Increments the value at the register by 1.`
 - `0x2100`: DEC:    register                `Decrements the value at the register by 1.`
@@ -163,7 +163,7 @@
 
 # Convert instructions
 
-- `0x4000`: CBTA:   register, address       `Convertes the register into an ASCII string and puts the result into memory using the address`
+- `0x4000`: CBTA:   register, address       `Convertes the register into an ASCII string and puts the result into memory using the address and the length of the string is in the C register`
 
 # Memory Operations instructions
 
@@ -180,4 +180,7 @@
 - `0xF050`: BRK:                            `Generates a software interrupt (more in the INTERRUPTS)`
 - `0xF060`: ENTER:                          `Creates a stack frame`
 - `0xF070`: LEAVE:                          `Leaves the current stack frame`
+- `0xF080`: CPUID:  register                `Puts some info about the CPU into the destination register`
+- `0xF090`: PUSHRR:                         `Pushes R1 to R16 on to the stack`
+- `0xF0A0`: POPRR:                          `Pops R1 to R16 off the stack`
 - `0xFFF0`: HALT:                           `Stops the CPU`

@@ -37,6 +37,7 @@ namespace BCG16CPUEmulator
 
             m_CPUBus.ReadMemory = m_Memory.ReadByte;
             m_CPUBus.ReadBytes = m_Memory.ReadBytes;
+            m_CPUBus.ReadVRAM = m_Memory.ReadVRAM;
             m_CPUBus.WriteMemory = m_Memory.WriteByte;
             m_CPUBus.WriteBytes = m_Memory.WriteBytes;
 

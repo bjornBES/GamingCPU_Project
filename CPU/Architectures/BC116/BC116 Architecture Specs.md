@@ -94,6 +94,7 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 - 0x01: immediate word              number
 - 0x02: immediate tbyte:            number
 - 0x03: immediate dword:            number
+- 0x04: immediate qword:            number
 - 0x08: immediate_float:            numberf
 - 0x10: register                    register
 - 0x11: register AL:                AL
@@ -249,8 +250,8 @@ The Stack is a 64 KB section set using the [Stack Segment register](#registers) 
   - 0x0080 HALT
   - 0x0100 reserved
   - 0x0200 under flow
-  - 0x0400 reserved
-  - 0x0800 reserved
+  - 0x0400 shift flag
+  - 0x0800 greater
   - 0x1000 reserved
   - 0x2000 reserved
   - 0x4000 reserved

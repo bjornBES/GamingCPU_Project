@@ -45,10 +45,6 @@ namespace BCG16CPUEmulator
         public _32Bit_Register m_R14 = new _32Bit_Register();
         public _32Bit_Register m_R15 = new _32Bit_Register();
         public _32Bit_Register m_R16 = new _32Bit_Register();
-        public _32Bit_Register m_R17 = new _32Bit_Register();
-        public _32Bit_Register m_R18 = new _32Bit_Register();
-        public _32Bit_Register m_R19 = new _32Bit_Register();
-        public _32Bit_Register m_R20 = new _32Bit_Register();
 
         public _8Bit_Register m_CR0 = new _8Bit_Register();
         public _8Bit_Register m_CR1 = new _8Bit_Register();
@@ -108,6 +104,16 @@ namespace BCG16CPUEmulator
         /// Flag overflow
         /// </summary>
         public const int FL_U = 0x0200;
+
+        /// <summary>
+        /// shift flag
+        /// </summary>
+        public const int FL_SF = 0x0400;
+
+        /// <summary>
+        /// shift flag
+        /// </summary>
+        public const int FL_G = 0x0800;
 
 
         public const int CR0_BiosRom = 0x01;
