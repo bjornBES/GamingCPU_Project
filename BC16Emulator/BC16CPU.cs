@@ -6,7 +6,7 @@ using System.Diagnostics.Tracing;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class BC16CPU : BC16CPU_Instructions
     {

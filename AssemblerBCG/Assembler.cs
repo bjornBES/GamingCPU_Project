@@ -15,6 +15,7 @@ namespace AssemblerBCG
     {
         public void Start(string src, string file, bool isLast)
         {
+
             Console.WriteLine($"Assembling {file.Split(Path.DirectorySeparatorChar).Last()}");
             if (m_doneFiles.Contains(file))
             {
@@ -68,7 +69,7 @@ namespace AssemblerBCG
                     if (line[1] == "=")
                     {
                         SizeAlignment alignment = SizeAlignment._word;
-                        if (!ParseTerm(line[2], ref alignment, out ArgumentMode mode, out string[] value))
+                        if (!ParseTerm(line[2], ref alignment, out ArgumentModeOld mode, out string[] value))
                         {
                             Console.WriteLine($"Error: 00100 {m_file}:{Linenumber}");
                             Environment.Exit(1);
@@ -257,9 +258,9 @@ namespace AssemblerBCG
                         for (int i = 0; i < arguments.Length; i++)
                         {
                             sizeAlignment = SizeAlignment._byte;
-                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentMode mode, out string[] result))
+                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentModeOld mode, out string[] result))
                             {
-                                if (mode != ArgumentMode.immediate_byte)
+                                if (mode != ArgumentModeOld.immediate_byte)
                                 {
                                     Console.WriteLine($"Error: {arguments[i]} is not a byte value");
                                     m_WriteOut = false;
@@ -276,9 +277,9 @@ namespace AssemblerBCG
                         for (int i = 0; i < arguments.Length; i++)
                         {
                             sizeAlignment = SizeAlignment._word;
-                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentMode mode, out string[] result))
+                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentModeOld mode, out string[] result))
                             {
-                                if (mode != ArgumentMode.immediate_word)
+                                if (mode != ArgumentModeOld.immediate_word)
                                 {
                                     Console.WriteLine($"Error: {arguments[i]} is not a word value");
                                     m_WriteOut = false;
@@ -295,9 +296,9 @@ namespace AssemblerBCG
                         for (int i = 0; i < arguments.Length; i++)
                         {
                             sizeAlignment = SizeAlignment._tbyte;
-                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentMode mode, out string[] result))
+                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentModeOld mode, out string[] result))
                             {
-                                if (mode != ArgumentMode.immediate_tbyte)
+                                if (mode != ArgumentModeOld.immediate_tbyte)
                                 {
                                     Console.WriteLine($"Error: {arguments[i]} is not a tbyte value");
                                     m_WriteOut = false;
@@ -314,9 +315,9 @@ namespace AssemblerBCG
                         for (int i = 0; i < arguments.Length; i++)
                         {
                             sizeAlignment = SizeAlignment._dword;
-                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentMode mode, out string[] result))
+                            if (ParseTerm(arguments[i], ref sizeAlignment, out ArgumentModeOld mode, out string[] result))
                             {
-                                if (mode != ArgumentMode.immediate_dword)
+                                if (mode != ArgumentModeOld.immediate_dword)
                                 {
                                     Console.WriteLine($"Error: {arguments[i]} is not a dword value");
                                     m_WriteOut = false;
@@ -493,7 +494,7 @@ namespace AssemblerBCG
 
         void directiveOrg(string number)
         {
-            if (ParseTerm(number, SizeAlignment._word, out ArgumentMode mode, out string[] data))
+            if (ParseTerm(number, SizeAlignment._word, out ArgumentModeOld mode, out string[] data))
             {
                 string address = "";
                 for (int i = 0; i < data.Length; i++)

@@ -1,36 +1,124 @@
 .setcpu "BC16CE"
 .section TEXT
 L0000000:
+_OUT:
+	enter
+	pushr
+	mov   R2,                      [BP - 10]
+	mov   R3,                      [BP - 14]
+	outb  R2,                      R3
 L0000001:
+	mov   R16,                     0
+Exit_OUT:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+L0000002:
+_IN:
+	enter
+	pushr
+	mov   R2,                      [BP - 10]
+	inb   R2,                      AX
+	mov   R16,                     AX
+	jmp   [Exit_IN]
+Exit_IN:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   4
+L0000010:
+_diplay:
+	enter
+	pushr
+L0000049:
+	mov   R16,                     0
+Exit_diplay:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   16
+.extern _ACLAsmReadSector
+L2000000:
+_ReadRoot:
+	enter
+	pushr
+L2000005:
+	; arguemnt 4
+	mov   HL,                      Sector
+	push  HL
+	; arguemnt 3
+	mov   AX,                      0x3
+	push  AX
+	; arguemnt 2
+	mov   AX,                      0x0
+	push  AX
+	; arguemnt 1
+	mov   AX,                      0x0
+	push  AX
+	; arguemnt 0
+	mov   AX,                      [BP - 10]
+	push  AX
+	call  far [_ACLAsmReadSector]
+L2000010:
+	cmp   AX,                      1
+	je    [L2020500]
+L2009000:
+	mov   R16,                     0
+Exit_ReadRoot:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+L2020500:
+_ErrorRS:
+	enter
+	pushr
+L2020501:
+	push  HL
+	push  AX
+	mov   HL,                      far @MessERS
+	mov   AH,                      0x02
+	int   0x10
+	pop   AX
+	pop   HL
+	jmp   [L9000000]
+	mov   R16,                     0
+Exit_ErrorRS:
+	popr
+	leave
+	mov   AX,                      R16
+	retz
+L9000000:
+	jmp   [L9000000]
+.extern _DOSSTART
+L1000000:
 _cstart:
 	enter
 	pushr
-L0000005:
-	mov   ,
-L0000015:
-	mov   HL,                      HELLO
+L1001000:
+	mov   HL,                      far @_DOSSTART
 	push  HL
-L0000500:
-	mov   R1,                      0
+	sez   SP
+	jmp   [HL]
+L1001010:
+	mov   R16,                     0
 Exit_cstart:
 	popr
-	sub   SP,                      4
 	leave
-	ret   2
-L0002000:
+	mov   AX,                      R16
+	ret   8
+.local __RODATASTRAT__
+__RODATASTRAT__:
+MessERS:
+.db   "Error white reading a sector", 0
+DOSFileName:
+.db   "DOS        BIN  ", 0
 
 .section BSS
-SECTOR:
+Sector:
 .res  1024
-KERNEL:
-.res  32768
 
 .section DATA
 .local __DATASTRAT__
 __DATASTRAT__:
-
-.section RODATA
-.local __RODATASTRAT__
-__RODATASTRAT__:
-HELLO:
-.db   "HELLO WORLD", 0

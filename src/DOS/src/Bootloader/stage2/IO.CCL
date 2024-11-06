@@ -1,0 +1,4 @@
+SECTION:TEXT
+0000000:func OUT(byte port, byte pdata).asm("outb\t{port},\t{pdata}").  \\
+0000001:endfunc.                                                        \\
+0000002:func IN(byte port).asm("inb\t{port},\tAX").return @AX.endfunc.  \\

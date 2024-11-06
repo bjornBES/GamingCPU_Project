@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class CPUSettings
     {

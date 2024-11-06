@@ -1,0 +1,57 @@
+
+.section TEXT
+;
+; far byte des                      [BP - 26]
+; uint16 sector                     [BP - 22]
+; uint16 track                      [BP - 18]
+; uint8 head                        [BP - 14]
+; uint8 drive                       [BP - 10]
+;
+; return:
+; bool error                        AX
+;
+; func ACLAsmReadSector(uint8 drive, uint8 head, uint16 track, uint16 sector, far byte des)
+;
+.global _ACLAsmReadSector
+_ACLAsmReadSector:
+    enter
+    pushr
+
+    mov         A,              CR0
+    and         A,              0xFF7F                      ; 0x0080 with a not
+    mov         CR0,            A                           ; exit protected mode
+
+_RSJmpE:
+    mov     A,                  @__DATASTART
+    mov     DS,                 A
+    mov     SS,                 @__STACKSTART
+
+    push    R1
+    mov     R1L,                [BP - 14]
+    mov     R2,                 [BP - 18]
+    mov     R3,                 [BP - 22]
+    mov     DL,                 [BP - 14]
+    mov     HL,                 [BP - 26]
+
+    mov     AH,                 0x01
+    int     0x13
+
+    sez     R16
+    jnc     [_ACLAsmRSDone]
+    mov     R16,                0x01
+_ACLAsmRSDone:
+
+    mov         A,              CR0
+    and         A,              0x0080                      ; 0x0080 
+    mov         CR0,            A                           ; enabling protected mode
+
+_RSJmpP:
+    mov     AX,                 FAR @__DATASTART
+    mov     EDS,                AX
+    mov     ESS,                FAR @__STACKSTART
+
+    popr
+    mov     AX,                 R16
+    leave
+    ret     20                                              ; - 20 in arguments
+    

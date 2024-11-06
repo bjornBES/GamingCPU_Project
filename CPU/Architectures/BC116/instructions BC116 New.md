@@ -1,0 +1,89 @@
+# General instructions
+
+- `0x0000`: MOV:  destination, source       `Moves the value from the source into the destination`
+- `0x0400`: CMP:  operand1 operand2         `Compares operand1 and operand2 and sets the flags in the flags register`
+- `0x0500`: PUSH: regisger                  `Pushes the regisger onto the stack and increments the SP`
+- `0x0600`: POP:  register                  `Decrements the SP and pops the current byte into the register`
+- `0x0700`: CALL: address                   `pushes the PC register and jumps to the function specified by the address`
+- `0x0800`: RET:  operand1                  `pops the PC register and subtracts the SP by operand1`
+- `0x0801`: RETL:                           `pops the CS:PC registers off the stack`
+- `0x0A00`: SEZ:  register                  `Sets a register to zero`
+- `0x0B00`: TEST: register                  `Compares the destination with itself and sets the flag`
+- `0x0C00`: SWAP register register          `swaps the contents of register1 with register2`
+- `0x1000`: OUT:  port source
+- `0x1010`: INP:  port destination
+- `0x2000`: SZE:                            `Sets the zero flag`
+- `0x2001`: SEE:                            `Sets the equals flag`
+- `0x2002`: SES:                            `Sets the signed flag`
+- `0x2003`: SEC:                            `Sets the carry flag`
+- `0x2004`: SEL:                            `Sets the less flag`
+- `0x2005`: SEI:                            `Sets the interrupt enable flag`
+- `0x2006`: SEH:                            `Sets the halt flag`
+- `0x2010`: CZE:                            `Clears the zero flag`
+- `0x2011`: CLE:                            `Clears the equals flag`
+- `0x2012`: CLS:                            `Clears the signed flag`
+- `0x2013`: CLC:                            `Clears the carry flag`
+- `0x2014`: CLL:                            `Clears the less flag`
+- `0x2015`: CLI:                            `Clears the interrupt enable flag`
+- `0x2016`: CLH:                            `Clears the halt flag`
+- `0x2020`: ADD:    destination, source     `Adds the values of the source and the destination.`
+- `0x2024`: ADC:    destination, source     `Adds the values of the source and the destination + carry.`
+- `0x2030`: SUB:    destination, source     `Subtracts the values of the source and the destination.`
+- `0x2034`: SBB:    destination, source     `Subtracts the values of the source and the destination + carry.`
+- `0x2040`: MUL:    destination, source     `Multiplies the values of the source and the destination.`
+- `0x2050`: DIV:    destination, source     `Divides the values of the source and the destination.`
+- `0x2060`: AND:    destination, source     `Performs a bitwise AND operation between the destination.`
+- `0x2070`: OR:     destination, source     `Performs a bitwise OR operation between the destination.`
+- `0x2080`: NOR:    destination, source     `Performs a bitwise NOR operation between the destination.`
+- `0x2090`: XOR:    destination, source     `Performs a bitwise XOR operation between the destination.`
+- `0x20A0`: NOT:    destination             `Performs a bitwise NOT operation on the destination.`
+- `0x20B0`: SHL:    destination, operand1   `Shifts all the bits left in the destination by specified operand1. The shift flag is the overflowing bit, and the next bit is zero.`
+- `0x20C0`: SHR:    destination, operand1   `Shifts all the bits rigth in the destination by specified by operand1. The shift flag is the overflowing bit, and the next bit is zero.`
+- `0x20D0`: ROL:    destination, operand1   `Rotates all the bits left in the destination by specified by operand1. The shift flag is used as the next bit, and the overflowing bit.`
+- `0x20E0`: ROR:    destination, operand1   `Rotates all the bits right in the destination by specified by operand1. The shift flag is used as the next bit, and the overflowing bit.`
+- `0x20F0`: INC:    register                `Increments the value at the register by 1.`
+- `0x2100`: DEC:    register                `Decrements the value at the register by 1.`
+- `0x2110`: NEG:    destination             `Sets/clears the signed bit of the destination.`
+- `0x2120`: EXP:    destination, operand1   `Raises the value at the destination to the power of the value specified by operand1.`
+- `0x2130`: SQRT:   destination             `Calculates the square root of the destination.`
+- `0x2140`: RNG:    destination             `Generates a random byte and puts the value into the destination`
+- `0x2150`: SEB:    source, operand1        `Sets a bit in the source specified by the operand1`
+- `0x2160`: CLB:    source, operand1        `Clears a bit in the source specified by the operand1`
+- `0x2170`: MOD:    destination, source     `WIP`
+- `0x2190`: ADDF:   destination, source     `Adds the values of the source and the destination and stores the result in the destination.`
+- `0x21A0`: SUBF:   destination, source     `Subtracts the source from the destination and stores the result in the destination.`
+- `0x21B0`: MULF:   destination, source     `Multiplies the source and the destination and stores the result in the destination.`
+- `0x21C0`: DIVF:   destination, source     `Divides the destination by the source and stores the result in the destination.`
+- `0x21D0`: CMPF:   destination, source     `Compares the source and destination values, setting flags accordingly.`
+- `0x21E0`: SQRTF:  destination             `Computes the square root of the value in the destination and stores the result in the destination.`
+- `0x21F0`: MODF:   destination, source     `Computes the modulus of the destination by the source and stores the result in the destination.`
+- `0x3000`: JMP:    address                 `Jumps to the specified address`
+- `0x3010`: JZ:     address                 `Jumps to the specified address if the zero flag is set`
+- `0x3011`: JNZ:    address                 `Jumps to the specified address if the zero flag is cleared`
+- `0x3020`: JS:     address                 `Jumps to the specified address if the signed flag is set`
+- `0x3021`: JNS:    address                 `Jumps to the specified address if the signed flag is cleared`
+- `0x3030`: JE:     address                 `Jumps to the specified address if the equal flag is set`
+- `0x3031`: JNE:    address                 `Jumps to the specified address if the equal flag is cleared`
+- `0x3040`: JC:     address                 `Jumps to the specified address if the carry flag is set`
+- `0x3041`: JNC:    address                 `Jumps to the specified address if the carry flag is cleared`
+- `0x3090`: JL:     address                 `Jumps to the specified address if the less flag is set`
+- `0x3091`: JG:     address                 `Jumps to the specified address if the less flag is cleared`
+- `0x3092`: JLE:    address                 `Jumps to the specified address if the equal flag or the less flag is set`
+- `0x3093`: JGE:    address                 `Jumps to the specified address if the equal flag is set or the less flag is cleared`
+- `0x30A1`: JNV:    address                 `Jumps to the specified address if the overflow flag is cleared`
+- `0x4000`: CBTA:   register, address       `Convertes the register into an ASCII string and puts the result into memory using the address and the length of the string is in the C register`
+- `0x4010`: CMPL:                           `Compares the memory address value in HL and DS:B for C times and updates the flags register`
+- `0x4020`: MOVF:   destination, immediate  `moves a float from the specified immediate to the float register(destination)`
+- `0xF000`: RETI:                           `returns from an interrupt routine`
+- `0xF010`: NOP:                            `No operation`
+- `0xF020`: PUSHR:                          `Pushes (A B C D H L) on to the stack`
+- `0xF030`: POPR:                           `Pops (A B C D H L) off the stack`
+- `0xF040`: INT:    INTERRUPT_ROUTINE       `Generates an interrupt routine (more in the INTERRUPTS)`
+- `0xF050`: BRK:                            `Generates a software interrupt (more in the INTERRUPTS)`
+- `0xF060`: ENTER:                          `Creates a stack frame`
+- `0xF070`: LEAVE:                          `Leaves the current stack frame`
+- `0xF080`: CPUID:  register                `Puts some info about the CPU into the destination register`
+- `0xF090`: PUSHRR:                         `Pushes R1 to R16 on to the stack`
+- `0xF0A0`: POPRR:                          `Pops R1 to R16 off the stack`
+- `0xF0B0`: LGDT:   address                 `Loads the GDA register with the address`
+- `0xFFF0`: HALT:                           `Stops the CPU`

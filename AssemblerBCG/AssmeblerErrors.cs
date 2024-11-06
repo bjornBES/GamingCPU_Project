@@ -35,7 +35,7 @@ public class AssmeblerErrors : AssemblerVariabels
 
         printError(errorMessage);
     }
-    public void E_InvalidCPUFeature(CPUType NeededCPU, ArgumentMode argumentMode)
+    public void E_InvalidCPUFeature(CPUType NeededCPU, ArgumentModeOld argumentMode)
     {
         string errorMessage = "";
 

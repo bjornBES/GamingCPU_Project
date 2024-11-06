@@ -89,12 +89,12 @@ namespace AssemblerBCG
         bool m_isNear = false;
         bool m_isLong = false;
         bool m_isFar = false;
-        public bool ParseTerm(string term, SizeAlignment alignment, out ArgumentMode mode, out string[] _out)
+        public bool ParseTerm(string term, SizeAlignment alignment, out ArgumentModeOld mode, out string[] _out)
         {
             SizeAlignment sizeAlignment = alignment;
             return ParseTerm(term, ref sizeAlignment, out mode, out _out);
         }
-        public string ParseTerm(string term, SizeAlignment alignment, out ArgumentMode mode)
+        public string ParseTerm(string term, SizeAlignment alignment, out ArgumentModeOld mode)
         {
             SizeAlignment sizeAlignment = alignment;
             string[] _out;
@@ -112,7 +112,7 @@ namespace AssemblerBCG
 
             return result;
         }
-        public bool ParseTerm(string term, ref SizeAlignment alignment, out ArgumentMode mode, out string[] _out)
+        public bool ParseTerm(string term, ref SizeAlignment alignment, out ArgumentModeOld mode, out string[] _out)
         {
             if (string.IsNullOrEmpty(term))
             {
@@ -139,7 +139,7 @@ namespace AssemblerBCG
             {
                 m_isFar = true;
 
-                string _arg = term.Replace("far ", "", false, System.Globalization.CultureInfo.CurrentCulture);
+                string _arg = term.Replace("far ", "", true, System.Globalization.CultureInfo.CurrentCulture);
 
                 bool result = ParseTerm(_arg, ref alignment, out mode, out _out);
 
@@ -151,7 +151,7 @@ namespace AssemblerBCG
             {
                 m_isLong = true;
 
-                string _arg = term.Replace("long ", "", false, System.Globalization.CultureInfo.CurrentCulture);
+                string _arg = term.Replace("long ", "", true, System.Globalization.CultureInfo.CurrentCulture);
 
                 bool result = ParseTerm(_arg, ref alignment, out mode, out _out);
 
@@ -161,7 +161,7 @@ namespace AssemblerBCG
             }
             else if (term.Contains("short", IgnoreCasing))
             {
-                string _arg = term.Replace("short ", "", false, System.Globalization.CultureInfo.CurrentCulture);
+                string _arg = term.Replace("short ", "", true, System.Globalization.CultureInfo.CurrentCulture);
 
                 bool result = ParseTerm(_arg, ref alignment, out mode, out _out);
 
@@ -171,7 +171,7 @@ namespace AssemblerBCG
             {
                 m_isNear = true;
 
-                string _arg = term.Replace("near ", "", false, System.Globalization.CultureInfo.CurrentCulture);
+                string _arg = term.Replace("near ", "", true, System.Globalization.CultureInfo.CurrentCulture);
 
                 bool result = ParseTerm(_arg, ref alignment, out mode, out _out);
                 m_isNear = false;
@@ -295,7 +295,7 @@ namespace AssemblerBCG
             }
             else if (term.StartsWith('\'') && term.EndsWith('\''))
             {
-                mode = ArgumentMode.immediate_byte;
+                mode = ArgumentModeOld.immediate_byte;
                 term = term.Remove(0, 1);
                 term = term.Remove(term.Length - 1, 1);
                 if (term == "\\0")
@@ -334,7 +334,7 @@ namespace AssemblerBCG
                     result.Add(c.PadLeft(2, '0'));
                 }
                 _out = result.ToArray();
-                mode = ArgumentMode.immediate_byte;
+                mode = ArgumentModeOld.immediate_byte;
                 return true;
             }
             else if (term.EndsWith('f'))
@@ -352,7 +352,7 @@ namespace AssemblerBCG
                     binaryString = Convert.ToString(floatToInt, 16).PadLeft(16, '0');
                 }
 
-                mode = ArgumentMode.immediate_float;
+                mode = ArgumentModeOld.immediate_float;
                 _out = SplitHexString(binaryString);
                 return true;
             }
@@ -361,44 +361,42 @@ namespace AssemblerBCG
             _out = null;
             return false;
         }
-        ArgumentMode GetArgumentFromRegister(Register register)
+        ArgumentModeOld GetArgumentFromRegister(Register register)
         {
             return register switch
             {
-                Register.AL => ArgumentMode.register_AL,
-                Register.A => ArgumentMode.register_A,
-                Register.AX => ArgumentMode.register_AX,
+                Register.AL => ArgumentModeOld.register_AL,
+                Register.A => ArgumentModeOld.register_A,
+                Register.AX => ArgumentModeOld.register_AX,
 
-                Register.BL => ArgumentMode.register_BL,
-                Register.B => ArgumentMode.register_B,
-                Register.BX => ArgumentMode.register_BX,
+                Register.BL => ArgumentModeOld.register_BL,
+                Register.B => ArgumentModeOld.register_B,
+                Register.BX => ArgumentModeOld.register_BX,
 
-                Register.CL => ArgumentMode.register_CL,
-                Register.C => ArgumentMode.register_C,
-                Register.CX => ArgumentMode.register_CX,
+                Register.CL => ArgumentModeOld.register_CL,
+                Register.C => ArgumentModeOld.register_C,
+                Register.CX => ArgumentModeOld.register_CX,
 
-                Register.DL => ArgumentMode.register_DL,
-                Register.D => ArgumentMode.register_D,
-                Register.DX => ArgumentMode.register_DX,
+                Register.DL => ArgumentModeOld.register_DL,
+                Register.D => ArgumentModeOld.register_D,
+                Register.DX => ArgumentModeOld.register_DX,
 
-                Register.L => ArgumentMode.register_L,
-                Register.H => ArgumentMode.register_H,
+                Register.L => ArgumentModeOld.register_L,
+                Register.H => ArgumentModeOld.register_H,
 
-                Register.AF => ArgumentMode.register_AF,
-                Register.BF => ArgumentMode.register_BF,
-                Register.CF => ArgumentMode.register_CF,
-                Register.DF => ArgumentMode.register_DF,
+                Register.AF => ArgumentModeOld.register_AF,
+                Register.BF => ArgumentModeOld.register_BF,
+                Register.CF => ArgumentModeOld.register_CF,
+                Register.DF => ArgumentModeOld.register_DF,
 
-                Register.AD => ArgumentMode.register_AD,
-                Register.BD => ArgumentMode.register_BD,
-                Register.CD => ArgumentMode.register_CD,
-                Register.DD => ArgumentMode.register_DD,
+                Register.AD => ArgumentModeOld.register_AD,
+                Register.BD => ArgumentModeOld.register_BD,
+                Register.CD => ArgumentModeOld.register_CD,
+                Register.DD => ArgumentModeOld.register_DD,
 
-                Register.EX => ArgumentMode.register_EX,
-                Register.FX => ArgumentMode.register_FX,
-                Register.GX => ArgumentMode.register_GX,
-                Register.HX => ArgumentMode.register_HX,
-                _ => ArgumentMode.register,
+                Register.EX => ArgumentModeOld.register_EX,
+                Register.GX => ArgumentModeOld.register_GX,
+                _ => ArgumentModeOld.register,
             };
         }
         public SizeAlignment GetAlignmentFromRegister(Register register)
@@ -406,36 +404,36 @@ namespace AssemblerBCG
             RegisterInfo registerInfo = Registers.m_Regs[register];
             return (SizeAlignment)registerInfo.m_Size;
         }
-        public ArgumentMode getSize(ref string HexNumber)
+        public ArgumentModeOld getSize(ref string HexNumber)
         {
             switch (HexNumber.Length)
             {
                 case 1:
                 case 2:
                     HexNumber = HexNumber.PadLeft(2, '0');
-                    return ArgumentMode.immediate_byte;
+                    return ArgumentModeOld.immediate_byte;
                 case 3:
                 case 4:
                     HexNumber = HexNumber.PadLeft(4, '0');
-                    return ArgumentMode.immediate_word;
+                    return ArgumentModeOld.immediate_word;
                 case 6:
                     HexNumber = HexNumber.PadLeft(6, '0');
-                    return ArgumentMode.immediate_tbyte;
+                    return ArgumentModeOld.immediate_tbyte;
                 case 8:
                     HexNumber = HexNumber.PadLeft(8, '0');
-                    return ArgumentMode.immediate_dword;
+                    return ArgumentModeOld.immediate_dword;
                 default:
                     //Console.WriteLine($"Qword {m_file}:{Linenumber}");
                     HexNumber = HexNumber.PadLeft(16, '0').Substring(0, 16);
                     if (m_CPUType < CPUType.BC16)
                     {
                         HexNumber = HexNumber.Substring(8, 8);
-                        return ArgumentMode.immediate_dword;
+                        return ArgumentModeOld.immediate_dword;
                     }
-                    return ArgumentMode.immediate_qword;
+                    return ArgumentModeOld.immediate_qword;
             }
         }
-        bool doAddresses(string addressTerm, ref SizeAlignment alignment, out ArgumentMode argumentMode, out string[] _out)
+        bool doAddresses(string addressTerm, ref SizeAlignment alignment, out ArgumentModeOld argumentMode, out string[] _out)
         {
 
             if (addressTerm.StartsWith("[BP ") && addressTerm.EndsWith(']') || addressTerm.StartsWith("[BPX ") && addressTerm.EndsWith(']'))
@@ -460,17 +458,17 @@ namespace AssemblerBCG
 
                 if (register == Register.BP)
                 {
-                    if (argumentMode == ArgumentMode.immediate_byte)
+                    if (argumentMode == ArgumentModeOld.immediate_byte)
                     {
                         byte number = Convert.ToByte(data, 16);
-                        argumentMode = ArgumentMode.BP_rel_address_byte;
+                        argumentMode = ArgumentModeOld.BP_rel_address_byte;
                         number = (byte)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
-                    else if (argumentMode == ArgumentMode.immediate_word)
+                    else if (argumentMode == ArgumentModeOld.immediate_word)
                     {
                         ushort number = Convert.ToUInt16(data, 16);
-                        argumentMode = ArgumentMode.BP_rel_address_short;
+                        argumentMode = ArgumentModeOld.BP_rel_address_short;
                         number = (ushort)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
@@ -482,24 +480,24 @@ namespace AssemblerBCG
                 }
                 else
                 {
-                    if (argumentMode == ArgumentMode.immediate_word)
+                    if (argumentMode == ArgumentModeOld.immediate_word)
                     {
                         byte number = Convert.ToByte(data, 16);
-                        argumentMode = ArgumentMode.BPX_rel_address_word;
+                        argumentMode = ArgumentModeOld.BPX_rel_address_word;
                         number = (byte)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
-                    else if (argumentMode == ArgumentMode.immediate_tbyte)
+                    else if (argumentMode == ArgumentModeOld.immediate_tbyte)
                     {
                         ushort number = Convert.ToUInt16(data, 16);
-                        argumentMode = ArgumentMode.BPX_rel_address_tbyte;
+                        argumentMode = ArgumentModeOld.BPX_rel_address_tbyte;
                         number = (ushort)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
-                    else if (argumentMode == ArgumentMode.immediate_dword)
+                    else if (argumentMode == ArgumentModeOld.immediate_dword)
                     {
                         ushort number = Convert.ToUInt16(data, 16);
-                        argumentMode = ArgumentMode.BPX_rel_address_int;
+                        argumentMode = ArgumentModeOld.BPX_rel_address_int;
                         number = (ushort)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
@@ -535,17 +533,17 @@ namespace AssemblerBCG
 
                 if (register == Register.SP)
                 {
-                    if (argumentMode == ArgumentMode.immediate_byte)
+                    if (argumentMode == ArgumentModeOld.immediate_byte)
                     {
                         byte number = Convert.ToByte(data, 16);
-                        argumentMode = ArgumentMode.SP_rel_address_byte;
+                        argumentMode = ArgumentModeOld.SP_rel_address_byte;
                         number = (byte)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
-                    else if (argumentMode == ArgumentMode.immediate_word)
+                    else if (argumentMode == ArgumentModeOld.immediate_word)
                     {
                         ushort number = Convert.ToUInt16(data, 16);
-                        argumentMode = ArgumentMode.SP_rel_address_short;
+                        argumentMode = ArgumentModeOld.SP_rel_address_short;
                         number = (ushort)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
@@ -557,24 +555,24 @@ namespace AssemblerBCG
                 }
                 else
                 {
-                    if (argumentMode == ArgumentMode.immediate_word)
+                    if (argumentMode == ArgumentModeOld.immediate_word)
                     {
                         byte number = Convert.ToByte(data, 16);
-                        argumentMode = ArgumentMode.SPX_rel_address_word;
+                        argumentMode = ArgumentModeOld.SPX_rel_address_word;
                         number = (byte)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
-                    else if (argumentMode == ArgumentMode.immediate_tbyte)
+                    else if (argumentMode == ArgumentModeOld.immediate_tbyte)
                     {
                         ushort number = Convert.ToUInt16(data, 16);
-                        argumentMode = ArgumentMode.SPX_rel_address_tbyte;
+                        argumentMode = ArgumentModeOld.SPX_rel_address_tbyte;
                         number = (ushort)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
-                    else if (argumentMode == ArgumentMode.immediate_dword)
+                    else if (argumentMode == ArgumentModeOld.immediate_dword)
                     {
                         ushort number = Convert.ToUInt16(data, 16);
-                        argumentMode = ArgumentMode.SPX_rel_address_int;
+                        argumentMode = ArgumentModeOld.SPX_rel_address_int;
                         number = (ushort)(Operator == '-' ? -number : number);
                         _out = SplitHexString(ToHexString(number));
                     }
@@ -600,23 +598,23 @@ namespace AssemblerBCG
 
                 if (segment == Register.DS)
                 {
-                    argumentMode = ArgumentMode.segment_DS_register;
+                    argumentMode = ArgumentModeOld.segment_DS_register;
                     if (offset == Register.B)
                     {
-                        argumentMode = ArgumentMode.segment_DS_B;
+                        argumentMode = ArgumentModeOld.segment_DS_B;
                     }
                 }
                 else if (segment == Register.ES)
                 {
-                    argumentMode = ArgumentMode.segment_ES_register;
+                    argumentMode = ArgumentModeOld.segment_ES_register;
                     if (offset == Register.B)
                     {
-                        argumentMode = ArgumentMode.segment_ES_B;
+                        argumentMode = ArgumentModeOld.segment_ES_B;
                     }
                 }
                 else
                 {
-                    argumentMode = ArgumentMode.segment_address;
+                    argumentMode = ArgumentModeOld.segment_address;
                 }
 
                 _out = new string[]
@@ -627,10 +625,10 @@ namespace AssemblerBCG
             }
             else if (addressTerm.StartsWith('[') && addressTerm.EndsWith(']') && isRegister(addressTerm.Trim('[', ']'), out Register register))
             {
-                argumentMode = ArgumentMode.register_address;
+                argumentMode = ArgumentModeOld.register_address;
                 if (register == Register.HL)
                 {
-                    argumentMode = ArgumentMode.register_address_HL;
+                    argumentMode = ArgumentModeOld.register_address_HL;
                 }
                 _out = new string[] { ToHexString((int)register).PadLeft(2, '0') };
                 return true;
@@ -720,19 +718,19 @@ namespace AssemblerBCG
                 ParseTerm(addressTerm, ref alignment, out argumentMode, out _out);
                 switch (argumentMode)
                 {
-                    case ArgumentMode.immediate_byte:
-                        argumentMode = ArgumentMode.near_address;
+                    case ArgumentModeOld.immediate_byte:
+                        argumentMode = ArgumentModeOld.near_address;
                         break;
-                    case ArgumentMode.immediate_word:
-                        argumentMode = ArgumentMode.short_address;
+                    case ArgumentModeOld.immediate_word:
+                        argumentMode = ArgumentModeOld.short_address;
                         break;
-                    case ArgumentMode.immediate_tbyte:
-                        argumentMode = ArgumentMode.long_address;
+                    case ArgumentModeOld.immediate_tbyte:
+                        argumentMode = ArgumentModeOld.long_address;
                         break;
-                    case ArgumentMode.immediate_dword:
-                        argumentMode = ArgumentMode.far_address;
+                    case ArgumentModeOld.immediate_dword:
+                        argumentMode = ArgumentModeOld.far_address;
                         break;
-                    case ArgumentMode.immediate_qword:
+                    case ArgumentModeOld.immediate_qword:
                     default:
                         break;
                 }
@@ -743,7 +741,7 @@ namespace AssemblerBCG
             {
                 addressTerm = addressTerm.Replace("rel ", "");
                 string result = ParseTerm(addressTerm, alignment, out _);
-                argumentMode = ArgumentMode.relative_address;
+                argumentMode = ArgumentModeOld.relative_address;
 
                 _out = new string[] { $"REL_{result}" };
 
@@ -756,27 +754,27 @@ namespace AssemblerBCG
             return false;
         }
         bool isRegister(string value, out Register register) => Enum.TryParse(value, true, out register);
-        void setPreSize(out string _out, out ArgumentMode argumentMode)
+        void setPreSize(out string _out, out ArgumentModeOld argumentMode)
         {
             if (m_isNear)
             {
                 _out = "_N";
-                argumentMode = ArgumentMode.immediate_byte;
+                argumentMode = ArgumentModeOld.immediate_byte;
             }
             else if (m_isLong)
             {
                 _out = "_L";
-                argumentMode = ArgumentMode.immediate_tbyte;
+                argumentMode = ArgumentModeOld.immediate_tbyte;
             }
             else if (m_isFar)
             {
                 _out = "_F";
-                argumentMode = ArgumentMode.immediate_dword;
+                argumentMode = ArgumentModeOld.immediate_dword;
             }
             else
             {
                 _out = "_S";
-                argumentMode = ArgumentMode.immediate_word;
+                argumentMode = ArgumentModeOld.immediate_word;
             }
         }
         public bool LabelExists(string name, out Label label, out int index)
@@ -813,7 +811,7 @@ namespace AssemblerBCG
         List<string> tokens = new List<string>();
         string m_expr;
         int m_exprindex = 0;
-        public bool BuildExpr(string expr, out ArgumentMode argumentMode, out string[] result)
+        public bool BuildExpr(string expr, out ArgumentModeOld argumentMode, out string[] result)
         {
             m_exprindex = 0;
             tokens.Clear();
@@ -872,7 +870,7 @@ namespace AssemblerBCG
         Stack<string> HoldingStack = new Stack<string>();
         Stack<string> OutputStack = new Stack<string>();
         bool badExpr = false;
-        public string[] ParseExpr(out ArgumentMode argumentMode)
+        public string[] ParseExpr(out ArgumentModeOld argumentMode)
         {
             badExpr = false;
             HoldingStack.Clear();
@@ -880,7 +878,7 @@ namespace AssemblerBCG
             bool isAddress = false;
             bool doResult = true;
             string lastToken = "";
-            List<ArgumentMode> argumentModes = new List<ArgumentMode>();
+            List<ArgumentModeOld> argumentModes = new List<ArgumentModeOld>();
 
             for (int i = 0; i < tokens.Count; i++)
             {
@@ -897,19 +895,19 @@ namespace AssemblerBCG
 
                 string term = tokens[i];
 
-                if (ParseTerm(term, SizeAlignment._word, out ArgumentMode mode) != null)
+                if (ParseTerm(term, SizeAlignment._word, out ArgumentModeOld mode) != null)
                 {
                     argumentModes.Add(mode);
                     string result = ParseTerm(term, SizeAlignment._word, out _);
                     switch (mode)
                     {
-                        case ArgumentMode.immediate_byte:
-                        case ArgumentMode.immediate_word:
-                        case ArgumentMode.immediate_tbyte:
-                        case ArgumentMode.immediate_dword:
-                        case ArgumentMode.immediate_float:
-                        case ArgumentMode.immediate_qword:
-                        case ArgumentMode.immediate_double:
+                        case ArgumentModeOld.immediate_byte:
+                        case ArgumentModeOld.immediate_word:
+                        case ArgumentModeOld.immediate_tbyte:
+                        case ArgumentModeOld.immediate_dword:
+                        case ArgumentModeOld.immediate_float:
+                        case ArgumentModeOld.immediate_qword:
+                        case ArgumentModeOld.immediate_double:
                             if (result.StartsWith("_"))
                             {
                                 OutputStack.Push(result);
@@ -922,7 +920,7 @@ namespace AssemblerBCG
                             break;
                         default:
                             badExpr = true;
-                            argumentMode = ArgumentMode.none;
+                            argumentMode = ArgumentModeOld.none;
                             return null;
                     }
 
@@ -1047,7 +1045,7 @@ namespace AssemblerBCG
             }
             else
             {
-                argumentMode = ArgumentMode.none;
+                argumentMode = ArgumentModeOld.none;
                 string result = "BINEXPR ";
                 for (int i = 0; i < outputS.Length; i++)
                 {
@@ -1060,46 +1058,46 @@ namespace AssemblerBCG
 
             for (int i = 0; i < argumentModes.Count; i++)
             {
-                if (argumentModes[i] == ArgumentMode.immediate_double && argumentMode < ArgumentMode.immediate_double)
+                if (argumentModes[i] == ArgumentModeOld.immediate_double && argumentMode < ArgumentModeOld.immediate_double)
                 {
                     if (isAddress)
                     {
                         throw new NotImplementedException();
                     }
-                    argumentMode = ArgumentMode.immediate_double;
+                    argumentMode = ArgumentModeOld.immediate_double;
                 }
-                else if (argumentModes[i] == ArgumentMode.immediate_float && argumentMode < ArgumentMode.immediate_float)
+                else if (argumentModes[i] == ArgumentModeOld.immediate_float && argumentMode < ArgumentModeOld.immediate_float)
                 {
                     if (isAddress)
                     {
                         throw new NotImplementedException();
                     }
-                    argumentMode = ArgumentMode.immediate_float;
+                    argumentMode = ArgumentModeOld.immediate_float;
                 }
-                else if (argumentModes[i] == ArgumentMode.immediate_word && argumentMode < ArgumentMode.immediate_word)
+                else if (argumentModes[i] == ArgumentModeOld.immediate_word && argumentMode < ArgumentModeOld.immediate_word)
                 {
-                    argumentMode = ArgumentMode.immediate_word;
+                    argumentMode = ArgumentModeOld.immediate_word;
                 }
-                else if (argumentModes[i] == ArgumentMode.immediate_tbyte && argumentMode < ArgumentMode.immediate_tbyte)
+                else if (argumentModes[i] == ArgumentModeOld.immediate_tbyte && argumentMode < ArgumentModeOld.immediate_tbyte)
                 {
-                    argumentMode = ArgumentMode.immediate_tbyte;
+                    argumentMode = ArgumentModeOld.immediate_tbyte;
                 }
-                else if (argumentModes[i] == ArgumentMode.immediate_dword && argumentMode < ArgumentMode.immediate_dword)
+                else if (argumentModes[i] == ArgumentModeOld.immediate_dword && argumentMode < ArgumentModeOld.immediate_dword)
                 {
-                    argumentMode = ArgumentMode.immediate_dword;
+                    argumentMode = ArgumentModeOld.immediate_dword;
                 }
-                else if (argumentModes[i] == ArgumentMode.immediate_dword && argumentMode < ArgumentMode.immediate_dword)
+                else if (argumentModes[i] == ArgumentModeOld.immediate_dword && argumentMode < ArgumentModeOld.immediate_dword)
                 {
                     if (m_CPUType >= CPUType.BC32)
                     {
-                        argumentMode = ArgumentMode.immediate_qword;
+                        argumentMode = ArgumentModeOld.immediate_qword;
                     }
                     else
                     {
-                        argumentMode = ArgumentMode.immediate_dword;
+                        argumentMode = ArgumentModeOld.immediate_dword;
                     }
                 }
-                else if (argumentMode == ArgumentMode.immediate_byte)
+                else if (argumentMode == ArgumentModeOld.immediate_byte)
                 {
                     continue;
                 }
@@ -1113,19 +1111,19 @@ namespace AssemblerBCG
             {
                 switch (argumentMode)
                 {
-                    case ArgumentMode.immediate_byte:
-                        argumentMode = ArgumentMode.near_address;
+                    case ArgumentModeOld.immediate_byte:
+                        argumentMode = ArgumentModeOld.near_address;
                         break;
-                    case ArgumentMode.immediate_word:
-                        argumentMode = ArgumentMode.short_address;
+                    case ArgumentModeOld.immediate_word:
+                        argumentMode = ArgumentModeOld.short_address;
                         break;
-                    case ArgumentMode.immediate_tbyte:
-                        argumentMode = ArgumentMode.long_address;
+                    case ArgumentModeOld.immediate_tbyte:
+                        argumentMode = ArgumentModeOld.long_address;
                         break;
-                    case ArgumentMode.immediate_dword:
-                        argumentMode = ArgumentMode.far_address;
+                    case ArgumentModeOld.immediate_dword:
+                        argumentMode = ArgumentModeOld.far_address;
                         break;
-                    case ArgumentMode.immediate_qword:
+                    case ArgumentModeOld.immediate_qword:
                     default:
                         throw new NotImplementedException();
                 }

@@ -43,24 +43,29 @@ _NEWLINE_
 _DEL_ mov AL, CR0
 01
 00
-0c
-0a
+11
+10
 _NEWARG_ AL
 _NEWARG_ CR0
-21
+24
 _NEWLINE_
-_DEL_ or A, 0x10
+_DEL_ or A, 0x30
 20
 71
 01
 _NEWARG_ A
-_NEWARG_ 0x10
+_NEWARG_ 0x30
 00
-10
+30
 _NEWLINE_
 _DEL_ mov CR0, AL
 00
 06
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov
+00
+00
 _NEWLINE_
 _NEWLINE_
 _DEL_ sez A
@@ -71,26 +76,30 @@ _NEWLINE_
 _DEL_ mov HL, far @Message
 00
 00
-0a
+10
 03
 _NEWARG_ HL
 c7
 _NEWARG_ far @Message
 _FL_Message
 _NEWLINE_
+_DEL_ mov
+00
+00
+_NEWLINE_
 _REF_ LABEL PrintLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
 _NEWLINE_
 _DEL_ mov AL, [HL]
 00
 01
-16
+21
 _NEWARG_ AL
 _NEWARG_ [HL]
 _NEWLINE_
 _DEL_ jz [ExitPrintLoop]
 30
 10
-52
+32
 _NEWARG_ [ExitPrintLoop]
 _SL_ExitPrintLoop
 _NEWLINE_
@@ -104,7 +113,7 @@ _NEWLINE_
 _DEL_ inc HL
 20
 f0
-0a
+10
 _NEWARG_ HL
 c7
 _NEWLINE_
@@ -114,34 +123,54 @@ _NEWLINE_
 _DEL_ mov SS, 0x00FA
 02
 08
-0a
+10
 02
 _NEWARG_ SS
-06
+c6
 _NEWARG_ 0x00FA
 00
 00
 FA
 _NEWLINE_
-_DEL_ mov DS, HIGH Entry
+_DEL_ mov DS, HIGH @Entry
 02
 08
-0a
+10
 01
 _NEWARG_ DS
 05
-_NEWARG_ HIGH Entry
+_NEWARG_ HIGH @Entry
 _SL_Entry,MH
 _NEWLINE_
 _DEL_ sez SP
 0a
 00
-0a
+10
 _NEWARG_ SP
 09
 _NEWLINE_
 _NEWLINE_
+_DEL_ outw 0x02, 0x0011
+10
+04
+01
+01
+_NEWARG_ 0x02
+00
+02
+_NEWARG_ 0x0011
+00
+11
 _NEWLINE_
+_DEL_ outb 0x02, 0x02
+10
+00
+00
+00
+_NEWARG_ 0x02
+02
+_NEWARG_ 0x02
+02
 _NEWLINE_
 _NEWLINE_
 _DEL_ nop
@@ -159,8 +188,8 @@ _NEWLINE_
 _DEL_ mov R1, D
 01
 00
-0a
-13
+10
+1a
 _NEWARG_ R1
 10
 _NEWARG_ D
@@ -178,7 +207,7 @@ _NEWLINE_
 _DEL_ sez DH
 0a
 00
-0a
+10
 _NEWARG_ DH
 43
 _NEWLINE_
@@ -198,7 +227,7 @@ _NEWLINE_
 _DEL_ call [ReadSector]
 07
 00
-52
+32
 _NEWARG_ [ReadSector]
 _SL_ReadSector
 _NEWLINE_
@@ -206,7 +235,7 @@ _NEWLINE_
 _DEL_ mov HL, @Stage2_Name
 00
 00
-0a
+10
 01
 _NEWARG_ HL
 c7
@@ -220,7 +249,7 @@ _DEL_ mov C, 16
 _NEWARG_ C
 _NEWARG_ 16
 00
-10
+16
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
@@ -233,7 +262,7 @@ _NEWLINE_
 _DEL_ je rel [ExitFindStage2]
 30
 30
-50
+30
 _NEWARG_ rel [ExitFindStage2]
 REL__SL_ExitFindStage2
 _NEWLINE_
@@ -251,7 +280,7 @@ _NEWLINE_
 _DEL_ jmp rel [FindStage2File]
 30
 00
-50
+30
 _NEWARG_ rel [FindStage2File]
 REL__SL_FindStage2File
 _NEWLINE_
@@ -266,7 +295,7 @@ _NEWARG_ 16
 00
 00
 00
-10
+16
 _NEWLINE_
 _DEL_ sez C
 0a
@@ -276,7 +305,7 @@ _NEWLINE_
 _DEL_ mov B, [AX]
 01
 02
-0b
+20
 _NEWARG_ B
 _NEWARG_ [AX]
 c0
@@ -284,7 +313,7 @@ _NEWLINE_
 _DEL_ call [OFS]
 07
 00
-52
+32
 _NEWARG_ [OFS]
 _SL_OFS
 _NEWLINE_
@@ -309,8 +338,8 @@ _NEWLINE_
 _DEL_ mov DH, [AX]
 01
 00
-0a
-0b
+10
+20
 _NEWARG_ DH
 43
 _NEWARG_ [AX]
@@ -319,16 +348,16 @@ _NEWLINE_
 _DEL_ mov L, D
 01
 00
-15
-13
+16
+1a
 _NEWARG_ L
 _NEWARG_ D
 _NEWLINE_
 _DEL_ mov D, R1
 02
 08
-13
-0a
+1a
+10
 _NEWARG_ D
 _NEWARG_ R1
 10
@@ -349,7 +378,7 @@ _NEWLINE_
 _DEL_ call rel [ReadSector]
 07
 00
-50
+30
 _NEWARG_ rel [ReadSector]
 REL__SL_ReadSector
 _NEWLINE_
@@ -369,13 +398,13 @@ _NEWLINE_
 _DEL_ inc B
 20
 f0
-11
+18
 _NEWARG_ B
 _NEWLINE_
 _DEL_ call rel [OFS]
 07
 00
-50
+30
 _NEWARG_ rel [OFS]
 REL__SL_OFS
 _NEWLINE_
@@ -384,28 +413,28 @@ _NEWLINE_
 _DEL_ call rel [ReadSector]
 07
 00
-50
+30
 _NEWARG_ rel [ReadSector]
 REL__SL_ReadSector
 _NEWLINE_
 _DEL_ dec L
 21
 00
-15
+16
 _NEWARG_ L
 _NEWLINE_
 _DEL_ jnz rel [LoadStage2Loop]
 30
 11
-50
+30
 _NEWARG_ rel [LoadStage2Loop]
 REL__SL_LoadStage2Loop
 _NEWLINE_
 _DEL_ mov D, R1
 02
 08
-13
-0a
+1a
+10
 _NEWARG_ D
 _NEWARG_ R1
 10
@@ -413,7 +442,7 @@ _NEWLINE_
 _DEL_ mov HL, far @_STAGE2
 00
 00
-0a
+10
 03
 _NEWARG_ HL
 c7
@@ -423,7 +452,7 @@ _NEWLINE_
 _DEL_ push HL
 05
 00
-0a
+10
 _NEWARG_ HL
 c7
 _NEWLINE_
@@ -450,8 +479,8 @@ _NEWLINE_
 _DEL_ swap AX, HL
 0c
 00
-20
-0a
+1b
+10
 _NEWARG_ AX
 _NEWARG_ HL
 c7
@@ -459,8 +488,8 @@ _NEWLINE_
 _DEL_ swap DH, AL
 0c
 00
-0a
-0c
+10
+11
 _NEWARG_ DH
 43
 _NEWARG_ AL
@@ -468,7 +497,7 @@ _NEWLINE_
 _DEL_ mov AH, 0x01
 01
 00
-0a
+10
 01
 _NEWARG_ AH
 40
@@ -487,7 +516,7 @@ _NEWLINE_
 _DEL_ jnc rel [ExitReadSector]
 30
 41
-50
+30
 _NEWARG_ rel [ExitReadSector]
 REL__SL_ExitReadSector
 _NEWLINE_
@@ -495,7 +524,7 @@ _NEWLINE_
 _DEL_ mov DS, high @ErrorMessageReading
 02
 08
-0a
+10
 01
 _NEWARG_ DS
 05
@@ -513,7 +542,7 @@ _NEWLINE_
 _DEL_ jmp rel [Error]
 30
 00
-50
+30
 _NEWARG_ rel [Error]
 REL__SL_Error
 _NEWLINE_
@@ -541,13 +570,13 @@ _NEWLINE_
 _DEL_ push A
 05
 00
-10
+17
 _NEWARG_ A
 _NEWLINE_
 _DEL_ mov A, B
 01
 01
-11
+18
 _NEWARG_ A
 _NEWARG_ B
 _NEWLINE_
@@ -560,12 +589,12 @@ _DEL_ cmp A, 19
 _NEWARG_ A
 _NEWARG_ 19
 00
-13
+19
 _NEWLINE_
 _DEL_ jle rel [ExitOFS]
 30
 92
-50
+30
 _NEWARG_ rel [ExitOFS]
 REL__SL_ExitOFS
 _NEWLINE_
@@ -576,18 +605,18 @@ _DEL_ sub A, 18
 _NEWARG_ A
 _NEWARG_ 18
 00
-12
+18
 _NEWLINE_
 _DEL_ inc C
 20
 f0
-12
+19
 _NEWARG_ C
 _NEWLINE_
 _DEL_ jmp rel [OFSLOOP]
 30
 00
-50
+30
 _NEWARG_ rel [OFSLOOP]
 REL__SL_OFSLOOP
 _NEWLINE_
@@ -596,14 +625,14 @@ _NEWLINE_
 _DEL_ mov B, A
 01
 02
-10
+17
 _NEWARG_ B
 _NEWARG_ A
 _NEWLINE_
 _DEL_ pop A
 06
 00
-10
+17
 _NEWARG_ A
 _NEWLINE_
 _DEL_ retz
@@ -646,7 +675,7 @@ _NEWLINE_
 _DEL_ mov AH, 0x02
 01
 00
-0a
+10
 01
 _NEWARG_ AH
 40
@@ -654,7 +683,7 @@ _NEWARG_ 0x02
 00
 02
 _NEWLINE_
-_DEL_ int byte 0x10
+_DEL_ int 0x10
 f0
 40
 00

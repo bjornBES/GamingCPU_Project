@@ -8,7 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CommonBCGCPU\CommonBCGCPU.csproj" />
     <ProjectReference Include="..\fileSystem\filesystem.csproj" />
-    <ProjectReference Include="..\HexLibrary\HexLibrary.csproj" />
   </ItemGroup>
 
 </Project>

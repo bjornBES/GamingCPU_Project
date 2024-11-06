@@ -26,6 +26,7 @@
     exclamationmark     = '!',
     leftanglebracket    = '<',
     rightanglebracket   = '>',
+    numberSign          = '#',
 
     none = 0x17F,
 
@@ -69,6 +70,8 @@
 
     invoke,
 
+    _extern,
+
     _nearPointer,
     _shortPointer,
     _longPointer,
@@ -77,6 +80,8 @@
     _void,
     function,
     program,
+
+    define,
 
     neg,
     dec,

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.ComponentModel.DataAnnotations;
 using AssemblerBCG;
+using System.ComponentModel;
 
 public class Program : ArgumentFunctions
 {
@@ -12,10 +13,10 @@ public class Program : ArgumentFunctions
     {
         {"-h", PrintHelp },
         {"-help", PrintHelp },
-        
+
         {"-i", GetInputFile },
         {"-o", GetOutputFile },
-        
+
         {"-f", SetFormatOutput },
         {"-fobj", SetFormatOBJ },
 
@@ -38,7 +39,7 @@ public class Program : ArgumentFunctions
         {"-bss-name",   SetBSSSegmentName },
         {"-bssname",    SetBSSSegmentName },
         {"-bn",         SetBSSSegmentName },
-        
+
         {"-d", SetDebugMode },
         {"-debug", SetDebugMode },
         // {"-p", SetProjectPath },
@@ -54,8 +55,196 @@ public class Program : ArgumentFunctions
         return 0;
     }
 
+    public void ParseAddress(string term, SizeAlignment sizeAlignment, out OperandArgument[] operandArgument)
+    {
+        List<OperandArgument> operands = new List<OperandArgument>();
+
+        // segments [RegS:DATA] / [{RegS:}IMMDATA]
+        // address SpiltPoint(HIGH, LOW, none) length(near, short, long, far) DATA(R/K)
+
+        if (term.StartsWith('[') && term.EndsWith(']'))
+        {
+            term = term.Trim('[', ']');
+            if (term.Contains(':'))
+            {
+                string srgmentstr = term.Split(':')[0];
+                string offsetstr = term.Split(':')[1];
+                Register segment = Enum.Parse<Register>(srgmentstr, true);
+                if (!Enum.TryParse(offsetstr, true, out Register offset))
+                {
+                    operandArgument = operands.ToArray();
+                    return;
+                }
+
+                if (sizeAlignment == SizeAlignment._word)
+                {
+                    if (segment == Register.DS)
+                    {
+                        if (offset == Register.B)
+                        {
+                            operands.Add(new OperandArgument()
+                            {
+                                ArgumentMode = ArgumentMode.RM,
+                                data = "00",
+                                IsRawData = true,
+                                Size = sizeAlignment
+                            });
+                            operands.Add(new OperandArgument()
+                            {
+                                ArgumentMode = ArgumentMode.MOD,
+                                data = "0000",
+                                IsRawData = true,
+                                Size = sizeAlignment
+                            });
+                        }
+                    }
+                    else if (segment == Register.ES)
+                    {
+                        if (offset == Register.B)
+                        {
+                            operands.Add(new OperandArgument()
+                            {
+                                ArgumentMode = ArgumentMode.RM,
+                                data = "00",
+                                IsRawData = true,
+                                Size = sizeAlignment
+                            });
+                            operands.Add(new OperandArgument()
+                            {
+                                ArgumentMode = ArgumentMode.MOD,
+                                data = "0011",
+                                IsRawData = true,
+                                Size = sizeAlignment
+                            });
+                        }
+                    }
+                    else
+                    {
+                        operands.Add(new OperandArgument()
+                        {
+                            ArgumentMode = ArgumentMode.RM,
+                            data = "00",
+                            IsRawData = true,
+                            Size = sizeAlignment
+                        });
+                        operands.Add(new OperandArgument()
+                        {
+                            ArgumentMode = ArgumentMode.MOD,
+                            data = "0101",
+                            IsRawData = true,
+                            Size = sizeAlignment
+                        });
+                        operands.Add(new OperandArgument()
+                        {
+                            ArgumentMode = ArgumentMode.Sregister,
+                            data = Convert.ToString((byte)Enum.Parse<SRegisterWord>(srgmentstr, true),16 ).PadLeft(3, '0'),
+                            IsRawData = true,
+                            Size = sizeAlignment
+                        });
+                        operands.Add(new OperandArgument()
+                        {
+                            ArgumentMode = ArgumentMode.register,
+                            data = Convert.ToString((byte)offset, 16).PadLeft(8, '0'),
+                            IsRawData = true,
+                            Size = sizeAlignment
+                        });
+                    }
+                }
+            }
+            else
+            {
+                if (!Enum.TryParse(term, true, out Register offset))
+                {
+
+                }
+            }
+        }
+
+        operandArgument = operands.ToArray();
+        return;
+    }
+
     public Program(string[] args)
     {
+        /*
+        ParseAddress("[DS:B]", SizeAlignment._word, out OperandArgument[] operandArgument);
+        ParseAddress("[ES:B]", SizeAlignment._word, out operandArgument);
+        ParseAddress("[FS:B]", SizeAlignment._word, out operandArgument);
+        ParseAddress("[DS:0x7FFF]", SizeAlignment._word, out operandArgument);
+        ParseAddress("[0x7FFF]", SizeAlignment._word, out operandArgument);
+        ParseAddress("[B]", SizeAlignment._word, out operandArgument);
+
+        new Instructions();
+
+        InstructionArgumentInfo argumentInfo1 = new InstructionArgumentInfo(Instruction.MOV, ArgumentMode.GPregister, ArgumentMode.immediate);
+        InstructionArgumentInfo argumentInfo2 = new InstructionArgumentInfo(Instruction.MOV, ArgumentMode.GPregister, ArgumentMode.register);
+        InstructionArgumentInfo argumentInfo3 = new InstructionArgumentInfo(Instruction.MOV, ArgumentMode.GPregister, ArgumentMode.RM, ArgumentMode.MOD);
+        InstructionInfo instructionInfo = Instructions.m_Instr[argumentInfo1];
+
+        OperandArgument operand1 = new OperandArgument()
+        {
+            ArgumentMode = ArgumentMode.GPregister,
+            data = "01",
+            IsRawData = true,
+            Size = SizeAlignment._dword,
+        };
+        OperandArgument operand2 = new OperandArgument()
+        {
+            ArgumentMode = ArgumentMode.immediate,
+            data = "55AA55AA",
+            IsRawData = true,
+            Size = SizeAlignment._dword,
+        };
+
+        string InstrBin = instructionInfo.GenInstr(SizeAlignment._dword, operand1, operand2);
+        string InstrHex = HexLibrary.HexConverter.ToHexString(InstrBin, 2);
+        PrintInstr(argumentInfo1, InstrHex);
+
+        instructionInfo = Instructions.m_Instr[argumentInfo2];
+        operand1 = new OperandArgument()
+        {
+            ArgumentMode = ArgumentMode.GPregister,
+            data = "01",
+            Size = SizeAlignment._word,
+        };
+        operand2 = new OperandArgument()
+        {
+            ArgumentMode = ArgumentMode.register,
+            data = Convert.ToString((byte)Register.B, 16).PadLeft(2, '0'),
+            IsRawData = true,
+            Size = SizeAlignment._word,
+        };
+
+        InstrBin = instructionInfo.GenInstr(SizeAlignment._word, operand1, operand2);
+        InstrHex = HexLibrary.HexConverter.ToHexString(InstrBin, 2);
+        PrintInstr(argumentInfo2, InstrHex);
+
+        instructionInfo = Instructions.m_Instr[argumentInfo3];
+        operand1 = new OperandArgument()
+        {
+            ArgumentMode = ArgumentMode.GPregister,
+            data = "01",
+            Size = SizeAlignment._word,
+        };
+        operand2 = new OperandArgument()
+        {
+            ArgumentMode = ArgumentMode.RM,
+            data = "00",
+            IsRawData = true,
+            Size = SizeAlignment._word,
+        };
+        OperandArgument operand3 = new OperandArgument()
+        {
+            ArgumentMode = ArgumentMode.MOD,
+            data = "0000",
+            IsRawData = true,
+            Size = SizeAlignment._word,
+        };
+
+        InstrBin = instructionInfo.GenInstr(SizeAlignment._word, operand1, operand2, operand3);
+        InstrHex = HexLibrary.HexConverter.ToHexString(InstrBin, 2);
+        PrintInstr(argumentInfo3, InstrHex);
+         */
         if (args.Length == 0)
         {
             Console.WriteLine("ERROR: Include arguments");
@@ -88,7 +277,7 @@ public class Program : ArgumentFunctions
 
         includeFiles();
 
-        new Instructions();
+        new OldInstructions();
 
         Assembler assembler = new Assembler();
         string FullSrc = "";
@@ -140,6 +329,12 @@ public class Program : ArgumentFunctions
         }
 
         File.WriteAllText("./PreAssemblerSrc.txt", FullSrc);
+    }
+
+    void PrintInstr(InstructionArgumentInfo instructionInfo, string hexinstr)
+    {
+        Console.WriteLine($"{instructionInfo}");
+        Console.WriteLine($"{hexinstr}");
     }
 
     void decodeArguments(string[] args)

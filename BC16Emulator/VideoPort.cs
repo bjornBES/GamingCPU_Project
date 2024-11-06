@@ -9,7 +9,7 @@ using ConsoleGameEngine;
 using System.Diagnostics.Tracing;
 using System.Linq;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class VideoPort : IPort
     {

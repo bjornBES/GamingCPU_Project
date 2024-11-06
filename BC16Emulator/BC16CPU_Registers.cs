@@ -1,6 +1,6 @@
 ﻿using CommonBCGCPU.Types;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class BC16CPU_Registers
     {
@@ -11,14 +11,19 @@ namespace BCG16CPUEmulator
 
         public _32Bit_Register m_HL = new _32Bit_Register();
 
+        public _16Bit_Register m_CS = new _16Bit_Register();
         public _16Bit_Register m_DS = new _16Bit_Register();
         public _16Bit_Register m_ES = new _16Bit_Register();
         public _16Bit_Register m_FS = new _16Bit_Register();
         public _16Bit_Register m_SS = new _16Bit_Register();
-        public _16Bit_Register m_CS = new _16Bit_Register();
+        public _16Bit_Register m_GS = new _16Bit_Register();
+        public _16Bit_Register m_HS = new _16Bit_Register();
 
         public _16Bit_Register m_X = new _16Bit_Register();
         public _16Bit_Register m_Y = new _16Bit_Register();
+
+        public _16Bit_Register m_PTA = new _16Bit_Register();
+        public _32Bit_Register m_GDA = new _32Bit_Register();
 
         public _24Bit_Register m_PC = new _24Bit_Register();
         public _24Bit_Register m_AddressSave = new _24Bit_Register();

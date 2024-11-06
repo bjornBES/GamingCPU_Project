@@ -4,6 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>Assemble BIOS</ActiveDebugProfile>
+    <ActiveDebugProfile>Assemble Bootloader</ActiveDebugProfile>
   </PropertyGroup>
 </Project>

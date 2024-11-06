@@ -12,6 +12,8 @@
 - `0x0102`: MOVW: B, source                 `Moves a word from the specified source to the B register`
 - `0x0103`: MOVW: C, source                 `Moves a word from the specified source to the C register`
 - `0x0104`: MOVW: D, source                 `Moves a word from the specified source to the D register`
+- `0x0105`: MOVW: A, CR0                    `Moves CR0 register into the A register`
+- `0x0106`: MOVW: CR0, A                    `Moves A register into the CR0 register`
 - `0x0208`: MOVT: destination, source       `Moves a tbyte from the specified source to the destination`
 - `0x0300`: MOVD: destination, source       `Moves a dword from the specified source to the destination`
 - `0x0301`: MOVD: AX, source                `Moves a dword from the specified source to the AX register`
@@ -183,4 +185,5 @@
 - `0xF080`: CPUID:  register                `Puts some info about the CPU into the destination register`
 - `0xF090`: PUSHRR:                         `Pushes R1 to R16 on to the stack`
 - `0xF0A0`: POPRR:                          `Pops R1 to R16 off the stack`
+- `0xF0B0`: LGDT:   address                 `Loads the GDA register with the address`
 - `0xFFF0`: HALT:                           `Stops the CPU`

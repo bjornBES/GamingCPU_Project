@@ -3,6 +3,7 @@
     public TokenType m_Type;
     public int m_Line;
     public string m_Value;
+    public string m_File;
     public override string ToString()
     {
         switch (m_Type)

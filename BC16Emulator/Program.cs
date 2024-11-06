@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class Program : ArgumentFunctions
     {

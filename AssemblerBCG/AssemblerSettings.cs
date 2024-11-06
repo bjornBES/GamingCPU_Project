@@ -8,8 +8,6 @@ public enum OutputFormats
 public enum CPUType
 {
     BC8,
-    BC816,
-    BC810680,
 
     BC16,
     BC16C,
@@ -19,9 +17,6 @@ public enum CPUType
     BC16CF,
     BC16CEF,
     BC1602CF,
-
-    BC24,
-    BC24F,
 
     BC32,
     BC3203,

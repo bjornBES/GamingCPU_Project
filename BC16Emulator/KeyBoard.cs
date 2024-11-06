@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class KeyBoard : IPort
     {

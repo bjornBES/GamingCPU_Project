@@ -16,7 +16,6 @@
     <ProjectReference Include="..\BFDCG12\BFDCG12.csproj" />
     <ProjectReference Include="..\CommonBCGCPU\CommonBCGCPU.csproj" />
     <ProjectReference Include="..\ConsoleGameEngine\ConsoleGameEngine.csproj" />
-    <ProjectReference Include="..\HexLibrary\HexLibrary.csproj" />
   </ItemGroup>
 
 </Project>

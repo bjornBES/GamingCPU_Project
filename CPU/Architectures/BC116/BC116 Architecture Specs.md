@@ -13,22 +13,17 @@
     - [INSTRUCTION LAYOUT](#instruction-layout)
     - [ARGUMENT MODE](#argument-mode)
   - [Interrupt vector table](#interrupt-vector-table)
-    - [Layout](#layout)
-    - [Interrupt vector assignments](#interrupt-vector-assignments)
-      - [interrupt](#interrupt)
-      - [exception](#exception)
   - [Caches](#caches)
   - [Floating values](#floating-values)
     - [Floating-Point Registers](#floating-point-registers)
   - [Virtual mode](#virtual-mode)
   - [Extended mode](#extended-mode)
   - [Protected mode](#protected-mode)
+  - [Protected extended mode](#protected-extended-mode)
   - [Memory](#memory)
     - [Memory layout](#memory-layout)
   - [The Stack](#the-stack)
   - [REGISTERS](#registers)
-    - [Extended registers](#extended-registers)
-    - [Bigger registers](#bigger-registers)
 
 ## Architecture overview
 
@@ -41,7 +36,6 @@
 
 - BC16          Base 16 bit CPU starts in [virtual mode](#virtual-mode)
 - BC16C         Can enable `extended mode` in the CR0 register
-- BC16CE        Can enable bigger registers [more here](#bigger-registers)
 - BC1602C       With all the other things before but starts in [extended mode](#extended-mode)
 - BC16F         The BC16 CPU with in built float registers and functions
 - BC16CF        The BC16C CPU with in built float registers and functions
@@ -63,13 +57,11 @@
 - The base BC16 CPU
 - Starts in [virtual mode](#virtual-mode)
 - Can enable [extended mode](#extended-mode) in CR0
-- Can enable bigger registers [more here](#bigger-registers)
 
 ### BC1602C
 
 - The base BC16 CPU
 - Starts in [extended mode](#extended-mode)
-- Can enable bigger registers [more here](#bigger-registers)
 
 ### Note
 
@@ -134,35 +126,13 @@ XXXXXXXX_XXXXUUUU_AAAAAAAA_BBBBBBBB
 
 ## Interrupt vector table
 
-The Interrupt vector table is 4 KB in size
-
-### Layout
-
-The first word is the Address Segment for the routine
-
-The second word is the Address offset for the routine
-
-### Interrupt vector assignments
-
 [Here](../BCG%20arch%20Specs.md#interrupt-entres)
-
-#### interrupt
-
-an interrupt can be caused by the IRQ or NMI pins or the INT instruction
-
-#### exception
-
-an exception can be caused an instruction
-
-when the BC116 Architecture gets an Abort exception it will stop and the Halt flag will be set
-
-when the BC116 Architecture gets an Fault exception it will skip that instruction and continue
 
 ## Caches
 
 ## Floating values
 
-The BC232 architecture supports floating-point operations through specialized registers and instructions. The floating-point unit (FPU) can handle both single-precision and double-precision values. Below are the key components and capabilities related to floating-point operations.
+The BC116 architecture supports floating-point operations through specialized registers and instructions. The floating-point unit (FPU) can handle both single-precision and double-precision values. Below are the key components and capabilities related to floating-point operations.
 
 ### Floating-Point Registers
 
@@ -181,6 +151,10 @@ in Extended mode the CPU will get [here](../BCG%20arch%20Specs.md#extended-mode)
 ## Protected mode
 
 in Protected mode the CPU will get [here](../BCG%20arch%20Specs.md#protected-mode)
+
+## Protected extended mode
+
+in Protected extended mode the CPU will get [here](../BCG%20arch%20Specs.md#protected-extended-mode)
 
 ## Memory
 
@@ -204,74 +178,4 @@ The Stack is a 64 KB section set using the [Stack Segment register](#registers) 
 
 ## REGISTERS
 
-- A (AH + AL):    16  bit general purpose register
-- B (BH + BL):    16  bit general purpose register
-- C (CH + CL):    16  bit general purpose register
-- D (DH + DL):    16  bit general purpose register
-
-- CS:             16  bit code segment register
-- DS:             16  bit data segment register
-- ES:             16  bit extra data segment register
-- FS:             16  bit extra data segment register
-- SS:             16  bit stack segment register
-
-- PC:             16  bit program counter
-
-- HL (H + L):     32  bit general purpose address register
-- H:              16  bit general purpose address register
-- L:              16  bit general purpose address register
-
-- BP:             16  bit Stack register
-- SP:             16  bit Stack register
-
-- AF:             32  bit float register
-- BF:             32  bit float register
-
-- R1..16:         16  bit general purpose register
-
-- CR0:            8   bit control register
-  - 0 0x01 Boot mode
-  - 1 0x02 FPU enabled
-  - 2 0x04 Low power Mode
-  - 3 0x08 Enable bigger registers        Enableing [bigger registers](#bigger-registers)
-  - 4 0x10 Enable extended mode           Enableing [extended mode](#extended-mode)
-  - 5 0x20
-  - 6 0x40
-  - 7 0x80 Enable Protected mode          Enableing [Protected mode](#protected-mode)
-
-- F:              16: bit (F)lags register
-  - 0x0001 zero
-  - 0x0002 equals
-  - 0x0004 signed
-  - 0x0008 carry
-  - 0x0010 overflow
-  - 0x0020 less
-  - 0x0040 interrupt enable
-  - 0x0080 HALT
-  - 0x0100 reserved
-  - 0x0200 under flow
-  - 0x0400 shift flag
-  - 0x0800 greater
-  - 0x1000 reserved
-  - 0x2000 reserved
-  - 0x4000 reserved
-  - 0x8000 reserved
-
-### Extended registers
-
-- PC:             the PC is now 32 bits can only use 24 bits
-
-- X:              16 bit index register
-- Y:              16 bit index register
-
-- AX              32 bit general purpose register
-- BX              32 bit general purpose register
-- CX              32 bit general purpose register
-- DX              32 bit general purpose register
-
-- R1..16:         32 bit general purpose register
-
-### Bigger registers
-
-- CF:             32  bit float register
-- DF:             32  bit float register
+list is [here](../BCG%20arch%20Specs.md#protected-registers)

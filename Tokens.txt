@@ -1,120 +1,251 @@
-Section             line:00002	SECTION
+Section             line:00000	SECTION
+colon               line:00000	
+SectionText         line:00000	TEXT
+int literal         line:00001	0000000
+colon               line:00001	
+function            line:00001	func
+identifier          line:00001	OUT
+open_paren          line:00001	
+uint8               line:00001	byte
+identifier          line:00001	port
+comma               line:00001	
+uint8               line:00001	byte
+identifier          line:00001	pdata
+close_paren         line:00001	
+period              line:00001	
+_asm                line:00001	asm
+open_paren          line:00001	asm
+quotation_mark      line:00001	asm
+identifier          line:00001	outb\t{port},\t{pdata}
+identifier          line:00001	port
+identifier          line:00001	pdata
+quotation_mark      line:00001	outb\t{port},\t{pdata}
+close_paren         line:00001	outb\t{port},\t{pdata}
+period              line:00001	
+int literal         line:00002	0000001
 colon               line:00002	
-SectionData         line:00002	DATA
+end                 line:00002	endfunc
+function            line:00002	endfunc
+period              line:00002	
+int literal         line:00003	0000002
 colon               line:00003	
-identifier          line:00003	name
-_res                line:00003	RES
-int literal         line:00003	1024
+function            line:00003	func
+identifier          line:00003	IN
+open_paren          line:00003	
+uint8               line:00003	byte
+identifier          line:00003	port
+close_paren         line:00003	
+period              line:00003	
+_asm                line:00003	asm
+open_paren          line:00003	asm
+quotation_mark      line:00003	asm
+identifier          line:00003	inb\t{port},\tAX
+identifier          line:00003	port
+quotation_mark      line:00003	inb\t{port},\tAX
+close_paren         line:00003	inb\t{port},\tAX
+period              line:00003	
+_return             line:00003	return
+at                  line:00003	
+identifier          line:00003	AX
+period              line:00003	
+end                 line:00003	endfunc
+function            line:00003	endfunc
+period              line:00003	
+Section             line:00001	SECTION
+colon               line:00001	
+SectionText         line:00001	TEXT
+int literal         line:00003	0000010
+colon               line:00003	
+function            line:00003	func
+identifier          line:00003	diplay
+open_paren          line:00003	
+_farPointer         line:00003	far
+uint8               line:00003	char
+identifier          line:00003	str
+close_paren         line:00003	
+period              line:00003	
+int literal         line:00007	0000049
+colon               line:00007	
+end                 line:00007	endfunc
+function            line:00007	endfunc
+period              line:00007	
+Section             line:00013	SECTION
+colon               line:00013	
+SectionData         line:00013	DATA
+Section             line:00001	SECTION
+colon               line:00001	
+SectionData         line:00001	DATA
+colon               line:00002	
+identifier          line:00002	Sector
+_res                line:00002	RES
+int literal         line:00002	1024
+colon               line:00003	
+_extern             line:00003	extern
+function            line:00003	func
+identifier          line:00003	ACLAsmReadSector
+open_paren          line:00003	
+uint8               line:00003	byte
+identifier          line:00003	d
+comma               line:00003	
+uint8               line:00003	byte
+identifier          line:00003	h
+comma               line:00003	
+uint16              line:00003	word
+identifier          line:00003	t
+comma               line:00003	
+uint16              line:00003	word
+identifier          line:00003	s
+comma               line:00003	
+_farPointer         line:00003	far
+uint8               line:00003	byte
+identifier          line:00003	d
+close_paren         line:00003	
 Section             line:00005	SECTION
 colon               line:00005	
 SectionString       line:00005	STRING
 colon               line:00006	
 identifier          line:00006	MessERS
 quotation_mark      line:00006	
-identifier          line:00006	Hello world
+identifier          line:00006	Error white reading a sector
 quotation_mark      line:00006	
 Section             line:00008	SECTION
 colon               line:00008	
 SectionText         line:00008	TEXT
-int literal         line:00010	0000000
+int literal         line:00009	2000000
+colon               line:00009	
+function            line:00009	func
+identifier          line:00009	ReadRoot
+open_paren          line:00009	
+uint16              line:00009	word
+identifier          line:00009	drive
+close_paren         line:00009	
+period              line:00009	
+int literal         line:00010	2000005
 colon               line:00010	
-program             line:00010	prog
-identifier          line:00010	test
+call                line:00010	call
+identifier          line:00010	ACLAsmReadSector
+open_paren          line:00010	
+identifier          line:00010	drive
+comma               line:00010	
+int literal         line:00010	0
+comma               line:00010	
+int literal         line:00010	0
+comma               line:00010	
+int literal         line:00010	3
+comma               line:00010	
+ampersand           line:00010	
+identifier          line:00010	Sector
+close_paren         line:00010	
 period              line:00010	
-int literal         line:00011	0000001
+int literal         line:00011	2000010
 colon               line:00011	
-uint32              line:00011	uint
-identifier          line:00011	pVram
+_asm                line:00011	asm
+open_paren          line:00011	asm
+quotation_mark      line:00011	asm
+identifier          line:00011	cmp\tAX,\t1
+quotation_mark      line:00011	cmp\tAX,\t1
+close_paren         line:00011	cmp\tAX,\t1
 period              line:00011	
-int literal         line:00012	0000002
+_asm                line:00011	asm
+open_paren          line:00011	asm
+quotation_mark      line:00011	asm
+identifier          line:00011	je\t[L2020500]
+quotation_mark      line:00011	je\t[L2020500]
+close_paren         line:00011	je\t[L2020500]
+period              line:00011	
+int literal         line:00012	2009000
 colon               line:00012	
-uint8               line:00012	byte
-identifier          line:00012	bvar
+end                 line:00012	endfunc
+function            line:00012	endfunc
 period              line:00012	
-int literal         line:00013	0000010
-colon               line:00013	
-function            line:00013	func
-identifier          line:00013	main
-open_paren          line:00013	
-close_paren         line:00013	
-period              line:00013	
-int literal         line:00014	0000011
+int literal         line:00014	2020500
 colon               line:00014	
-_shortPointer       line:00014	shortshort
-uint16              line:00014	shortshort
-identifier          line:00014	ShByte
-eq                  line:00014	
-int literal         line:00014	31744
+function            line:00014	func
+identifier          line:00014	ErrorRS
+open_paren          line:00014	
+close_paren         line:00014	
 period              line:00014	
-int literal         line:00015	0000021
+int literal         line:00015	2020501
 colon               line:00015	
 display             line:00015	display
 open_paren          line:00015	
+ampersand           line:00015	
 identifier          line:00015	MessERS
 close_paren         line:00015	
 period              line:00015	
-int literal         line:00016	0000022
-colon               line:00016	
-identifier          line:00016	pVram
-eq                  line:00016	
-int literal         line:00016	65536
-period              line:00016	
-int literal         line:00017	0000023
+_asm                line:00015	asm
+open_paren          line:00015	asm
+quotation_mark      line:00015	asm
+identifier          line:00015	jmp\t[L9000000]
+quotation_mark      line:00015	jmp\t[L9000000]
+close_paren         line:00015	jmp\t[L9000000]
+period              line:00015	
+end                 line:00015	endfunc
+function            line:00015	endfunc
+period              line:00015	
+int literal         line:00017	9000000
 colon               line:00017	
-star                line:00017	
-identifier          line:00017	pVram
-eq                  line:00017	
-int literal         line:00017	85
+_asm                line:00017	asm
+open_paren          line:00017	asm
+quotation_mark      line:00017	asm
+identifier          line:00017	jmp\t[L9000000]
+quotation_mark      line:00017	jmp\t[L9000000]
+close_paren         line:00017	jmp\t[L9000000]
 period              line:00017	
-int literal         line:00018	0000024
-colon               line:00018	
-star                line:00018	
-int literal         line:00018	65536
-eq                  line:00018	
-int literal         line:00018	85
-period              line:00018	
-int literal         line:00019	0000025
-colon               line:00019	
-_longPointer        line:00019	longbyte
-uint8               line:00019	longbyte
-identifier          line:00019	str
-eq                  line:00019	
-ampersand           line:00019	
-identifier          line:00019	MessERS
-period              line:00019	
-int literal         line:00020	0000027
-colon               line:00020	
-uint8               line:00020	char
-identifier          line:00020	c
-eq                  line:00020	
-star                line:00020	
-identifier          line:00020	str
-period              line:00020	
-int literal         line:00021	0000028
-colon               line:00021	
-display             line:00021	display
-open_paren          line:00021	
-identifier          line:00021	str
-close_paren         line:00021	
-period              line:00021	
-int literal         line:00022	0000029
-colon               line:00022	
-identifier          line:00022	bvar
-eq                  line:00022	
-int literal         line:00022	85
-period              line:00022	
-int literal         line:00023	0000032
-colon               line:00023	
-_return             line:00023	ret
-int literal         line:00023	0
-period              line:00023	
-int literal         line:00024	0000070
-colon               line:00024	
-end                 line:00024	endfunc
-function            line:00024	endfunc
-period              line:00024	
-int literal         line:00025	0001000
-colon               line:00025	
-end                 line:00025	endprog
-program             line:00025	endprog
-period              line:00025	
+Section             line:00001	SECTION
+colon               line:00001	
+SectionData         line:00001	DATA
+colon               line:00002	
+_extern             line:00002	extern
+function            line:00002	func
+identifier          line:00002	DOSSTART
+open_paren          line:00002	
+close_paren         line:00002	
+Section             line:00004	SECTION
+colon               line:00004	
+SectionString       line:00004	STRING
+colon               line:00005	
+identifier          line:00005	DOSFileName
+quotation_mark      line:00005	
+identifier          line:00005	DOS        BIN  
+quotation_mark      line:00005	
+Section             line:00007	SECTION
+colon               line:00007	
+SectionText         line:00007	TEXT
+int literal         line:00008	1000000
+colon               line:00008	
+function            line:00008	func
+identifier          line:00008	cstart
+open_paren          line:00008	
+uint16              line:00008	word
+identifier          line:00008	drive
+close_paren         line:00008	
+period              line:00008	
+int literal         line:00009	1001000
+colon               line:00009	
+_farPointer         line:00009	far
+uint32              line:00009	uint
+identifier          line:00009	DOSAddresss
+eq                  line:00009	
+ampersand           line:00009	
+identifier          line:00009	DOSSTART
+period              line:00009	
+_asm                line:00009	asm
+open_paren          line:00009	asm
+quotation_mark      line:00009	asm
+identifier          line:00009	sez\tSP
+quotation_mark      line:00009	sez\tSP
+close_paren         line:00009	sez\tSP
+period              line:00009	
+_asm                line:00009	asm
+open_paren          line:00009	asm
+quotation_mark      line:00009	asm
+identifier          line:00009	jmp\t[HL]
+quotation_mark      line:00009	jmp\t[HL]
+close_paren         line:00009	jmp\t[HL]
+period              line:00009	
+int literal         line:00010	1001010
+colon               line:00010	
+end                 line:00010	endfunc
+function            line:00010	endfunc
+period              line:00010	

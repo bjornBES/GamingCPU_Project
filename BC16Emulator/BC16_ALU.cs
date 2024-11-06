@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class BC16_ALU : BC16CPU_HelperFunctions
     {

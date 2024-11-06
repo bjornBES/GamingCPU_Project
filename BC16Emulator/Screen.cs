@@ -3,7 +3,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using BCG16CPUEmulator;
+using BC16CPUEmulator;
 using System;
 
 namespace BC16CPUEmulator

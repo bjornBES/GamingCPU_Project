@@ -1,0 +1,60 @@
+.section TEXT
+
+; Program program
+
+global Add
+
+Main:
+    push    BP
+    mov     BP,                 SP
+    push    AX                                  ; _OUT = [BP]
+    pushr
+    ; print OUT "Hello world"
+    mov     AX,                 @str1
+    mov     CX,                 @str1_len
+    call    [PrintOut]
+
+    ; _OUT = Add(10, 10)
+    mov     AX,                 10
+    push    AX
+    push    AX
+    call    [Add]
+    mov     [BP],               AX
+
+    popr
+    pop     AX
+    pop     BP
+    retz
+
+;
+; uint32 Y:                     [BP - 14]
+; uint32 X:                     [BP - 10]
+; uint32 return address:        [BP - 6]
+; utin16 OldBP:                 [BP - 2]
+; uint32 _OUT:                  [BP]
+;
+Add:
+    push    BP
+    mov     BP,                 SP
+    push    AX                              ; _OUT = [BP]
+    pushr
+
+    mov     AX,                 [BP - 10]
+    mov     BX,                 [BP - 14]
+    add     AX,                 BX
+    mov     [BP],               AX
+    
+    pop     AX
+    popr
+    pop     BP
+    ret     8
+
+.section DATA
+
+.section RODATA
+str1:
+.db "Hello world"
+str1_len:
+.dw 11
+
+.includeil "./FunctionCalls.acl"

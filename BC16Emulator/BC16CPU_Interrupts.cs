@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class BC16CPU_Interrupts : BC16_ALU
     {

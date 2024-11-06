@@ -27,6 +27,21 @@ public class CompilerCCL
                 m_Src += lineNumber + ":" + line + "\n";
                 continue;
             }
+            else if (element.StartsWith("#"))
+            {
+                m_Src += line + "\n";
+                continue;
+            }
+            else if (lineNumber.StartsWith("file", StringComparison.OrdinalIgnoreCase))
+            {
+                m_Src += element + "\n";
+                continue;
+            }
+            else if (line.StartsWith("extern"))
+            {
+                m_Src += element + "\n";
+                continue;
+            }
             if (line.Length > 64)
             {
                 Console.WriteLine("Error: Line needs to be 64 characters long with spaces");
@@ -34,8 +49,8 @@ public class CompilerCCL
             m_Src += lineNumber + ":" + line + "\\\\\n";
         }
 
-        Tokenizer tokenizer = new Tokenizer(m_Src);
-        Token[] tokens = tokenizer.Tokenize();
+        Tokenizer tokenizer = new Tokenizer();
+        Token[] tokens = tokenizer.Tokenize(m_Src);
 
         for (int i = 0; i < tokens.Length; i++)
         {

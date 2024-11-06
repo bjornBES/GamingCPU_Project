@@ -161,7 +161,7 @@ _DEL_ mov AL, CR0
 10
 _NEWARG_ AL
 _NEWARG_ CR0
-21
+24
 _NEWLINE_
 _DEL_ or A, 0x01
 20
@@ -643,7 +643,7 @@ _DEL_ mov AL, CR0
 10
 _NEWARG_ AL
 _NEWARG_ CR0
-21
+24
 _NEWLINE_
 _DEL_ xor A, 0x01
 20
@@ -695,10 +695,6 @@ _REF_ LABEL ShowBIOS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\
 _NEWLINE_
 _NEWLINE_
 _REF_ LABEL BreakPoint C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_NEWLINE_
-_DEL_ pushr
-f0
-20
 _NEWLINE_
 _DEL_ sez B
 0a
@@ -836,10 +832,6 @@ _DEL_ call [COut]
 32
 _NEWARG_ [COut]
 _SL_COut
-_NEWLINE_
-_DEL_ popr
-f0
-30
 _NEWLINE_
 _DEL_ reti
 f0
@@ -3122,7 +3114,7 @@ _DEL_ mov AL, CR0
 10
 _NEWARG_ AL
 _NEWARG_ CR0
-21
+24
 _NEWLINE_
 _DEL_ cmp A, 0x01
 04
@@ -3376,7 +3368,7 @@ _DEL_ mov AL, CR0
 10
 _NEWARG_ AL
 _NEWARG_ CR0
-21
+24
 _NEWLINE_
 _DEL_ cmp A, 0x10
 04

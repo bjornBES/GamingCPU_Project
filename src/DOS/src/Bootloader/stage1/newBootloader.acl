@@ -5,8 +5,8 @@
 .org 0x7C00
 Entry:
     mov     AL,             CR0
-    or      A,              0x10
-    mov     CR0,            AL                  ; enabling extended mode
+    or      A,              0x30
+    mov     CR0,            AL                  ; enabling extended mode and the A24 line
 
     mov
 

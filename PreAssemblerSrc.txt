@@ -1,866 +1,126 @@
 
-.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+.setcpu "BC16CE"
 .section TEXT
-
-$VideoCard              = 0x02
-$BootableDriveNumber = 0xAA55
-
-.SETCPU "BC16"
-
-.org 0x1200
-_BIOSStart:
-    sez     SS                                  ; SS = 0
-    mov     SP,             @__STACK            ; SP = @Stack
-
-    sez     A
-    mov     AL,             CR0
-    or      A,              0x01
-    mov     CR0,            AL
-
-    mov     HL,             @StartMSG
-    mov     C,              @StartMSGLength
-    sez     B
-    call    [PrintStr]
-
-OtherBIOS:
-    outw    %VideoCard,     0x8001              ; _outputIndex = 0
-    outw    %VideoCard,     0x0010              ; video cammand Get res
-    inpw    %VideoCard,     A                   ; getting screen resolution height
-    mov     [ScreenHeight], A                   ; 
-    inpw    %VideoCard,     A                   ; getting screen resolution width
-    mov     [ScreenWidth],  A                   ;
-    
-    call    [InitBuffer]
-
-    movd    [_INT2h],       far @BreakPoint
-    movd    [_InvalidIns],  far @Error_Invalid_Instruction
-    movd    [_IRQ0],        far @KeyBoardIRQ
-    ; movd    [_IRQ15],       far @FloppyInterruptHandler
-    movd    [_INT10h],      far @BIOS_Interrupt10h
-    movd    [_INT13h],      far @BIOS_Interrupt13h
-    
-    sei
-
-    int     0x02
-
-    ; this function will use the DL register as the disk index
-    sez     D
-
-FindBootDiskLoop:
-    call    [InitializeDrive]
-
-    cmp     [IsF12],        0x01                ; IsF12 == 1
-    je      [ShowBIOS]                          ; yes
-
-SetArguments:
-    mov     A,              1                   ; A = 1
-    push    A                                   ; uint16_t sector = 1
-    sez     A                                   ; A = 0
-    push    A                                   ; uint16_t track = 0
-    push    A                                   ; uint16_t head = 0
-    mov     HL,             far @__BOOTLOADER
-    push    D                                   ; uint16_t drive
-    push    L                                   ; Far uint8_t* LOW data
-    push    H                                   ; Far uint8_t* HIGH data
-    call    [Read_Sector]
-
-    mov     A,              R1
-    cmp     AL,             1
-    jne     [FindBootDiskLoop]
-
-    mov     A,              [@__BOOTLOADER + 510]
-    cmp     A,              %BootableDriveNumber
-    je      [Exit_FindDiskLoop]
-    inc     DL
-    cmp     DL,             4   
-    jne     [FindBootDiskLoop]
-    mov     HL,             @Error_Invalid_BootDisk_Str
-    mov     C,              @Error_Invalid_BootDisk_StrLength
-    jmp     [Error_Invalid_BootDisk]
-Exit_FindDiskLoop:
-    mov     [DriveNumber],  DL
-
-    int     0x02
-
-EndOfBIOS:
-
-    mov     HL,             far @INFOMSG_FoundBootableDisk
-    mov     C,              @INFOMSG_FoundBootableDiskLength
-    sez     B
-    call    [PrintStr]
-
-    mov     AL,             DL
-    add     AL,             '0'
-    call    [COut]
-
-    nop
-
-    sez     A
-    mov     AL,             CR0
-    xor     A,              0x01
-    mov     CR0,            AL
-
-    mov     DL,             [DriveNumber]
-
-    mov     HL,             far @__BOOTLOADER
-    halt
-    jmp     [HL]
-
-    ; not comming back
-
-ShowBIOS:
-    
-BreakPoint:
-    pushr
-    sez     B
-    mov     [Cursorx],      B
-    mov     [Cursory],      B
-    mov     H,              HIGH @BreakPointMSG
-    mov     L,              LOW @BreakPointMSG
-    mov     C,              @BreakPointMSGLength
-    call    [PrintStr]
-
-    nop
-
-BreakpointLoop:
-    call    [BufferSize]                                            ; get keyboard buffer size
-    cmp     A,              0                                       ; A <= 0
-    jle     [BreakpointLoop]                                        ; yes
-    call    [ReadBuffer]                                            ; nope read the key
-    cmp     AL,             'C'                                     ; AL == C
-    jne     [BreakpointLoop]                                        ; no
-    push    BL
-    mov     AL,             'D'
-    push    AL
-    call    [COut]
-    popr                                                            ; yes
-    reti                                                            ; return
-
-
-.includeil "./BIOS_errors.acl"
-.includeil "./IOFunctions.acl"
-.includeil "./Keyboard.acl"
-
-.includeil "./BIOS_Interrupt_Pointer.acl"
-
-.section Stack
-
-.section Bootloader
+L0000000:
+_OUT:
+	enter
+	pushr
+	mov   R2,                      [BP - 10]
+	mov   R3,                      [BP - 14]
+	outb  R2,                      R3
+L0000001:
+	mov   R16,                     0
+Exit_OUT:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+L0000002:
+_IN:
+	enter
+	pushr
+	mov   R2,                      [BP - 10]
+	inb   R2,                      AX
+	mov   R16,                     AX
+	jmp   [Exit_IN]
+Exit_IN:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   4
+L0000010:
+_diplay:
+	enter
+	pushr
+L0000049:
+	mov   R16,                     0
+Exit_diplay:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   16
+.extern _ACLAsmReadSector
+L2000000:
+_ReadRoot:
+	enter
+	pushr
+L2000005:
+	; arguemnt 4
+	mov   HL,                      Sector
+	push  HL
+	; arguemnt 3
+	mov   AX,                      0x3
+	push  AX
+	; arguemnt 2
+	mov   AX,                      0x0
+	push  AX
+	; arguemnt 1
+	mov   AX,                      0x0
+	push  AX
+	; arguemnt 0
+	mov   AX,                      [BP - 10]
+	push  AX
+	call  far [_ACLAsmReadSector]
+L2000010:
+	cmp   AX,                      1
+	je    [L2020500]
+L2009000:
+	mov   R16,                     0
+Exit_ReadRoot:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+L2020500:
+_ErrorRS:
+	enter
+	pushr
+L2020501:
+	push  HL
+	push  AX
+	mov   HL,                      far @MessERS
+	mov   AH,                      0x02
+	int   0x10
+	pop   AX
+	pop   HL
+	jmp   [L9000000]
+	mov   R16,                     0
+Exit_ErrorRS:
+	popr
+	leave
+	mov   AX,                      R16
+	retz
+L9000000:
+	jmp   [L9000000]
+.extern _DOSSTART
+L1000000:
+_cstart:
+	enter
+	pushr
+L1001000:
+	mov   HL,                      far @_DOSSTART
+	push  HL
+	sez   SP
+	jmp   [HL]
+L1001010:
+	mov   R16,                     0
+Exit_cstart:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+.local __RODATASTRAT__
+__RODATASTRAT__:
+MessERS:
+.db   "Error white reading a sector", 0
+DOSFileName:
+.db   "DOS        BIN  ", 0
 
 .section BSS
-
-DriveNumber:
-.resb
-ReceivedIRQ:
-.resb
-IsF12:
-.resb
-Cursorx:
-.resw
-Cursory:
-.resw
-EReg:
-.resd
-ScreenHeight:
-.resw
-ScreenWidth:
-.resw
-KeyBoardChar:
-.resb
+Sector:
+.res  1024
 
 .section DATA
-
-.section RODATA
-BreakPointMSG:
-.db "Breakpoint\n"
-.db "press C", 0
-BreakPointMSGEnd:
-BreakPointMSGLength:
-.dw @BreakPointMSGEnd - @BreakPointMSG
-
-StartMSG:
-.db "BIOS"
-StartMSGEnd:
-StartMSGLength:
-.dw @StartMSGEnd - @StartMSG - 1
-
-Error_Invalid_BootDisk_Str:
-.db "Can't find a bootable disk", 0
-Error_Invalid_BootDisk_Strend:
-Error_Invalid_BootDisk_StrLength:
-.dw @Error_Invalid_BootDisk_Strend - @Error_Invalid_BootDisk_Str
-
-INFOMSG_FoundBootableDisk:
-.db 0xA, "Found drive: "
-INFOMSG_FoundBootableDiskEnd:
-INFOMSG_FoundBootableDiskLength:
-.dw @INFOMSG_FoundBootableDiskEnd - @INFOMSG_FoundBootableDisk
-
-.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-.section TEXT
-.local JMPErrorLoop
-
-; short char* str           HL
-; int length                C
-Error_Invalid_BootDisk:
-    sez     B
-    call    [PrintStr]
-    jmp     [JMPErrorLoop]
-
-Error_Invalid_Instruction:
-    push    HL
-    call    [PrintError]
-    mov     HL,                 @Error_Invalid_InstructionMSG
-    mov     C,                  @Error_Invalid_InstructionLength
-    call    [PrintStr]
-
-    pop     HL
-    CBTA    HL,                 [CharBuffer]
-    mov     HL,                 @CharBuffer
-    call    [PrintStr]
-    
-JMPErrorLoop:
-    cli
-    jmp     [JMPErrorLoop]
-
-
-.local PrintError
-PrintError:
-    sez     B
-    mov     HL,                 @ErrorMSG
-    mov     C,                  @ErrorMSGLength
-    call    [PrintStr]
-    retz
-
-ErrorMSG:
-.db "Error:"
-ErrorMSGend:
-ErrorMSGLength:
-.dw @ErrorMSGend - @ErrorMSG
-
-Error_Invalid_InstructionMSG:
-.db "Invalid instruction at "
-Error_Invalid_InstructionEnd:
-Error_Invalid_InstructionLength:
-.dw @Error_Invalid_InstructionEnd - @Error_Invalid_InstructionMSG
-
-.section BSS
-CharBuffer:
-.res 8                              ; res 8 bytes
-.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-.section TEXT
-$STR                = 0x100
-$MSR                = 0x102
-
-$DRS                = 0x103
-$DATA               = 0x104
-
-;
-; Arguments:
-; char* str         HL
-; uint16 length     C
-; uint8 color       BL
-;
-; void PrintStr(char* str)
-.global PrintStr
-PrintStr:
-    enter
-    pushr
-
-    PrintStrLoop:
-    mov     AL,             [HL]
-    cmp     AL,             0
-    je      [ExitPrintStr]
-    push    BL
-    push    AL
-    call    [COut]
-    inc     HL
-    dec     C
-    jz      [ExitPrintStr]
-    jmp     [PrintStrLoop]
-    ExitPrintStr:
-    popr
-    leave
-    retz
-
-;
-; Arguments:
-;
-; return in AL
-;
-; char ReadCharKey()
-ReadCharKey:
-    call    [ReadBuffer]
-    retz
-
-; Arguments:
-; uint16_t sector           [BP - 18]   2 byte
-; uint16_t track            [BP - 16]   2 bytes
-; uint16_t Head             [BP - 14]   2 byte
-; uint16_t drive            [BP - 12]   2 byte
-; uint8_t* LOW address      [BP - 10]   2 bytes
-; uint8_t* HIGH address     [BP - 8]    2 bytes
-;
-;
-;
-; void Read_Sector(far uint8_t* address, uint16_t drive, uint16_t head, uint16_t track, uint16_t sector)
-.global Read_Sector
-Read_Sector:
-    enter
-    pushr
-
-    movw    A,              [BP - 12]       ; uint16_t drive
-    push    A
-
-    movw    A,              [BP - 14]       ; uint16_t head
-    push    A
-    
-    movw    A,              [BP - 16]       ; uint16_t Track
-    push    A
-    
-    movw    A,              [BP - 18]       ; uint16_t sector
-    push    A
-    
-    mov     A,              0x02            ; data length
-    push    A
-
-    call    [Read_Data]
-
-    movw    L,              [BP - 10]
-    movw    H,              [BP - 8]
-
-    outw    %DATA,          H
-    outw    %DATA,          L
-
-    inb     %DATA,          A
-    sez     R1
-    test    A
-    jz      [ExitReadSector]
-    inc     R1
-    ExitReadSector:
-    popr
-    leave
-    ret     12
-
-; Arguments:
-; uint32 LBA                [BP - 14]
-; uint16 heads per tracks   [BP - 10]
-; uint16 sectors per track  [BP - 8]
-;
-; Return:
-; R1 = heads,
-; R2 = track,
-; R3 = sector,
-;
-.global LBAtoCHS
-LBAtoCHS:
-    enter
-    pushr
-    movd    HL,             [BP - 14]           ; HL = LBA
-    movw    A,              [BP - 10]           ; A = headsPerTrack
-    mov     R4,             A
-    movw    B,              [BP - 8]            ; B = sectorsPerTrack
-    mov     R5,             B
-
-    mul     A,              B                   ; headsPerTrack * sectorsPerTrack
-    mov     R6,             A                   ; R6 = headsPerTrack * sectorsPerTrack
-    ; R6 = (headsPertrack * sectorsPerTrack)
-    mov     R2,             L                   ; R2 = LBA
-    div     R2,             A                   ; track = lba / (headsPerTrack * sectorsPerTrack)
-    ; int track = lba / R6
-
-    mov     A,              R6                  ; A = headsPerTrack * sectorsPerTrack
-    mov     R7,             L                   ; R7 = LBA
-    mod     R7,             A                   ; R7 = lba % (headsPerTrack * sectorsPerTrack)
-    ; temp = R7 = lba % R6;
-
-    mov     R1,             R7                  ; R1 = temp
-    swap    A,              B                   ; A = B & B = A
-    div     A,              R1                  ; A = temp / sectorsPerTrack
-    swap    A,              R1                  ; R1 = temp / sectorsPerTrack
-    ; R1 = R7 / sectorsPerTrack
-
-    mov     R3,             R7                  ; R3 = temp
-    mov     A,              R5                  ; A = sectorsPerTrack
-    mod     R3,             A                   ; R3 = temp % sectorsPerTrack
-    ; R3 = (R7 % sectorsPerTrack)
-    inc     R3                                  ; R3 = (temp % sectorsPerTrack) + 1
-    ; R3 = (R7 % sectorsPerTrack) + 1
-
-
-
-; Arguments:
-; uint32 LBA                [BP - 16]
-; uint32 heads per tracks   [BP - 12]
-; uint32 sectors per track  [BP - 8]
-;
-; Return:
-; R1 = heads,
-; R2 = track,
-; R3 = sector,
-;
-.global LBAtoCHS32
-LBAtoCHS32:
-    enter
-    push    HL
-    movd    HL,             [BP - 16]           ; LBA
-    push    L
-    movd    HL,             [BP - 14]           ; heads per track
-    push    L
-    movd    HL,             [BP - 8]            ; tracks per sector
-    push    L
-    call    [LBAtoCHS]
-    pop     HL
-    leave
-    ret     12
-    
-
-.includeil "./BIOS_VideoDriver.acl"
-.includeil "./FDDController.acl"
-
-.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-.section TEXT
-
-$KB_Status = 0x00
-
-InitBuffer:
-    push        A
-    sez         A
-    mov         [ReadPtrVar],       A
-    mov         [WritePtrVar],      A
-    pop         A
-    retz
-
-; Char c in CL
-WriteBuffer:
-    pushr
-
-    sez         H
-    mov         L,                  @KeyboardBuffer
-    mov         A,                  [WritePtrVar]
-    add         L,                  A
-    mov         [HL],               CL
-    inc         A
-    mov         [WritePtrVar],      A
-
-    popr
-    retz
-
-; return in AL
-ReadBuffer:
-    push        H
-    push        L
-    push        B
-    
-    sez         H
-    mov         L,                  @KeyboardBuffer
-    mov         B,                  [ReadPtrVar]
-    add         L,                  B
-    inc         B
-    mov         [ReadPtrVar],       B
-
-    mov         AL,                 [HL]
-    pop         B
-    pop         L
-    pop         H
-    retz
-
-; return in A
-BufferSize:
-    push        B
-
-    mov         B,                  [ReadPtrVar]
-    mov         A,                  [WritePtrVar]
-    sub         A,                  B
-
-    pop         B
-    retz
-
-; enabling the CLS pin to the Keyboard controller 
-EnableCLS:
-    outb        0x00,               0x01
-    retz
-
-; return in AL and status in AH
-CharIn:
-    call        [BufferSize]
-    test        A
-    jz          [nopeKey]
-    call        [ReadBuffer]
-    mov         AH,                 0x01
-    retz
-    nopeKey:
-    sez         AH
-    retz
-
-.section BSS
-ReadPtrVar:
-.res 2              ; This is the read pointer
-WritePtrVar:
-.res 2              ; This is the write pointer
-KeyboardBuffer:
-.res 0x100          ; 256 entrys in the buffer
-
-.section TEXT
-.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-
-.section TEXT
-
-; this is for the IRQs Interrupts
-BIOS_IRQ_Interrupt:
-
-    reti
-
-KeyBoardIRQ:
-    push    C
-    push    A 
-    inb     0x0,            CL                  ; Getting a char from the Keyboard
-    call    [WriteBuffer]                       ; Putting it into the KeyboardBuffer
-    mov     AL,             CR0                 ; A = CR0
-    cmp     A,              0x01                ; are we in boot mode
-    jne     [NotInBoot]                         ; no
-    cmp     C,              0x7b                ; is F12 key
-    jne     rel [NotInBoot]                     ; no
-    mov     A,              0x1                 ; A = 0x1
-    mov     [IsF12],        AL                  ; IsF12 = true
-    call    [ReadBuffer]                        ; take the F12 out
-NotInBoot:
-    pop     A
-    pop     C
-    sei
-    reti
-
-;
-; AH = interrupt routine
-;
-; Disk interrupt routine
-;
-BIOS_Interrupt13h:
-    cmp     AH,             0x01
-    je      [readsector]
-    cmp     AH,             0x11
-    je      [IntLBAToCHS]
-    reti
-
-;
-; AH = interrupt routine
-;
-; Video interrupt routine
-;
-BIOS_Interrupt10h:
-    cmp     AH,             0x00
-    je      rel [printchar]
-    cmp     AH,             0x01
-    je      rel [readkey]
-    reti
-
-.local readkey
-readkey:
-    call    [ReadCharKey]
-    reti
-
-.local printchar
-printchar:
-    call    [COut]
-    reti
-
-; parameters
-; HL = LBA
-; R4 = heads per track,
-; R5 = sectors per track,
-; return
-; R1 = heads,
-; R2 = track,
-; R3 = sector,
-.local IntLBAToCHS
-IntLBAToCHS:
-    push    A
-    push    HL
-    push    R4
-    push    R5
-    mov     AL,     CR0
-    cmp     A,      0x10
-    je      [EEMLBAToCHS32]
-    call    [LBAtoCHS]
-EEMLBAToCHS32:
-    call    [LBAtoCHS32]
-    pop     A
-    reti
-    
-; R1 = heads,
-; R2 = track,
-; R3 = sector,
-; DL = Drive,
-; HL = address of the data buffer,
-.local readsector
-readsector:
-    pushr
-    push    R3                                  ; sector
-    push    R2                                  ; track
-    push    R1                                  ; head
-    push    D                                   ; drive
-    push    HL                                  ; destination address
-    call    [Read_Sector]                       ; calling
-    popr
-    reti
-.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-.section TEXT
-;
-; Arguments:
-; uint8_t color     [BP - 9]
-; uint8_t c         [BP - 8]
-;
-; void COut(uint8_t color, uint8_t c)
-COut:
-    enter
-    push    A
-    push    HL
-
-    mov     AH,             [BP - 9]
-    mov     AL,             [BP - 8]
-    cmp     AL,             0xA                 ; \n
-    je      [NewLine]
-    cmp     AL,             0x0                 ; \0
-    je      [EndOfLoad]
-
-    call    [GetCursorAddress]
-
-    ; writing to VRAM
-    mov     [HL],           A                   ; writing the data
-EndOfLoad:
-    mov     word A,         [Cursorx]           ; A = Cursorx
-    inc     A                                   ; A += 1
-    mov     [Cursorx],      A                   ; Cursorx = A
-    cmp     A,              [ScreenHeight]      ; A >= ScreenHeight ?
-    jge     [NewLine]                           ; Yes
-    jmp     [ExitCout]
-
-NewLine:
-    sez     A
-    mov     [Cursorx],      A
-    movw    A,              [Cursory]
-    inc     A
-    mov     [Cursory],      A
-
-ExitCout:
-    pop     HL
-    pop     A
-    leave
-    ret     2
-
-
-
-;
-; Return in HL
-; 
-; private int* GetCursorAddress()
-.local GetCursorAddress
-GetCursorAddress:
-    push    C
-
-    sez     L
-    movd    H,              0x0001              ; memory address of VRAM
-    movw    C,              [Cursorx]           ; loading cursorx into C
-    mul     C,              0x2                 ; C *= 2
-    add     HL,             C                   ; loading cursorx into HL
-    movw    C,              [Cursory]           ; loading cursory into C
-    mul     C,              [ScreenWidth]
-    add     HL,             C                   ; X and Y is now a coord
-
-    pop     C
-    retz
-.newfile C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-.section TEXT
-
-$STR                = 0x100
-$MSR                = 0x102
-
-$DRS                = 0x103
-$DATA               = 0x104
-
-; 5,25" 512 sector size
-$FloppyGPL1         = 0x2A
-
-; 3,5" 512 sector size
-$FloppyGPL2         = 0x1B
-
-$SectorSize0x080    = 0x00
-$SectorSize0x100    = 0x01
-$SectorSize0x200    = 0x02
-$SectorSize0x400    = 0x03
-$SectorSize0x600    = 0x04
-
-$Drive1 = 0x00
-$Drive2 = 0x01
-$Drive3 = 0x02
-$Drive4 = 0x03
-
-$CommandRead        = 0x01
-$CommandWrite       = 0x02
-
-.local Metadata
-.local Buffer
-
-; Arguments:
-;
-;
-; void InitializeDrive();
-InitializeDrive:
-    enter
-
-    mov     B,                          2                   ; B = 0002
-    mov     [Format.Head],              BL                  ; TotalHeads = 2
-    mov     B,                          160                 ; B = 160
-    mov     [Format.TotalTracks],       B                   ; TotalTracks = 160
-
-    ; TracksPerHead = TotalHeads / TotalTracks = 80
-    mov     A,                          2880                ; A = TotalSectors
-    mov     [Format.TotalSector],       A                   ; TotalSector = 2880
-    div     A,                          B                   ; SectorsPerTrack = TotalSectors / TotalTracks
-    mov     [Format.SectorsPerTrack],   A                   ; SectorsPerTrack = 36
-    mov     A,                          0x200               ; A = 0x200
-    mov     [Format.BytesPerSector],    A                   ; BytesPerSector = 0x200
-
-    leave
-    retz
-
-; Arguments:
-; uint16 drive              [BP - 16]
-; uint16 head               [BP - 14]
-; uint16 track              [BP - 12]
-; uint16 sector             [BP - 10]
-; uint16 data_length        [BP - 8]
-;
-; Read data from a specified sector of a floppy disk
-;
-; void Read_Data(uint16 data_length, uint16 sector, uint16_t track, uint16 head, uint16 drive);
-
-Read_Data:
-    enter
-    pushr
-
-    mov     AL,             %CommandRead        ; command code for Read data
-    outw    %DATA,          AL                  ; write the command to the FDC command register
-
-    movw    A,              [BP - 16]           ; drive number
-    outw    %DATA,          AL                  ; Outputing the drive
-    movw    A,              [BP - 14]           ; getting the Head
-    outw    %DATA,          AL                  ; Outputing the head
-        
-    movw    A,              [BP - 12]           ; track number
-    outw    %DATA,          A                   ; writing the track number
-
-    movw    A,              [BP - 10]           ; Sector
-    outw    %DATA,          AL                  ; writing the Sector
-
-    movw    A,              [BP - 8]            ; data_length
-    outw    %DATA,          AL                  ; writing the data_length
-
-    mov     A,              0x0004              ; checking the busy bit in the MSR
-    call    [WaitForMSR]
-
-    popr
-    leave
-    ret     10
-
-; Arguments:
-; far uint8* data           [BP - 20]   4
-; uint16 drive              [BP - 16]   2
-; uint16 head               [BP - 14]   2
-; uint16 track              [BP - 12]   2
-; uint16 sector             [BP - 10]   2
-; uint16 data_length        [BP - 8]    2
-;
-; Write data to a specified sector of a floppy disk
-;
-; void Write_Data(const uint8* data, uint16 data_length, uint16 sector, uint16_t track, uint16 head, uint16 drive);
-
-Write_Data:
-    enter
-    pushr
-
-    mov     AL,             %CommandWrite       ; command code for Write data
-    outb    %DATA,          AL                  ; write the command to the FDC command register
-
-    mov     A,              [BP - 16]           ; drive number
-    mov     AH,             [BP - 14]           ; getting the Head
-    outb    %DATA,          A                   ; Outputing the head and drive
-        
-    mov     A,              [BP - 12]           ; track number
-    outb    %DATA,          A                   ; writing the track number
-
-    mov     A,              [BP - 10]           ; Sector
-    outb    %DATA,          AL                  ; writing the Sector
-
-    mov     A,              [BP - 8]            ; data_length
-    outb    %DATA,          AL                  ; writing the data_length 
-
-    mov     A,              0x0004              ; checking the busy bit in the MSR
-    call    [WaitForMSR]
-
-    popr
-    leave
-    ret     14
-
-; Arguments:
-; uint16 drive             [BP - 8]
-;
-; void Format(uint16 drive)
-Format:
-    enter
-
-    mov     HL,             far @Buffer         ; loading the Buffer address
-    push    HL                                  ; writing the data address
-
-    sez     A
-    mov     AL,             %SectorSize0x400    ; loading the size
-    push    A                                   ; writing the size
-
-    mov     AL,             2
-    push    A                                   ; writing the sector
-
-    sez     A                                   ; A = 0
-    push    A                                   ; writing the track
-    push    A                                   ; head
-
-    mov     A,              [BP - 8]            ; loading the drive
-    push    A                                   ; writing the drive
-
-    call    [Write_Data]
-
-    leave
-    ret     2
-
-WaitForMSR:
-    push    B
-    inb     %MSR,           B
-    and     B,              A
-    jz      [WaitForMSR]
-    pop     B
-    retz
-
-.struct FilesystemFormat
-
-Head: .resb
-TotalTracks: .resw
-TotalSector: resw
-SectorsPerTrack: .resb
-BytesPerSector: .resw
-
-.endstruct
-
-Buffer:
-.db         "BFS01 "                                ; header
-.db         0                                       ; disk letter
-.struct FilesystemFormat Format:
-; .db         2                                       ; Total head
-; .dw         160                                     ; Total tracks
-; .dw         2880                                    ; Total sectors
-; .db         18                                      ; Sectors per track
-; .dw         0x200                                   ; bytes per sector
-
-.dw         0x400                                   ; root address
-.dw         0x10                                    ; max number of entries in root directory
-.db         1                                       ; fat allocated
-.db         "FSBGC01\0\0\0\0\0\0\0\0\0"             ; volume label with padding
-Metadata:
+.local __DATASTRAT__
+__DATASTRAT__:

@@ -1,4 +1,4 @@
-﻿namespace BCG16CPUEmulator
+﻿namespace BC16CPUEmulator
 {
     public enum ArgumentMode
     {

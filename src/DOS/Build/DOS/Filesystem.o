@@ -3,15 +3,14 @@ INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\F
 
 
 SECTION HEADER
-_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
 _TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
+_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
 _TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Filesystem.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL DriveIndex,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
-_REF_ LABEL _CStart_,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
 _REF_ LABEL Entry,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
+_REF_ LABEL DriveIndex,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
 _REF_ LABEL _GetFileHandler,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Filesystem.acl
 _REF_ LABEL FindFileLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Filesystem.acl
 _REF_ LABEL _GetEntres,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Filesystem.acl
@@ -31,16 +30,7 @@ _FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\d
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_SECTION_ BSS
-_NEWLINE_
-_REF_ LABEL DriveIndex C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
-_NEWLINE_
-_RES_ 0001
-_NEWLINE_
-_NEWLINE_
 _SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
@@ -52,8 +42,8 @@ _NEWLINE_
 _DEL_ mov [DriveIndex], DL
 00
 00
-52
-0f
+32
+14
 _NEWARG_ [DriveIndex]
 _SL_DriveIndex
 _NEWARG_ DL
@@ -62,14 +52,14 @@ _NEWLINE_
 _DEL_ sez SP
 0a
 00
-0a
+10
 _NEWARG_ SP
 09
 _NEWLINE_
 _DEL_ mov FS, high @__BSSSTART
 02
 08
-0a
+10
 01
 _NEWARG_ FS
 85
@@ -79,12 +69,19 @@ _NEWLINE_
 _DEL_ mov DS, high @__DATASTART
 02
 08
-0a
+10
 01
 _NEWARG_ DS
 05
 _NEWARG_ high @__DATASTART
 _SL___DATASTART,MH
+_NEWLINE_
+_NEWLINE_
+_SECTION_ BSS
+_NEWLINE_
+_REF_ LABEL DriveIndex C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\dos.acl
+_NEWLINE_
+_RES_ 0001
 _NEWLINE_
 _NEWLINE_
 _FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\DOS\Filesystem.acl"
@@ -112,14 +109,14 @@ _NEWLINE_
 _DEL_ call [_ReadRootDirectory]
 07
 00
-52
+32
 _NEWARG_ [_ReadRootDirectory]
 _SL__ReadRootDirectory
 _NEWLINE_
 _DEL_ inc HL
 20
 f0
-0a
+10
 _NEWARG_ HL
 c7
 _NEWLINE_
@@ -127,7 +124,7 @@ _NEWLINE_
 _DEL_ mov DS, HIGH @Buffer
 02
 08
-0a
+10
 01
 _NEWARG_ DS
 05
@@ -152,7 +149,7 @@ _DEL_ mov C, 15
 _NEWARG_ C
 _NEWARG_ 15
 00
-0f
+15
 _NEWLINE_
 _DEL_ cmpl
 40
@@ -165,7 +162,7 @@ _NEWLINE_
 _DEL_ add HL, word 0x20
 20
 20
-0a
+10
 01
 _NEWARG_ HL
 c7
@@ -200,7 +197,7 @@ _NEWLINE_
 _DEL_ push DS
 05
 00
-0a
+10
 _NEWARG_ DS
 05
 _NEWLINE_
@@ -208,21 +205,21 @@ _NEWLINE_
 _DEL_ mov AX, [BP - 18]
 03
 01
-61
+41
 _NEWARG_ AX
 _NEWARG_ [BP - 18]
-ee
+e8
 _NEWLINE_
 _DEL_ push AX
 05
 00
-20
+1b
 _NEWARG_ AX
 _NEWLINE_
 _DEL_ call [_ReadSector]
 07
 00
-52
+32
 _NEWARG_ [_ReadSector]
 _SL__ReadSector
 _NEWLINE_
@@ -230,7 +227,7 @@ _NEWLINE_
 _DEL_ mov DS, HIGH @Buffer
 02
 08
-0a
+10
 01
 _NEWARG_ DS
 05
@@ -251,33 +248,37 @@ _NEWLINE_
 _DEL_ mov AX, [DS:B]
 03
 01
-64
+3c
 _NEWARG_ AX
 _NEWARG_ [DS:B]
 _NEWLINE_
 _DEL_ jz [ExitMoveEntryes]
 30
 10
-52
+32
 _NEWARG_ [ExitMoveEntryes]
 _SL_ExitMoveEntryes
 _NEWLINE_
 _DEL_ mov [HL], AX
 03
 00
-16
-20
+21
+1b
 _NEWARG_ [HL]
 _NEWARG_ AX
 _NEWLINE_
 _DEL_ add HL, 0x4
 20
 20
-0a
-03
+10
+04
 _NEWARG_ HL
 c7
 _NEWARG_ 0x4
+00
+00
+00
+00
 00
 00
 00
@@ -286,7 +287,7 @@ _NEWLINE_
 _DEL_ add B, 0x4
 20
 20
-11
+18
 01
 _NEWARG_ B
 _NEWARG_ 0x4
@@ -296,7 +297,7 @@ _NEWLINE_
 _DEL_ jmp [MoveEntryesLoop]
 30
 00
-52
+32
 _NEWARG_ [MoveEntryesLoop]
 _SL_MoveEntryesLoop
 _NEWLINE_
@@ -306,7 +307,7 @@ _NEWLINE_
 _DEL_ pop DS
 06
 00
-0a
+10
 _NEWARG_ DS
 05
 _NEWLINE_
@@ -344,30 +345,30 @@ _NEWLINE_
 _DEL_ mov HL, [BP - 24]
 00
 00
-0a
-61
+10
+41
 _NEWARG_ HL
 c7
 _NEWARG_ [BP - 24]
-e8
+dc
 _NEWLINE_
 _DEL_ mov DS, [BP - 18]
 02
 08
-0a
-61
+10
+41
 _NEWARG_ DS
 05
 _NEWARG_ [BP - 18]
-ee
+e8
 _NEWLINE_
 _DEL_ mov B, [BP - 20]
 01
 02
-61
+41
 _NEWARG_ B
 _NEWARG_ [BP - 20]
-ec
+e0
 _NEWLINE_
 _DEL_ mov CL, 0x20
 00
@@ -383,22 +384,22 @@ _NEWLINE_
 _DEL_ mov AX, [DS:B]
 03
 01
-64
+3c
 _NEWARG_ AX
 _NEWARG_ [DS:B]
 _NEWLINE_
 _DEL_ mov [HL], AX
 03
 00
-16
-20
+21
+1b
 _NEWARG_ [HL]
 _NEWARG_ AX
 _NEWLINE_
 _DEL_ sub CL, 4
 20
 30
-0e
+13
 00
 _NEWARG_ CL
 _NEWARG_ 4
@@ -407,7 +408,7 @@ _NEWLINE_
 _DEL_ jnz [GetEntryLoop]
 30
 11
-52
+32
 _NEWARG_ [GetEntryLoop]
 _SL_GetEntryLoop
 _NEWLINE_
@@ -419,17 +420,17 @@ _NEWLINE_
 _DEL_ mov HL, [BP - 24]
 00
 00
-0a
-61
+10
+41
 _NEWARG_ HL
 c7
 _NEWARG_ [BP - 24]
-e8
+dc
 _NEWLINE_
 _DEL_ pop BP
 06
 00
-0a
+10
 _NEWARG_ BP
 08
 _NEWLINE_
@@ -472,7 +473,7 @@ _NEWLINE_
 _DEL_ mov DL, [DriveIndex]
 00
 04
-52
+32
 _NEWARG_ DL
 _NEWARG_ [DriveIndex]
 _SL_DriveIndex
@@ -480,31 +481,31 @@ _NEWLINE_
 _DEL_ push AL
 05
 00
-0c
+11
 _NEWARG_ AL
 _NEWLINE_
 _DEL_ push B
 05
 00
-11
+18
 _NEWARG_ B
 _NEWLINE_
 _DEL_ push C
 05
 00
-12
+19
 _NEWARG_ C
 _NEWLINE_
 _DEL_ push DL
 05
 00
-0f
+14
 _NEWARG_ DL
 _NEWLINE_
 _DEL_ call [_ReadSector]
 07
 00
-52
+32
 _NEWARG_ [_ReadSector]
 _SL__ReadSector
 _NEWLINE_
@@ -536,39 +537,39 @@ _NEWLINE_
 _DEL_ mov AL, [BP - 23]
 00
 01
-61
+41
 _NEWARG_ AL
 _NEWARG_ [BP - 23]
-e9
+dd
 _NEWLINE_
 _DEL_ mov B, [BP - 19]
 01
 02
-61
+41
 _NEWARG_ B
 _NEWARG_ [BP - 19]
-ed
+e7
 _NEWLINE_
 _DEL_ mov C, [BP - 21]
 01
 03
-61
+41
 _NEWARG_ C
 _NEWARG_ [BP - 21]
-eb
+df
 _NEWLINE_
 _DEL_ mov DL, [BP - 18]
 00
 04
-61
+41
 _NEWARG_ DL
 _NEWARG_ [BP - 18]
-ee
+e8
 _NEWLINE_
 _DEL_ mov HL, far @Buffer
 00
 00
-0a
+10
 03
 _NEWARG_ HL
 c7
@@ -578,7 +579,7 @@ _NEWLINE_
 _DEL_ mov AH, 0x01
 01
 00
-0a
+10
 01
 _NEWARG_ AH
 40

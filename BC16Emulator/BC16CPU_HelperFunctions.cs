@@ -7,7 +7,7 @@ using static HexLibrary.HexConverter;
 using System.Windows.Markup;
 using System.Linq;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class BC16CPU_HelperFunctions : BC16CPU_Registers
     {

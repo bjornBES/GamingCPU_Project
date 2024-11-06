@@ -1,6 +1,5 @@
 .setcpu "BC16"
 .section TEXT
-L0000000:
 L0000001:
 	; _pVram is at 0x0003:0
 L0000002:
@@ -28,7 +27,7 @@ L0000022:
 	; _pVram = 0x10000
 L0000023:
 	mov   HL,                      far @__DATASTRAT__ + 0
-	mov   AX,                      0x55
+	mov   AX,                      0x41
 	mov   [HL]                     AX
 L0000024:
 	mov   HL,                      0x10000
@@ -53,16 +52,16 @@ L0000029:
 	mov   AX,                      0x55
 	mov   [R1L],                   AX
 	; _bvar = 0x55
-L0000032:
-	mov   AX,                      0x0
-	jmp   [Exit_main]
+L0000030:
+	mov   AX,                      0x55
+	push  AX
 L0000070:
+	mov   R16,                     0
 Exit_main:
 	popr
-	sub   SP,                      6
 	leave
-	retz
-L0001000:
+	mov   AX,                      R16
+	ret   4
 
 .section BSS
 name:

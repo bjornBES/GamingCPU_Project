@@ -18,7 +18,7 @@
     "Assemble Bootloader": {
       "commandName": "Project",
       "workingDirectory": "./..",
-      "commandLineArgs": "-i ./CPU/src/DOS/src/Bootloader/stage1/newbootloader.acl -o ./CPU/src/DOS/build/Bootloader/stage1/newbootloader.o"
+      "commandLineArgs": "-i ./src/DOS/src/Bootloader/stage2/stage2.acl -o ./src/DOS/build/Bootloader/stage2/stage2.o"
     }
   }
 }

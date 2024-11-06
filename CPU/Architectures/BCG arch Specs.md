@@ -5,16 +5,24 @@
     - [INSTRUCTION SET](#instruction-set)
     - [INSTRUCTION LAYOUT](#instruction-layout)
     - [Base argument modes from the BC018 architecture](#base-argument-modes-from-the-bc018-architecture)
+  - [Global Descriptor Table](#global-descriptor-table)
+    - [Layout](#layout)
+      - [Access Byte](#access-byte)
+      - [GDT flags](#gdt-flags)
   - [Interrupt tables](#interrupt-tables)
     - [Interrupt descriptor table](#interrupt-descriptor-table)
-      - [Layout](#layout)
-      - [privilege level](#privilege-level)
-      - [Gate type](#gate-type)
-    - [Interrupt vector table](#interrupt-vector-table)
       - [Layout](#layout-1)
+    - [Interrupt vector table](#interrupt-vector-table)
+      - [Layout](#layout-2)
     - [Interrupt entres](#interrupt-entres)
       - [interrupt](#interrupt)
       - [exception](#exception)
+  - [privilege level](#privilege-level)
+    - [Ring 0 Upper root](#ring-0-upper-root)
+    - [Ring 1 Kernel mode](#ring-1-kernel-mode)
+    - [Ring 2 User mode](#ring-2-user-mode)
+    - [Ring 3 Restricted user mode](#ring-3-restricted-user-mode)
+  - [Gate type](#gate-type)
   - [Pipelining](#pipelining)
   - [CPUID](#cpuid)
   - [Caches](#caches)
@@ -24,18 +32,22 @@
   - [Virtual mode](#virtual-mode)
   - [Extended mode](#extended-mode)
   - [Protected mode](#protected-mode)
+  - [Protected extended mode](#protected-extended-mode)
   - [Long mode](#long-mode)
   - [long long mode](#long-long-mode)
   - [MEMORY](#memory)
     - [MEMORY LAYOUT](#memory-layout)
   - [Base registers for BC8](#base-registers-for-bc8)
   - [Extended registers](#extended-registers)
-    - [Bigger registers](#bigger-registers)
   - [Protected registers](#protected-registers)
-    - [Bigger registers](#bigger-registers-1)
   - [long mode registers](#long-mode-registers)
   - [long long mode registers](#long-long-mode-registers)
-    - [Bigger registers](#bigger-registers-2)
+  - [Virtual mode flags](#virtual-mode-flags)
+  - [Extended mode flags](#extended-mode-flags)
+  - [Extended mode CR0 flags](#extended-mode-cr0-flags)
+  - [Protected mode flags](#protected-mode-flags)
+  - [Protected mode CR0 flags](#protected-mode-cr0-flags)
+  - [Long mode CR0 flags](#long-mode-cr0-flags)
 
 ## INSTRUCTIONS
 
@@ -61,8 +73,8 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 - 0x14: register DL:                DL
 - 0x15: register H:                 H
 - 0x16: register L:                 L
-- 0x20: register address:           address [register]
-- 0x21: address register HL:        [HL]
+- 0x2E: register address:           address [register]
+- 0x2F: address register HL:        [HL]
 - 0x30: Relative address:           [byte address]      an 8 bit offset to the PC
 - 0x31: Near address:               Near [address]      a 8 bit address
 - 0x32: Short address:              short [address]     a 16 bit address
@@ -71,6 +83,46 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 - 0x3B: 32 bit segment DS B:        [DS:B]
 - 0x40: SP relative address byte:   [SP + sbyte number]
 - 0x41: BP relative address byte:   [BP + sbyte number]
+
+## Global Descriptor Table
+
+### Layout
+
+|Offset |Size |Name                     |Description
+|-------|-    |-                        |-
+|`00`   |`16` |Limit                    | this is the limit of the entry or the size of the segment This limit is the low part
+|`16`   |`32` |Base                     | this is the base of the entry or where the segment starts
+|`48`   |`08` |Access Byte              | this is the [access Byte](#access-byte)
+|`56`   |`04` |Other flags              | this is the [flags](#gdt-flags)
+|`60`   |`04` |Limit                    | this is the limit of the entry or the size of the segment This limit is the high part
+
+#### Access Byte
+
+|7|6&nbsp;5|4|3 |2|1 |0
+|-|--------|-|--|-|--|-
+|0|DPL     |T|DC|0|RW|0
+
+- DPL [Descriptor privilege level field](#privilege-level)
+- T Descriptor type bit.
+  - if clear(0) the descriptor defines a code segment. if set (1) it defines a data segment
+- DC Direction bit
+  - For Data segments set(1) the segment grows down (from base + limit to base), clear(0) the segment grows up (from base to base + limit)
+- WR Readable /Writable bit
+  - For data segments, clear (0) read and write access, if set (1) write access is not allowed
+  - For code segments, clear (0) read access is not allowed, if set (1) read access
+
+#### GDT flags
+
+|3|2|1|0
+|-|-|-|-
+|G|T|L|Reserved
+
+- G Granularity flag
+  - if clear (0) the limit is in 1 byte blocks, if set (1) the limlt is in 4 KB blocks
+- T Size flag
+  - if clear (0), the descriptor defines a 16 bit Protected extended mode, if set (1), the descriptor defines a 16 bit extended mode
+- L Long-mode code flag
+  - if set (1) the descriptor defines a 32 bit Long long mode segment, if clear (0) the T flag should be used
 
 ## Interrupt tables
 
@@ -82,13 +134,9 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 |-------|-    |-                        |-
 |`00`   |`32` |Offset                   | this is the offset to the interrupt function
 |`32`   |`20` |Segment                  | this is the segment to the interrupt function
-|`52`   |`01` |CPU Privilege level      | this is the privilege level [more here](#privilege-level)
-|`53`   |`01` |Gate type                | this is the Gate type [more here](#gate-type)
-|`54`   |`10` |reserved                 | reserved NOT IN USE
-
-#### privilege level
-
-#### Gate type
+|`52`   |`02` |CPU Privilege level      | this is the privilege level [more here](#privilege-level)
+|`54`   |`01` |Gate type                | this is the Gate type [more here](#gate-type)
+|`55`   |`09` |reserved                 | reserved NOT IN USE
 
 ### Interrupt vector table
 
@@ -130,6 +178,20 @@ an exception can be caused an instruction
 when the CPU gets an Abort exception it will stop and the Halt flag will be set
 
 when the CPU gets an Fault exception it will skip that instruction and continue
+
+## privilege level
+
+The privilege level goes from 0 to 3 where 0 is [ring 0](#ring-0-upper-root) and 3 is [ring 3](#ring-3-restricted-user-mode)
+
+### Ring 0 Upper root
+
+### Ring 1 Kernel mode
+
+### Ring 2 User mode
+
+### Ring 3 Restricted user mode
+
+## Gate type
 
 ## Pipelining
 
@@ -187,8 +249,8 @@ This is the sequence within the called function:
 
 In virtual mode the CPU has
 
-- 16 bit adderss bus
 - 8 bit data bus
+- 20 bit adderss bus
 - a 4 KB [IVT](#interrupt-vector-table)
 - And only has the [base registers](#base-registers-for-bc8)
 - The CPU will emulate the [BC8](./BC018/BC018%20Architecture%20Specs.md) CPU
@@ -197,11 +259,9 @@ In virtual mode the CPU has
 
 in Extended mode the CPU will get
 
-- 24 bit address bus
 - 16 bit data bus
+- 24 bit address bus
 - Make use of the [extended registers](#extended-registers)
-- PC becomes a 24 bit register
-- BIOS interrupt function no longer work
 - new argument modes
   - 0x02: immediate tbyte:            number
   - 0x03: immediate dword:            number
@@ -210,15 +270,17 @@ in Extended mode the CPU will get
   - 0x18: register B                  B
   - 0x19: register C                  C
   - 0x1A: register D                  D
-  - 0x1B: register AX:                AX
-  - 0x1C: register BX:                BX
-  - 0x1D: register CX:                CX
-  - 0x1E: register DX:                DX
   - 0x33: long address:               long [address]      a 24 bit address
-  - 0x36: Short X indexed address:    [short address],X
-  - 0x37: Short Y indexed address:    [short address],Y
+  - 0x50: Short X indexed address:    [short address],X
+  - 0x51: Short Y indexed address:    [short address],Y
   - 0x3C: 32 bit segment ES register: [ES:register]
   - 0x3D: 32 bit segment ES B:        [ES:B]
+  - 0x3E: 32 bit segment FS register: [FS:register]
+  - 0x3F: 32 bit segment FS B:        [FS:B]
+  - 0x40: 32 bit segment GS register: [GS:register]
+  - 0x41: 32 bit segment GS B:        [GS:B]
+  - 0x42: 32 bit segment HS register: [HS:register]
+  - 0x43: 32 bit segment HS B:        [HS:B]
   - 0x60: register AF:                AF
   - 0x61: register BF:                BF
   - 0x62: register CF:                CF
@@ -228,36 +290,49 @@ in Extended mode the CPU will get
 
 in Protected mode the CPU will get
 
-- 32 bit address bus
-- 32 bit data bus
 - Make use of the [protected registers](#protected-registers)
+
+## Protected extended mode
+
+in Protected Extended mode the CPU will get
+
+- 32 bit address bus
+- 16 bit data bus
+- segments are now 16 bits
+- offsets are now 32 bits
+- BIOS interrupt function no longer work
 - PC becomes a 32 bit register
+- \+ Protected mode
 - new argument modes
   - 0x04: immediate qword:            number
+  - 0x1B: register AX:                AX
+  - 0x1C: register BX:                BX
+  - 0x1D: register CX:                CX
+  - 0x1E: register DX:                DX
   - 0x34: Far address:                far [address]       a 32 bit address
-  - 0x42: SP relative address short:  [SP + short number]
-  - 0x43: BP relative address short:  [BP + short number]
+  - 0x52: SP relative address short:  [SP + short number]
+  - 0x53: BP relative address short:  [BP + short number]
 
 ## Long mode
 
 in long mode the CPU will get
 
 - 32 bit address bus
-- 64 bit data bus
+- 32 bit data bus
+- segments are now 20 bits
+- offsets are now 32 bits
 - Make use of the [long registers](#long-mode-registers)
 - a 16 KB [IDT](#interrupt-descriptor-table)
 - new argument modes
   - 0x09: immediate_double:           double numberf
-  - 0x24: register EX:                EX
-  - 0x25: register FX:                FX
-  - 0x26: register GX:                GX
-  - 0x27: register HX:                HX
-  - 0x44: SPX relative address word:  [SPX + word number]
-  - 0x45: BPX relative address word:  [BPX + word number]
-  - 0x46: SPX relative address tbyte: [SPX + tbyte number]
-  - 0x47: BPX relative address tbyte: [BPX + tbyte number]
-  - 0x48: SPX relative address int:   [SPX + int number]
-  - 0x49: BPX relative address int:   [BPX + int number]
+  - 0x1F: register EX:                EX
+  - 0x20: register GX:                GX
+  - 0x54: SPX relative address word:  [SPX + word number]
+  - 0x55: BPX relative address word:  [BPX + word number]
+  - 0x56: SPX relative address tbyte: [SPX + tbyte number]
+  - 0x57: BPX relative address tbyte: [BPX + tbyte number]
+  - 0x58: SPX relative address int:   [SPX + int number]
+  - 0x59: BPX relative address int:   [BPX + int number]
   - 0x70: register AD:                AD
   - 0x71: register BD:                BD
   - 0x72: register CD:                CD
@@ -269,15 +344,17 @@ in long long mode the CPU will get
 
 - 40 bit address bus
 - 64 bit data bus
+- segments are now 32 bits
+- offsets are now 32 bits
 - Make use of the [long long registers](#long-long-mode-registers)
 - PC becomes a 32 bit register
 - \+ Protected mode
 - new argument mode
   - 0x05: immediate dqword:           number
-  - 0x46: SPX relative address word:  [SPX + word number]
-  - 0x47: BPX relative address word:  [BPX + word number]
-  - 0x48: BPX relative address int:   [BPX + int number]
-  - 0x49: BPX relative address int:   [BPX + int number]
+  - 0x5A: SPX relative address word:  [SPX + word number]
+  - 0x5B: BPX relative address word:  [BPX + word number]
+  - 0x5C: BPX relative address int:   [BPX + int number]
+  - 0x5D: BPX relative address int:   [BPX + int number]
 
 ## MEMORY
 
@@ -293,231 +370,412 @@ in long long mode the CPU will get
 
 ## Base registers for BC8
 
-- AL:             8   bit general purpose register
-- AH:
-- BL:             8   bit general purpose register
-- BH:
-- CL:             8   bit general purpose register
-- CH:
-- DL:             8   bit general purpose register
-- DH:
-
-- CS:             16  bit code segment register
-- DS:             16  bit data segment register
-- SS:             16  bit stack segment register
-
-- PC:             16  bit program counter
-
-- HL (H + L):     32  bit general purpose address register
-- H:              16  bit general purpose address register
-- L:              16  bit general purpose address register
-
-- BP:             16  bit Stack register
-- SP:             16  bit Stack register
-
-- R1:             16  bit temp register
-- R2:             16  bit temp register
-- R3:             16  bit temp register
-- R4:             16  bit temp register
-
-- MB:             8   bit bank register
-
-- F:              8:  bit (F)lags register
-  - 0x0001 zero
-  - 0x0002 equals
-  - 0x0004 signed
-  - 0x0008 carry
-  - 0x0010 overflow
-  - 0x0020 less
-  - 0x0040 interrupt enable
-  - 0x0080 HALT
+|Name     |Type   |Size in bits |Description
+|---------|-------|-------------|-
+|AL       | GP    |8            | an 8 bit general purpose register
+|AH       | GP    |8            | an 8 bit general purpose register
+|BL       | GP    |8            | an 8 bit general purpose register
+|BH       | GP    |8            | an 8 bit general purpose register
+|CL       | GP    |8            | an 8 bit general purpose register
+|CH       | GP    |8            | an 8 bit general purpose register
+|DL       | GP    |8            | an 8 bit general purpose register
+|DH       | GP    |8            | an 8 bit general purpose register
+|&nbsp;   |&nbsp; |&nbsp;       |&nbsp;
+|CS       |Segment|16           | an 16 bit code segment register
+|DS       |Segment|16           | an 16 bit data segment register
+|SS       |Segment|16           | an 16 bit stack segment register
+|&nbsp;   |&nbsp; |&nbsp;       |&nbsp;
+|PC       |address|16           | an 16 bit program counter
+|HL       |address|32           | an 32 bit address register
+|H        |address|16           | an 16 bit address register high part of HL
+|L        |address|16           | an 16 bit address register low part of HL
+|&nbsp;   |&nbsp; |&nbsp;       |&nbsp;
+|SP       |stack  |16           | an 16 bit stack pointer
+|BP       |stack  |16           | an 16 bit base pointer
+|&nbsp;   |&nbsp; |&nbsp;       |&nbsp;
+|R1-4     |GP     |8            | an 8 bit general purpose registers
+|&nbsp;   |&nbsp; |&nbsp;       |&nbsp;
+|F        |flags  |8            | an 8 bit flags register [flags here](#virtual-mode-flags)
 
 ## Extended registers
 
-- A (AH + AL):    16  bit general purpose register
-- B (BH + BL):    16  bit general purpose register
-- C (CH + CL):    16  bit general purpose register
-- D (DH + DL):    16  bit general purpose register
-
-- CS:             16  bit code segment register
-- DS:             16  bit data segment register
-- ES:             16  bit extra data segment register
-- FS:             16  bit extra data segment register
-- SS:             16  bit stack segment register
-
-- PC:             the PC is now 32 bits can only use 24 bits
-
-- AF:             32  bit float register
-- BF:             32  bit float register
-
-- CR0:            8   bit control register
-  - 0 0x01 Boot mode
-  - 1 0x02 FPU enabled
-  - 2 0x04 Low power Mode
-  - 3 0x08 Enable bigger registers        Enableing [bigger registers](#bigger-registers)
-  - 4 0x10 Enable extended mode           Enableing [extended mode](#extended-mode)
-  - 5 0x20 reserved
-  - 6 0x40 reserved
-  - 7 0x80 Enable Protected mode          Enableing [Protected mode](#protected-mode)
-
-- F:              16: bit (F)lags register
-  - 0x0001 zero
-  - 0x0002 equals
-  - 0x0004 signed
-  - 0x0008 carry
-  - 0x0010 overflow
-  - 0x0020 less
-  - 0x0040 interrupt enable
-  - 0x0080 HALT
-  - 0x0100 reserved
-  - 0x0200 under flow
-  - 0x0400 shift flag
-  - 0x0800 greater
-  - 0x1000 reserved
-  - 0x2000 reserved
-  - 0x4000 reserved
-  - 0x8000 reserved
-
-- X:              16 bit index register
-- Y:              16 bit index register
-
-- AX              32 bit general purpose register
-- BX              32 bit general purpose register
-- CX              32 bit general purpose register
-- DX              32 bit general purpose register
-
-- R1..16:         32 bit general purpose register
-
-### Bigger registers
-
-- CF:             32  bit float register
-- DF:             32  bit float register
+|Name     |Type     |Size in bits |Description
+|---------|---------|-------------|-
+|A(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of A
+|B(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of B
+|C(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of C
+|D(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of D
+|A        | GP      |16           | an 16 bit general purpose register
+|B        | GP      |16           | an 16 bit general purpose register
+|C        | GP      |16           | an 16 bit general purpose register
+|D        | GP      |16           | an 16 bit general purpose register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CS       |Segment  |16           | an 16 bit code segment register
+|DS       |Segment  |16           | an 16 bit data segment register
+|ES       |Segment  |16           | an 16 bit extra data segment register
+|FS       |Segment  |16           | an 16 bit extra data segment register
+|GS       |Segment  |16           | an 16 bit extra data segment register
+|HS       |Segment  |16           | an 16 bit extra data segment register
+|SS       |Segment  |16           | an 16 bit stack segment register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|PC       |address  |24           | an 24 bit program counter
+|HL       |address  |32           | an 32 bit address register
+|H        |address  |16           | an 16 bit address register high part of HL
+|L        |address  |16           | an 16 bit address register low part of HL
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|SP       |stack    |16           | an 16 bit stack pointer
+|BP       |stack    |16           | an 16 bit base pointer
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AF       |GB float |32           | a 32 bit single precision float register
+|BF       |GB float |32           | a 32 bit single precision float register
+|CF       |GB float |32           | a 32 bit single precision float register
+|DF       |GB float |32           | a 32 bit single precision float register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|R1-16    |GP       |16           | an 16 bit general purpose registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|X        |index    |16           | an 16 bit index registers
+|Y        |index    |16           | an 16 bit index registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CR0      |control  |8            | an 8 bit control register [flags here](#extended-mode-cr0-flags)
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|F        |flags    |16           | an 16 bit flags register [flags here](#extended-mode-flags)
 
 ## Protected registers
 
-- AX              32 bit general purpose register
-- BX              32 bit general purpose register
-- CX              32 bit general purpose register
-- DX              32 bit general purpose register
-
-- ES:             16  bit extra data segment register
-- FS:             16  bit extra data segment register
-- GS:             16  bit extra data segment register
-
-- PC:             32  bit program counter
-
-- R1..16:         32 bit general purpose register
-
-- CR0:            16  bit control register
-  - 0x0001 Boot mode
-  - 0x0002 FPU enabled
-  - 0x0004 Low power Mode
-  - 0x0008 Enable bigger registers        Enableing [bigger registers](#bigger-registers)
-  - 0x0010 Enable extended mode             Enableing [extended mode](#extended-mode)
-  - 0x0020
-  - 0x0040
-  - 0x0080 Enable Protected mode            Enableing [Protected mode](#protected-mode)
-  - 0x0100
-  - 0x0200
-  - 0x0400
-  - 0x0800
-  - 0x1000
-  - 0x2000
-  - 0x4000
-  - 0x8000
-
-- F:              24: bit (F)lags register
-  - 0x000001 zero
-  - 0x000002 equals
-  - 0x000004 signed
-  - 0x000008 carry
-  - 0x000010 overflow
-  - 0x000020 less
-  - 0x000040 interrupt enable
-  - 0x000080 HALT
-  - 0x000100 reserved
-  - 0x000200 under flow
-  - 0x000400 shift flag
-  - 0x000800 greater
-  - 0x001000 reserved
-  - 0x002000 reserved
-  - 0x004000 reserved
-  - 0x008000 reserved
-  - 0x010000 reserved
-  - 0x020000 reserved
-  - 0x040000 reserved
-  - 0x080000 reserved
-  - 0x100000 reserved
-  - 0x200000 reserved
-  - 0x400000 reserved
-  - 0x800000 reserved
-
-- X:              32 bit index register
-- Y:              32 bit index register
-
-### Bigger registers
+|Name     |Type     |Size in bits |Description
+|---------|---------|-------------|-
+|A(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of A
+|B(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of B
+|C(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of C
+|D(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of D
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|A        | GP      |16           | an 16 bit general purpose register the low part of the AX register
+|B        | GP      |16           | an 16 bit general purpose register the low part of the BX register
+|C        | GP      |16           | an 16 bit general purpose register the low part of the CX register
+|D        | GP      |16           | an 16 bit general purpose register the low part of the DX register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AX       | GP      |32           | an 32 bit general purpose register
+|BX       | GP      |32           | an 32 bit general purpose register
+|CX       | GP      |32           | an 32 bit general purpose register
+|DX       | GP      |32           | an 32 bit general purpose register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CS       |Segment  |16           | an 16 bit code segment register low part of the ECS register
+|DS       |Segment  |16           | an 16 bit data segment register low part of the EDS register
+|ES       |Segment  |16           | an 16 bit extra data segment register low part of the EES register
+|FS       |Segment  |16           | an 16 bit extra data segment register low part of the EFS register
+|GS       |Segment  |16           | an 16 bit extra data segment register low part of the EGS register
+|HS       |Segment  |16           | an 16 bit extra data segment register low part of the EHS register
+|SS       |Segment  |16           | an 16 bit stack segment register low part of the ESS register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|ECS      |Segment  |32           | an 32 bit code segment register
+|EDS      |Segment  |32           | an 32 bit data segment register
+|EES      |Segment  |32           | an 32 bit extra data segment register
+|EFS      |Segment  |32           | an 32 bit extra data segment register
+|EGS      |Segment  |32           | an 32 bit extra data segment register
+|EHS      |Segment  |32           | an 32 bit extra data segment register
+|ESS      |Segment  |32           | an 32 bit stack segment register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|PC       |address  |32           | an 32 bit program counter
+|HL       |address  |32           | an 32 bit address register
+|H        |address  |16           | an 16 bit address register high part of HL
+|L        |address  |16           | an 16 bit address register low part of HL
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|PTA      |address  |16           | this register will point to the page table
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|GDA      |address  |32           | this register will point to the global descriptor table in memory
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|SP       |stack    |16           | an 16 bit stack pointer
+|BP       |stack    |16           | an 16 bit base pointer
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AF       |GB float |32           | a 32 bit single precision float register
+|BF       |GB float |32           | a 32 bit single precision float register
+|CF       |GB float |32           | a 32 bit single precision float register
+|DF       |GB float |32           | a 32 bit single precision float register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|R1-16    |GP       |32           | an 32 bit general purpose registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|X        |index    |32           | an 32 bit index registers
+|Y        |index    |32           | an 32 bit index registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CR0      |control  |16           | an 16 bit control register [flags here](#protected-mode-cr0-flags)
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|F        |flags    |24           | an 24 bit flags register [flags here](#protected-mode-flags)
 
 ## long mode registers
 
-- EX              32 bit general purpose register
-- FX              32 bit general purpose register
-- GX              32 bit general purpose register
-- HX              32 bit general purpose register
-
-- BPX:            20  bit Stack register
-- SPX:            20  bit Stack register
-
-- AD:             64  bit float register
-- BD:             64  bit float register
-- CD:             64  bit float register
-- DD:             64  bit float register
+|Name     |Type     |Size in bits |Description
+|---------|---------|-------------|-
+|A(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of A
+|B(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of B
+|C(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of C
+|D(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of D
+|E(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of E
+|G(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of G
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|A        | GP      |16           | an 16 bit general purpose register the low part of the AX register
+|B        | GP      |16           | an 16 bit general purpose register the low part of the BX register
+|C        | GP      |16           | an 16 bit general purpose register the low part of the CX register
+|D        | GP      |16           | an 16 bit general purpose register the low part of the DX register
+|E        | GP      |16           | an 16 bit general purpose register the low part of the EX register
+|G        | GP      |16           | an 16 bit general purpose register the low part of the GX register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AX       | GP      |32           | an 32 bit general purpose register
+|BX       | GP      |32           | an 32 bit general purpose register
+|CX       | GP      |32           | an 32 bit general purpose register
+|DX       | GP      |32           | an 32 bit general purpose register
+|EX       | GP      |32           | an 32 bit general purpose register
+|GX       | GP      |32           | an 32 bit general purpose register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CS       |Segment  |16           | an 16 bit code segment register low part of the ECS register
+|DS       |Segment  |16           | an 16 bit data segment register low part of the EDS register
+|ES       |Segment  |16           | an 16 bit extra data segment register low part of the EES register
+|FS       |Segment  |16           | an 16 bit extra data segment register low part of the EFS register
+|GS       |Segment  |16           | an 16 bit extra data segment register low part of the EGS register
+|HS       |Segment  |16           | an 16 bit extra data segment register low part of the EHS register
+|SS       |Segment  |16           | an 16 bit stack segment register low part of the ESS register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|ECS      |Segment  |32           | an 32 bit code segment register
+|EDS      |Segment  |32           | an 32 bit data segment register
+|EES      |Segment  |32           | an 32 bit extra data segment register
+|EFS      |Segment  |32           | an 32 bit extra data segment register
+|EGS      |Segment  |32           | an 32 bit extra data segment register
+|EHS      |Segment  |32           | an 32 bit extra data segment register
+|ESS      |Segment  |32           | an 32 bit stack segment register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|PC       |address  |32           | an 32 bit program counter
+|HL       |address  |32           | an 32 bit address register
+|H        |address  |16           | an 16 bit address register high part of HL
+|L        |address  |16           | an 16 bit address register low part of HL
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|SP       |stack    |16           | an 16 bit stack pointer
+|BP       |stack    |16           | an 16 bit base pointer
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|SPX      |stack    |20           | an 20 bit stack pointer
+|BPX      |stack    |20           | an 20 bit base pointer
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AF       |GB float |32           | a 32 bit single precision float register
+|BF       |GB float |32           | a 32 bit single precision float register
+|CF       |GB float |32           | a 32 bit single precision float register
+|DF       |GB float |32           | a 32 bit single precision float register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AD       |GB float |64           | a 64 bit double precision float register
+|BD       |GB float |64           | a 64 bit double precision float register
+|CD       |GB float |64           | a 64 bit double precision float register
+|DD       |GB float |64           | a 64 bit double precision float register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|R1-16    |GP       |32           | an 32 bit general purpose registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|X        |index    |32           | an 32 bit index registers
+|Y        |index    |32           | an 32 bit index registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CR0      |control  |24           | an 24 bit control register [flags here](#long-mode-cr0-flags)
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|F        |flags    |24           | an 24 bit flags register [flags here](#protected-mode-flags)
 
 ## long long mode registers
 
-- EA              64 bit general purpose register
-- EB              64 bit general purpose register
-- EC              64 bit general purpose register
-- ED              64 bit general purpose register
-- EX              64 bit general purpose register
-- FX              64 bit general purpose register
-- GX              64 bit general purpose register
-- HX              64 bit general purpose register
+|Name     |Type     |Size in bits |Description
+|---------|---------|-------------|-
+|A(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of A
+|B(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of B
+|C(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of C
+|D(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of D
+|E(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of E
+|G(L & H) | GP      |8            | an 8 bit general purpose register the low/high part of G
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|A        | GP      |16           | an 16 bit general purpose register the low part of the AX register
+|B        | GP      |16           | an 16 bit general purpose register the low part of the BX register
+|C        | GP      |16           | an 16 bit general purpose register the low part of the CX register
+|D        | GP      |16           | an 16 bit general purpose register the low part of the DX register
+|E        | GP      |16           | an 16 bit general purpose register the low part of the EX register
+|G        | GP      |16           | an 16 bit general purpose register the low part of the GX register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AX       | GP      |32           | an 32 bit general purpose register the low part of the EA register
+|BX       | GP      |32           | an 32 bit general purpose register the low part of the EB register
+|CX       | GP      |32           | an 32 bit general purpose register the low part of the EC register
+|DX       | GP      |32           | an 32 bit general purpose register the low part of the ED register
+|EX       | GP      |32           | an 32 bit general purpose register the low part of the EE register
+|GX       | GP      |32           | an 32 bit general purpose register the low part of the EG register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|EA       | GP      |64           | an 64 bit general purpose register
+|EB       | GP      |64           | an 64 bit general purpose register
+|EC       | GP      |64           | an 64 bit general purpose register
+|ED       | GP      |64           | an 64 bit general purpose register
+|EE       | GP      |64           | an 64 bit general purpose register
+|EG       | GP      |64           | an 64 bit general purpose register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CS       |Segment  |16           | an 16 bit code segment register low part of the ECS register
+|DS       |Segment  |16           | an 16 bit data segment register low part of the EDS register
+|ES       |Segment  |16           | an 16 bit extra data segment register low part of the EES register
+|FS       |Segment  |16           | an 16 bit extra data segment register low part of the EFS register
+|GS       |Segment  |16           | an 16 bit extra data segment register low part of the EGS register
+|HS       |Segment  |16           | an 16 bit extra data segment register low part of the EHS register
+|SS       |Segment  |16           | an 16 bit stack segment register low part of the ESS register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|ECS      |Segment  |32           | an 32 bit code segment register
+|EDS      |Segment  |32           | an 32 bit data segment register
+|EES      |Segment  |32           | an 32 bit extra data segment register
+|EFS      |Segment  |32           | an 32 bit extra data segment register
+|EGS      |Segment  |32           | an 32 bit extra data segment register
+|EHS      |Segment  |32           | an 32 bit extra data segment register
+|ESS      |Segment  |32           | an 32 bit stack segment register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|PC       |address  |32           | an 32 bit program counter
+|HL       |address  |64           | an 64 bit address register
+|H        |address  |32           | an 32 bit address register high part of HL
+|L        |address  |32           | an 32 bit address register low part of HL
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|PTA      |address  |32           | this register will point to the page table
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|GDA      |address  |40           | this register will point to the global descriptor table in memory
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|SP       |stack    |16           | an 16 bit stack pointer
+|BP       |stack    |16           | an 16 bit base pointer
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|SPX      |stack    |32           | an 32 bit stack pointer
+|BPX      |stack    |32           | an 32 bit base pointer
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AF       |GB float |32           | a 32 bit single precision float register
+|BF       |GB float |32           | a 32 bit single precision float register
+|CF       |GB float |32           | a 32 bit single precision float register
+|DF       |GB float |32           | a 32 bit single precision float register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|AD       |GB float |64           | a 64 bit double precision float register
+|BD       |GB float |64           | a 64 bit double precision float register
+|CD       |GB float |64           | a 64 bit double precision float register
+|DD       |GB float |64           | a 64 bit double precision float register
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|R1-16    |GP       |64           | an 64 bit general purpose registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|X        |index    |32           | an 32 bit index registers
+|Y        |index    |32           | an 32 bit index registers
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|CR0      |control  |24           | an 24 bit control register [flags here](#long-mode-cr0-flags)
+|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
+|F        |flags    |24           | an 24 bit flags register [flags here](#protected-mode-flags)
 
-- PC:             32  bit program counter
+## Virtual mode flags
 
-- HL (H + L):     64 bit general purpose address register
-- H:              32 bit general purpose address register
-- L:              32 bit general purpose address register
+|bit  |name             |Description
+|-----|---------        |-
+|0x01 |zero             | this flag is set if a register is zero or instruction gets a zero
+|0x02 |equals           | this flag is set if an CMP instruction is true
+|0x04 |signed           | this flag is set if the signed bit is set on a register in an instruction
+|0x08 |carry            | this flag is set if a arithmetic instruction overflows and can be used in arithmetic instruction
+|0x10 |overflow         | this flag is set if a arithmetic instruction overflows
+|0x20 |less then        | this flag is set if the operand1 is less then operand2 in a CMP instruction
+|0x40 |interrupt enable | this flag is used to enable the IRQ interrupts
+|0x80 |HALT             | this flag will halt the CPU
 
-- BPX:            32  bit Stack register
-- SPX:            32  bit Stack register
+## Extended mode flags
 
-- R1..20:         64  bit general purpose register
+|bit    |name             |Description
+|-------|---------        |-
+|0x0001 |zero             | this flag is set if a register is zero or instruction gets a zero
+|0x0002 |equals           | this flag is set if an CMP instruction is true
+|0x0004 |signed           | this flag is set if the signed bit is set on a register in an instruction
+|0x0008 |carry            | this flag is set if a arithmetic instruction overflows and can be used in arithmetic instruction
+|0x0010 |overflow         | this flag is set if a arithmetic instruction overflows
+|0x0020 |less then        | this flag is set if the operand1 is less then operand2 in a CMP instruction
+|0x0040 |interrupt enable | this flag is used to enable the IRQ interrupts
+|0x0080 |HALT             | this flag will halt the CPU
+|0x0100 |reserved         | reserved
+|0x0200 |under flow       | this flag is set if a arithmetic instruction underflows
+|0x0400 |shift flag       | this flag is used with the ROR ROL instructions
+|0x0800 |greater then     | this flag is set if the operand1 is greater then operand2 in a CMP instruction
+|0x1000 |reserved         | reserved
+|0x2000 |reserved         | reserved
+|0x4000 |reserved         | reserved
+|0x8000 |reserved         | reserved
 
-- CR0:            24  bit control register
-  - 0x000001 Boot mode
-  - 0x000002 FPU enabled
-  - 0x000004 Low power Mode
-  - 0x000008
-  - 0x000010 Enable extended mode             Enableing [extended mode](#extended-mode)
-  - 0x000020
-  - 0x000040
-  - 0x000080
-  - 0x000100 Enable Protected mode            Enableing [Protected mode](#protected-mode)
-  - 0x000200
-  - 0x000400
-  - 0x000800
-  - 0x001000
-  - 0x002000
-  - 0x004000
-  - 0x008000 Enable Long mode                 Enableing [Long mode](#long-mode)
-  - 0x010000
-  - 0x020000
-  - 0x040000
-  - 0x080000
-  - 0x100000
-  - 0x200000
-  - 0x400000
-  - 0x800000
+## Extended mode CR0 flags
 
-### Bigger registers
+|bit  |name                   |Description
+|-----|---------              |-
+|0x01 |Boot mode              | this flag is used by the BIOS
+|0x02 |FPU enabled            | this flag is used to enable the FPU for float arithmetic
+|0x04 |low power mode         | this flag will set the CPU in a state where it cuts the power but is still operational
+|0x08 |reserved               | reserved
+|0x10 |Enable extended mode   | this flag is used to enable extended mode
+|0x20 |Enable A24             | this flag is used to enable the A24 line
+|0x40 |reserved               | reserved
+|0x80 |Enable protected mode  | this flag is used to enable protected mode
+
+## Protected mode flags
+
+|bit      |name             |Description
+|---------|---------        |-
+|0x000001 |zero             | this flag is set if a register is zero or instruction gets a zero
+|0x000002 |equals           | this flag is set if an CMP instruction is true
+|0x000004 |signed           | this flag is set if the signed bit is set on a register in an instruction
+|0x000008 |carry            | this flag is set if a arithmetic instruction overflows and can be used in arithmetic instruction
+|0x000010 |overflow         | this flag is set if a arithmetic instruction overflows
+|0x000020 |less then        | this flag is set if the operand1 is less then operand2 in a CMP instruction
+|0x000040 |interrupt enable | this flag is used to enable the IRQ interrupts
+|0x000080 |HALT             | this flag will halt the CPU
+|0x000100 |reserved         | reserved
+|0x000200 |under flow       | this flag is set if a arithmetic instruction underflows
+|0x000400 |shift flag       | this flag is used with the ROR ROL instructions
+|0x000800 |greater then     | this flag is set if the operand1 is greater then operand2 in a CMP instruction
+|0x001000 |reserved         | reserved
+|0x002000 |reserved         | reserved
+|0x004000 |reserved         | reserved
+|0x008000 |reserved         | reserved
+|0x010000 |reserved         | reserved
+|0x020000 |reserved         | reserved
+|0x040000 |reserved         | reserved
+|0x080000 |reserved         | reserved
+|0x100000 |reserved         | reserved
+|0x200000 |reserved         | reserved
+|0x400000 |reserved         | reserved
+|0x800000 |reserved         | reserved
+
+## Protected mode CR0 flags
+
+|bit    |name                   |Description
+|-------|---------              |-
+|0x0001 |Boot mode              | this flag is used by the BIOS
+|0x0002 |FPU enabled            | this flag is used to enable the FPU for float arithmetic
+|0x0004 |low power mode         | this flag will set the CPU in a state where it cuts the power but is still operational
+|0x0008 |reserved               | reserved
+|0x0010 |Enable extended mode   | this flag is used to enable extended mode
+|0x0020 |Enable A24             | this flag is used to enable the A24 line
+|0x0040 |reserved               | reserved
+|0x0080 |Enable protected mode  | this flag is used to enable protected mode
+|0x0100 |Enable paging          | this flag is used to enable paging
+|0x0200 |reserved               | reserved
+|0x0400 |reserved               | reserved
+|0x0800 |reserved               | reserved
+|0x1000 |reserved               | reserved
+|0x2000 |reserved               | reserved
+|0x4000 |reserved               | reserved
+|0x8000 |reserved               | reserved
+
+## Long mode CR0 flags
+
+|bit    |name                   |Description
+|-------|---------              |-
+|0x000001 |Boot mode              | this flag is used by the BIOS
+|0x000002 |FPU enabled            | this flag is used to enable the FPU for float arithmetic
+|0x000004 |low power mode         | this flag will set the CPU in a state where it cuts the power but is still operational
+|0x000008 |reserved               | reserved
+|0x000010 |Enable extended mode   | this flag is used to enable extended mode
+|0x000020 |Enable A24             | this flag is used to enable the A24 line
+|0x000040 |reserved               | reserved
+|0x000080 |Enable protected mode  | this flag is used to enable protected mode
+|0x000100 |Enable paging          | this flag is used to enable paging
+|0x000200 |reserved               | reserved
+|0x000400 |reserved               | reserved
+|0x000800 |reserved               | reserved
+|0x001000 |reserved               | reserved
+|0x002000 |reserved               | reserved
+|0x004000 |reserved               | reserved
+|0x008000 |reserved               | reserved
+|0x010000 |reserved               | reserved
+|0x020000 |reserved               | reserved
+|0x040000 |reserved               | reserved
+|0x080000 |reserved               | reserved
+|0x100000 |Enable long mode       | this flag is used to enable long mode
+|0x200000 |reserved               | reserved
+|0x400000 |reserved               | reserved
+|0x800000 |reserved               | reserved

@@ -165,4 +165,8 @@
 - `0xF050`: BRK:                            `Generates a software interrupt (more in the INTERRUPTS)`
 - `0xF060`: ENTER:                          `Creates a stack frame`
 - `0xF070`: LEAVE:                          `Leaves the current stack frame`
+- `0xF080`: CPUID:  register                `Puts some info about the CPU into the destination register`
+- `0xF090`: PUSHRR:                         `Pushes R1 to R16 on to the stack`
+- `0xF0A0`: POPRR:                          `Pops R1 to R16 off the stack`
+- `0xF0B0`: LGDT:   address                 `Loads the GDA register with the address`
 - `0xFFF0`: HALT:                           `Stops the CPU`

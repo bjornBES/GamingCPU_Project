@@ -1,12 +1,6 @@
 .setcpu "BC16CE"
 
-.section BSS
-DriveIndex:
-.res 1
-
 .section TEXT
-
-.extern _CStart_
 
 ; disk              DL
 ;
@@ -18,5 +12,9 @@ Entry:
     sez         SP
     mov         FS,                 high @__BSSSTART
     mov         DS,                 high @__DATASTART
+
+.section BSS
+DriveIndex:
+.res 1
 
 .includeil "./Filesystem.acl"

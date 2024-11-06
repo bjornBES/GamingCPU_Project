@@ -1,3 +1,5 @@
+#define TEST = 0x55
+
 SECTION:DATA
         :name RES 0x400
 
@@ -6,19 +8,8 @@ SECTION:STRING
 
 SECTION:TEXT
 
-0000000:prog    test.                                                   \\
 0000001:uint    pVram.                                                  \\
 0000002:byte    bvar.                                                   \\
-0000010:func    main().                                                 \\
-0000011:shortshort ShByte = 0x7C00.                                     \\ 
-0000021:display(MessERS).                                               \\
-0000022:pVram=0x010000.                                                 \\
-0000023:*pVram=0x55.                                                    \\
-0000024:*0x010000=0x55.                                                 \\
-0000025:longbyte str=&MessERS.                                          \\
-0000027:char c=*str.                                                    \\
-0000028:display(str).                                                   \\
-0000029:bvar=0x55.                                                      \\
-0000032:ret 0.                                                          \\
+0000010:func    main(byte bootD).                                       \\ test
+0000011:name[101] = 0x55.                                               \\
 0000070:endfunc.                                                        \\
-0001000:endprog.                                                        \\

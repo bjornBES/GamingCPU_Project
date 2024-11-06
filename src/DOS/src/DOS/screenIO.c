@@ -24,7 +24,7 @@ void clear()
         for (int x = 0; x < SCREEN_WIDTH; x += 2)
         {
             screenBuffer[getScreenPos(x, y)] = 0;
-            screenBuffer[getScreenPos(x, y) + 1     ] = 0;
+            screenBuffer[getScreenPos(x, y) + 1] = 0;
         }
     }
 }

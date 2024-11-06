@@ -1,0 +1,12 @@
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\bin\Debug\net7.0\HexLibrary.deps.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\bin\Debug\net7.0\HexLibrary.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\bin\Debug\net7.0\HexLibrary.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\HexLibrary.csproj.AssemblyReference.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\HexLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\HexLibrary.AssemblyInfoInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\HexLibrary.AssemblyInfo.cs
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\HexLibrary.csproj.CoreCompileInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\HexLibrary.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\refint\HexLibrary.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\HexLibrary.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HexLibrary\obj\Debug\net7.0\ref\HexLibrary.dll

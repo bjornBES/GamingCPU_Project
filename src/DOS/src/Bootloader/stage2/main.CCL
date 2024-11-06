@@ -1,19 +1,13 @@
-@#inc   "./filesystem.CCL"
+#inc    "./IO.CCL"
+#inc    "./filesystem.CCL"
 
 SECTION:DATA
-       :SECTOR RES 0x400
-       :KERNEL RES 0x8000
+       :extern func DOSSTART()
 
 SECTION:STRING
-       :HELLO "HELLO WORLD"
-
+       :DOSFileName "DOS        BIN  "
 
 SECTION:TEXT
-0000000:program test.                                                   \\
-0000001:func cstart(word drive).                                        \\
-0000005:uint Sdat=&SECTOR.                                              \\
-0000015:uint str=HELLO.                                                 \\
-@0000020:if str==HELLO.then.ret 1.elif drive==1.then.ret 1.enif.ret 0.   \\
-0000500:endfunc.                                                        \\
-
-0002000:endprogram.                                                     \\
+1000000:func cstart(word drive).                                        \\
+1001000:far uint DOSAddresss=&DOSSTART.asm("sez\tSP").asm("jmp\t[HL]"). \\
+1001010:endfunc.                                                        \\

@@ -23,7 +23,7 @@
     "Link DOS": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/DOS/Build/DOS/DOS.o -o ./CPU/src/DOS/build/DOS/DOS.bin -fbin -ls ./CPU/src/DOS/src/DOS/DOS.conf"
+      "commandLineArgs": "-i ./src/DOS/Build/DOS/DOS.o -o ./src/DOS/build/DOS/DOS.bin -fbin -ls ./src/DOS/src/DOS/DOS.conf"
     }
   }
 }

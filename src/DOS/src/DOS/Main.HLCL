@@ -1,4 +1,4 @@
-program main
+function main
     ; comment lines here
     print OUT, "Hello world"
-endprog main
+endfunc main

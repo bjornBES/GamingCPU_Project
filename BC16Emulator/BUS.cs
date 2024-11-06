@@ -8,12 +8,13 @@ using _BFDCG12;
 using filesystem;
 using BC16CPUEmulator;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class BUS
     {
         public Memory m_Memory;
         public BC16CPU m_CPU;
+        public MMU m_MMU;
 
         public CPUBus m_CPUBus;
 
@@ -29,6 +30,24 @@ namespace BCG16CPUEmulator
 
             m_CPU = new BC16CPU();
             m_CPU.ConnectBus(this);
+
+            m_MMU = new MMU();
+            m_MMU.ConnectBus(this);
+
+            m_MMU.Allocate(1);
+
+            m_MMU.Allocate(2);
+            m_MMU.Allocate(3);
+            m_MMU.RequestMoreMemory(2);
+
+            //m_MMU.ShowMemoryMap();
+
+            m_MMU.GetPhysicalAddress(1, 0x8000);
+            m_MMU.GetPhysicalAddress(2, 0x18000);
+            m_MMU.GetPhysicalAddress(3, 0x8000);
+
+            m_MMU.Deallocate(2);
+            m_MMU.ShowMemoryMap();
 
             m_CPUBus = new CPUBus();
 

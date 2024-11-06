@@ -1,0 +1,21 @@
+Program global program              ; program is global to all files
+{
+    function global Add(x, y)
+    {
+        _OUT = x + y
+    }
+
+    function Main()
+    {
+        print OUT, "Hello world"        
+        _OUT = Add(10, 10)
+    }
+}
+
+program local _test                 ; _test is local to the file
+{
+    function OtherFunction()
+    {
+        program.Add()
+    }
+}

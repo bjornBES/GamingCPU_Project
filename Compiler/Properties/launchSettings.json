@@ -12,7 +12,7 @@
     },
     "Test Bootloader": {
       "commandName": "Project",
-      "commandLineArgs": "-i ./CPU/src/DOS/src/Bootloader/stage2/main.ccl -o ./CPU/src/DOS/Build/Bootloader/stage2/CCL/main.acl -cpu BC16C",
+      "commandLineArgs": "-i ./src/DOS/src/Bootloader/stage2/main.ccl -o ./src/DOS/Build/Bootloader/stage2/CCL/main.acl -cpu BC16CE",
       "workingDirectory": "./.."
     }
   }

@@ -5,7 +5,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.ComponentModel;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public enum Size
     {

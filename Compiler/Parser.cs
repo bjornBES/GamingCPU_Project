@@ -12,36 +12,15 @@ using Compiler;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics.Tracing;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Compiler
 {
-    public class Parser
+    public class Parser : ParserCPUInstrctions
     {
-        public int m_StackSize;
-        public Stack<int> m_Scopes = new Stack<int>();
-
-        Token[] m_tokens;
-        int m_index = 0;
-        List<Var> m_var = new List<Var>();
-        List<Function> m_functions = new List<Function>();
-        List<string> m_lineNumber = new List<string>();
-        Token m_lastToken;
-        List<string> m_lineNumbers = new List<string>();
-        int m_labelCount;
-        int m_globalVarIndex = 0;
-
-
-        Section m_section;
-
-        Dictionary<string, string> m_strings = new Dictionary<string, string>();
-
-        public List<string> m_Output = new List<string>();
-        public List<string> m_OutputBss = new List<string>();
-        public List<string> m_OutputData = new List<string>();
-        public List<string> m_OutputRodata = new List<string>();
         string parseTerm(out string register, TypeData type = null)
         {
-                register = "";
+            register = "";
             if (!peek().HasValue)
             {
                 return null;
@@ -49,16 +28,77 @@ namespace Compiler
 
             if (peek().Value.m_Type == TokenType.int_lit)
             {
-                string term = consume().m_Value;
-
-                uint data = Convert.ToUInt32(term);
-
-                register = "AX";
-                return $"0x{Convert.ToString(data, 16)}";
+                return parseTerm(consume(), out register, type);
             }
             else if (peek().Value.m_Type == TokenType.ident)
             {
                 string name = consume().m_Value;
+                if (m_strings.ContainsKey(name))
+                {
+                    int offset = 0;
+
+                    if (try_consume(TokenType.open_square))
+                    {
+                        string strOffset = parseTerm(out _);
+                        offset = Convert.ToInt32(strOffset, 16);
+                        try_consume_error(TokenType.close_square);
+                    }
+
+                    string result = $"far @{name}";
+                    if (offset != 0)
+                    {
+                        result += $" + 0x{Convert.ToString(offset, 16)}";
+                    }
+                    register = "HL";
+                    return result;
+                }
+                else
+                {
+                    return parseTerm(peek(-1).Value, out register, type);
+                }
+            }
+            else if (peek().Value.m_Type == TokenType.at)
+            {
+                try_consume_error(TokenType.at);
+                register = try_consume_error(TokenType.ident).m_Value;
+                return register;
+            }
+            else if (peek().Value.m_Type == TokenType.ampersand)
+            {
+                try_consume_error(TokenType.ampersand);
+
+                return parseTerm(out register, type);
+            }
+            else if (peek().Value.m_Type == TokenType.open_square)
+            {
+                try_consume_error(TokenType.open_square);
+                string data = parseTerm(out register, type);
+                try_consume_error(TokenType.close_square);
+                return data;
+            }
+
+            return null;
+        }
+        string parseTerm(Token term, out string register, TypeData type = null)
+        {
+            register = "";
+            if (!peek().HasValue)
+            {
+                return null;
+            }
+
+            if (term.m_Type == TokenType.int_lit)
+            {
+                string value = term.m_Value;
+
+                uint data = Convert.ToUInt32(value);
+
+                register = "AX";
+                return $"0x{Convert.ToString(data, 16)}";
+            }
+            else if (term.m_Type == TokenType.ident)
+            {
+                string name = term.m_Value;
                 if (isVariabel(name, out Var var))
                 {
                     if (var.m_Address.m_isGlobal)
@@ -80,49 +120,90 @@ namespace Compiler
                             break;
                     }
                 }
-                else if (m_strings.ContainsKey(name))
+                else if (m_defines.ContainsKey(name))
                 {
-                    int offset = 0;
-
-                    if (try_consume(TokenType.open_square))
-                    {
-                        string strOffset = parseTerm(out _);
-                        offset = Convert.ToInt32(strOffset, 16);
-                        try_consume_error(TokenType.close_square);
-                    }
-
-                    string result = $"far @{name}";
-                    if (offset != 0)
-                    {
-                        result += $" + 0x{Convert.ToString(offset, 16)}";
-                    }
+                    register = "AX";
+                    return m_defines[name];
+                }
+                else if (m_bssDefines.ContainsKey(name))
+                {
                     register = "HL";
-                    return result;
+                    return $"{m_bssDefines[name].m_offset}";
+                }
+                else if (m_functions.Exists(func => { return func.m_Name == name; }))
+                {
+                    register = "HL";
+                    return $"@_{name}";
                 }
                 else
                 {
 
                 }
             }
+
+            return null;
+        }
+        bool isParseTerm()
+        {
+            if (!peek().HasValue)
+            {
+                return false;
+            }
+
+            if (peek().Value.m_Type == TokenType.int_lit)
+            {
+                return true;
+            }
+            else if (peek().Value.m_Type == TokenType.ident)
+            {
+                string name = peek(0).Value.m_Value;
+                if (isVariabel(name, out Var var))
+                {
+                    return true;
+                }
+                else if (m_strings.ContainsKey(name))
+                {
+                    return true;
+                }
+                else if (m_defines.ContainsKey(name))
+                {
+                    return true;
+                }
+                else if (m_bssDefines.ContainsKey(name))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
             else if (peek().Value.m_Type == TokenType.at)
             {
-                try_consume_error(TokenType.at);
-                register = try_consume_error(TokenType.ident).m_Value;
-                return register;
+                return true;
             }
             else if (peek().Value.m_Type == TokenType.ampersand)
             {
-                try_consume_error(TokenType.ampersand);
-
-                return parseTerm(out register, type);
+                return true;
             }
-            else if (peek().Value.m_Type == TokenType.star)
+            else if (peek().Value.m_Type == TokenType.open_square)
             {
-                try_consume_error(TokenType.star);
-                return parseTerm(out register, type);
+                return true;
             }
 
-            return null;
+            return false;
+        }
+        string parseExpr()
+        {
+            push(Regs.AX);
+            push(Regs.BX);
+            push(Regs.HL);
+
+
+            pop32("HL");
+            pop32("BX");
+            pop32("AX");
+            return "";
         }
         string parseIdent(out string register)
         {
@@ -282,34 +363,22 @@ namespace Compiler
             return false;
         }
 
-        void parseProgram()
-        {
-            try_consume_error(TokenType.program);
-            string name = try_consume_error(TokenType.ident).m_Value;
-
-            try_consume_error(TokenType.period);
-
-            begin_scope();
-            while (peek().HasValue && 
-                peek().Value.m_Type != TokenType.end && peek(1).HasValue && peek().Value.m_Type != TokenType.program)
-            {
-                parse_Stmt();
-            }
-            try_consume_error(TokenType.end);
-            try_consume_error(TokenType.program);
-            try_consume_error(TokenType.period);
-            end_scope();
-        }
         void parseFunction()
         {
             try_consume_error(TokenType.function);
             string name = try_consume_error(TokenType.ident).m_Value;
             try_consume_error(TokenType.open_paren);
             List<Argument> args = new List<Argument>();
-            addLine($"_{name}:", 0);
-            byte BPoffset = 6;                      // 6 from the return address
-            addLine("enter");
-            pushr();
+            byte BPoffset = 4;                      // 6 from the return address
+            m_StackSize += 4;
+            if (DoNotWrite == true)
+            {
+                addLine($"_{name}:", 0);
+                addLine("enter");
+                m_StackSize += 2;
+                BPoffset += 2;
+                pushr();
+            }
             int sizeOfArgument = 0;
             while (!try_consume(TokenType.close_paren))
             {
@@ -318,24 +387,39 @@ namespace Compiler
 
                 if (type.m_IsPointer)
                 {
-                    BPoffset += (byte)type.m_PointerSize;
+                    BPoffset += 4;
                     sizeOfArgument += type.m_PointerSize;
                 }
                 else
                 {
-                    BPoffset += (byte)type.m_TypeSize;
+                    BPoffset += 4;
                     sizeOfArgument += type.m_TypeSize;
                 }
 
-                m_var.Add(new Var(argName, type, BPoffset, true));
-
-                args.Add(new Argument()
+                if (DoNotWrite == true)
                 {
-                    m_Name = argName,
-                    m_Type = type,
-                });
+                    m_var.Add(new Var(argName, type, BPoffset, true));
+
+                }
+                    args.Add(new Argument()
+                    {
+                        m_Name = argName,
+                        m_Type = type,
+                    });
+                if (try_consume(TokenType.comma))
+                {
+                    continue;
+                }
+                else
+                {
+                    try_consume_error(TokenType.close_paren);
+                    break;
+                }
             }
-            try_consume_error(TokenType.period);
+            if (DoNotWrite == true)
+            {
+                try_consume_error(TokenType.period);
+            }
 
             m_functions.Add(new Function()
             {
@@ -344,36 +428,41 @@ namespace Compiler
                 m_Arguments = args.ToArray(),
             });
 
-            begin_scope();
+            if (DoNotWrite == true)
+            {
+                begin_scope();
 
-            if (name == "main")
-            {
-                addLine("mov\tR1H,\t0x0003");
-            }
+                if (name == "main")
+                {
+                    addLine("mov\tR1H,\t0x0003");
+                }
 
-            while (peek().HasValue &&
-                peek().Value.m_Type != TokenType.end && peek(1).HasValue && peek().Value.m_Type != TokenType.function)
-            {
-                parse_Stmt();
-            }
-            try_consume_error(TokenType.end);
-            try_consume_error(TokenType.function);
-            try_consume_error(TokenType.period);
-            if (m_lastToken.m_Type != TokenType._return)
-            {
-                addLine($"mov\tR1,\t0");
-            }
-            addLine($"Exit_{name}:", 0);
-            popr();
-            end_scope();
-            addLine($"leave");
-            if (m_functions.Last().m_ArgumentSize == 0)
-            {
-                addLine("retz");
-            }
-            else
-            {
-                addLine($"ret\t{m_functions.Last().m_ArgumentSize}");
+                while (peek().HasValue &&
+                    peek().Value.m_Type != TokenType.end && peek(1).HasValue && peek().Value.m_Type != TokenType.function)
+                {
+                    parse_Stmt();
+                }
+                try_consume_error(TokenType.end);
+                try_consume_error(TokenType.function);
+                try_consume_error(TokenType.period);
+                if (m_lastToken.m_Type != TokenType._return)
+                {
+                    addLine($"mov\tR16,\t0");
+                }
+                addLine($"Exit_{name}:", 0);
+                end_scope();
+                popr();
+                addLine($"leave");
+                m_StackSize -= 6;
+                addLine($"mov\tAX,\tR16");
+                if (m_functions.Last().m_ArgumentSize == 0)
+                {
+                    addLine("retz");
+                }
+                else
+                {
+                    addLine($"ret\t{m_functions.Last().m_ArgumentSize * 4}");
+                }
             }
         }
         void parseVariabel(TypeData type)
@@ -390,10 +479,18 @@ namespace Compiler
 
                     switch (type.m_PointerSize)
                     {
-                        case NEARPOINTERSIZE:   pointerSize = "near"; break; 
-                        case SHORTPOINTERSIZE:  pointerSize = "short"; break; 
-                        case LONGPOINTERSIZE:   pointerSize = "long"; break; 
-                        case FARPOINTERSIZE:    pointerSize = "far"; break; 
+                        case NEARPOINTERSIZE:
+                            pointerSize = "near";
+                            break;
+                        case SHORTPOINTERSIZE:
+                            pointerSize = "short";
+                            break;
+                        case LONGPOINTERSIZE:
+                            pointerSize = "long";
+                            break;
+                        case FARPOINTERSIZE:
+                            pointerSize = "far";
+                            break;
                     }
 
                     term = pointerSize + " " + term;
@@ -412,26 +509,16 @@ namespace Compiler
             try_consume_error(TokenType._return);
             string term = parseTerm(out string register);
 
-            if (register == "AX")
-            {
-                addLine($"mov\tAX,\t{term}");
-            }
-            else
-            {
-                addLine($"mov\t{register},\t{term}");
-                addLine($"mov\tR1,\t{register}");
-                addLine($"mov\tA,\tR1");
-            }
+            addLine($"mov\tR16,\t{term}");
             addLine($"jmp\t[Exit_{m_functions.Last().m_Name}]");
             try_consume_error(TokenType.period);
         }
         void parseReference()
         {
-            try_consume_error(TokenType.star);
-
             string addressRegister = "";
             string register;
-
+            
+            try_consume_error(TokenType.open_square);
             if (peek().Value.m_Type == TokenType.ident)
             {
                 string address = parseIdent(out register);
@@ -444,6 +531,7 @@ namespace Compiler
                 addLine($"mov\tHL,\t{address}");
                 addressRegister = register;
             }
+            try_consume_error(TokenType.close_square);
 
             try_consume_error(TokenType.eq);
             string data = parseTerm(out register);
@@ -463,13 +551,18 @@ namespace Compiler
         }
         void parseReassign()
         {
-            string name = try_consume_error(TokenType.ident).m_Value;
+            if (peek().Value.m_Type == TokenType.open_square)
+            {
 
+            }
+            string name = try_consume_error(TokenType.ident).m_Value;
+            string address = "";
+            string term = "";
+            string register = "";
             if (isVariabel(name, out Var var))
             {
                 try_consume_error(TokenType.eq);
-                string term = parseTerm(out string register, var.m_TypeData);
-                string address;
+                term = parseTerm(out register, var.m_TypeData);
 
                 if (var.m_Address.m_isGlobal)
                 {
@@ -498,11 +591,19 @@ namespace Compiler
                 {
                 }
 
-                addLine($"mov\t{address},\t{register}");
-                addLine($"; _{name} = {term}");
-
-                try_consume_error(TokenType.period);
             }
+            else
+            {
+                m_index--;
+                if (isParseTerm())
+                {
+
+                }
+            }
+            addLine($"mov\t{address},\t{register}");
+            addLine($"; _{name} = {term}");
+
+            try_consume_error(TokenType.period);
         }
         void parseReassignRegister()
         {
@@ -527,6 +628,7 @@ namespace Compiler
             string Routine = parseTerm(out string routineRegister);
             try_consume_error(TokenType.comma);
             string Function = parseTerm(out string functionRegister);
+            addLine($"clc");
             addLine($"mov\tAH,\t{Function}");
             addLine($"int\t{Routine}");
             try_consume_error(TokenType.close_paren);
@@ -606,7 +708,7 @@ namespace Compiler
             try_consume_error(TokenType._then);
             try_consume_error(TokenType.period);
             begin_scope();
-            while (peek().HasValue && peek(1).HasValue && 
+            while (peek().HasValue && peek(1).HasValue &&
                     peek().Value.m_Type != TokenType.end && peek(1).Value.m_Type != TokenType._if &&
                     peek().Value.m_Type != TokenType._elif &&
                     peek().Value.m_Type != TokenType._else)
@@ -644,16 +746,112 @@ namespace Compiler
                 addLine("; end if", 0);
                 try_consume_error(TokenType._if);
                 try_consume_error(TokenType.period);
-                    addLine(fExitLable + ":", 0);
+                addLine(fExitLable + ":", 0);
                 if (m_lastToken.m_Type == TokenType._return || LastSegment.m_Type == TokenType._else)
                 {
                 }
                 else
                 {
-                    popr();
                     end_scope();
+                    popr();
                 }
             }
+        }
+        void parseArray()
+        {
+            string address = parseTerm(out string addressRegister);
+
+            try_consume_error(TokenType.open_square);
+            string index = parseTerm(out string indexRegister);
+            try_consume_error(TokenType.close_square);
+        }
+        void parseCallFunction()
+        {
+            try_consume_error(TokenType.call);
+
+            string name = try_consume_error(TokenType.ident).m_Value;
+
+            Function function = m_functions.Find(func =>
+            {
+                return func.m_Name == name;
+            });
+            int argumentIndex = 0;
+
+            List<(string, string)> arguments = new List<(string, string)>();
+
+            try_consume_error(TokenType.open_paren);
+            while (!try_consume(TokenType.close_paren))
+            {
+                string term = parseTerm(out string termRegister, function.m_Arguments[argumentIndex].m_Type);
+                argumentIndex++;
+
+                arguments.Add((term, termRegister));
+                if (peek().Value.m_Type == TokenType.comma)
+                {
+                    consume();
+                    continue;
+                }
+            }
+
+            for (int i = arguments.Count - 1; i > -1; i--)
+            {
+                (string term, string termRegister) = arguments[i];
+
+                addLine($"; arguemnt {i}");
+                addLine($"mov\t{termRegister},\t{term}");
+                addLine($"push\t{termRegister}");
+            }
+
+            addLine($"call\tfar [_{function.m_Name}]");
+
+            try_consume_error(TokenType.period);
+        }
+        void parseAsm()
+        {
+            try_consume_error(TokenType._asm);
+            try_consume_error(TokenType.open_paren);
+            try_consume_error(TokenType.quotation_mark);
+            string line = try_consume_error(TokenType.ident).m_Value;
+            string asm = "";
+            int registerIndex = 2;
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                if (line[i] == '{')
+                {
+                    i++;
+                    if (line[i] == '{')
+                    {
+                        asm += "{";
+                        continue;
+                    }
+                    while (i < line.Length && line[i] != '}')
+                    {
+                        i++; 
+                    }
+                    string term = parseTerm(out string register);
+                    addLine($"mov\tR{registerIndex},\t{term}");
+                    asm += $"R{registerIndex}";
+                    registerIndex++;
+                }
+                else if (line[i] == '\\')
+                {
+                    i++;
+                    if (line[i] == 't')
+                    {
+                        asm += "\t";
+                    }
+                }
+                else
+                {
+                    asm += line[i];
+                }
+            }
+            try_consume_error(TokenType.quotation_mark);
+            try_consume_error(TokenType.close_paren);
+            try_consume_error(TokenType.period);
+
+            addLine(asm);
         }
 
         void parse_Stmt()
@@ -671,18 +869,28 @@ namespace Compiler
                     case TokenType.SectionText:
                         consume();
                         m_section = Section.text;
-                        break;
+                        return;
                     case TokenType.SectionData:
                         consume();
                         m_section = Section.data;
-                        break;
+                        return;
                     case TokenType.SectionString:
                         consume();
                         m_section = Section._string;
-                        break;
+                        return;
                     default:
                         break;
                 }
+            }
+
+            if (try_consume(TokenType.numberSign))
+            {
+                try_consume_error(TokenType.define);
+                string name = try_consume_error(TokenType.ident).m_Value;
+                try_consume_error(TokenType.eq);
+                string term = parseTerm(out _);
+                m_defines.Add(name, term);
+                return;
             }
 
             if (m_section == Section.text)
@@ -703,13 +911,7 @@ namespace Compiler
                     return;
                 }
 
-                if (peek().Value.m_Type == TokenType.program && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
-                {
-                    m_lastToken = peek().Value;
-                    parseProgram();
-                    return;
-                }
-                else if (peek().Value.m_Type == TokenType.function && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
+                if (peek().Value.m_Type == TokenType.function && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
                 {
                     m_lastToken = peek().Value;
                     parseFunction();
@@ -735,12 +937,6 @@ namespace Compiler
                         Error_expected(peek(-1).Value, m_lineNumbers.ToArray(), "name");
                     }
                 }
-                else if (peek().Value.m_Type == TokenType.ident && peek(1).HasValue && peek(1).Value.m_Type == TokenType.eq)
-                {
-                    m_lastToken = peek().Value;
-                    parseReassign();
-                    return;
-                }
                 else if (peek().Value.m_Type == TokenType.at && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
                 {
                     m_lastToken = peek().Value;
@@ -762,7 +958,13 @@ namespace Compiler
                         return;
                     }
                 }
-                else if (peek().Value.m_Type == TokenType.star)
+                else if (isParseTerm() && isThereRange(TokenType.eq, 5))
+                {
+                    m_lastToken = peek().Value;
+                    parseReassign();
+                    return;
+                }
+                else if (peek().Value.m_Type == TokenType.open_square)
                 {
                     parseReference();
                     return;
@@ -771,6 +973,23 @@ namespace Compiler
                 {
                     parseIf();
                     return;
+                }
+                else if (peek(1).Value.m_Type == TokenType.open_square)
+                {
+                    parseArray();
+                    return;
+                }
+                else if (peek().Value.m_Type == TokenType.call)
+                {
+                    parseCallFunction();
+                }
+                else if (peek().Value.m_Type == TokenType._asm && peek(1).HasValue && peek(1).Value.m_Type == TokenType.open_paren)
+                {
+                    parseAsm();
+                }
+                else
+                {
+                    errorStmtNotFound();
                 }
             }
             else if (m_section == Section._string)
@@ -784,25 +1003,54 @@ namespace Compiler
                     m_strings.Add(name, value);
                     addLine($"{name}:", 0, AsmSection.rodata);
                     addLine($".db\t\"{value}\", 0", 0, AsmSection.rodata);
-                    return;
+                }
+                else
+                {
+                    errorStmtNotFound();
                 }
             }
             else if (m_section == Section.data) // BSS
             {
                 if (try_consume(TokenType.colon))
                 {
+                    if (try_consume(TokenType._extern))
+                    {
+                        if (peek().Value.m_Type == TokenType.function)
+                        {
+                            DoNotWrite = false;
+                            parseFunction();
+                            addLine($".extern _{m_functions.Last().m_Name}", 0);
+                            DoNotWrite = true;
+                            return;
+                        }
+                    }
+
                     string name = try_consume_error(TokenType.ident).m_Value;
                     try_consume_error(TokenType._res);
                     string value = try_consume_error(TokenType.int_lit).m_Value;
                     addLine($"{name}:", 0, AsmSection.bss);
                     addLine($".res\t{value}", 0, AsmSection.bss);
-                    return;
+                    m_bssDefines.Add(name, new BssEntry()
+                    {
+                        m_name = name,
+                        m_size = Convert.ToInt32(value, 16),
+                        m_offset = name
+                    });
+                }
+                else
+                {
+                    errorStmtNotFound();
                 }
             }
+        }
 
-            Console.WriteLine($"-1 = {peek(-1).Value}");
-            Console.WriteLine($"Need parsing for {peek().Value}");
-            Console.WriteLine($"1 =  {peek(1).Value}");
+        void errorStmtNotFound()
+        {
+            Console.WriteLine($"-1 = {peek(-1).Value} at {peek(-1).Value.m_File}:{peek(-1).Value.m_Line}");
+            Console.WriteLine($"Need parsing for {peek().Value} at {peek().Value.m_File}:{peek().Value.m_Line}");
+            Console.WriteLine($"1 =  {peek(1).Value} at {peek(1).Value.m_File}:{peek(1).Value.m_Line}");
+
+            Environment.Exit(1);
         }
 
         public void Parse_Prog(Token[] tokens, string[] src)
@@ -816,6 +1064,10 @@ namespace Compiler
                 parse_Stmt();
             }
 
+            addLine($".local __RODATASTRAT__", 0);
+            addLine($"__RODATASTRAT__:", 0);
+            m_Output.AddRange(m_OutputRodata);
+
             addLine($"{Environment.NewLine}.section BSS", 0);
             m_Output.AddRange(m_OutputBss);
 
@@ -823,10 +1075,6 @@ namespace Compiler
             addLine($".local __DATASTRAT__", 0);
             addLine($"__DATASTRAT__:", 0);
             m_Output.AddRange(m_OutputData);
-            addLine($"{Environment.NewLine}.section RODATA", 0);
-            addLine($".local __RODATASTRAT__", 0);
-            addLine($"__RODATASTRAT__:", 0);
-            m_Output.AddRange(m_OutputRodata);
 
         }
 
@@ -836,6 +1084,17 @@ namespace Compiler
             if (m_index + offset >= m_tokens.Length)
                 return null;
             return m_tokens[m_index + offset];
+        }
+        bool isThereRange(TokenType type, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (peek(i).Value.m_Type == type)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         Token consume()
         {
@@ -879,7 +1138,7 @@ namespace Compiler
 
                 if (popCount != 0)
                 {
-                    addLine($"sub\tSP,\t{popCount * 2}");
+                    addLine($"sub\tSP,\t{popCount * 4}");
                 }
 
                 m_StackSize -= popCount;
@@ -894,60 +1153,10 @@ namespace Compiler
 
             m_Scopes.Pop();
         }
-        
-        void push16(string reg16)
-        {
-            addLine($"push\t{reg16}");
-            m_StackSize += 2;
-        }
-        void push32(string reg32)
-        {
-            addLine($"push\t{reg32}");
-            m_StackSize += 4;
-        }
-        void pushr()
-        {
-            addLine($"pushr");
-            m_StackSize += 20;
-        }
-
-        void pop16(string reg16)
-        {
-            addLine($"pop\t{reg16}");
-            m_StackSize -= 2;
-        }
-        void pop32(string reg32)
-        {
-            addLine($"pop\t{reg32}");
-            m_StackSize -= 4;
-        }
-        void popr()
-        {
-            addLine($"popr");
-            m_StackSize -= 20;
-        }
 
         void declareVariabel(string name, TypeData type, string term = "", string register = "")
         {
             if (m_Scopes.Count == 0)
-            {
-                addLine($"_{name}", section: AsmSection.bss);
-                addLine($".res {type.m_TypeSize}", section: AsmSection.bss);
-                if (term == "")
-                {
-                    if (register == "AX")
-                    {
-                        addLine($"mov\tAX,\t{term}");
-                    }
-                    else
-                    {
-                        addLine($"mov\t{register},\t{term}");
-                    }
-                    addLine($"mov\t[_{name}],\t{register}");
-                }
-                m_var.Add(new Var());
-            }
-            else if (m_Scopes.Count == 1)
             {
                 addLine($"; _{name} is at 0x0003:{Convert.ToString(m_globalVarIndex)}", section: AsmSection.text);
                 m_var.Add(new Var(name, type, m_globalVarIndex, 0))
@@ -989,235 +1198,6 @@ namespace Compiler
                 }
             }
         }
-
-        void addLine(string line, int taps = 1, AsmSection section = AsmSection.text)
-        {
-            string[] splited = line.Split('\t');
-
-            splited[0] = splited[0].PadRight(6, ' ');
-            line = splited[0];
-
-            for (int i = 1; i < splited.Length; i++)
-            {
-                line += splited[i].PadRight(25, ' ');
-            }
-
-            line = line.TrimEnd();
-
-
-            switch (section)
-            {
-                case AsmSection.bss:
-                    m_OutputBss.Add("".PadLeft(taps, '\t') + line);
-                    break;
-                case AsmSection.rodata:
-                    m_OutputRodata.Add("".PadLeft(taps, '\t') + line);
-                    //m_output_rdata.Add(line);
-                    break;
-                case AsmSection.data:
-                    m_OutputData.Add("".PadLeft(taps, '\t') + line);
-                    //m_output_data.Add(line.Replace(":|:", $":{Environment.NewLine}\t"));
-                    break;
-                case AsmSection.text:
-                    m_Output.Add("".PadLeft(taps, '\t') + line);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    enum AsmSection
-    {
-        bss,
-        rodata,
-        data,
-        text,
-        loacl,
-    }
-    enum Section
-    {
-        text,
-        data,
-        _string,
-    }
-    enum Size
-    {
-        _byte = 1,
-        _short = 2,
-        _tbyte = 3,
-        _int = 4,
-        pointer,
-    }
-}
-public struct Var
-{
-    public string m_Name;
-    public TypeData m_TypeData;
-    public Address m_Address;
-
-    public Var(string name, TypeData typeData, int stack)
-    {
-        m_Name = name;
-        m_TypeData = typeData;
-        m_Address.m_UseStack = true;
-        m_Address.m_StackLoc = stack;
-        m_Address.m_IsArg = false;
-    }
-    public Var(string name, TypeData typeData, int stack, bool Isarg)
-    {
-        m_Name = name;
-        m_TypeData = typeData;
-        m_Address.m_UseStack = true;
-        m_Address.m_StackLoc = stack;
-        m_Address.m_IsArg = Isarg;
-    }
-    public Var(string name, TypeData typeData, int address, int a)
-    {
-        m_Name = name;
-        m_TypeData = typeData;
-        m_Address.m_isGlobal = true;
-        m_Address.m_address = address;
-    }
-}
-public struct Address
-{
-    public bool m_UseStack;
-    public bool m_IsArg;
-    public int m_StackLoc;
-
-    public bool m_isGlobal;
-    public int m_address;
-
-    public string GetAddress(Parser parser)
-    {
-        if (m_UseStack == true)
-        {
-            if (m_IsArg)
-            {
-                int address = m_StackLoc;
-                if (address == 0)
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[BP]";
-                    }
-                    else
-                    {
-                        return $"[BPX]";
-                    }
-                }
-                else
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[BP - {address}]";
-                    }
-                    else
-                    {
-                        return $"[BPX- {address}]";
-                    }
-                }
-            }
-            else
-            {
-                int address = parser.m_StackSize - m_StackLoc;
-                if (address == 0)
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[SP]";
-                    }
-                    else
-                    {
-                        return $"[SPX]";
-                    }
-                }
-                else
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[SP - {address}]";
-                    }
-                    else
-                    {
-                        return $"[SPX - {address}]";
-                    }
-                }
-            }
-        }
-        else if (m_isGlobal)
-        {
-            string hex = Convert.ToString(m_address, 16).PadLeft(4, '0');
-            return $"0x{hex}";
-        }
-
-
-        return "";
-    }
-    public string GetAddressRaw(Parser parser)
-    {
-        if (m_UseStack == true)
-        {
-            if (m_IsArg)
-            {
-                int address = m_StackLoc;
-                if (address == 0)
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[BP]";
-                    }
-                    else
-                    {
-                        return $"[BPX]";
-                    }
-                }
-                else
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[BP - {address}]";
-                    }
-                    else
-                    {
-                        return $"[BPX- {address}]";
-                    }
-                }
-            }
-            else
-            {
-                int address = parser.m_StackSize - m_StackLoc;
-                if (address == 0)
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[SP]";
-                    }
-                    else
-                    {
-                        return $"[SPX]";
-                    }
-                }
-                else
-                {
-                    if (m_CPUType < CPUType.BC32)
-                    {
-                        return $"[SP - {address}]";
-                    }
-                    else
-                    {
-                        return $"[SPX - {address}]";
-                    }
-                }
-            }
-        }
-        else if (m_isGlobal)
-        {
-            return $"far @__DATASTRAT__ + {m_address}";
-        }
-
-
-        return "";
     }
 }
 public struct Function
@@ -1225,6 +1205,21 @@ public struct Function
     public string m_Name;
     public Argument[] m_Arguments;
     public int m_ArgumentSize;
+
+    public override bool Equals(object obj)
+    {
+        if (obj is not string)
+        {
+            return false;
+        }
+
+        return (string)obj == m_Name;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }
 public struct Argument
 {

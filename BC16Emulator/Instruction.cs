@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public enum Instruction : ushort
     {

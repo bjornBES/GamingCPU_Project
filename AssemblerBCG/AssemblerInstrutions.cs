@@ -7,8 +7,8 @@ namespace AssemblerBCG
 {
     public class AssemblerInstrutions : AssemblerStructs
     {
-        ArgumentMode argument1 = 0;
-        ArgumentMode argument2 = 0;
+        ArgumentModeOld argument1 = 0;
+        ArgumentModeOld argument2 = 0;
 
         List<object> argumentData = new List<object>();
 
@@ -24,21 +24,28 @@ namespace AssemblerBCG
                 arguments[i] = arguments[i].Trim();
             }
 
-            if (!Enum.TryParse(instruction, true, out Instruction result))
+            if (!Enum.TryParse(instruction, true, out OLdInstruction result))
             {
                 Console.WriteLine($"Bad Instruction {instruction} {m_file}:{Linenumber}");
-                m_WriteOut = true;
+                m_WriteOut = false;
                 return;
             }
 
-            InstructionInfo instructionInfo = Instructions.m_Instr[result];
+            OldInstructionInfo instructionInfo = OldInstructions.m_Instr[result];
+
 
             if (!string.IsNullOrEmpty(arguments[0]))
             {
+                if (arguments.Length != instructionInfo.m_NumberOfOperands && !line.Contains(','))
+                {
+                    Console.WriteLine($"Expected a \',\' between operands {m_file}:{Linenumber}");
+                    m_WriteOut = false;
+                    return;
+                }
                 if (arguments.Length != instructionInfo.m_NumberOfOperands)
                 {
                     Console.WriteLine($"Invalid Instruction {instruction} {m_file}:{Linenumber}");
-                    m_WriteOut = true;
+                    m_WriteOut = false;
                     return;
                 }
             }
@@ -48,10 +55,10 @@ namespace AssemblerBCG
             m_Output.AddRange(InstructionBytes);
         }
 
-        private void parseInstrutionArguments(Instruction instruction, string[] arguments, ref List<string> instructionBytes, int startingIndex = 0)
+        private void parseInstrutionArguments(OLdInstruction instruction, string[] arguments, ref List<string> instructionBytes, int startingIndex = 0)
         {
-            argument1 = ArgumentMode.none;
-            argument2 = ArgumentMode.none;
+            argument1 = ArgumentModeOld.none;
+            argument2 = ArgumentModeOld.none;
             string argument1data = null;
             string argument2data = null;
             List<string> argumentBuffer = new List<string>();
@@ -59,31 +66,33 @@ namespace AssemblerBCG
 
             switch (instruction)
             {
-                case Instruction.MOV:
-                case Instruction.MOVRAL:
-                case Instruction.MOVRBL:
-                case Instruction.MOVRCL:
-                case Instruction.MOVRDL:
-                case Instruction.OUTB:
-                case Instruction.INP:
+                case OLdInstruction.MOV:
+                case OLdInstruction.MOVRAL:
+                case OLdInstruction.MOVRBL:
+                case OLdInstruction.MOVRCL:
+                case OLdInstruction.MOVRDL:
+                case OLdInstruction.OUTB:
+                case OLdInstruction.INP:
+                case OLdInstruction.MOVRALCR0:
+                case OLdInstruction.MOVRCR0AL:
                     sizeAlignment = SizeAlignment._byte;
                     break;
-                case Instruction.MOVW:
-                case Instruction.MOVWRA:
-                case Instruction.MOVWRB:
-                case Instruction.MOVWRC:
-                case Instruction.MOVWRD:
-                case Instruction.MOVRALCR0:
-                case Instruction.MOVRCR0AL:
-                case Instruction.OUTW:
-                case Instruction.INPW:
+                case OLdInstruction.MOVW:
+                case OLdInstruction.MOVWRA:
+                case OLdInstruction.MOVWRB:
+                case OLdInstruction.MOVWRC:
+                case OLdInstruction.MOVWRD:
+                case OLdInstruction.OUTW:
+                case OLdInstruction.INPW:
+                case OLdInstruction.MOVWRCR0A:
+                case OLdInstruction.MOVWRACR0:
                     sizeAlignment = SizeAlignment._word;
                     break;
-                case Instruction.MOVT:
+                case OLdInstruction.MOVT:
                     sizeAlignment = SizeAlignment._tbyte;
                     break;
-                case Instruction.MOVD:
-                case Instruction.MOVDRAX:
+                case OLdInstruction.MOVD:
+                case OLdInstruction.MOVDRAX:
                     sizeAlignment = SizeAlignment._dword;
                     break;
             }
@@ -127,7 +136,7 @@ namespace AssemblerBCG
                 }
 
                 argumentBuffer.Add($"_NEWARG_ {argument}");
-                if (!ParseTerm(argument, ref sizeAlignment, out ArgumentMode argumentMode, out string[] data))
+                if (!ParseTerm(argument, ref sizeAlignment, out ArgumentModeOld argumentMode, out string[] data))
                 {
 
                 }
@@ -154,34 +163,34 @@ namespace AssemblerBCG
 
                 switch (argumentMode)
                 {
-                    case ArgumentMode.immediate_byte:
-                    case ArgumentMode.immediate_word:
-                    case ArgumentMode.immediate_tbyte:
-                    case ArgumentMode.immediate_dword:
-                    case ArgumentMode.immediate_qword:
-                    case ArgumentMode.immediate_dqword:
-                    case ArgumentMode.immediate_float:
-                    case ArgumentMode.immediate_double:
-                    case ArgumentMode.register:
-                    case ArgumentMode.register_address:
-                    case ArgumentMode.relative_address:
-                    case ArgumentMode.near_address:
-                    case ArgumentMode.short_address:
-                    case ArgumentMode.long_address:
-                    case ArgumentMode.far_address:
-                    case ArgumentMode.X_indexed_address:
-                    case ArgumentMode.Y_indexed_address:
-                    case ArgumentMode.SP_rel_address_byte:
-                    case ArgumentMode.BP_rel_address_byte:
-                    case ArgumentMode.SPX_rel_address_word:
-                    case ArgumentMode.BPX_rel_address_word:
-                    case ArgumentMode.SP_rel_address_short:
-                    case ArgumentMode.BP_rel_address_short:
-                    case ArgumentMode.SPX_rel_address_tbyte:
-                    case ArgumentMode.BPX_rel_address_tbyte:
-                    case ArgumentMode.SPX_rel_address_int:
-                    case ArgumentMode.BPX_rel_address_int:
-                        if (argumentMode == ArgumentMode.register)
+                    case ArgumentModeOld.immediate_byte:
+                    case ArgumentModeOld.immediate_word:
+                    case ArgumentModeOld.immediate_tbyte:
+                    case ArgumentModeOld.immediate_dword:
+                    case ArgumentModeOld.immediate_qword:
+                    case ArgumentModeOld.immediate_dqword:
+                    case ArgumentModeOld.immediate_float:
+                    case ArgumentModeOld.immediate_double:
+                    case ArgumentModeOld.register:
+                    case ArgumentModeOld.register_address:
+                    case ArgumentModeOld.relative_address:
+                    case ArgumentModeOld.near_address:
+                    case ArgumentModeOld.short_address:
+                    case ArgumentModeOld.long_address:
+                    case ArgumentModeOld.far_address:
+                    case ArgumentModeOld.X_indexed_address:
+                    case ArgumentModeOld.Y_indexed_address:
+                    case ArgumentModeOld.SP_rel_address_byte:
+                    case ArgumentModeOld.BP_rel_address_byte:
+                    case ArgumentModeOld.SPX_rel_address_word:
+                    case ArgumentModeOld.BPX_rel_address_word:
+                    case ArgumentModeOld.SP_rel_address_short:
+                    case ArgumentModeOld.BP_rel_address_short:
+                    case ArgumentModeOld.SPX_rel_address_tbyte:
+                    case ArgumentModeOld.BPX_rel_address_tbyte:
+                    case ArgumentModeOld.SPX_rel_address_int:
+                    case ArgumentModeOld.BPX_rel_address_int:
+                        if (argumentMode == ArgumentModeOld.register)
                         {
                             sizeAlignment = GetAlignmentFromRegister((Register)Convert.ToInt16(argument1data, 16)) + 1;
                         }
@@ -191,14 +200,14 @@ namespace AssemblerBCG
                         }
                         SetArgumentMode(argumentMode);
                         break;
-                    case ArgumentMode.segment_address:
-                    case ArgumentMode.segment_DS_register:
-                    case ArgumentMode.segment_ES_register:
+                    case ArgumentModeOld.segment_address:
+                    case ArgumentModeOld.segment_DS_register:
+                    case ArgumentModeOld.segment_ES_register:
                         Console.WriteLine($"data = {data[0]} {m_file}:{Linenumber}");
                         Register segment = Enum.Parse<Register>(data[0].Split(':')[0], true);
                         Register offset = Enum.Parse<Register>(data[0].Split(':')[1], true);
 
-                        if (argumentMode == ArgumentMode.segment_address)
+                        if (argumentMode == ArgumentModeOld.segment_address)
                         {
                             argumentBuffer.Add(Convert.ToString((byte)segment, 16));
                             argumentBuffer.Add(Convert.ToString((byte)offset, 16));
@@ -209,36 +218,36 @@ namespace AssemblerBCG
                         }
                         SetArgumentMode(argumentMode);
                         break;
-                    case ArgumentMode.segment_DS_B:
-                    case ArgumentMode.segment_ES_B:
-                    case ArgumentMode.register_AL:
-                    case ArgumentMode.register_BL:
-                    case ArgumentMode.register_CL:
-                    case ArgumentMode.register_DL:
-                    case ArgumentMode.register_A:
-                    case ArgumentMode.register_B:
-                    case ArgumentMode.register_C:
-                    case ArgumentMode.register_D:
-                    case ArgumentMode.register_H:
-                    case ArgumentMode.register_L:
-                    case ArgumentMode.register_address_HL:
-                    case ArgumentMode.register_AX:
-                    case ArgumentMode.register_BX:
-                    case ArgumentMode.register_CX:
-                    case ArgumentMode.register_DX:
-                    case ArgumentMode.register_EX:
-                    case ArgumentMode.register_FX:
-                    case ArgumentMode.register_GX:
-                    case ArgumentMode.register_HX:
-                    case ArgumentMode.register_AF:
-                    case ArgumentMode.register_BF:
-                    case ArgumentMode.register_CF:
-                    case ArgumentMode.register_DF:
-                    case ArgumentMode.register_AD:
-                    case ArgumentMode.register_BD:
-                    case ArgumentMode.register_CD:
-                    case ArgumentMode.register_DD:
-                    case ArgumentMode.none:
+                    case ArgumentModeOld.segment_DS_B:
+                    case ArgumentModeOld.segment_ES_B:
+                    case ArgumentModeOld.register_AL:
+                    case ArgumentModeOld.register_BL:
+                    case ArgumentModeOld.register_CL:
+                    case ArgumentModeOld.register_DL:
+                    case ArgumentModeOld.register_A:
+                    case ArgumentModeOld.register_B:
+                    case ArgumentModeOld.register_C:
+                    case ArgumentModeOld.register_D:
+                    case ArgumentModeOld.register_H:
+                    case ArgumentModeOld.register_L:
+                    case ArgumentModeOld.register_address_HL:
+                    case ArgumentModeOld.register_AX:
+                    case ArgumentModeOld.register_BX:
+                    case ArgumentModeOld.register_CX:
+                    case ArgumentModeOld.register_DX:
+                    case ArgumentModeOld.register_EX:
+                    case ArgumentModeOld.register_FX:
+                    case ArgumentModeOld.register_GX:
+                    case ArgumentModeOld.register_HX:
+                    case ArgumentModeOld.register_AF:
+                    case ArgumentModeOld.register_BF:
+                    case ArgumentModeOld.register_CF:
+                    case ArgumentModeOld.register_DF:
+                    case ArgumentModeOld.register_AD:
+                    case ArgumentModeOld.register_BD:
+                    case ArgumentModeOld.register_CD:
+                    case ArgumentModeOld.register_DD:
+                    case ArgumentModeOld.none:
                     default:
                         SetArgumentMode(argumentMode);
                         break;
@@ -246,38 +255,38 @@ namespace AssemblerBCG
 
                 switch (argumentMode)
                 {
-                    case ArgumentMode.register_AL:
-                    case ArgumentMode.register_BL:
-                    case ArgumentMode.register_CL:
-                    case ArgumentMode.register_DL:
+                    case ArgumentModeOld.register_AL:
+                    case ArgumentModeOld.register_BL:
+                    case ArgumentModeOld.register_CL:
+                    case ArgumentModeOld.register_DL:
                         sizeAlignment = SizeAlignment._byte;
                         break;
-                    case ArgumentMode.register_A:
-                    case ArgumentMode.register_B:
-                    case ArgumentMode.register_C:
-                    case ArgumentMode.register_D:
-                    case ArgumentMode.register_H:
-                    case ArgumentMode.register_L:
+                    case ArgumentModeOld.register_A:
+                    case ArgumentModeOld.register_B:
+                    case ArgumentModeOld.register_C:
+                    case ArgumentModeOld.register_D:
+                    case ArgumentModeOld.register_H:
+                    case ArgumentModeOld.register_L:
                         sizeAlignment = SizeAlignment._word;
                         break;
-                    case ArgumentMode.register_CX:
-                    case ArgumentMode.register_DX:
-                    case ArgumentMode.register_EX:
-                    case ArgumentMode.register_FX:
-                    case ArgumentMode.register_GX:
-                    case ArgumentMode.register_HX:
-                    case ArgumentMode.register_AX:
-                    case ArgumentMode.register_BX:
-                    case ArgumentMode.register_AF:
-                    case ArgumentMode.register_BF:
-                    case ArgumentMode.register_CF:
-                    case ArgumentMode.register_DF:
+                    case ArgumentModeOld.register_CX:
+                    case ArgumentModeOld.register_DX:
+                    case ArgumentModeOld.register_EX:
+                    case ArgumentModeOld.register_FX:
+                    case ArgumentModeOld.register_GX:
+                    case ArgumentModeOld.register_HX:
+                    case ArgumentModeOld.register_AX:
+                    case ArgumentModeOld.register_BX:
+                    case ArgumentModeOld.register_AF:
+                    case ArgumentModeOld.register_BF:
+                    case ArgumentModeOld.register_CF:
+                    case ArgumentModeOld.register_DF:
                         sizeAlignment = SizeAlignment._dword;
                         break;
-                    case ArgumentMode.register_AD:
-                    case ArgumentMode.register_BD:
-                    case ArgumentMode.register_CD:
-                    case ArgumentMode.register_DD:
+                    case ArgumentModeOld.register_AD:
+                    case ArgumentModeOld.register_BD:
+                    case ArgumentModeOld.register_CD:
+                    case ArgumentModeOld.register_DD:
                         sizeAlignment = SizeAlignment._qword;
                         break;
                 }
@@ -285,37 +294,37 @@ namespace AssemblerBCG
 
             switch (instruction)
             {
-                case Instruction.PUSH:
-                case Instruction.POP:
+                case OLdInstruction.PUSH:
+                case OLdInstruction.POP:
                     switch (argument1)
                     {
-                        case ArgumentMode.register:
-                        case ArgumentMode.register_AL:
-                        case ArgumentMode.register_BL:
-                        case ArgumentMode.register_CL:
-                        case ArgumentMode.register_DL:
-                        case ArgumentMode.register_A:
-                        case ArgumentMode.register_B:
-                        case ArgumentMode.register_C:
-                        case ArgumentMode.register_D:
-                        case ArgumentMode.register_H:
-                        case ArgumentMode.register_L:
-                        case ArgumentMode.register_AX:
-                        case ArgumentMode.register_BX:
-                        case ArgumentMode.register_CX:
-                        case ArgumentMode.register_DX:
-                        case ArgumentMode.register_EX:
-                        case ArgumentMode.register_FX:
-                        case ArgumentMode.register_GX:
-                        case ArgumentMode.register_HX:
-                        case ArgumentMode.register_AF:
-                        case ArgumentMode.register_BF:
-                        case ArgumentMode.register_CF:
-                        case ArgumentMode.register_DF:
-                        case ArgumentMode.register_AD:
-                        case ArgumentMode.register_BD:
-                        case ArgumentMode.register_CD:
-                        case ArgumentMode.register_DD:
+                        case ArgumentModeOld.register:
+                        case ArgumentModeOld.register_AL:
+                        case ArgumentModeOld.register_BL:
+                        case ArgumentModeOld.register_CL:
+                        case ArgumentModeOld.register_DL:
+                        case ArgumentModeOld.register_A:
+                        case ArgumentModeOld.register_B:
+                        case ArgumentModeOld.register_C:
+                        case ArgumentModeOld.register_D:
+                        case ArgumentModeOld.register_H:
+                        case ArgumentModeOld.register_L:
+                        case ArgumentModeOld.register_AX:
+                        case ArgumentModeOld.register_BX:
+                        case ArgumentModeOld.register_CX:
+                        case ArgumentModeOld.register_DX:
+                        case ArgumentModeOld.register_EX:
+                        case ArgumentModeOld.register_FX:
+                        case ArgumentModeOld.register_GX:
+                        case ArgumentModeOld.register_HX:
+                        case ArgumentModeOld.register_AF:
+                        case ArgumentModeOld.register_BF:
+                        case ArgumentModeOld.register_CF:
+                        case ArgumentModeOld.register_DF:
+                        case ArgumentModeOld.register_AD:
+                        case ArgumentModeOld.register_BD:
+                        case ArgumentModeOld.register_CD:
+                        case ArgumentModeOld.register_DD:
                             break;
                         default:
                             Console.WriteLine($"Error: {instruction}".PadRight(6, ' ') + $" {m_file}:{Linenumber}");
@@ -335,7 +344,7 @@ namespace AssemblerBCG
                 }
             }
 
-            InstructionInfo instructionInfo = Instructions.m_Instr[instruction];
+            OldInstructionInfo instructionInfo = OldInstructions.m_Instr[instruction];
 
             switch (sizeAlignment)
             {
@@ -391,308 +400,308 @@ namespace AssemblerBCG
 
             switch (instruction)
             {
-                case Instruction.MOV:
-                    if (argument1 == ArgumentMode.register_AL)
+                case OLdInstruction.MOV:
+                    if (argument1 == ArgumentModeOld.register_AL)
                     {
-                        argument1 = ArgumentMode.none;
-                        if (m_CPUType < CPUType.BC32 && argument2 == ArgumentMode.register && Enum.TryParse(FromHexString(argument2data).ToString(), true, out Register result) && result == Register.CR0)
+                        argument1 = ArgumentModeOld.none;
+                        if (m_CPUType < CPUType.BC32 && argument2 == ArgumentModeOld.register && Enum.TryParse(FromHexString(argument2data).ToString(), true, out Register result) && result == Register.CR0)
                         {
-                            argument2 = ArgumentMode.none;
-                            instruction = Instruction.MOVRALCR0;
+                            argument2 = ArgumentModeOld.none;
+                            instruction = OLdInstruction.MOVRALCR0;
                             argumentBuffer.Clear();
                             break;
                         }
-                        instruction = Instruction.MOVRAL;
+                        instruction = OLdInstruction.MOVRAL;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_BL)
+                    else if (argument1 == ArgumentModeOld.register_BL)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVRBL;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVRBL;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_CL)
+                    else if (argument1 == ArgumentModeOld.register_CL)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVRCL;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVRCL;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_DL)
+                    else if (argument1 == ArgumentModeOld.register_DL)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVRDL;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVRDL;
                         break;
                     }
-                    else if (m_CPUType < CPUType.BC32 && argument1 == ArgumentMode.register && Enum.TryParse(FromHexString(argument1data).ToString(), true, out Register result) && result == Register.CR0)
+                    else if (m_CPUType < CPUType.BC32 && argument1 == ArgumentModeOld.register && Enum.TryParse(FromHexString(argument1data).ToString(), true, out Register result) && result == Register.CR0)
                     {
-                        if (argument2 == ArgumentMode.register_AL)
+                        if (argument2 == ArgumentModeOld.register_AL)
                         {
                             argumentBuffer.Clear();
-                            argument1 = ArgumentMode.none;
-                            argument2 = ArgumentMode.none;
-                            instruction = Instruction.MOVRCR0AL;
+                            argument1 = ArgumentModeOld.none;
+                            argument2 = ArgumentModeOld.none;
+                            instruction = OLdInstruction.MOVRCR0AL;
                         }
                     }
                     break;
-                case Instruction.MOVW:
-                    if (argument1 == ArgumentMode.register_A)
+                case OLdInstruction.MOVW:
+                    if (argument1 == ArgumentModeOld.register_A)
                     {
-                        argument1 = ArgumentMode.none;
-                        if (m_CPUType >= CPUType.BC32 && argument2 == ArgumentMode.register && Enum.TryParse(FromHexString(argument2data).ToString(), true, out Register result) && result == Register.CR0)
+                        argument1 = ArgumentModeOld.none;
+                        if (m_CPUType >= CPUType.BC32 && argument2 == ArgumentModeOld.register && Enum.TryParse(FromHexString(argument2data).ToString(), true, out Register result) && result == Register.CR0)
                         {
-                            argument2 = ArgumentMode.none;
-                            instruction = Instruction.MOVWRACR0;
+                            argument2 = ArgumentModeOld.none;
+                            instruction = OLdInstruction.MOVWRACR0;
                             argumentBuffer.Clear();
                             break;
                         }
-                        instruction = Instruction.MOVWRA;
+                        instruction = OLdInstruction.MOVWRA;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_B)
+                    else if (argument1 == ArgumentModeOld.register_B)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVWRB;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVWRB;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_C)
+                    else if (argument1 == ArgumentModeOld.register_C)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVWRC;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVWRC;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_D)
+                    else if (argument1 == ArgumentModeOld.register_D)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVWRD;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVWRD;
                         break;
                     }
-                    else if (m_CPUType >= CPUType.BC32 && argument1 == ArgumentMode.register && Enum.TryParse(FromHexString(argument1data).ToString(), true, out Register result) && result == Register.CR0)
+                    else if (m_CPUType >= CPUType.BC32 && argument1 == ArgumentModeOld.register && Enum.TryParse(FromHexString(argument1data).ToString(), true, out Register result) && result == Register.CR0)
                     {
-                        if (argument2 == ArgumentMode.register_A)
+                        if (argument2 == ArgumentModeOld.register_A)
                         {
                             argumentBuffer.Clear();
-                            argument1 = ArgumentMode.none;
-                            argument2 = ArgumentMode.none;
-                            instruction = Instruction.MOVWRCR0A;
+                            argument1 = ArgumentModeOld.none;
+                            argument2 = ArgumentModeOld.none;
+                            instruction = OLdInstruction.MOVWRCR0A;
                         }
                     }
                     break;
-                case Instruction.MOVD:
-                    if (argument1 == ArgumentMode.register_AX)
+                case OLdInstruction.MOVD:
+                    if (argument1 == ArgumentModeOld.register_AX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVDRAX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVDRAX;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_BX)
+                    else if (argument1 == ArgumentModeOld.register_BX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVDRBX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVDRBX;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_CX)
+                    else if (argument1 == ArgumentModeOld.register_CX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVDRCX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVDRCX;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_DX)
+                    else if (argument1 == ArgumentModeOld.register_DX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.MOVDRDX;
-                        break;
-                    }
-                    break;
-                case Instruction.SEZ:
-                    if (argument1 == ArgumentMode.register_AL)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRAL;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_BL)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRBL;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_CL)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRCL;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_DL)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRDL;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_A)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRA;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_B)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRB;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_C)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRC;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_D)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRD;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_AX)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRAX;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_BX)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRBX;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_CX)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRCX;
-                        break;
-                    }
-                    else if (argument1 == ArgumentMode.register_DX)
-                    {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.SEZRDX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.MOVDRDX;
                         break;
                     }
                     break;
-                case Instruction.TEST:
-                    if (argument1 == ArgumentMode.register_AL)
+                case OLdInstruction.SEZ:
+                    if (argument1 == ArgumentModeOld.register_AL)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRAL;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRAL;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_BL)
+                    else if (argument1 == ArgumentModeOld.register_BL)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRBL;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRBL;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_CL)
+                    else if (argument1 == ArgumentModeOld.register_CL)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRCL;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRCL;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_DL)
+                    else if (argument1 == ArgumentModeOld.register_DL)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRDL;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRDL;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_A)
+                    else if (argument1 == ArgumentModeOld.register_A)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRA;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRA;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_B)
+                    else if (argument1 == ArgumentModeOld.register_B)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRB;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRB;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_C)
+                    else if (argument1 == ArgumentModeOld.register_C)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRC;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRC;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_D)
+                    else if (argument1 == ArgumentModeOld.register_D)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRD;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRD;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_AX)
+                    else if (argument1 == ArgumentModeOld.register_AX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRAX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRAX;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_BX)
+                    else if (argument1 == ArgumentModeOld.register_BX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRBX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRBX;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_CX)
+                    else if (argument1 == ArgumentModeOld.register_CX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRCX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRCX;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_DX)
+                    else if (argument1 == ArgumentModeOld.register_DX)
                     {
-                        argument1 = ArgumentMode.none;
-                        instruction = Instruction.TESTRDX;
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.SEZRDX;
+                        break;
+                    }
+                    break;
+                case OLdInstruction.TEST:
+                    if (argument1 == ArgumentModeOld.register_AL)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRAL;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_BL)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRBL;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_CL)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRCL;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_DL)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRDL;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_A)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRA;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_B)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRB;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_C)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRC;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_D)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRD;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_AX)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRAX;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_BX)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRBX;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_CX)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRCX;
+                        break;
+                    }
+                    else if (argument1 == ArgumentModeOld.register_DX)
+                    {
+                        argument1 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.TESTRDX;
                         break;
                     }
                     break;
 
-                case Instruction.CMP:
-                    if (argument1 == ArgumentMode.register_A)
+                case OLdInstruction.CMP:
+                    if (argument1 == ArgumentModeOld.register_A)
                     {
-                        instruction = Instruction.CMPRA;
-                        argument1 = ArgumentMode.none;
+                        instruction = OLdInstruction.CMPRA;
+                        argument1 = ArgumentModeOld.none;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_AX)
+                    else if (argument1 == ArgumentModeOld.register_AX)
                     {
-                        instruction = Instruction.CMPRAX;
-                        argument1 = ArgumentMode.none;
+                        instruction = OLdInstruction.CMPRAX;
+                        argument1 = ArgumentModeOld.none;
                         break;
                     }
-                    else if (argument2 == ArgumentMode.immediate_byte && argument2data == "0")
+                    else if (argument2 == ArgumentModeOld.immediate_byte && argument2data == "0")
                     {
-                        argument2 = ArgumentMode.none;
-                        instruction = Instruction.CMPZ;
+                        argument2 = ArgumentModeOld.none;
+                        instruction = OLdInstruction.CMPZ;
                     }
                     break;
 
-                case Instruction.ADD:
-                case Instruction.ADC:
-                case Instruction.SUB:
-                case Instruction.SBB:
-                case Instruction.MUL:
-                case Instruction.DIV:
-                case Instruction.AND:
-                case Instruction.OR:
-                case Instruction.NOR:
-                case Instruction.XOR:
-                case Instruction.NOT:
-                    if (argument1 == ArgumentMode.register_A)
+                case OLdInstruction.ADD:
+                case OLdInstruction.ADC:
+                case OLdInstruction.SUB:
+                case OLdInstruction.SBB:
+                case OLdInstruction.MUL:
+                case OLdInstruction.DIV:
+                case OLdInstruction.AND:
+                case OLdInstruction.OR:
+                case OLdInstruction.NOR:
+                case OLdInstruction.XOR:
+                case OLdInstruction.NOT:
+                    if (argument1 == ArgumentModeOld.register_A)
                     {
                         instruction = instruction + 1;
-                        argument1 = ArgumentMode.none;
+                        argument1 = ArgumentModeOld.none;
                         break;
                     }
-                    else if (argument1 == ArgumentMode.register_AX)
+                    else if (argument1 == ArgumentModeOld.register_AX)
                     {
                         instruction = instruction + 2;
-                        argument1 = ArgumentMode.none;
+                        argument1 = ArgumentModeOld.none;
                         break;
                     }
                     break;
@@ -704,12 +713,12 @@ namespace AssemblerBCG
 
             string instr = Convert.ToString((ushort)instruction, 16).PadLeft(4, '0');
             instructionBytes.AddRange(SplitHexString(instr));
-            if (argument1 != ArgumentMode.none)
+            if (argument1 != ArgumentModeOld.none)
             {
                 string arg1 = Convert.ToString((ushort)argument1, 16).PadLeft(2, '0');
                 instructionBytes.Add(arg1);
             }
-            if (argument2 != ArgumentMode.none)
+            if (argument2 != ArgumentModeOld.none)
             {
                 string arg2 = Convert.ToString((ushort)argument2, 16).PadLeft(2, '0');
                 instructionBytes.Add(arg2);
@@ -718,96 +727,96 @@ namespace AssemblerBCG
             instructionBytes.AddRange(argumentBuffer);
         }
 
-        void SetArgumentMode(ArgumentMode mode) 
+        void SetArgumentMode(ArgumentModeOld mode) 
         {
             switch (mode)
             {
-                case ArgumentMode.immediate_byte:
-                case ArgumentMode.immediate_word:
-                case ArgumentMode.register:
-                case ArgumentMode.register_AL:
-                case ArgumentMode.register_BL:
-                case ArgumentMode.register_CL:
-                case ArgumentMode.register_DL:
-                case ArgumentMode.register_H:
-                case ArgumentMode.register_L:
-                case ArgumentMode.register_address:
-                case ArgumentMode.register_address_HL:
-                case ArgumentMode.relative_address:
-                case ArgumentMode.near_address:
-                case ArgumentMode.short_address:
-                case ArgumentMode.segment_address:
-                case ArgumentMode.segment_DS_register:
-                case ArgumentMode.segment_DS_B:
-                case ArgumentMode.SP_rel_address_byte:
-                case ArgumentMode.BP_rel_address_byte:
+                case ArgumentModeOld.immediate_byte:
+                case ArgumentModeOld.immediate_word:
+                case ArgumentModeOld.register:
+                case ArgumentModeOld.register_AL:
+                case ArgumentModeOld.register_BL:
+                case ArgumentModeOld.register_CL:
+                case ArgumentModeOld.register_DL:
+                case ArgumentModeOld.register_H:
+                case ArgumentModeOld.register_L:
+                case ArgumentModeOld.register_address:
+                case ArgumentModeOld.register_address_HL:
+                case ArgumentModeOld.relative_address:
+                case ArgumentModeOld.near_address:
+                case ArgumentModeOld.short_address:
+                case ArgumentModeOld.segment_address:
+                case ArgumentModeOld.segment_DS_register:
+                case ArgumentModeOld.segment_DS_B:
+                case ArgumentModeOld.SP_rel_address_byte:
+                case ArgumentModeOld.BP_rel_address_byte:
                     if (m_CPUType < CPUType.BC8)
                     {
                         E_InvalidCPUFeature(CPUType.BC8, mode);
                     }
                     break;
-                case ArgumentMode.immediate_tbyte:
-                case ArgumentMode.immediate_dword:
-                case ArgumentMode.immediate_qword:
-                case ArgumentMode.immediate_float:
-                case ArgumentMode.register_A:
-                case ArgumentMode.register_B:
-                case ArgumentMode.register_C:
-                case ArgumentMode.register_D:
-                case ArgumentMode.register_AX:
-                case ArgumentMode.register_BX:
-                case ArgumentMode.register_CX:
-                case ArgumentMode.register_DX:
-                case ArgumentMode.long_address:
-                case ArgumentMode.far_address:
-                case ArgumentMode.X_indexed_address:
-                case ArgumentMode.Y_indexed_address:
-                case ArgumentMode.segment_ES_register:
-                case ArgumentMode.segment_ES_B:
-                case ArgumentMode.register_AF:
-                case ArgumentMode.register_BF:
-                case ArgumentMode.register_CF:
-                case ArgumentMode.register_DF:
-                case ArgumentMode.SP_rel_address_short:
-                case ArgumentMode.BP_rel_address_short:
+                case ArgumentModeOld.immediate_tbyte:
+                case ArgumentModeOld.immediate_dword:
+                case ArgumentModeOld.immediate_qword:
+                case ArgumentModeOld.immediate_float:
+                case ArgumentModeOld.register_A:
+                case ArgumentModeOld.register_B:
+                case ArgumentModeOld.register_C:
+                case ArgumentModeOld.register_D:
+                case ArgumentModeOld.register_AX:
+                case ArgumentModeOld.register_BX:
+                case ArgumentModeOld.register_CX:
+                case ArgumentModeOld.register_DX:
+                case ArgumentModeOld.long_address:
+                case ArgumentModeOld.far_address:
+                case ArgumentModeOld.X_indexed_address:
+                case ArgumentModeOld.Y_indexed_address:
+                case ArgumentModeOld.segment_ES_register:
+                case ArgumentModeOld.segment_ES_B:
+                case ArgumentModeOld.register_AF:
+                case ArgumentModeOld.register_BF:
+                case ArgumentModeOld.register_CF:
+                case ArgumentModeOld.register_DF:
+                case ArgumentModeOld.SP_rel_address_short:
+                case ArgumentModeOld.BP_rel_address_short:
                     if (m_CPUType < CPUType.BC16)
                     {
                         E_InvalidCPUFeature(CPUType.BC16, mode);
                     }
                     break;
-                case ArgumentMode.immediate_dqword:
-                case ArgumentMode.immediate_double:
-                case ArgumentMode.register_EX:
-                case ArgumentMode.register_FX:
-                case ArgumentMode.register_GX:
-                case ArgumentMode.register_HX:
-                case ArgumentMode.SPX_rel_address_word:
-                case ArgumentMode.BPX_rel_address_word:
-                case ArgumentMode.register_AD:
-                case ArgumentMode.register_BD:
-                case ArgumentMode.register_CD:
-                case ArgumentMode.register_DD:
-                case ArgumentMode.SPX_rel_address_tbyte:
-                case ArgumentMode.BPX_rel_address_tbyte:
-                case ArgumentMode.SPX_rel_address_int:
-                case ArgumentMode.BPX_rel_address_int:
+                case ArgumentModeOld.immediate_dqword:
+                case ArgumentModeOld.immediate_double:
+                case ArgumentModeOld.register_EX:
+                case ArgumentModeOld.register_FX:
+                case ArgumentModeOld.register_GX:
+                case ArgumentModeOld.register_HX:
+                case ArgumentModeOld.SPX_rel_address_word:
+                case ArgumentModeOld.BPX_rel_address_word:
+                case ArgumentModeOld.register_AD:
+                case ArgumentModeOld.register_BD:
+                case ArgumentModeOld.register_CD:
+                case ArgumentModeOld.register_DD:
+                case ArgumentModeOld.SPX_rel_address_tbyte:
+                case ArgumentModeOld.BPX_rel_address_tbyte:
+                case ArgumentModeOld.SPX_rel_address_int:
+                case ArgumentModeOld.BPX_rel_address_int:
                     if (m_CPUType < CPUType.BC32)
                     {
                         E_InvalidCPUFeature(CPUType.BC32, mode);
                     }
                     break;
-                case ArgumentMode.none:
+                case ArgumentModeOld.none:
                     break;
                 default:
                     break;
             }
 
-            if (argument1 == ArgumentMode.none)
+            if (argument1 == ArgumentModeOld.none)
             {
                 argument1 = mode;
                 return;
             }
-            if (argument2 == ArgumentMode.none)
+            if (argument2 == ArgumentModeOld.none)
             {
                 argument2 = mode;
             }

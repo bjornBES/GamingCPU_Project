@@ -1,14 +1,40 @@
 .setcpu "BC16CE"
 
+.section TEXTE
+
 .extern _cstart
 
-.section TEXT
 Start:
-    mov     AL,                 CR0
-    or      AL,                 0x08
-    mov     CR0,                AL              ; enableing bigger registers
+    lgdt    @GDTStart
 
-    push    D                                   ; pushing the argument
+    mov     A,                  CR0
+    or      A,                  0x0080
+    mov     CR0,                A               ; enableing protected mode
+
+    mov     L,                  LOW @Jmp        ; jumping into the extended code segment
+    mov     H,                  0x0005
+    jmp     [HL]
+
+; this is in the TEXT section in the GDT
+
+.section TEXT
+
+Jmp:
+    mov     AX,                 FAR @__DATASTART
+    mov     EDS,                AX
+    mov     EES,                AX
+    mov     EFS,                AX
+    mov     EGS,                AX
+    mov     EHS,                AX
+    mov     ESS,                FAR @__STACKSTART
+
+    push    DX                                  ; pushing the argument
+    ; now it protected mode arguments take 4 bytes
     call    [_cstart]                           ; calling the cstart function in CCL
 
+.includeil "./AsmIO.acl"
+
+.includeil "./GDT.acl"
+
 .section DOS
+

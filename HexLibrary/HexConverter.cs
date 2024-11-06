@@ -8,7 +8,59 @@ namespace HexLibrary
     {
         public static string ToHexString(string value, int _base)
         {
-            return Convert.ToString(Convert.ToInt32(value, _base), 16);
+            List<byte> segments = new List<byte>();
+            string data = value;
+
+            for (int i = 0; i < value.Length; )
+            {
+                switch (_base)
+                {
+                    case 2:
+                        if (i + 8 >  value.Length)
+                        {
+                            data = data.PadLeft(i + 8, '0');
+                        }
+                        segments.Add(Convert.ToByte(data.Substring(i, 8), _base));
+                        i += 8;
+                        break;
+                    case 10:
+                        return Convert.ToString(Convert.ToInt64(value, _base));
+                    default:
+                        break;
+                }
+            }
+
+            return Convert.ToHexString(segments.ToArray());
+        }
+        public static string ToBinString(string value, int _base)
+        {
+            List<byte> segments = new List<byte>();
+            string data = value;
+
+            for (int i = 0; i < value.Length;)
+            {
+                switch (_base)
+                {
+                    case 16:
+                        if (i + 2 > value.Length)
+                        {
+                            data = data.PadLeft(i + 2, '0');
+                        }
+                        segments.Add(Convert.ToByte(data.Substring(i, 2), _base));
+                        i += 2;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            string binString = "";
+            segments.ForEach(_byte =>
+            {
+                binString += Convert.ToString(_byte, 2).PadLeft(8, '0');
+            });
+
+            return binString;
         }
         public static string ToHexString(short value)
         {

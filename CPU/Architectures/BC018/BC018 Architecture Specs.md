@@ -8,10 +8,6 @@
     - [INSTRUCTION LAYOUT](#instruction-layout)
     - [ARGUMENT MODE](#argument-mode)
   - [Interrupt vector table](#interrupt-vector-table)
-    - [Layout](#layout)
-    - [Interrupt vector assignments](#interrupt-vector-assignments)
-      - [interrupt](#interrupt)
-      - [exception](#exception)
   - [Caches](#caches)
   - [MEMORY](#memory)
     - [MEMORY LAYOUT](#memory-layout)
@@ -22,12 +18,11 @@
 - Over all Architecture: BCG Architecture
 - Name: BC018 Architecture
 - Base data bus: 8 bits
-- Base address bus: 16 bits
+- Base address bus: 20 bits
 
 ## CPUs
 
 - BC8           Base 8 bit CPU
-- BC816         With a 20 bit address bus
 
 ## INSTRUCTIONS
 
@@ -66,45 +61,7 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 
 ## Interrupt vector table
 
-The Interrupt vector table is 4 KB in size
-
-### Layout
-
-The first word is the Address Segment for the routine
-
-The second word is the Address offset for the routine
-
-### Interrupt vector assignments
-
-|Function                   |Interupt number|Type             |IVT address      |Is User defined|Related instructions
-|---------------------------|---------------|-----------------|-----------------|---------------|-
-|Divide error               |0              |Fault exception  |`0x0000`         |true           |DIV or DIVF
-|NMI interrupt              |1              |interrupt        |`0x0004`         |true           |INT 2 or NMI pin
-|BRK interrupt              |2              |interrupt        |`0x0008`         |true           |BRK
-|invalid opcode             |6              |Abort exception  |`0x0018`         |false          |Any undefined opcode
-|Keyboard IRQ               |16             |interrupt        |`0x0040`         |false          |Keyboard IRQ0
-|User defined IRQ interrupt |17-30          |interrupt        |`0x0044`         |true           |The IRQ pin
-|FDC IRQ                    |31             |interrupt        |`0x007C`         |true           |FDC IRQ15
-|reserved                   |32             |interrupt        |`0x0080`         |false          |Unused
-|User defined interrupts    |33             |interrupt        |`0x0084`         |true           |INT 0x04
-|User defined interrupts    |34             |interrupt        |`0x0088`         |true           |INT 0x05
-|User defined interrupts    |35             |interrupt        |`0x008C`         |true           |INT 0x06
-|User defined interrupts    |36             |interrupt        |`0x0090`         |true           |INT 0x10
-|User defined interrupts    |37             |interrupt        |`0x0094`         |true           |INT 0x13
-|User defined interrupts    |37             |interrupt        |`0x0098`         |true           |if the stack overflows
-|reserved                   |38-255         |interrupt        |`0x009C`         |true           |DO NOT USE
-
-#### interrupt
-
-an interrupt can be caused by the IRQ or NMI pins or the INT instruction
-
-#### exception
-
-an exception can be caused an instruction
-
-when the BCG16 gets an Abort exception it will stop and the Halt flag will be set
-
-when the BCG16 gets an Fault exception it will skip that instruction and continue
+[Here](../BCG%20arch%20Specs.md#interrupt-entres)
 
 ## Caches
 
@@ -112,7 +69,7 @@ when the BCG16 gets an Fault exception it will skip that instruction and continu
 
 ### MEMORY LAYOUT
 
-- Address bus: 16 bits to a max of 24 bits
+- Address bus: 16 bits to a max of 20 bits
 
 |Base Address |Size       |Name                     |Description
 |-------------|-----------|-------------------------|-

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using CommonBCGCPU.Types;
 using HexLibrary;
-namespace BCG16CPUEmulator
+namespace BC16CPUEmulator
 {
     public class Memory
     {

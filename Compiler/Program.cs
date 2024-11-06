@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 public class Program : ArgumentFunctions
 {
@@ -30,26 +31,57 @@ public class Program : ArgumentFunctions
             Environment.Exit(1);
         }
 
-        string FullSrc = "";
+        string FullSrc = includeFiles(new FileInfo(m_InputFile));
 
+        /*
         for (int f = 0; f < m_Files.Count; f++)
         {
             string FileContents = File.ReadAllText(m_Files[f].FullName);
 
-            FileContents = FileContents.Replace("\r\n", "\n");
-
             // pre compile
 
             //FullSrc += $"\n.newfile {Files[f].Name}\n" + FileContents;
-            FullSrc += $"\n" + FileContents;
+            FullSrc += $"{Environment.NewLine}" + FileContents;
         }
+         */
 
         FullSrc = FullSrc.Replace("\r\n", "\n");
 
         CompilerCCL compiler = new CompilerCCL(FullSrc);
         File.WriteAllLines(m_OutputFile, compiler.m_Output);
     }
+    string includeFiles(FileInfo file)
+    {
+        string[] src;
+        string outputSrc = "";
 
+        src = File.ReadAllText(file.FullName).Split(Environment.NewLine);
+        outputSrc += $"FILE \"{file.FullName}\"";
+
+        for (int a = 0; a < src.Length; a++)
+        {
+            if (src[a].StartsWith("#inc"))
+            {
+                string inputFile = m_InputFile.Split("/").Last();
+                string currFileDir = m_InputFile.Replace(inputFile, "");
+                src[a] = currFileDir + Regex.Replace(src[a], @" +", " ").Replace("#inc ", "").Trim('\"').Substring(2);
+                if (File.Exists(src[a]))
+                {
+                    FileInfo fileInfo = new FileInfo(src[a]);
+                    if (!m_Files.Contains(fileInfo))
+                    {
+                        outputSrc += includeFiles(fileInfo);
+                        outputSrc += $"FILE \"{file.FullName}\"";
+                    }
+                }
+            }
+            else
+            {
+                outputSrc += src[a] + Environment.NewLine;
+            }
+        }
+        return outputSrc;
+    }
     static int m_i;
     void decodeArguments(string[] args)
     {
