@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2n5dMqQKSL1Rbco0whmRiBkeXZ54L54D49QOQ9RVxkmSkSOQ3K4n7fkNXpejml5cs9pQ760uJpcf/LuzQC03uQ==",
+  "dgSpecHash": "3OItvy/pjPDrmCPKb6e/pjwqRu9agfjajiwD+7PTsLvCmTOCa79X99G6lq/BaX/gaWIzJytOR2Vrs+9w6eAANA==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/HLCLCompiler.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HLCLCompiler/HLCLCompiler.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/bjornbes/projects/GamingCPU_Project/AssemblerBCG/AssemblerBCG.csproj": {}
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/AssemblerBCG/AssemblerBCG.csproj": {}
   },
   "projects": {
-    "/home/bjornbes/projects/GamingCPU_Project/AssemblerBCG/AssemblerBCG.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/AssemblerBCG/AssemblerBCG.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/AssemblerBCG/AssemblerBCG.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/AssemblerBCG/AssemblerBCG.csproj",
         "projectName": "AssemblerBCG",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/AssemblerBCG/AssemblerBCG.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/AssemblerBCG/AssemblerBCG.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/AssemblerBCG/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/AssemblerBCG/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
@@ -26,8 +26,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
-                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj"
+              "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj"
               }
             }
           }
@@ -75,14 +75,14 @@
         }
       }
     },
-    "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj",
         "projectName": "HexLibrary",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"

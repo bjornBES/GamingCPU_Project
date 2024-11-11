@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ObHSXJ9vQ00e5X6PKm5fHCKhfM8P4ua0+/zrYVcrrOcCB7v64ISpn2xPcMI4zg7eMX6ORPkQJP5QORKJ16lI1w==",
+  "dgSpecHash": "oDHJLA5TqrtuMjNY0dG8LeqgfmHMYvF5L4YOUuxmjAi5I5Iw5QLypUspPIviE+W5GcoZ2tMVVM5zsr6ua7GyxQ==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512"

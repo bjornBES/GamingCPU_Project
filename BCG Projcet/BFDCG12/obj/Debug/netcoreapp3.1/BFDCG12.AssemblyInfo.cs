@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BFDCG12")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc9745e122430e5c40c2b277dd202598f325b420")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3e0ac7c15bc4f6ab199ae5e11fb31b1c0cae539")]
 [assembly: System.Reflection.AssemblyProductAttribute("BFDCG12")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BFDCG12")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

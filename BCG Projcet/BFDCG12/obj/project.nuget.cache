@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fNvCp9EUaoTzQKC8uKvbLwxszT/62e/K9Hxzei6J1Rwo/MPJqP71QQ6sdlr/bdI2Z4rzsJder4uzHvrunB2pEg==",
+  "dgSpecHash": "gg4BsVfxKlyEMtlVLBUyonzkzwuIRAeDTBVoYc0Hi9FIuK+oL7x32AqF0lNIGSdWisAMbrf5BJIOfMoJoa+Dpg==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/3.1.0/microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/3.1.10/microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",

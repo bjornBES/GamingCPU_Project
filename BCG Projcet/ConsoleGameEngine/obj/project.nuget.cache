@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "o3P69Cub6nFwtbZlPdvYpr4MREAVpTmFgbY5nm6i1osL2D3m63OK9FqeOcIZb2L5AOVol7W0oioW7TMOmwqGmA==",
+  "dgSpecHash": "hZ3A9iKfl/ZaEH6Q0J+VC3KGMXnXLTgaGyqN1abOUbm/RXxmi6G4agg8lLn1RbDFv2PWDec1qWRmJjECUV4zhg==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "S2vLBsX72KS+VjtTtxaP4jWNG3F80PzXkbw1uSJdMqFXkLcHDvJY+fTaOPrYcq7NuhvPFyFDBixkqYdRWk5Ecw==",
+  "dgSpecHash": "Xa1AOUBPnsDTQV7lPvdWRxaAzGV9w/1wBD3UtVVGBOH53N0h21efdVPaqEdmmPlrN4ZDcK8qrYFHsUq8iOLpMw==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/3.1.0/microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/3.1.10/microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cxm6dqRD6VII/KWSvm+n4VEQW/ARgJ8XauIFGzNmOmOcn93+DYQ85FCz03ZpgTjwgNATh1UxEwcT66xQro9o2A==",
+  "dgSpecHash": "YQ6iA5pgLirFGCPvBbvCt/kGNH/E3B5YBoxZSGtLf31qpxAHn2wS8N5NST1tMX22mnYzBRC9efTlsu0D2U3gaw==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/opentk/4.8.2/opentk.4.8.2.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/opentk.audio.openal/4.8.2/opentk.audio.openal.4.8.2.nupkg.sha512",

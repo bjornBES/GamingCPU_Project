@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/HLCLCompiler.csproj",
+      "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HLCLCompiler/HLCLCompiler.csproj",
       "projectName": "HLCLCompiler",
-      "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/HLCLCompiler.csproj",
+      "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HLCLCompiler/HLCLCompiler.csproj",
       "packagesPath": "/home/bjornbes/.nuget/packages/",
-      "outputPath": "/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/",
+      "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HLCLCompiler/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/bjornbes/.nuget/NuGet/NuGet.Config"

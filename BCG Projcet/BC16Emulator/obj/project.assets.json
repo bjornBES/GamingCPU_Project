@@ -503,11 +503,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
+      "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj",
       "projectName": "BC16Emulator",
-      "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
+      "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj",
       "packagesPath": "/home/bjornbes/.nuget/packages/",
-      "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/obj/",
+      "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/bjornbes/.nuget/NuGet/NuGet.Config"
@@ -522,17 +522,17 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj": {
-              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj"
+            "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj": {
+              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj"
             },
-            "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj": {
-              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj"
+            "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj": {
+              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj"
             },
-            "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj": {
-              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj"
+            "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj": {
+              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj"
             },
-            "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
-              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj"
+            "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj": {
+              "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj"
             }
           }
         }

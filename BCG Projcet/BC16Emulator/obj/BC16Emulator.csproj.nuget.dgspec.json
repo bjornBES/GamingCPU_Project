@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj": {}
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj": {}
   },
   "projects": {
-    "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj",
         "projectName": "BC16Emulator",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
@@ -26,17 +26,17 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj": {
-                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj"
+              "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj"
               },
-              "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj": {
-                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj"
+              "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj"
               },
-              "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj": {
-                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj"
+              "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj"
               },
-              "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
-                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj"
+              "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj"
               }
             }
           }
@@ -94,14 +94,14 @@
         }
       }
     },
-    "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj",
         "projectName": "BFDCG12",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/BFDCG12.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BFDCG12/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
@@ -116,11 +116,11 @@
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
             "projectReferences": {
-              "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj": {
-                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj"
+              "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj"
               },
-              "/home/bjornbes/projects/GamingCPU_Project/fileSystem/filesystem.csproj": {
-                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/fileSystem/filesystem.csproj"
+              "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/fileSystem/filesystem.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/fileSystem/filesystem.csproj"
               }
             }
           }
@@ -168,14 +168,14 @@
         }
       }
     },
-    "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj",
         "projectName": "CommonBCGCPU",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/CommonBCGCPU.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/CommonBCGCPU/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
@@ -231,14 +231,14 @@
         }
       }
     },
-    "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj",
         "projectName": "ConsoleGameEngine",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
@@ -294,14 +294,14 @@
         }
       }
     },
-    "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj",
         "projectName": "HexLibrary",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
@@ -357,14 +357,14 @@
         }
       }
     },
-    "/home/bjornbes/projects/GamingCPU_Project/fileSystem/filesystem.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/fileSystem/filesystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/fileSystem/filesystem.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/fileSystem/filesystem.csproj",
         "projectName": "filesystem",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/fileSystem/filesystem.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/fileSystem/filesystem.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/fileSystem/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/fileSystem/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"

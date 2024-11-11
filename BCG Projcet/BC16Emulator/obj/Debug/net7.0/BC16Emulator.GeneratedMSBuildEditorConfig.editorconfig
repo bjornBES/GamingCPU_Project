@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = BC16CPUEmulator
-build_property.ProjectDir = /home/bjornbes/projects/GamingCPU_Project/BC16Emulator/
+build_property.ProjectDir = /home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

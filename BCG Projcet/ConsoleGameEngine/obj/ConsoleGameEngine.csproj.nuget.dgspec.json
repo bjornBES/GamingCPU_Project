@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj": {}
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj": {}
   },
   "projects": {
-    "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj",
         "projectName": "ConsoleGameEngine",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/ConsoleGameEngine.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/ConsoleGameEngine/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
