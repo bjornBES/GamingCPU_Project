@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = BC16CPUEmulator
+build_property.ProjectDir = /home/bjornbes/projects/GamingCPU_Project/BC16Emulator/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

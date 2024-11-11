@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = CommonBCGCPU
+build_property.ProjectDir = /home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
