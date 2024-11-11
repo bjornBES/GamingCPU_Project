@@ -3,17 +3,12 @@
     "BCGLinker": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/ACL/bin/TestProgram.o -o ./a.bin -fbin"
+      "commandLineArgs": "-i ./ACL/bin/TestProgram.o -o ./a.bin -fbin"
     },
     "Link BIOS": {
       "commandName": "Project",
       "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/BIOSBin/OBJ/BIOS.o -o ./BIOSBin/Bin/BIOS.bin -f fbin -ls ./Linker.conf"
-    },
-    "Try link BIOS": {
-      "commandName": "Project",
-      "workingDirectory": "../.",
-      "commandLineArgs": "-i ./CPU/src/ACL/bin/TestProgram.o -o ./CPU/src/ACL/bin/TestProgram.bin -f fbin"
+      "commandLineArgs": "-i ./src/BIOS/builds/BIOS.o -o ./src/BIOS/BIOS.bin -ls ./src/BIOS/BIOSLinker.conf"
     },
     "Link Bootloader": {
       "commandName": "Project",

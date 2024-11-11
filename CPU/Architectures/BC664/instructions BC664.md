@@ -151,9 +151,11 @@
 # Memory Operations instructions
 
 - `0x4010`: CMPL:                           `Compares the memory address value in AX and HL for C times and updates the flags register` **Need extended mode**
-- `0x4020`: MOVF: destination, immediate    `moves a float from the specified immediate to the float register(destination)`
-- `0x4030`: MOFD: destination, immediate    `moves a double from the specified immediate to the double register(destination)`
-- `0x4040`: MOVQ: destination, source       `Moves a qword from the specified source to the destination`
+- `0x4020`: LODR                            `moves the contents in memory from DS:B to HL for C times`
+  - `where DS:B as the source and HL as the destination and where C is the count`
+- `0x4030`: MOVF: destination, immediate    `moves a float from the specified immediate to the float register(destination)`
+- `0x4040`: MOFD: destination, immediate    `moves a double from the specified immediate to the double register(destination)`
+- `0x4050`: MOVQ: destination, source       `Moves a qword from the specified source to the destination`
 
 # Special instructions
 

@@ -6,8 +6,9 @@
         public int m_Size;
         public int m_Start;
         public Memory m_Memory;
-        public type m_Type;
+        public Type m_Type;
         public int m_PCOffset;
+        public string OutputFile;
 
         public bool InSection(int i)
         {
@@ -26,10 +27,10 @@
         public string m_Name;
         public int m_Size;
         public int m_Start;
-        public type m_Type;
+        public Type m_Type;
     }
 
-    public enum type
+    public enum Type
     {
         ReadOnly,
         WriteOnly,

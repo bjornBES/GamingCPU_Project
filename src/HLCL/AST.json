@@ -1,0 +1,81 @@
+{
+  "prog": [
+    {
+      "stmt": {
+        "name": "main",
+        "arguments": [],
+        "LineNumber": 8,
+        "stmts": [
+          {
+            "stmt": {
+              "name": "_byte",
+              "type": {
+                "Kind": 0,
+                "IsArith": true,
+                "IsIntegral": true,
+                "IsScalar": true,
+                "IsComplete": true,
+                "SizeOf": 1,
+                "Alignment": 1
+              },
+              "expr": {
+                "expr": {
+                  "term": {
+                    "value": {
+                      "Kind": 2,
+                      "Val": 10,
+                      "m_Line": 6
+                    }
+                  }
+                }
+              },
+              "OperatorVal": 29
+            }
+          },
+          {
+            "stmt": {
+              "name": "ptrByte",
+              "type": {
+                "Kind": 7,
+                "IsArith": false,
+                "IsIntegral": false,
+                "IsScalar": true,
+                "IsComplete": true,
+                "SizeOf": 4,
+                "Alignment": 4
+              },
+              "expr": {
+                "expr": {
+                  "term": {
+                    "value": {
+                      "Kind": 2,
+                      "Val": 1000,
+                      "m_Line": 7
+                    }
+                  }
+                }
+              },
+              "OperatorVal": 29
+            }
+          },
+          {
+            "stmt": {
+              "name": "array",
+              "type": {
+                "Kind": 9,
+                "IsArith": false,
+                "IsIntegral": false,
+                "IsScalar": false,
+                "IsComplete": true,
+                "SizeOf": 10,
+                "Alignment": 1
+              },
+              "expr": null,
+              "OperatorVal": 0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

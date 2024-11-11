@@ -5,7 +5,6 @@ $BootableDriveNumber = 0xAA55
 
 .SETCPU "BC16"
 
-.org 0x1200
 _BIOSStart:
     sez     SS                                  ; SS = 0
     mov     SP,             @__STACK            ; SP = @Stack

@@ -1,0 +1,34 @@
+.setcpu "BC16CE"
+
+.section TEXT
+
+GDTStart:
+GDT16BitEPCode:
+; Limit 20 bits
+.dw 0x0008                  ; limit 0-15
+; Base 32 bits
+.dd 0x00080000              ; segment starts at 0x0008
+; Access byte
+.db 0b00000010              ; ring 0, code segment, read access
+; Other flags
+.db 0b10000000              ; limit is 4 KB blocks, 16 bit protected extended code segment, limit 16-20
+
+GDT16BitData:
+; Limit 20 bits
+.dw 0x0005                  ; limit 0-15
+; Base 32 bits
+.dd 0x00F60000              ; segment starts at 0x00F6
+; Access byte
+.db 0b00010000              ; ring 0, data segment, read/write access, grows down
+; Other flags
+.db 0b10000000              ; limit is 4 KB blocks, limit 16-20
+
+GDT16BitStack:
+; Limit 20 bits
+.dw 0x0001                  ; limit 0-15
+; Base 32 bits
+.dd 0x00F50000              ; segment starts at 0x00F5
+; Access byte
+.db 0b00010000              ; ring 0, data segment, read/write access, grows down
+; Other flags
+.db 0b10000000              ; limit is 4 KB blocks, limit 16-20

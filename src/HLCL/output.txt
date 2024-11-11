@@ -1,0 +1,12 @@
+_main:
+.global _main
+	enter
+	add       SP,                           0x0004
+	; return value is at [BP]
+	pushr
+_mainReturn:
+	popr
+	mov       AX,                           [BP]
+	sub       SP,                           0x0004
+	leave
+	retz

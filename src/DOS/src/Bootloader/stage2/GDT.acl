@@ -5,40 +5,40 @@
 GDTStart:
 GDT16BitEPCode:
 ; Limit 20 bits
-.dw 0x0000                  ; limit 0-15
+.dw 0x0005                  ; limit 0-15
 ; Base 32 bits
 .dd 0x00050000              ; segment starts at 0x0005
 ; Access byte
 .db 0b00000010              ; ring 0, code segment, read access
 ; Other flags
-.db 0b10000101              ; limit is 4 KB blocks, 16 bit protected extended code segment, limit 16-20
+.db 0b10000000              ; limit is 4 KB blocks, 16 bit protected extended code segment, limit 16-20
 
 GDT16BitECode:
 ; Limit 20 bits
-.dw 0x0000                  ; limit 0-15
+.dw 0x0002                  ; limit 0-15
 ; Base 32 bits
 .dd 0x00030000              ; segment starts at 0x0003
 ; Access byte
 .db 0b00000010              ; ring 0, code segment, read access
 ; Other flags
-.db 0b11000010              ; limit is 4 KB blocks, 16 bit extended code segment, limit 16-20
+.db 0b11000000              ; limit is 4 KB blocks, 16 bit extended code segment, limit 16-20
 
 GDT16BitData:
 ; Limit 20 bits
-.dw 0x0000                  ; limit 0-15
+.dw 0x0005                  ; limit 0-15
 ; Base 32 bits
 .dd 0x00F60000              ; segment starts at 0x00F6
 ; Access byte
 .db 0b00010000              ; ring 0, data segment, read/write access, grows down
 ; Other flags
-.db 0b10000101              ; limit is 4 KB blocks, limit 16-20
+.db 0b10000000              ; limit is 4 KB blocks, limit 16-20
 
 GDT16BitStack:
 ; Limit 20 bits
-.dw 0x0000                  ; limit 0-15
+.dw 0x0001                  ; limit 0-15
 ; Base 32 bits
 .dd 0x00F50000              ; segment starts at 0x00F5
 ; Access byte
 .db 0b00010000              ; ring 0, data segment, read/write access, grows down
 ; Other flags
-.db 0b10000001              ; limit is 4 KB blocks, limit 16-20
+.db 0b10000000              ; limit is 4 KB blocks, limit 16-20

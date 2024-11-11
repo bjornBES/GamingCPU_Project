@@ -84,8 +84,8 @@
 
             // sets the window and buffer size
             // the buffer must be set after the window, as it must never be smaller than the screen
-            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
-            Console.SetBufferSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            // Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            // Console.SetBufferSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             
             NativeMethods.Coord size = new NativeMethods.Coord((short)width, (short)height);
             NativeMethods.SetConsoleScreenBufferSize(stdOutputHandle, size);

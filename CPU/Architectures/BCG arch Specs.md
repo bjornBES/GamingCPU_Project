@@ -17,8 +17,9 @@
     - [Interrupt entres](#interrupt-entres)
       - [interrupt](#interrupt)
       - [exception](#exception)
+        - [Stack](#stack)
   - [privilege level](#privilege-level)
-    - [Ring 0 Upper root](#ring-0-upper-root)
+    - [Ring 0 BIOS](#ring-0-bios)
     - [Ring 1 Kernel mode](#ring-1-kernel-mode)
     - [Ring 2 User mode](#ring-2-user-mode)
     - [Ring 3 Restricted user mode](#ring-3-restricted-user-mode)
@@ -132,15 +133,16 @@ XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
 
 |Offset |Size |Name                     |Description
 |-------|-    |-                        |-
-|`00`   |`32` |Offset                   | this is the offset to the interrupt function
-|`32`   |`20` |Segment                  | this is the segment to the interrupt function
-|`52`   |`02` |CPU Privilege level      | this is the privilege level [more here](#privilege-level)
-|`54`   |`01` |Gate type                | this is the Gate type [more here](#gate-type)
-|`55`   |`09` |reserved                 | reserved NOT IN USE
+|`00`   |`32` |Segment                  | this is the segment to the interrupt function
+|`32`   |`20` |Offset                   | this is the offset to the interrupt function
+|`52`   |`04` |reserved                 | reserved NOT IN USE
+|`56`   |`02` |CPU Privilege level      | this is the privilege level [more here](#privilege-level)
+|`58`   |`02` |Gate type                | this is the Gate type [more here](#gate-type)
+|`60`   |`04` |reserved                 | reserved NOT IN USE
 
 ### Interrupt vector table
 
-The Interrupt vector table is 4 KB in size
+The Interrupt vector table is 2 KB in size
 
 #### Layout
 
@@ -179,11 +181,21 @@ when the CPU gets an Abort exception it will stop and the Halt flag will be set
 
 when the CPU gets an Fault exception it will skip that instruction and continue
 
+##### Stack
+
+|offset |BP offset|type     |name
+|-------|---------|---------|-
+|0      |BP - 8   |uint32   |Return address
+|4      |BP - 4   |uint16   |Flags
+|6      |BP - 2   |uint16   |enter
+|8      |BP + 0   |uint16   |Error code
+|10     |BP + 2   |byte[20] |Pushr
+
 ## privilege level
 
-The privilege level goes from 0 to 3 where 0 is [ring 0](#ring-0-upper-root) and 3 is [ring 3](#ring-3-restricted-user-mode)
+The privilege level goes from 0 to 3 where 0 is [ring 0](#ring-0-bios) and 3 is [ring 3](#ring-3-restricted-user-mode)
 
-### Ring 0 Upper root
+### Ring 0 BIOS
 
 ### Ring 1 Kernel mode
 
@@ -192,6 +204,10 @@ The privilege level goes from 0 to 3 where 0 is [ring 0](#ring-0-upper-root) and
 ### Ring 3 Restricted user mode
 
 ## Gate type
+
+- 0b00 or 0x0: Trap Gate
+- 0b01 or 0x1: 16 bit Interrupt Gate
+- 0b10 or 0x2: 32 bit Interrupt Gate
 
 ## Pipelining
 
@@ -291,6 +307,9 @@ in Extended mode the CPU will get
 in Protected mode the CPU will get
 
 - Make use of the [protected registers](#protected-registers)
+- you will get the IDT instead of the IVT
+- the IDT will be 16 kb starting at address 0
+- you will get the GDT
 
 ## Protected extended mode
 
@@ -362,9 +381,8 @@ in long long mode the CPU will get
 
 |Base Address |Size       |Name                     |Description
 |-------------|-----------|-------------------------|-
-|`0x0000_0000`|`0x00_1000`| Interrupt vector table  | Interrupt vector table more [here](#interrupt-vector-table)
-|`0x0000_1000`|`0x00_0200`| IO ports                | this is where the Ports is at
-|`0x0000_1200`|`0x00_EE00`| RAM                     | RAM in the first segment
+|`0x0000_0000`|`0x00_0400`| Interrupt vector table  | Interrupt vector table more [here](#interrupt-vector-table)
+|`0x0000_0400`|`0x00_FC00`| RAM                     | RAM in the first segment
 |`0x0001_0000`|`0x02_0000`| VRAM                    | video ram
 |`0x0003_0000`|end of Memory|RAM                    | RAM
 

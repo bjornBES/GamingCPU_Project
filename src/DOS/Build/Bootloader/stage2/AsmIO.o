@@ -476,7 +476,7 @@ _REF_ LABEL GDT16BitEPCode C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Projec
 _NEWLINE_
 _NEWLINE_
 00
-00
+05
 _NEWLINE_
 _NEWLINE_
 00
@@ -488,14 +488,14 @@ _NEWLINE_
 02
 _NEWLINE_
 _NEWLINE_
-85
+80
 _NEWLINE_
 _NEWLINE_
 _REF_ LABEL GDT16BitECode C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
 _NEWLINE_
 _NEWLINE_
 00
-00
+02
 _NEWLINE_
 _NEWLINE_
 00
@@ -507,14 +507,14 @@ _NEWLINE_
 02
 _NEWLINE_
 _NEWLINE_
-C2
+C0
 _NEWLINE_
 _NEWLINE_
 _REF_ LABEL GDT16BitData C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
 _NEWLINE_
 _NEWLINE_
 00
-00
+05
 _NEWLINE_
 _NEWLINE_
 00
@@ -526,14 +526,14 @@ _NEWLINE_
 10
 _NEWLINE_
 _NEWLINE_
-85
+80
 _NEWLINE_
 _NEWLINE_
 _REF_ LABEL GDT16BitStack C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
 _NEWLINE_
 _NEWLINE_
 00
-00
+01
 _NEWLINE_
 _NEWLINE_
 00
@@ -545,7 +545,7 @@ _NEWLINE_
 10
 _NEWLINE_
 _NEWLINE_
-81
+80
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_

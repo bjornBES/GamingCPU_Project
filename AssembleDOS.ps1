@@ -12,7 +12,7 @@ $compiler = Resolve-Path "./Compiler/build/Compiler.exe"
 & $compiler -i $SrcDir/Bootloader/stage2/main.ccl -o $BuildDir/Bootloader/stage2/CCL/main.acl -cpu BC16CE
 & $assembler -i $BuildDir/Bootloader/stage2/CCL/main.acl -o $BuildDir/Bootloader/stage2/main.o
 
-& $linker -i $BuildDir/DOS/dos.o -o $BuildDir/DOS/dos.bin -fbin -ls $SrcDir/DOS/DOS.conf
+& $linker -i $BuildDir/DOS/dos.o -o $BuildDir/DOS/dos.bin -fbin -ls $SrcDir/DOS/DOS.conf -fbin
 & $linker -i $BuildDir/Bootloader/stage1/newBootloader.o -o $BuildDir/Bootloader/stage1/Bootloader.bin -fbin -ls $SrcDir/Bootloader/stage1/stage1.conf
 & $linker -i $BuildDir/Bootloader/stage2/stage2.o $BuildDir/Bootloader/stage2/main.o -o $BuildDir/Bootloader/stage2/stage2.bin -fbin -ls $SrcDir/Bootloader/stage2/stage2.conf
 

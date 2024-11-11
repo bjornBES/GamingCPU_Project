@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {
+    "net7.0": {
       "OpenTK/4.8.2": {
         "type": "package",
         "dependencies": {
@@ -232,7 +232,7 @@
       },
       "ConsoleGameEngine/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
+        "framework": ".NETCoreApp,Version=v7.0",
         "compile": {
           "bin/placeholder/ConsoleGameEngine.dll": {}
         },
@@ -248,6 +248,16 @@
         },
         "runtime": {
           "bin/placeholder/filesystem.dll": {}
+        }
+      },
+      "HexLibrary/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/HexLibrary.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/HexLibrary.dll": {}
         }
       }
     }
@@ -470,13 +480,19 @@
       "type": "project",
       "path": "../fileSystem/filesystem.csproj",
       "msbuildProject": "../fileSystem/filesystem.csproj"
+    },
+    "HexLibrary/1.0.0": {
+      "type": "project",
+      "path": "../HexLibrary/HexLibrary.csproj",
+      "msbuildProject": "../HexLibrary/HexLibrary.csproj"
     }
   },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": [
+    "net7.0": [
       "BFDCG12 >= 1.0.0",
       "CommonBCGCPU >= 1.0.0",
       "ConsoleGameEngine >= 1.0.0",
+      "HexLibrary >= 1.0.0",
       "OpenTK >= 4.8.2",
       "OpenTK.Audio.OpenAL >= 4.8.2"
     ]
@@ -498,15 +514,15 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "netcoreapp3.1"
+        "net7.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "projectReferences": {
             "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BFDCG12\\BFDCG12.csproj": {
               "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\BFDCG12\\BFDCG12.csproj"
@@ -516,6 +532,9 @@
             },
             "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj": {
               "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\ConsoleGameEngine\\ConsoleGameEngine.csproj"
+            },
+            "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj": {
+              "projectPath": "C:\\Users\\bjorn\\Desktop\\VideoProjects\\GamingCPU_Project\\HexLibrary\\HexLibrary.csproj"
             }
           }
         }
@@ -527,8 +546,8 @@
       }
     },
     "frameworks": {
-      "netcoreapp3.1": {
-        "targetAlias": "netcoreapp3.1",
+      "net7.0": {
+        "targetAlias": "net7.0",
         "dependencies": {
           "OpenTK": {
             "target": "Package",

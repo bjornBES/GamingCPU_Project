@@ -8,8 +8,6 @@ namespace BC16CPUEmulator
 {
     public class Memory
     {
-        public const uint MemBankEndAddress = 0x008_0000;
-
         public const uint TotalMemorySize = 16 * 1024 * 1024;               // 16 MB
         public const uint InterruptRoutineCount = 0xFF;
         public const uint AllInterruptRoutineSize = 1024;
@@ -34,11 +32,7 @@ namespace BC16CPUEmulator
         {
             Address MemAddr = pAddress;
 
-            if (MemAddr >= 0 && MemAddr <= 0x200 - 1)
-            {
-                return 0;
-            }
-            else if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == 0x00)
+            if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == 0x00)
             {
                 MemAddr = MemAddr & 0x00FFFF;
             }
@@ -47,10 +41,7 @@ namespace BC16CPUEmulator
                 MemAddr = MemAddr & 0xFFFFFF;
             }
 
-            if (MemAddr >= 0 && MemAddr <= 0x200 - 1)
-            {
-            }
-            else if (MemAddr >= 0 && MemAddr <= MemorySize)
+            if (MemAddr >= 0 && MemAddr <= MemorySize)
             {
                 return readByteMemory(MemAddr, 0);
             }
@@ -85,11 +76,7 @@ namespace BC16CPUEmulator
         {
             Address MemAddr = pAddress;
 
-            if (pAddress >= 0x1000 && pAddress <= 0x1200 - 1)
-            {
-                return null;
-            }
-            else if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == 0x00)
+            if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == 0x00)
             {
                 MemAddr = MemAddr & 0x00FFFF;
             }
@@ -98,10 +85,7 @@ namespace BC16CPUEmulator
                 MemAddr = MemAddr & 0xFFFFFF;
             }
 
-            if (MemAddr >= 0x1000 && MemAddr <= 0x1200 - 1)
-            {
-            }
-            else if (MemAddr >= 0 && MemAddr <= MemorySize)
+            if (MemAddr >= 0 && MemAddr <= MemorySize)
             {
                 return m_Mem[(int)MemAddr..(MemAddr + count)];
             }
@@ -114,10 +98,7 @@ namespace BC16CPUEmulator
         {
             Address MemAddr = 0x00010000;
 
-            if (MemAddr >= 0x1000 && MemAddr <= 0x1200 - 1)
-            {
-            }
-            else if (MemAddr >= 0 && MemAddr <= MemorySize)
+            if (MemAddr >= 0 && MemAddr <= MemorySize)
             {
                 return m_Mem[(int)MemAddr..(MemAddr + count)];
             }
@@ -132,11 +113,7 @@ namespace BC16CPUEmulator
             byte[] byteData = new byte[] { data };
             Address MemAddr = pAddress;
 
-            if (MemAddr >= 0x1000 && MemAddr <= 0x1200 - 1)
-            {
-                return;
-            }
-            else if (MemAddr >= 0 && MemAddr <= MemorySize)
+            if (MemAddr >= 0 && MemAddr <= MemorySize)
             {
                 writeByteMemory(MemAddr, 0, byteData);
             }
@@ -170,11 +147,7 @@ namespace BC16CPUEmulator
             byte[] byteData = data;
             Address MemAddr = pAddress;
 
-            if (MemAddr >= 0 && MemAddr <= 0x200 - 1)
-            {
-                return;
-            }
-            else if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == 0x00)
+            if ((m_bUS.m_CPU.m_CR0 & BC16CPU_Registers.CR0_EnableExtendedMode) == 0x00)
             {
                 MemAddr = MemAddr & 0x00FFFF;
                 pAddress = pAddress & 0x00FFFF;
@@ -185,11 +158,7 @@ namespace BC16CPUEmulator
                 pAddress = pAddress & 0xFFFFFF;
             }
 
-            if (MemAddr >= 0 && MemAddr <= 0x200 - 1)
-            {
-                return;
-            }
-            else if (MemAddr >= 0 && MemAddr <= MemorySize)
+            if (MemAddr >= 0 && MemAddr <= MemorySize)
             {
                 for (int i = 0; i < data.Length; i++)
                 {

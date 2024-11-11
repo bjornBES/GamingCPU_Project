@@ -14,30 +14,6 @@ namespace BCGLinker
         List<Memory> memories = new List<Memory>();
         List<Section> sections = new List<Section>();
 
-        string testSrc =
-    @$"ENTRY(_BIOSStart)
-OUTPUTFORMAT(""binary"")
-address = 0x1200
-MAP(""./map.map"")
-
-MEMORY
-{{
-    CODE:       start = 0x1200, size = 0x6A00,  type = RW
-    BOOTLOADER: start = 0x7C00, size = 0x0200,  type = RW
-    VAR:        start = 0x7E00, size = 0x1200,  type = RW
-    DATA:       start = 0x9000, size = 0x7000,  type = RW
-}}
-
-SECTIONS
-{{
-    TEXT:       load = CODE,        start-symbol = __CODE,      file = ""%O""
-    Stack:      load = CODE,        start-symbol = __STACK,     end-symbol = __ENDSTACK
-    Bootloader: load = BOOTLOADER,  start-symbol = __BOOTLOADER
-    Ram:        load = VAR
-    BSS:        start = .
-    DATA:       load = DATA
-}}";
-
         string[] m_src;
 
         public Linker m_Linker;
@@ -53,7 +29,7 @@ SECTIONS
             build();
         }
 
-                            int oldOffset;
+        int oldOffset;
         void build()
         {
             for (int i = 0; i < m_src.Length; i++)
@@ -107,7 +83,7 @@ SECTIONS
 
                             int start = offset;
                             int size = 0x100;
-                            type type = type.ReadWrite;
+                            Type type = Type.ReadWrite;
 
                             for (int e = 0; e < lines.Length; e++)
                             {
@@ -136,7 +112,7 @@ SECTIONS
                                     {
                                         if (segments[2].Contains("RW", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            type = type.ReadWrite;
+                                            type = Type.ReadWrite;
                                         }
                                     }
                                 }
@@ -252,6 +228,7 @@ SECTIONS
 
                             sections.Add(new Section()
                             {
+                                OutputFile = file,
                                 m_Name = name,
                                 m_Size = size,
                                 m_Start = start,
@@ -290,6 +267,10 @@ SECTIONS
                     if (format.StartsWith("binary", StringComparison.OrdinalIgnoreCase))
                     {
                         LinkerSettings.OutputFormat = OutputFormats.bin;
+                    }
+                    if (format.StartsWith("fbinary", StringComparison.OrdinalIgnoreCase))
+                    {
+                        LinkerSettings.OutputFormat = OutputFormats.fbin;
                     }
                 }
                 else if (line.Contains("MAP", StringComparison.OrdinalIgnoreCase))

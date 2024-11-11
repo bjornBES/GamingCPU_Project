@@ -8,12 +8,12 @@ Start	Size		Name                     File
 007c	0004		IRQ15                    
 0090	0004		INT10h                   
 0094	0004		INT13h                   
-1200	6a00		TEXT                     
+1000	6c00		TEXT                     
 7c00	0200		Bootloader               
 7e00	0200		Stack                    
 8000	0e00		BSS                      
 9000	5000		DATA                     
-e000	2000		RODATA                   
+1000	6c00		RODATA                   
 
 Name                                         Address	Section             File
 
@@ -24,81 +24,81 @@ _IRQ1                                        00000044	IRQ1
 _IRQ15                                       0000007c	IRQ15               
 _INT10h                                      00000090	INT10h              
 _INT13h                                      00000094	INT13h              
-__CODE                                       00001200	TEXT                %O
+__CODE                                       00001000	TEXT                %O
 __BOOTLOADER                                 00007c00	Bootloader          
 __STACK                                      00007e00	Stack               
 __ENDSTACK                                   00008000	Stack               
 __STARTBSS                                   00008000	BSS                 
 __ENDBSS                                     00008e00	BSS                 
-__STARTDATA                                  00009000	DATA                %O
-__ENDDATA                                    0000e000	DATA                %O
-__STARTRODATA                                0000e000	RODATA              %O
-__ENDRODATA                                  00010000	RODATA              %O
-_BIOSStart                                   00001200	TEXT                \src\BIOS\src\BIOS.acl
-OtherBIOS                                    0000122c	TEXT                \src\BIOS\src\BIOS.acl
-FindBootDiskLoop                             00001293	TEXT                \src\BIOS\src\BIOS.acl
-SetArguments                                 000012a4	TEXT                \src\BIOS\src\BIOS.acl
-Exit_FindDiskLoop                            00001307	TEXT                \src\BIOS\src\BIOS.acl
-EndOfBIOS                                    00001311	TEXT                \src\BIOS\src\BIOS.acl
-ShowBIOS                                     00001356	TEXT                \src\BIOS\src\BIOS.acl
-BreakPoint                                   00001356	TEXT                \src\BIOS\src\BIOS.acl
-BreakpointLoop                               0000137c	TEXT                \src\BIOS\src\BIOS.acl
-JMPErrorLoop                                 000013e8	TEXT                \src\BIOS\src\BIOS_errors.acl
-Error_Invalid_BootDisk                       000013ab	TEXT                \src\BIOS\src\BIOS_errors.acl
-Error_Invalid_Instruction                    000013b7	TEXT                \src\BIOS\src\BIOS_errors.acl
-PrintError                                   000013ef	TEXT                \src\BIOS\src\BIOS_errors.acl
-ErrorMSG                                     00001404	TEXT                \src\BIOS\src\BIOS_errors.acl
-ErrorMSGend                                  0000140a	TEXT                \src\BIOS\src\BIOS_errors.acl
-ErrorMSGLength                               0000140a	TEXT                \src\BIOS\src\BIOS_errors.acl
-Error_Invalid_InstructionMSG                 0000140c	TEXT                \src\BIOS\src\BIOS_errors.acl
-Error_Invalid_InstructionEnd                 00001423	TEXT                \src\BIOS\src\BIOS_errors.acl
-Error_Invalid_InstructionLength              00001423	TEXT                \src\BIOS\src\BIOS_errors.acl
+__STARTDATA                                  00009000	DATA                
+__ENDDATA                                    0000e000	DATA                
+__STARTRODATA                                00001000	RODATA              %O
+__ENDRODATA                                  00007c00	RODATA              %O
+_BIOSStart                                   00001000	TEXT                \src\BIOS\src\BIOS.acl
+OtherBIOS                                    0000102c	TEXT                \src\BIOS\src\BIOS.acl
+FindBootDiskLoop                             00001093	TEXT                \src\BIOS\src\BIOS.acl
+SetArguments                                 000010a4	TEXT                \src\BIOS\src\BIOS.acl
+Exit_FindDiskLoop                            00001107	TEXT                \src\BIOS\src\BIOS.acl
+EndOfBIOS                                    00001111	TEXT                \src\BIOS\src\BIOS.acl
+ShowBIOS                                     00001156	TEXT                \src\BIOS\src\BIOS.acl
+BreakPoint                                   00001156	TEXT                \src\BIOS\src\BIOS.acl
+BreakpointLoop                               0000117c	TEXT                \src\BIOS\src\BIOS.acl
+JMPErrorLoop                                 000011e8	TEXT                \src\BIOS\src\BIOS_errors.acl
+Error_Invalid_BootDisk                       000011ab	TEXT                \src\BIOS\src\BIOS_errors.acl
+Error_Invalid_Instruction                    000011b7	TEXT                \src\BIOS\src\BIOS_errors.acl
+PrintError                                   000011ef	TEXT                \src\BIOS\src\BIOS_errors.acl
+ErrorMSG                                     00001204	TEXT                \src\BIOS\src\BIOS_errors.acl
+ErrorMSGend                                  0000120a	TEXT                \src\BIOS\src\BIOS_errors.acl
+ErrorMSGLength                               0000120a	TEXT                \src\BIOS\src\BIOS_errors.acl
+Error_Invalid_InstructionMSG                 0000120c	TEXT                \src\BIOS\src\BIOS_errors.acl
+Error_Invalid_InstructionEnd                 00001223	TEXT                \src\BIOS\src\BIOS_errors.acl
+Error_Invalid_InstructionLength              00001223	TEXT                \src\BIOS\src\BIOS_errors.acl
 CharBuffer                                   00008000	BSS                 \src\BIOS\src\BIOS_errors.acl
-PrintStr                                     00001425	TEXT                \src\BIOS\src\IOFunctions.acl
-PrintStrLoop                                 00001429	TEXT                \src\BIOS\src\IOFunctions.acl
-ExitPrintStr                                 00001452	TEXT                \src\BIOS\src\IOFunctions.acl
-ReadCharKey                                  00001458	TEXT                \src\BIOS\src\IOFunctions.acl
-Read_Sector                                  0000145f	TEXT                \src\BIOS\src\IOFunctions.acl
-ExitReadSector                               000014b7	TEXT                \src\BIOS\src\IOFunctions.acl
-LBAtoCHS                                     000014bf	TEXT                \src\BIOS\src\IOFunctions.acl
-LBAtoCHS32                                   00001523	TEXT                \src\BIOS\src\IOFunctions.acl
-COut                                         00001553	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
-EndOfLoad                                    00001583	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
-NewLine                                      000015a0	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
-ExitCout                                     000015b6	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
-GetCursorAddress                             000015c3	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
-Metadata                                     00001744	TEXT                \src\BIOS\src\FDDController.acl
-Buffer                                       00001722	TEXT                \src\BIOS\src\FDDController.acl
-InitializeDrive                              000015f4	TEXT                \src\BIOS\src\FDDController.acl
-Read_Data                                    0000162f	TEXT                \src\BIOS\src\FDDController.acl
-Write_Data                                   00001682	TEXT                \src\BIOS\src\FDDController.acl
-Format                                       000016d1	TEXT                \src\BIOS\src\FDDController.acl
-WaitForMSR                                   0000170b	TEXT                \src\BIOS\src\FDDController.acl
-Format_Head                                  00001729	TEXT                \src\BIOS\src\FDDController.acl
-Format_TotalTracks                           0000172a	TEXT                \src\BIOS\src\FDDController.acl
-Format_TotalSector                           0000172c	TEXT                \src\BIOS\src\FDDController.acl
-Format_SectorsPerTrack                       0000172c	TEXT                \src\BIOS\src\FDDController.acl
-Format_BytesPerSector                        0000172d	TEXT                \src\BIOS\src\FDDController.acl
-InitBuffer                                   00001744	TEXT                \src\BIOS\src\Keyboard.acl
-WriteBuffer                                  0000175a	TEXT                \src\BIOS\src\Keyboard.acl
-ReadBuffer                                   0000177f	TEXT                \src\BIOS\src\Keyboard.acl
-BufferSize                                   000017b1	TEXT                \src\BIOS\src\Keyboard.acl
-EnableCLS                                    000017c6	TEXT                \src\BIOS\src\Keyboard.acl
-CharIn                                       000017ce	TEXT                \src\BIOS\src\Keyboard.acl
-nopeKey                                      000017e8	TEXT                \src\BIOS\src\Keyboard.acl
+PrintStr                                     00001225	TEXT                \src\BIOS\src\IOFunctions.acl
+PrintStrLoop                                 00001229	TEXT                \src\BIOS\src\IOFunctions.acl
+ExitPrintStr                                 00001252	TEXT                \src\BIOS\src\IOFunctions.acl
+ReadCharKey                                  00001258	TEXT                \src\BIOS\src\IOFunctions.acl
+Read_Sector                                  0000125f	TEXT                \src\BIOS\src\IOFunctions.acl
+ExitReadSector                               000012b7	TEXT                \src\BIOS\src\IOFunctions.acl
+LBAtoCHS                                     000012bf	TEXT                \src\BIOS\src\IOFunctions.acl
+LBAtoCHS32                                   00001323	TEXT                \src\BIOS\src\IOFunctions.acl
+COut                                         00001353	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
+EndOfLoad                                    00001383	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
+NewLine                                      000013a0	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
+ExitCout                                     000013b6	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
+GetCursorAddress                             000013c3	TEXT                \src\BIOS\src\BIOS_VideoDriver.acl
+Metadata                                     00001544	TEXT                \src\BIOS\src\FDDController.acl
+Buffer                                       00001522	TEXT                \src\BIOS\src\FDDController.acl
+InitializeDrive                              000013f4	TEXT                \src\BIOS\src\FDDController.acl
+Read_Data                                    0000142f	TEXT                \src\BIOS\src\FDDController.acl
+Write_Data                                   00001482	TEXT                \src\BIOS\src\FDDController.acl
+Format                                       000014d1	TEXT                \src\BIOS\src\FDDController.acl
+WaitForMSR                                   0000150b	TEXT                \src\BIOS\src\FDDController.acl
+Format_Head                                  00001529	TEXT                \src\BIOS\src\FDDController.acl
+Format_TotalTracks                           0000152a	TEXT                \src\BIOS\src\FDDController.acl
+Format_TotalSector                           0000152c	TEXT                \src\BIOS\src\FDDController.acl
+Format_SectorsPerTrack                       0000152c	TEXT                \src\BIOS\src\FDDController.acl
+Format_BytesPerSector                        0000152d	TEXT                \src\BIOS\src\FDDController.acl
+InitBuffer                                   00001544	TEXT                \src\BIOS\src\Keyboard.acl
+WriteBuffer                                  0000155a	TEXT                \src\BIOS\src\Keyboard.acl
+ReadBuffer                                   0000157f	TEXT                \src\BIOS\src\Keyboard.acl
+BufferSize                                   000015b1	TEXT                \src\BIOS\src\Keyboard.acl
+EnableCLS                                    000015c6	TEXT                \src\BIOS\src\Keyboard.acl
+CharIn                                       000015ce	TEXT                \src\BIOS\src\Keyboard.acl
+nopeKey                                      000015e8	TEXT                \src\BIOS\src\Keyboard.acl
 ReadPtrVar                                   00008008	BSS                 \src\BIOS\src\Keyboard.acl
 WritePtrVar                                  0000800a	BSS                 \src\BIOS\src\Keyboard.acl
 KeyboardBuffer                               0000800c	BSS                 \src\BIOS\src\Keyboard.acl
-BIOS_IRQ_Interrupt                           000017ee	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-KeyBoardIRQ                                  000017f0	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-NotInBoot                                    00001829	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-BIOS_Interrupt13h                            00001833	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-BIOS_Interrupt10h                            0000184d	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-readkey                                      00001865	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-printchar                                    0000186c	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-IntLBAToCHS                                  00001873	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-EEMLBAToCHS32                                00001896	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
-readsector                                   000018a0	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+BIOS_IRQ_Interrupt                           000015ee	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+KeyBoardIRQ                                  000015f0	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+NotInBoot                                    00001629	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+BIOS_Interrupt13h                            00001633	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+BIOS_Interrupt10h                            0000164d	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+readkey                                      00001665	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+printchar                                    0000166c	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+IntLBAToCHS                                  00001673	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+EEMLBAToCHS32                                00001696	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
+readsector                                   000016a0	TEXT                \src\BIOS\src\BIOS_Interrupt_Pointer.acl
 DriveNumber                                  0000810c	BSS                 \src\BIOS\src\BIOS.acl
 ReceivedIRQ                                  0000810d	BSS                 \src\BIOS\src\BIOS.acl
 IsF12                                        0000810e	BSS                 \src\BIOS\src\BIOS.acl
@@ -108,15 +108,15 @@ EReg                                         00008113	BSS                 \src\B
 ScreenHeight                                 00008117	BSS                 \src\BIOS\src\BIOS.acl
 ScreenWidth                                  00008119	BSS                 \src\BIOS\src\BIOS.acl
 KeyBoardChar                                 0000811b	BSS                 \src\BIOS\src\BIOS.acl
-BreakPointMSG                                0000e000	RODATA              \src\BIOS\src\BIOS.acl
-BreakPointMSGEnd                             0000e013	RODATA              \src\BIOS\src\BIOS.acl
-BreakPointMSGLength                          0000e013	RODATA              \src\BIOS\src\BIOS.acl
-StartMSG                                     0000e015	RODATA              \src\BIOS\src\BIOS.acl
-StartMSGEnd                                  0000e019	RODATA              \src\BIOS\src\BIOS.acl
-StartMSGLength                               0000e019	RODATA              \src\BIOS\src\BIOS.acl
-Error_Invalid_BootDisk_Str                   0000e01d	RODATA              \src\BIOS\src\BIOS.acl
-Error_Invalid_BootDisk_Strend                0000e038	RODATA              \src\BIOS\src\BIOS.acl
-Error_Invalid_BootDisk_StrLength             0000e038	RODATA              \src\BIOS\src\BIOS.acl
-INFOMSG_FoundBootableDisk                    0000e03a	RODATA              \src\BIOS\src\BIOS.acl
-INFOMSG_FoundBootableDiskEnd                 0000e048	RODATA              \src\BIOS\src\BIOS.acl
-INFOMSG_FoundBootableDiskLength              0000e048	RODATA              \src\BIOS\src\BIOS.acl
+BreakPointMSG                                00001000	RODATA              \src\BIOS\src\BIOS.acl
+BreakPointMSGEnd                             00001013	RODATA              \src\BIOS\src\BIOS.acl
+BreakPointMSGLength                          00001013	RODATA              \src\BIOS\src\BIOS.acl
+StartMSG                                     00001015	RODATA              \src\BIOS\src\BIOS.acl
+StartMSGEnd                                  00001019	RODATA              \src\BIOS\src\BIOS.acl
+StartMSGLength                               00001019	RODATA              \src\BIOS\src\BIOS.acl
+Error_Invalid_BootDisk_Str                   0000101d	RODATA              \src\BIOS\src\BIOS.acl
+Error_Invalid_BootDisk_Strend                00001038	RODATA              \src\BIOS\src\BIOS.acl
+Error_Invalid_BootDisk_StrLength             00001038	RODATA              \src\BIOS\src\BIOS.acl
+INFOMSG_FoundBootableDisk                    0000103a	RODATA              \src\BIOS\src\BIOS.acl
+INFOMSG_FoundBootableDiskEnd                 00001048	RODATA              \src\BIOS\src\BIOS.acl
+INFOMSG_FoundBootableDiskLength              00001048	RODATA              \src\BIOS\src\BIOS.acl

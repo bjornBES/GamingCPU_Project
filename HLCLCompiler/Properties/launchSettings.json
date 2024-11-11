@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "HLCLCompiler": {
+      "commandName": "Project",
+      "commandLineArgs": "-i ./src/HLCL/testprogram.hlcl -o ./src/HLCL/output.txt",
+      "workingDirectory": "./.."
+    }
+  }
+}

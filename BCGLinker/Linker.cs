@@ -42,6 +42,7 @@ namespace BCGLinker
 
         public void BuildSrc(string src)
         {
+
             LinkerSettings.Debug = true;
             m_Output.Clear();
             m_i = 0;
@@ -76,9 +77,11 @@ namespace BCGLinker
                     tempList.AddRange(m_Output_ARRAY);
                     break;
                 case OutputFormats.fbin:
+                    DebugWriter.Writeline("Output Format Bin");
+                    tempList.AddRange(m_Output_ARRAY);
+                    break;
                 case OutputFormats.bin:
                     DebugWriter.Writeline("Output Format Bin");
-                    // tempList.Add("_TEXT SECTION".PadRight(16, '\0'));
                     tempList.AddRange(m_Output_ARRAY);
                     break;
                 default:
@@ -310,8 +313,11 @@ namespace BCGLinker
             }
             else if (line.StartsWith("_OFF_"))
             {
-                int offset = Convert.ToInt32(line.Replace("_OFF_ ", ""), 16);
-                m_pc = offset;
+                if (LinkerSettings.OutputFormat == OutputFormats.bin)
+                {
+                    int offset = Convert.ToInt32(line.Replace("_OFF_ ", ""), 16);
+                    m_pc = offset;
+                }
             }
             else if (line.StartsWith("_RES_"))
             {
@@ -508,6 +514,24 @@ namespace BCGLinker
             if (Mask == "ML")
             {
                 address = address & 0x0000FFFF;
+            }
+
+            if (LinkerSettings.OutputFormat == OutputFormats.fbin && m_hasAllLabel)
+            {
+                for (int i = 0; i < m_Sections.Count; i++)
+                {
+                    if (m_Sections[i].InSection(address))
+                    {
+                        if (m_Sections[i].OutputFile != "")
+                        {
+                            if (address >= m_Sections[m_currentSectionIndex].m_Start)
+                            {
+                                address -= m_Sections[m_currentSectionIndex].m_Start;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             if (rel == true)
@@ -711,6 +735,10 @@ namespace BCGLinker
         string getPCHex(Section section)
         {
             uint address = (uint)m_pc;
+            if (LinkerSettings.OutputFormat == OutputFormats.fbin)
+            {
+                address -= (uint)section.m_Start;
+            }
             return Convert.ToString(address, 16).PadLeft(8, '0');
         }
 

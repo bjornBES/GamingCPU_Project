@@ -1,7 +1,8 @@
 Sections:
 Start	Size		Name                     File
 
-80000	50000		TEXT                     
+80000	80000		TEXT                     
+100000	1000		IDT                      
 f50000	10000		Stack                    
 f60000	50000		BSS                      
 f60000	50000		DATA                     
@@ -10,6 +11,7 @@ fb0000	50000		RODATA
 Name                                         Address	Section             File
 
 __CODESTART                                  00080000	TEXT                %O
+IDT_Start                                    00100000	IDT                 %O
 __STACKSTART                                 00f50000	Stack               
 __STACKEND                                   00f60000	Stack               
 __BSSSTART                                   00f60000	BSS                 

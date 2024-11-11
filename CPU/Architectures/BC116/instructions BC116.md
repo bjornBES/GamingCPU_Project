@@ -162,6 +162,7 @@
 - `0x3092`: JLE:    address                 `Jumps to the specified address if the equal flag or the less flag is set`
 - `0x3093`: JGE:    address                 `Jumps to the specified address if the equal flag is set or the less flag is cleared`
 - `0x30A1`: JNV:    address                 `Jumps to the specified address if the overflow flag is cleared`
+- `0x30B0`: LOOP    address                 `Jumps to the specified address if the C register is zero(0)`
 
 # Convert instructions
 
@@ -170,7 +171,9 @@
 # Memory Operations instructions
 
 - `0x4010`: CMPL:                           `Compares the memory address value in HL and DS:B for C times and updates the flags register`
-- `0x4020`: MOVF:   destination, immediate  `moves a float from the specified immediate to the float register(destination)`
+- `0x4020`: LODR                            `moves the contents in memory from DS:B to HL for C times`
+  - `where DS:B as the source and HL as the destination and where C is the count`
+- `0x4030`: MOVF:   destination, immediate  `moves a float from the specified immediate to the float register(destination)`
 
 # Special instructions
 

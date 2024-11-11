@@ -165,8 +165,7 @@ in Protected extended mode the CPU will get [here](../BCG%20arch%20Specs.md#prot
 |Base Address |Size       |Name                     |Description
 |-------------|-----------|-------------------------|-
 |`0x0000_0000`|`0x00_1000`| Interrupt vector table  | Interrupt vector table more [here](#interrupt-vector-table)
-|`0x0000_1000`|`0x00_0200`| IO ports                | this is where the Ports is at
-|`0x0000_1200`|`0x00_EE00`| RAM                     | RAM in the first segment
+|`0x0000_1000`|`0x00_F000`| RAM                     | RAM in the first segment
 |`0x0001_0000`|`0x02_0000`| VRAM                    | video ram
 |`0x0003_0000`|`0xFD_0000`| RAM                     | RAM
 

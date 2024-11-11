@@ -1,0 +1,15 @@
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.csproj.AssemblyReference.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.AssemblyInfoInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.AssemblyInfo.cs
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.csproj.CoreCompileInputs.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\bin\Debug\net7.0\HLCLCompiler.exe
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\bin\Debug\net7.0\HLCLCompiler.deps.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\bin\Debug\net7.0\HLCLCompiler.runtimeconfig.json
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\bin\Debug\net7.0\HLCLCompiler.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\bin\Debug\net7.0\HLCLCompiler.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\refint\HLCLCompiler.dll
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.pdb
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\HLCLCompiler.genruntimeconfig.cache
+C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\HLCLCompiler\obj\Debug\net7.0\ref\HLCLCompiler.dll
