@@ -2,29 +2,43 @@
   "prog": [
     {
       "stmt": {
-        "name": "main",
-        "arguments": [],
-        "LineNumber": 8,
+        "name": "add",
+        "arguments": [
+          {
+            "Name": "a",
+            "Type": {
+              "Kind": 0,
+              "IsArith": true,
+              "IsIntegral": true,
+              "IsScalar": true,
+              "IsComplete": true,
+              "SizeOf": 0,
+              "Alignment": 0
+            },
+            "ArgumentIndex": 0
+          }
+        ],
+        "LineNumber": 5,
         "stmts": [
           {
             "stmt": {
-              "name": "_byte",
+              "name": "test",
               "type": {
                 "Kind": 0,
                 "IsArith": true,
                 "IsIntegral": true,
                 "IsScalar": true,
                 "IsComplete": true,
-                "SizeOf": 1,
-                "Alignment": 1
+                "SizeOf": 0,
+                "Alignment": 0
               },
               "expr": {
                 "expr": {
                   "term": {
                     "value": {
-                      "Kind": 2,
-                      "Val": 10,
-                      "m_Line": 6
+                      "Kind": 5,
+                      "Val": "a",
+                      "m_Line": 4
                     }
                   }
                 }
@@ -32,6 +46,32 @@
               "OperatorVal": 29
             }
           },
+          {
+            "stmt": {
+              "name": "RetResult",
+              "expr": {
+                "expr": {
+                  "term": {
+                    "value": {
+                      "Kind": 5,
+                      "Val": "test",
+                      "m_Line": 5
+                    }
+                  }
+                }
+              },
+              "OperatorVal": 29
+            }
+          }
+        ]
+      }
+    },
+    {
+      "stmt": {
+        "name": "main",
+        "arguments": [],
+        "LineNumber": 38,
+        "stmts": [
           {
             "stmt": {
               "name": "ptrByte",
@@ -41,8 +81,8 @@
                 "IsIntegral": false,
                 "IsScalar": true,
                 "IsComplete": true,
-                "SizeOf": 4,
-                "Alignment": 4
+                "SizeOf": 5,
+                "Alignment": 5
               },
               "expr": {
                 "expr": {
@@ -50,7 +90,7 @@
                     "value": {
                       "Kind": 2,
                       "Val": 1000,
-                      "m_Line": 7
+                      "m_Line": 11
                     }
                   }
                 }
@@ -60,18 +100,100 @@
           },
           {
             "stmt": {
-              "name": "array",
-              "type": {
-                "Kind": 9,
-                "IsArith": false,
-                "IsIntegral": false,
-                "IsScalar": false,
-                "IsComplete": true,
-                "SizeOf": 10,
-                "Alignment": 1
+              "name": "*ptrByte",
+              "expr": {
+                "expr": {
+                  "term": {
+                    "value": {
+                      "Kind": 2,
+                      "Val": 16,
+                      "m_Line": 13
+                    }
+                  }
+                }
               },
-              "expr": null,
-              "OperatorVal": 0
+              "OperatorVal": 29
+            }
+          },
+          {
+            "stmt": {
+              "name": "_byte",
+              "type": {
+                "Kind": 0,
+                "IsArith": true,
+                "IsIntegral": true,
+                "IsScalar": true,
+                "IsComplete": true,
+                "SizeOf": 0,
+                "Alignment": 0
+              },
+              "expr": {
+                "expr": {
+                  "term": {
+                    "value": {
+                      "Kind": 2,
+                      "Val": 10,
+                      "m_Line": 35
+                    }
+                  }
+                }
+              },
+              "OperatorVal": 29
+            }
+          },
+          {
+            "stmt": {
+              "name": "add",
+              "args": [
+                {
+                  "expr": {
+                    "term": {
+                      "value": {
+                        "Kind": 2,
+                        "Val": 16,
+                        "m_Line": 37
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "stmt": {
+              "name": "returnResult",
+              "type": {
+                "Kind": 0,
+                "IsArith": true,
+                "IsIntegral": true,
+                "IsScalar": true,
+                "IsComplete": true,
+                "SizeOf": 0,
+                "Alignment": 0
+              },
+              "expr": {
+                "expr": {
+                  "term": {
+                    "stmtCall": {
+                      "name": "add",
+                      "args": [
+                        {
+                          "expr": {
+                            "term": {
+                              "value": {
+                                "Kind": 2,
+                                "Val": 16,
+                                "m_Line": 38
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "OperatorVal": 29
             }
           }
         ]

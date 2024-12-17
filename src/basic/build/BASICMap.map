@@ -1,30 +1,58 @@
 Sections:
 Start	Size		Name                     File
 
-b0000	50000		RODATA                   
-b0000	50000		TEXT                     
-f50000	10000		Stack                    
-fb0000	10000		BSS                      
-f60000	50000		DATA                     
+0000	60000		TEXT                     
+a0000	50000		BSS                      
+a0000	50000		DATA                     
+70000	10000		BASICSRC                 
 
 Name                                         Address	Section             File
 
-__RODATASTART                                000b0000	RODATA              %O
-__RODATAEND                                  00100000	RODATA              %O
-__STACKSTART                                 00f50000	Stack               
-__STACKEND                                   00f60000	Stack               
-__BSSSTART                                   00fb0000	BSS                 
-__BSSEND                                     00fc0000	BSS                 
-__DATASTART                                  00f60000	DATA                
-__DATAEND                                    00fb0000	DATA                
-Entry                                        000b0000	TEXT                \src\basic\src\basic\basic.acl
-PrintLoop                                    000b0022	TEXT                \src\basic\src\basic\basic.acl
-ExitPrintLoop                                000b003e	TEXT                \src\basic\src\basic\basic.acl
-Message                                      000b0043	TEXT                \src\basic\src\basic\basic.acl
-GetResolution                                000b004f	TEXT                \src\basic\src\basic\display.acl
-PrintC                                       000b0073	TEXT                \src\basic\src\basic\display.acl
-PutC                                         000b00b5	TEXT                \src\basic\src\basic\display.acl
-CursorX                                      000b00d9	TEXT                \src\basic\src\basic\display.acl
-CursorY                                      000b00db	TEXT                \src\basic\src\basic\display.acl
-ScreenHeight                                 000b00dd	TEXT                \src\basic\src\basic\display.acl
-ScreenWidth                                  000b00df	TEXT                \src\basic\src\basic\display.acl
+__START_TEXT__                               00000000	TEXT                %O
+__END_TEXT__                                 00060000	TEXT                %O
+__SIZE_TEXT__                                00060000	TEXT                %O
+__BSSSTART                                   000a0000	BSS                 
+__BSSEND                                     000f0000	BSS                 
+__SIZE_BSS__                                 000f0000	BSS                 
+__DATASTART                                  000a0000	DATA                
+__DATAEND                                    000f0000	DATA                
+__SIZE_DATA__                                000f0000	DATA                
+__START_BASICSRC__                           00070000	BASICSRC            
+__END_BASICSRC__                             000f0000	BASICSRC            
+__SIZE_BASICSRC__                            00080000	BASICSRC            
+Entry                                        00000000	TEXT                /src/basic/src/Basic.acl
+GetResolution                                000001b0	TEXT                /src/basic/src/display.acl
+PrintC                                       000001d1	TEXT                /src/basic/src/display.acl
+PrintStr                                     000001eb	TEXT                /src/basic/src/display.acl
+PrintStrLoop                                 000001fb	TEXT                /src/basic/src/display.acl
+PrintStrExit                                 00000210	TEXT                /src/basic/src/display.acl
+Let                                          00000218	TEXT                /src/basic/src/Commands/Vars.acl
+Help                                         00000218	TEXT                /src/basic/src/Commands/help.acl
+Run                                          00000218	TEXT                /src/basic/src/Commands/Run.acl
+TranslationTable                             000a0028	DATA                /src/basic/src/TokenTable.acl
+AddressTable                                 000a003e	DATA                /src/basic/src/TokenTable.acl
+Parse                                        00000222	TEXT                /src/basic/src/Parser.acl
+ParseLoop                                    0000024c	TEXT                /src/basic/src/Parser.acl
+ParseLoopExit                                0000024c	TEXT                /src/basic/src/Parser.acl
+GetCommand                                   0000024e	TEXT                /src/basic/src/Parser.acl
+GetCommandLoop                               0000025a	TEXT                /src/basic/src/Parser.acl
+GetCommandExitB                              0000027d	TEXT                /src/basic/src/Parser.acl
+GetCommandExit                               00000286	TEXT                /src/basic/src/Parser.acl
+TranslateCommand                             0000028e	TEXT                /src/basic/src/Parser.acl
+TranslateCommandLoop                         0000029c	TEXT                /src/basic/src/Parser.acl
+TranslateCommandExit                         000002af	TEXT                /src/basic/src/Parser.acl
+IsCommand                                    000002de	TEXT                /src/basic/src/Parser.acl
+ExitFunction                                 000002ef	TEXT                /src/basic/src/Parser.acl
+BasicSrcIndex                                000a000c	BSS                 /src/basic/src/Parser.acl
+Buffer                                       000a000e	BSS                 /src/basic/src/Parser.acl
+Generate                                     000002fc	TEXT                /src/basic/src/Generator.acl
+GenCommandAddress                            0000030c	TEXT                /src/basic/src/Generator.acl
+GenCommandLoop                               00000312	TEXT                /src/basic/src/Generator.acl
+GenCommandExit                               0000032b	TEXT                /src/basic/src/Generator.acl
+Message                                      0000033d	TEXT                /src/basic/src/Basic.acl
+ParsedBuffer                                 000a0018	BSS                 /src/basic/src/Basic.acl
+CursorX                                      000a0018	BSS                 /src/basic/src/Basic.acl
+CursorY                                      000a001a	BSS                 /src/basic/src/Basic.acl
+ScreenHeight                                 000a001c	BSS                 /src/basic/src/Basic.acl
+ScreenWidth                                  000a001e	BSS                 /src/basic/src/Basic.acl
+ParserIndex                                  000a0020	BSS                 /src/basic/src/Basic.acl

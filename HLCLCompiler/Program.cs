@@ -15,6 +15,8 @@ public class Program : ArgumentFunctions
         {"-e", DoNotEntry },
 
         {"-cpu", SetCPUType },
+
+        {"-d", Debug },
     };
 
     public delegate void VoidFunction(string[] args);

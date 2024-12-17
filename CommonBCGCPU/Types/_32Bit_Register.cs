@@ -134,6 +134,10 @@ namespace CommonBCGCPU.Types
             return a;
         }
 
+        public static implicit operator _32Bit_Register(ulong value)
+        {
+            return new _32Bit_Register((uint)value);
+        }
         public static implicit operator _32Bit_Register(uint value)
         {
             return new _32Bit_Register(value);

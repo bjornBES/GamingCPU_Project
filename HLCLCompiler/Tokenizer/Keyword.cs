@@ -15,6 +15,7 @@ namespace HLCLCompiler.Tokenizer {
         CONST,
         CONTINUE,
         FOR,
+        CALL,
         DEFAULT,
         GOTO,
         SIZEOF,
@@ -45,6 +46,7 @@ namespace HLCLCompiler.Tokenizer {
         public override TokenKind Kind { get; } = TokenKind.KEYWORD;
         public KeywordVal Val { get; }
         public static Dictionary<string, KeywordVal> Keywords { get; } = new Dictionary<string, KeywordVal>(StringComparer.InvariantCultureIgnoreCase) {
+            { "CALL",       KeywordVal.CALL         },            
             { "INT",        KeywordVal.INT          },
             { "STRUCT",     KeywordVal.STRUCT       },
             { "BREAK",      KeywordVal.BREAK        },
@@ -71,8 +73,9 @@ namespace HLCLCompiler.Tokenizer {
             { "DO",         KeywordVal.DO           },
             { "IF",         KeywordVal.IF           },
             { "WHILE",      KeywordVal.WHILE        },
+            
             { "FUNCTION",   KeywordVal.FUNCTION     },
-            { "AS",         KeywordVal.AS           },
+            { "FUNC",       KeywordVal.FUNCTION     },
 
             { "__SHORT__",  KeywordVal.SHORTPTR     },
             { "__FAR__",    KeywordVal.FARPTR       },

@@ -1,0 +1,12 @@
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/bin/Debug/net8.0/ConsoleGameEngine.deps.json
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/bin/Debug/net8.0/ConsoleGameEngine.dll
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/bin/Debug/net8.0/ConsoleGameEngine.pdb
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ConsoleGameEngine.GeneratedMSBuildEditorConfig.editorconfig
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ConsoleGameEngine.AssemblyInfoInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ConsoleGameEngine.AssemblyInfo.cs
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ConsoleGameEngine.csproj.CoreCompileInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ConsoleGameEngine.sourcelink.json
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ConsoleGameEngine.dll
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/refint/ConsoleGameEngine.dll
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ConsoleGameEngine.pdb
+/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/Debug/net8.0/ref/ConsoleGameEngine.dll

@@ -1,24 +1,24 @@
 {
   "profiles": {
-    "AssemblerBCG": {
+    "Assemble BASIC": {
       "commandName": "Project",
       "workingDirectory": "./..",
-      "commandLineArgs": "-i ./CPU/src/ACL/TestProgram.acl -o ./CPU/src/ACL/bin/TestProgram.o"
+      "commandLineArgs": "-i ./src/basic/src/Basic.acl -o ./src/basic/build/Basic.o"
     },
     "Assemble BIOS": {
       "commandName": "Project",
       "workingDirectory": "./..",
-      "commandLineArgs": "-i ./src/BIOS/src/BIOS.acl -o ./src/Builds/BIOS.o"
+      "commandLineArgs": "-i ./src/BIOS/src/BIOS.acl -o ./src/BIOS/Builds/BIOS.o"
+    },
+    "AssemblerBCG": {
+      "commandName": "Project",
+      "workingDirectory": "./..",
+      "commandLineArgs": "-i ./CPU/src/ACL/TestProgram.acl -o ./CPU/src/ACL/bin/TestProgram.o"
     },
     "Assemble DOS": {
       "commandName": "Project",
       "workingDirectory": "./..",
       "commandLineArgs": "-i ./CPU/src/DOS/src/Bootloader/bootloader.acl -o ./CPU/src/DOS/Build/bootloader.o"
     },
-    "Assemble Bootloader": {
-      "commandName": "Project",
-      "workingDirectory": "./..",
-      "commandLineArgs": "-i ./src/DOS/src/Bootloader/stage2/stage2.acl -o ./src/DOS/build/Bootloader/stage2/stage2.o"
-    }
   }
 }

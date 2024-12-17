@@ -20,13 +20,13 @@ Start:
 .section TEXT
 
 Jmp:
-    mov     AX,                 FAR @__DATASTART
+    mov     AX,                 FAR @__START_DATA__
     mov     EDS,                AX
     mov     EES,                AX
     mov     EFS,                AX
     mov     EGS,                AX
     mov     EHS,                AX
-    mov     ESS,                FAR @__STACKSTART
+    mov     ESS,                FAR @__START_STACK__
 
     push    DX                                  ; pushing the argument
     ; now it protected mode arguments take 4 bytes

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ja0pXzGSp2pE0ZvKVgc5DHaoTjJYpUJ5TWn19JveWrx0D5i1wHCpHKUwZyLqYQ1hi6vsKZ1k539MZehMfYP1vg==",
+  "dgSpecHash": "Pfo42gfQ4yz/tnPoqfZDeaBE1wyZe98uI7Z+pnndogWPLLnRubvw6Fp7bpyv2/cHrOHVcdkkUP06QKFIy88eig==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/DesassemblerBCG16/DisAssemblerBCG16.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/DesassemblerBCG16/DisAssemblerBCG16.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512",

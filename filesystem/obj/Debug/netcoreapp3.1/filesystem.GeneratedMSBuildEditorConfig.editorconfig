@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = filesystem
+build_property.ProjectDir = /home/bjornbes/projects/GamingCPU_Project/fileSystem/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

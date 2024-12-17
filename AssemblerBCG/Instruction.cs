@@ -163,7 +163,8 @@ public enum OLdInstruction : ushort
     CBTA =      0x4000,
 
     CMPL =      0x4010,
-    MOVF =      0x4020,
+    LOOR =      0x4020,
+    MOVF =      0x4030,
     
     RETI =      0xF000,
     NOP =       0xF010,
@@ -317,6 +318,7 @@ public class OldInstructions
             { OLdInstruction.CBTA,          new OldInstructionInfo(2,OLdInstruction.CBTA, CPUType.BC16)},
             
             { OLdInstruction.CMPL,          new OldInstructionInfo(0,OLdInstruction.CMPL, CPUType.BC8)},
+            { OLdInstruction.LOOR,          new OldInstructionInfo(0,OLdInstruction.LOOR, CPUType.BC8)},
             { OLdInstruction.MOVF,          new OldInstructionInfo(2,OLdInstruction.MOVF, CPUType.BC16)},
 
             { OLdInstruction.OUTB,          new OldInstructionInfo(2,OLdInstruction.OUTB, CPUType.BC8)},

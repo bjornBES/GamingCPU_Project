@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Format Bin file": {
+      "commandName": "Project",
+      "workingDirectory": "../",
+      "commandLineArgs": "-o ./src/DOS/disk.bin -O -S 0x81"
+    },
+    "filesystem": {
+      "commandName": "Project",
+      "workingDirectory": "./",
+      "commandLineArgs": "./floppy.bin ./hdd.bin"
+    },
+  }
+}

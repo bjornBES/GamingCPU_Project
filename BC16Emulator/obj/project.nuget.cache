@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YQ6iA5pgLirFGCPvBbvCt/kGNH/E3B5YBoxZSGtLf31qpxAHn2wS8N5NST1tMX22mnYzBRC9efTlsu0D2U3gaw==",
+  "dgSpecHash": "AcWMaF5Nn5sL0mxkNBxLncwfURnGNhxPLpgT3OzxEc6R1AyK/w9KhUxd/X9nrrcq+rniesZVswEw1EGF4UB7Qg==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BC16Emulator/BC16Emulator.csproj",
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
   "expectedPackageFiles": [
     "/home/bjornbes/.nuget/packages/opentk/4.8.2/opentk.4.8.2.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/opentk.audio.openal/4.8.2/opentk.audio.openal.4.8.2.nupkg.sha512",
@@ -15,10 +15,7 @@
     "/home/bjornbes/.nuget/packages/opentk.windowing.common/4.8.2/opentk.windowing.common.4.8.2.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/opentk.windowing.desktop/4.8.2/opentk.windowing.desktop.4.8.2.nupkg.sha512",
     "/home/bjornbes/.nuget/packages/opentk.windowing.graphicslibraryframework/4.8.2/opentk.windowing.graphicslibraryframework.4.8.2.nupkg.sha512",
-    "/home/bjornbes/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
-    "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
-    "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512",
-    "/home/bjornbes/.nuget/packages/microsoft.netcore.app.host.linux-x64/7.0.20/microsoft.netcore.app.host.linux-x64.7.0.20.nupkg.sha512"
+    "/home/bjornbes/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }

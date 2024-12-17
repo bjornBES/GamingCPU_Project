@@ -34,6 +34,7 @@ public class CompilerSettings
     public static string m_InputFile = "\0";
     public static string m_OutputFile = "./CCLOutput.txt";
     public static string m_ProjectPath;
+    public static bool m_Debug = false;
 
     public static bool m_DoEntry = true;
 

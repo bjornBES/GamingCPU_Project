@@ -246,6 +246,17 @@ namespace BCGLinker
                                     m_File = file
                                 });
                             }
+                            else
+                            {
+                                m_Linker.m_Labels.Add(new Label()
+                                {
+                                    m_Address = start,
+                                    m_IsGlobal = true,
+                                    m_Section = sections.Last(),
+                                    m_Name = $"__START_{name}__".ToUpper(),
+                                    m_File = file
+                                });
+                            }
                             if (endSymbol != "")
                             {
                                 m_Linker.m_Labels.Add(new Label()
@@ -257,6 +268,25 @@ namespace BCGLinker
                                     m_File = file
                                 });
                             }
+                            else
+                            {
+                                m_Linker.m_Labels.Add(new Label()
+                                {
+                                    m_Address = offset + start,
+                                    m_IsGlobal = true,
+                                    m_Section = sections.Last(),
+                                    m_Name = $"__END_{name}__".ToUpper(),
+                                    m_File = file
+                                });
+                            }
+                            m_Linker.m_Labels.Add(new Label()
+                            {
+                                m_Address = offset,
+                                m_IsGlobal = true,
+                                m_Section = sections.Last(),
+                                m_Name = $"__SIZE_{name}__".ToUpper(),
+                                m_File = file
+                            });
                         }
                     }
                 }

@@ -38,7 +38,6 @@ namespace _BFDCG12
         public ushort m_MasterStatusRegister;
         public ushort m_DataRateSelectRegister;
         public ushort m_DataRegister;
-        ushort m_bufferIndex;
 
         ushort m_commandRegister;
 
@@ -131,7 +130,6 @@ namespace _BFDCG12
 
         public void Reset()
         {
-            m_bufferIndex = 0;
             m_commandRegister = 0;
 
             InterruptIndex = 0x00;            // IRQ0

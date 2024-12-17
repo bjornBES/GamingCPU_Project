@@ -1,0 +1,88 @@
+
+.section TEXT
+
+Parse:
+    pushr
+    mov             ES,                 HIGH @__START_BASICSRC__
+    mov             DS,                 HIGH @Buffer
+    mov             FS,                 HIGH @ParsedBuffer
+
+    sez             B
+    mov             [ParserIndex],      B
+    sez             HL
+    mov             [BasicSrcIndex],    HL
+
+ParseLoop:
+
+
+
+ParseLoopExit:
+    
+
+
+    retz
+
+GetCommand:
+    mov             C,                  LOW @Buffer
+    mov             B,                  far [BasicSrcIndex]
+GetCommandLoop:
+    cmp             C,                  %TokenCommandLength
+    je              [GetCommandExit]
+    
+    mov             AL,                 [ES:B]
+    jz              [GetCommandExitB]
+    inc             B
+    mov             [DS:C],             AL
+    inc             C
+    jmp             [GetCommandLoop]
+
+GetCommandExitB:
+    inc             C
+    mov             [DS:C],             0
+GetCommandExit:
+    mov             far [BasicSrcIndex],B
+
+TranslateCommand:
+    push            B
+    mov             HL,                 far @TranslationTable
+    sez             B
+TranslateCommandLoop:
+    cmpl
+    ; MEM[HL..HL+C] == MEM[[DS:B]..[DS:B + C]]
+    je              [TranslateCommandExit]
+    add             HL,                 %EntrySize
+    jmp             [TranslateCommandLoop]
+TranslateCommandExit:
+    add             HL,                 %TokenCommandLength
+    mov             A,                  word [HL]
+    mov             R2,                 far [ParserIndex]
+    cmp             A,                  0xFFFF
+    jne             [IsCommand]
+
+    mov             B,                      C
+    dec             C
+    swap            H,                      FS
+    swap            L,                      R2
+    LOOR
+
+IsCommand:
+    mov             [FS:R2],            A
+    pop             B
+    mov             far [BasicSrcIndex],B
+ExitFunction:
+    inc             R2
+    mov             [ParserIndex],      R2
+    retz
+
+
+.section BSS
+
+BasicSrcIndex:
+.resw
+
+.local Buffer
+Buffer:
+.res %TokenCommandLength
+.section TEXT
+
+

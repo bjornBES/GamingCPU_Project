@@ -1,0 +1,13 @@
+#inc    "./IO.ccl"
+#inc    "./filesystem.ccl"
+
+SECTION:DATA
+       :extern func StartDos()
+
+SECTION:STRING
+       :DOSFileName "DOS        BIN  "
+
+SECTION:TEXT
+1000000:func cstart(word drive).                                        \\
+1001000:far uint DOSAddresss=&StartDos.asm("sez\tSP").asm("jmp\t[HL]"). \\
+1001010:endfunc.                                                        \\

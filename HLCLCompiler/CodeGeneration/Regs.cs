@@ -9,6 +9,8 @@ namespace HLCLCompiler.CodeGeneration
         CX,
         DX,
 
+        HL,
+
         SP,
         BP
     }
@@ -26,6 +28,8 @@ namespace HLCLCompiler.CodeGeneration
                     return "CX";
                 case Regs.DX:
                     return "DX";
+                case Regs.HL:
+                    return "HL";
                 case Regs.SP:
                     return "SP";
                 case Regs.BP:

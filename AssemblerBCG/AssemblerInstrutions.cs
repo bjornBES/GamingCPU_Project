@@ -159,7 +159,9 @@ namespace AssemblerBCG
                     {
                         argument2data = result;
                     }
+
                 }
+                //Console.WriteLine($"argument {argument}, argumentMode {argumentMode} with {result}");
 
                 switch (argumentMode)
                 {
@@ -192,7 +194,7 @@ namespace AssemblerBCG
                     case ArgumentModeOld.BPX_rel_address_int:
                         if (argumentMode == ArgumentModeOld.register)
                         {
-                            sizeAlignment = GetAlignmentFromRegister((Register)Convert.ToInt16(argument1data, 16)) + 1;
+                            sizeAlignment = GetAlignmentFromRegister((Register)Convert.ToInt16(result, 16)) + 1;
                         }
                         if (data != null)
                         {
@@ -203,7 +205,7 @@ namespace AssemblerBCG
                     case ArgumentModeOld.segment_address:
                     case ArgumentModeOld.segment_DS_register:
                     case ArgumentModeOld.segment_ES_register:
-                        Console.WriteLine($"data = {data[0]} {m_file}:{Linenumber}");
+                        //Console.WriteLine($"data = {data[0]} {m_file}:{Linenumber} as {argumentMode}");
                         Register segment = Enum.Parse<Register>(data[0].Split(':')[0], true);
                         Register offset = Enum.Parse<Register>(data[0].Split(':')[1], true);
 

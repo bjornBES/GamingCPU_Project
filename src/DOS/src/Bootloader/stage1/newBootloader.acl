@@ -142,7 +142,7 @@ Stage2_Name:
 .db "STAGE2",0,0,0,0,0
 .db "BIN",0,0
 
-.org 0x7DFE
+.section Boot
 .dw 0x55AA
 
 .section Stage2

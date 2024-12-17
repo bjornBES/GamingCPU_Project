@@ -98,7 +98,7 @@
         public static extern Int32 SetCurrentConsoleFontEx(
         IntPtr ConsoleOutput,
         bool MaximumWindow,
-        ref CONSOLE_FONT_INFO_EX ConsoleCurrentFontEx);
+        ref CONSOLE_FONT_INFO_EX ConsoleCurrentFoantEx);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);

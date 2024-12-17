@@ -1,29 +1,42 @@
 Sections:
 Start	Size		Name                     File
 
-100000	50000		TEXT                     
+80000	80000		TEXT                     
+100000	1000		IDT                      
 f50000	10000		Stack                    
 f60000	50000		BSS                      
 f60000	50000		DATA                     
+fb0000	50000		RODATA                   
 
 Name                                         Address	Section             File
 
-__CODESTART                                  00100000	TEXT                %O
+__CODESTART                                  00080000	TEXT                %O
+__END_TEXT__                                 00180000	TEXT                %O
+__SIZE_TEXT__                                00100000	TEXT                %O
+IDT_Start                                    00100000	IDT                 %O
+__END_IDT__                                  00201000	IDT                 %O
+__SIZE_IDT__                                 00101000	IDT                 %O
 __STACKSTART                                 00f50000	Stack               
 __STACKEND                                   00f60000	Stack               
+__SIZE_Stack__                               00f60000	Stack               
 __BSSSTART                                   00f60000	BSS                 
 __BSSEND                                     00fb0000	BSS                 
+__SIZE_BSS__                                 00fb0000	BSS                 
 __DATASTART                                  00f60000	DATA                %O
 __DATAEND                                    00fb0000	DATA                %O
-DriveIndex                                   00f60000	BSS                 \CPU\src\DOS\src\DOS\dos.acl
-Entry                                        00100000	TEXT                \CPU\src\DOS\src\DOS\dos.acl
-_GetFileHandler                              00100018	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-FindFileLoop                                 0010002f	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-_GetEntres                                   00100041	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-MoveEntryesLoop                              0010005f	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-ExitMoveEntryes                              0010007f	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-_GetEntry                                    00100089	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-GetEntryLoop                                 0010009f	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-_ReadRootDirectory                           001000c0	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-_ReadSector                                  001000e5	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
-Buffer                                       00100111	TEXT                \CPU\src\DOS\src\DOS\Filesystem.acl
+__SIZE_DATA__                                00fb0000	DATA                %O
+__RODATASTART                                00fb0000	RODATA              %O
+__RODATAEND                                  01000000	RODATA              %O
+__SIZE_RODATA__                              01000000	RODATA              %O
+Entry                                        00080000	TEXT                /src/DOS/src/DOS/dos.acl
+DriveIndex                                   00f60000	BSS                 /src/DOS/src/DOS/dos.acl
+_GetFileHandler                              00080515	TEXT                /src/DOS/src/DOS/Filesystem.acl
+FindFileLoop                                 0008052c	TEXT                /src/DOS/src/DOS/Filesystem.acl
+_GetEntres                                   0008053e	TEXT                /src/DOS/src/DOS/Filesystem.acl
+MoveEntryesLoop                              0008055c	TEXT                /src/DOS/src/DOS/Filesystem.acl
+ExitMoveEntryes                              00080580	TEXT                /src/DOS/src/DOS/Filesystem.acl
+_GetEntry                                    0008058a	TEXT                /src/DOS/src/DOS/Filesystem.acl
+GetEntryLoop                                 000805a0	TEXT                /src/DOS/src/DOS/Filesystem.acl
+_ReadRootDirectory                           000805c1	TEXT                /src/DOS/src/DOS/Filesystem.acl
+_ReadSector                                  000805e6	TEXT                /src/DOS/src/DOS/Filesystem.acl
+Buffer                                       00080612	TEXT                /src/DOS/src/DOS/Filesystem.acl

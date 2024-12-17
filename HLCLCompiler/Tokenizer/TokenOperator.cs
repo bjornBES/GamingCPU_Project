@@ -160,7 +160,9 @@ namespace HLCLCompiler.Tokenizer
             '|',
             ';',
             '{',
-            '}'
+            '}',
+            'e',
+            'q'
             );
 
         private State _state;

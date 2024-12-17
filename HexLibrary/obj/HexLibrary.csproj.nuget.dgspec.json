@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj": {}
+    "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {}
   },
   "projects": {
-    "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj": {
+    "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj",
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
         "projectName": "HexLibrary",
-        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/HexLibrary.csproj",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
         "packagesPath": "/home/bjornbes/.nuget/packages/",
-        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/HexLibrary/obj/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bjornbes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net8.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -35,8 +35,8 @@
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "imports": [
             "net461",
             "net462",
@@ -48,22 +48,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[7.0.20, 7.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[7.0.20, 7.0.20]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.111/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,19 +1,19 @@
 {
   "profiles": {
-    "Compiler": {
-      "commandName": "Project",
-      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL",
-      "workingDirectory": "./.."
-    },
     "Test Compiler": {
       "commandName": "Project",
-      "commandLineArgs": "-i ./src/CCL/testprogram.CCL -o ./src/ACL/CCLOutput.acl -cpu BC16",
+      "commandLineArgs": "-i ./src/CCL/testprogram.CCL -o ./src/CCL/CCLOutput.acl -cpu BC16",
       "workingDirectory": "./.."
     },
     "Test Bootloader": {
       "commandName": "Project",
       "commandLineArgs": "-i ./src/DOS/src/Bootloader/stage2/main.ccl -o ./src/DOS/Build/Bootloader/stage2/CCL/main.acl -cpu BC16CE",
       "workingDirectory": "./.."
-    }
+    },
+    "Compiler": {
+      "commandName": "Project",
+      "commandLineArgs": "-i ./CPU/src/CCL/testprogram.CCL",
+      "workingDirectory": "./.."
+    },
   }
 }

@@ -441,6 +441,10 @@ namespace Compiler
                     peek().Value.m_Type != TokenType.end && peek(1).HasValue && peek().Value.m_Type != TokenType.function)
                 {
                     parse_Stmt();
+                    if (ExitNow)
+                    {
+                        return;
+                    }
                 }
                 try_consume_error(TokenType.end);
                 try_consume_error(TokenType.function);
@@ -901,12 +905,12 @@ namespace Compiler
 
                     if (m_lineNumber.Contains(linenumber))
                     {
-                        Console.WriteLine($"Error: two lines can't have the same line number {linenumber}");
+                        Console.WriteLine($"Error: two lines can't have the same line number {peek().Value.m_File}:{linenumber}");
                     }
 
                     try_consume_error(TokenType.colon);
                     m_lineNumber.Add(linenumber);
-                    addLine($"L{linenumber}:", 0);
+                    //addLine($"L{linenumber}:", 0);
                     m_lineNumbers.Add(linenumber);
                     return;
                 }
@@ -934,7 +938,7 @@ namespace Compiler
                     }
                     else
                     {
-                        Error_expected(peek(-1).Value, m_lineNumbers.ToArray(), "name");
+                        Error_expected(peek(-1).Value, m_lineNumbers.Last(), "name");
                     }
                 }
                 else if (peek().Value.m_Type == TokenType.at && peek(1).HasValue && peek(1).Value.m_Type == TokenType.ident)
@@ -990,6 +994,7 @@ namespace Compiler
                 else
                 {
                     errorStmtNotFound();
+                    return;
                 }
             }
             else if (m_section == Section._string)
@@ -1007,6 +1012,7 @@ namespace Compiler
                 else
                 {
                     errorStmtNotFound();
+                    return;
                 }
             }
             else if (m_section == Section.data) // BSS
@@ -1040,21 +1046,24 @@ namespace Compiler
                 else
                 {
                     errorStmtNotFound();
+                    return;
                 }
             }
+            return;
         }
 
         void errorStmtNotFound()
         {
-            Console.WriteLine($"-1 = {peek(-1).Value} at {peek(-1).Value.m_File}:{peek(-1).Value.m_Line}");
-            Console.WriteLine($"Need parsing for {peek().Value} at {peek().Value.m_File}:{peek().Value.m_Line}");
-            Console.WriteLine($"1 =  {peek(1).Value} at {peek(1).Value.m_File}:{peek(1).Value.m_Line}");
 
-            Environment.Exit(1);
+            Error_StmtNotFound(peek(-1).Value, m_lineNumbers.Last());
+            ExitNow = true;
+
+            // Environment.Exit(1);
         }
-
+        bool ExitNow;
         public void Parse_Prog(Token[] tokens, string[] src)
         {
+            ExitNow = false;
             addLine($".setcpu \"{m_CPUType}\"", 0);
             addLine($".section TEXT", 0);
             m_tokens = tokens;
@@ -1062,6 +1071,11 @@ namespace Compiler
             while (peek().HasValue)
             {
                 parse_Stmt();
+
+                if (ExitNow)
+                {
+                    break;
+                }
             }
 
             addLine($".local __RODATASTRAT__", 0);
@@ -1116,8 +1130,9 @@ namespace Compiler
             {
                 return consume();
             }
-            Error_expected(peek(-1).Value, m_lineNumbers.ToArray(), type);
-            throw new NotImplementedException("yes do it you lazy ass implement it now");
+            m_index++;
+            Error_expected(peek(-1).Value, m_lineNumbers.Last(), type);
+            return new Token();
         }
         #endregion
 

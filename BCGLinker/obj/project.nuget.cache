@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0lFtnPziLgmww9U+UkPmxtufO5B4TUhuPnw5i8aJ8aVuPy3CLjL7heTJxVnbg3JdcwUfL8/FqD2L43eZB/6E1Q==",
+  "dgSpecHash": "8bAH9wqPZXyMSNGXfPnPjfeUlLWkrIYFnEnOU02zQUNKlbhHDZqnHyd/3UNfNw9NBzNQmuXRofSVEnk7w2vKdQ==",
   "success": true,
-  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCG Projcet/BCGLinker/BCGLinker.csproj",
-  "expectedPackageFiles": [
-    "/home/bjornbes/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
-    "/home/bjornbes/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512",
-    "/home/bjornbes/.nuget/packages/microsoft.netcore.app.host.linux-x64/7.0.20/microsoft.netcore.app.host.linux-x64.7.0.20.nupkg.sha512"
-  ],
+  "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/BCGLinker/BCGLinker.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

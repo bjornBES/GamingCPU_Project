@@ -19,8 +19,8 @@ namespace HLCLCompiler.Tokenizer
             FSAs = ImmutableList.Create<FSA>(
                 new FSAFloat(),
                 new FSAInt(),
-                new FSAIdentifier(),
                 new FSAOperator(),
+                new FSAIdentifier(),
                 new FSASpace(),
                 new FSANewLine(),
                 new FSACharConst(),

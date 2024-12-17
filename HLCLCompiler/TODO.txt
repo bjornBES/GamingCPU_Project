@@ -1,0 +1,4 @@
+- [X] Make parse function declaration
+- [X] Make function declaration generaton
+- [] Make parse indexing
+

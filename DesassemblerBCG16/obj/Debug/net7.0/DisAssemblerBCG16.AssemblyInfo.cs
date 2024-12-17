@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DisAssemblerBCG16")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3e0ac7c15bc4f6ab199ae5e11fb31b1c0cae539")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2246ed57c55969643e1d21f497a6e7e2bbf816de")]
 [assembly: System.Reflection.AssemblyProductAttribute("DisAssemblerBCG16")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DisAssemblerBCG16")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

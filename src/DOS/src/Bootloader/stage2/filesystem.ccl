@@ -1,0 +1,19 @@
+#inc    "./console.ccl"
+
+SECTION:DATA
+       :Sector RES 0x400
+       :extern func ACLAsmReadSector(byte d,byte h,word t,word s,far byte d)
+
+SECTION:STRING
+       :MessERS "Error white reading a sector"
+
+SECTION:TEXT
+2000000:func ReadRoot(word drive).                                      \\
+2000005:call ACLAsmReadSector(drive, 0, 0, 3, &Sector).                 \\
+2000010:asm("cmp\tAX,\t1").asm("je\t[L2020500]").                       \\
+2009000:endfunc.                                                        \\
+
+2020500:func ErrorRS().                                                 \\
+2020501:display(&MessERS).asm("jmp\t[L9000000]").endfunc.               \\
+
+9000000:asm("jmp\t[L9000000]").                                         \\

@@ -2,59 +2,62 @@ INCLUDE HEADER
 
 
 SECTION HEADER
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_DATA C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_BSS /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_DATA /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL L0000000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _OUT,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L0000001,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL Exit_OUT,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L0000002,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _IN,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL Exit_IN,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L0000010,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _diplay,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L0000049,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL Exit_diplay,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _ACLAsmReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L2000000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _ReadRoot,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L2000005,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L2000010,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L2009000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL Exit_ReadRoot,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L2020500,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _ErrorRS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L2020501,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL Exit_ErrorRS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L9000000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _DOSSTART,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L1000000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL _cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L1001000,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL L1001010,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL Exit_cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL __RODATASTRAT__,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL MessERS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL DOSFileName,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL Sector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_REF_ LABEL __DATASTRAT__,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL _ACLAsmWriteChar,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000010,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _diplay,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000048,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_diplay,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000049,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ColorOut,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000050,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_ColorOut,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000051,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _Cout,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000052,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_Cout,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ACLAsmReadSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2000000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ReadRoot,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2000005,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2000010,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2009000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_ReadRoot,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2020500,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ErrorRS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2020501,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_ErrorRS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L9000000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _StartDos,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L1000000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _cstart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L1001000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L1001010,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_cstart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL __RODATASTRAT__,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL MessERS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL DOSFileName,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Sector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL __DATASTRAT__,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 
 
 TEXT HEADER
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl"
 _NEWLINE_
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
-_REF_ LABEL L0000000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
 _NEWLINE_
-_REF_ LABEL _OUT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000010 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_REF_ LABEL _diplay /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -64,37 +67,7 @@ _DEL_ pushr
 f0
 20
 _NEWLINE_
-_DEL_ mov R2, [BP - 10]
-02
-08
-10
-41
-_NEWARG_ R2
-50
-_NEWARG_ [BP - 10]
-f0
-_NEWLINE_
-_DEL_ mov R3, [BP - 14]
-02
-08
-10
-41
-_NEWARG_ R3
-90
-_NEWARG_ [BP - 14]
-ec
-_NEWLINE_
-_DEL_ outb R2, R3
-10
-00
-10
-10
-_NEWARG_ R2
-50
-_NEWARG_ R3
-90
-_NEWLINE_
-_REF_ LABEL L0000001 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L0000048 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ mov R16, 0
 02
@@ -108,132 +81,7 @@ _NEWARG_ 0
 00
 00
 _NEWLINE_
-_REF_ LABEL Exit_OUT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_DEL_ popr
-f0
-30
-_NEWLINE_
-_DEL_ leave
-f0
-70
-_NEWLINE_
-_DEL_ mov AX, R16
-00
-00
-1b
-10
-_NEWARG_ AX
-_NEWARG_ R16
-d3
-_NEWLINE_
-_DEL_ ret 8
-08
-00
-00
-_NEWARG_ 8
-08
-_NEWLINE_
-_REF_ LABEL L0000002 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_REF_ LABEL _IN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_DEL_ enter
-f0
-60
-_NEWLINE_
-_DEL_ pushr
-f0
-20
-_NEWLINE_
-_DEL_ mov R2, [BP - 10]
-02
-08
-10
-41
-_NEWARG_ R2
-50
-_NEWARG_ [BP - 10]
-f0
-_NEWLINE_
-_DEL_ inb R2, AX
-10
-10
-10
-1b
-_NEWARG_ R2
-50
-_NEWARG_ AX
-_NEWLINE_
-_DEL_ mov R16, AX
-03
-00
-10
-1b
-_NEWARG_ R16
-d3
-_NEWARG_ AX
-_NEWLINE_
-_DEL_ jmp [Exit_IN]
-30
-00
-32
-_NEWARG_ [Exit_IN]
-_SL_Exit_IN
-_NEWLINE_
-_REF_ LABEL Exit_IN C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_DEL_ popr
-f0
-30
-_NEWLINE_
-_DEL_ leave
-f0
-70
-_NEWLINE_
-_DEL_ mov AX, R16
-00
-00
-1b
-10
-_NEWARG_ AX
-_NEWARG_ R16
-d3
-_NEWLINE_
-_DEL_ ret 4
-08
-00
-00
-_NEWARG_ 4
-04
-_NEWLINE_
-_REF_ LABEL L0000010 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_REF_ LABEL _diplay C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_DEL_ enter
-f0
-60
-_NEWLINE_
-_DEL_ pushr
-f0
-20
-_NEWLINE_
-_REF_ LABEL L0000049 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_DEL_ mov R16, 0
-02
-08
-10
-02
-_NEWARG_ R16
-d3
-_NEWARG_ 0
-00
-00
-00
-_NEWLINE_
-_REF_ LABEL Exit_diplay C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL Exit_diplay /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -259,10 +107,9 @@ _DEL_ ret 16
 _NEWARG_ 16
 16
 _NEWLINE_
+_REF_ LABEL L0000049 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_REF_ LABEL L2000000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
-_NEWLINE_
-_REF_ LABEL _ReadRoot C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL _ColorOut /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -272,7 +119,203 @@ _DEL_ pushr
 f0
 20
 _NEWLINE_
-_REF_ LABEL L2000005 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_NEWLINE_
+_DEL_ mov AX, [BP - 14]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 10]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ call far [_ACLAsmWriteChar]
+07
+00
+34
+_NEWARG_ far [_ACLAsmWriteChar]
+_FL__ACLAsmWriteChar
+_NEWLINE_
+_REF_ LABEL L0000050 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov R16, 0
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_ColorOut /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ mov AX, R16
+00
+00
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+_NEWARG_ 8
+08
+_NEWLINE_
+_REF_ LABEL L0000051 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_REF_ LABEL _Cout /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_DEL_ mov AX, 0x55
+03
+01
+03
+_NEWARG_ AX
+_NEWARG_ 0x55
+00
+00
+00
+55
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 14]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 10]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ call far [_ACLAsmWriteChar]
+07
+00
+34
+_NEWARG_ far [_ACLAsmWriteChar]
+_FL__ACLAsmWriteChar
+_NEWLINE_
+_REF_ LABEL L0000052 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov R16, 0
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_Cout /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ mov AX, R16
+00
+00
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ ret 4
+08
+00
+00
+_NEWARG_ 4
+04
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL L2000000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_REF_ LABEL _ReadRoot /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_REF_ LABEL L2000005 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov HL, Sector
@@ -368,7 +411,7 @@ _DEL_ call far [_ACLAsmReadSector]
 _NEWARG_ far [_ACLAsmReadSector]
 _FL__ACLAsmReadSector
 _NEWLINE_
-_REF_ LABEL L2000010 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L2000010 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ cmp AX, 1
 04
@@ -388,7 +431,7 @@ _DEL_ je [L2020500]
 _NEWARG_ [L2020500]
 _SL_L2020500
 _NEWLINE_
-_REF_ LABEL L2009000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L2009000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ mov R16, 0
 02
@@ -402,7 +445,7 @@ _NEWARG_ 0
 00
 00
 _NEWLINE_
-_REF_ LABEL Exit_ReadRoot C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL Exit_ReadRoot /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -428,9 +471,9 @@ _DEL_ ret 8
 _NEWARG_ 8
 08
 _NEWLINE_
-_REF_ LABEL L2020500 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L2020500 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_REF_ LABEL _ErrorRS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL _ErrorRS /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -440,7 +483,7 @@ _DEL_ pushr
 f0
 20
 _NEWLINE_
-_REF_ LABEL L2020501 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L2020501 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ push HL
 05
@@ -515,7 +558,7 @@ _NEWARG_ 0
 00
 00
 _NEWLINE_
-_REF_ LABEL Exit_ErrorRS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL Exit_ErrorRS /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -538,7 +581,7 @@ _DEL_ retz
 09
 00
 _NEWLINE_
-_REF_ LABEL L9000000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L9000000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ jmp [L9000000]
 30
@@ -548,9 +591,9 @@ _NEWARG_ [L9000000]
 _SL_L9000000
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL L1000000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L1000000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_REF_ LABEL _cstart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL _cstart /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -560,17 +603,17 @@ _DEL_ pushr
 f0
 20
 _NEWLINE_
-_REF_ LABEL L1001000 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L1001000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_DEL_ mov HL, far @_DOSSTART
+_DEL_ mov HL, far @_StartDos
 00
 00
 10
 03
 _NEWARG_ HL
 c7
-_NEWARG_ far @_DOSSTART
-_FL__DOSSTART
+_NEWARG_ far @_StartDos
+_FL__StartDos
 _NEWLINE_
 _DEL_ push HL
 05
@@ -592,7 +635,7 @@ _DEL_ jmp [HL]
 21
 _NEWARG_ [HL]
 _NEWLINE_
-_REF_ LABEL L1001010 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL L1001010 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ mov R16, 0
 02
@@ -606,7 +649,7 @@ _NEWARG_ 0
 00
 00
 _NEWLINE_
-_REF_ LABEL Exit_cstart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL Exit_cstart /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -633,9 +676,9 @@ _NEWARG_ 8
 08
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL __RODATASTRAT__ C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL __RODATASTRAT__ /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_REF_ LABEL MessERS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL MessERS /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 45
 72
@@ -667,7 +710,7 @@ _NEWLINE_
 72
 00
 _NEWLINE_
-_REF_ LABEL DOSFileName C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL DOSFileName /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 44
 4f
@@ -682,7 +725,7 @@ _NEWLINE_
 _NEWLINE_
 _SECTION_ BSS
 _NEWLINE_
-_REF_ LABEL Sector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL Sector /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _RES_ 1024
 _NEWLINE_
@@ -690,5 +733,6 @@ _NEWLINE_
 _SECTION_ DATA
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL __DATASTRAT__ C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\build\Bootloader\stage2\CCL\main.acl
+_REF_ LABEL __DATASTRAT__ /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
 _NEWLINE_

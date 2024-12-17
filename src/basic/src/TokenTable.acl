@@ -1,0 +1,29 @@
+.section DATA
+
+$TokenCommandLength = 0xA
+$EntrySize = 2 + %TokenCommandLength
+$AddressTableLength = 0x6
+
+TranslationTable:
+.db "HELP", 0               ; Command name
+.db "     "                 ; Command name padding
+.dw 0                       ; Command code
+
+.db "LET", 0                ; Command name
+.db "      "                ; Command name padding
+.dw 1                       ; Command code
+
+.db "RUN", 0                ; Command name
+.db "      "                ; Command name padding
+.dw 0xFFFE                  ; Command code
+
+AddressTable:
+.dw 0                       ; Command code
+.dd far @Help               ; Command address
+
+.dw 1                       ; Command code
+.dd far @Let                ; Command address
+
+.dw 0xFFFE                  ; Command code
+.dd far @Run                ; Command address
+

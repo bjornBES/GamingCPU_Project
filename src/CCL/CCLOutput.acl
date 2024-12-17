@@ -1,0 +1,26 @@
+.setcpu "BC16"
+.section TEXT
+	; _pVram is at 0x0003:0
+	; _bvar is at 0x0003:4
+_main:
+	enter
+	pushr
+	mov   R1H,                     0x0003
+	mov   R16,                     0
+Exit_main:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   4
+.local __RODATASTRAT__
+__RODATASTRAT__:
+MessERS:
+.db   "Hello world", 0
+
+.section BSS
+name:
+.res  1024
+
+.section DATA
+.local __DATASTRAT__
+__DATASTRAT__:

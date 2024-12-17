@@ -595,7 +595,7 @@ namespace AssemblerBCG
                 if (!isRegister(addressTerm.Split(':')[1], out Register offset))
                 {
                 }
-
+                // Console.WriteLine($"addressTerm {addressTerm} segment {segment} offset {offset}");
                 if (segment == Register.DS)
                 {
                     argumentMode = ArgumentModeOld.segment_DS_register;
@@ -619,7 +619,7 @@ namespace AssemblerBCG
 
                 _out = new string[]
                 {
-                    $"{segment.ToString().PadLeft(2, '0')}:{offset.ToString().PadLeft(2, '0')}"
+                    $"{segment}:{offset}"
                 };
                 return true;
             }

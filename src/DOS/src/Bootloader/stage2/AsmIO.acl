@@ -21,37 +21,69 @@ _ACLAsmReadSector:
     and         A,              0xFF7F                      ; 0x0080 with a not
     mov         CR0,            A                           ; exit protected mode
 
-_RSJmpE:
-    mov     A,                  @__DATASTART
-    mov     DS,                 A
-    mov     SS,                 @__STACKSTART
+    mov         A,              @__START_DATA__
+    mov         DS,             A
+    mov         SS,             @__START_STACK__
 
-    push    R1
-    mov     R1L,                [BP - 14]
-    mov     R2,                 [BP - 18]
-    mov     R3,                 [BP - 22]
-    mov     DL,                 [BP - 14]
-    mov     HL,                 [BP - 26]
+    push        R1
+    mov         R1L,            [BP - 14]
+    mov         R2,             [BP - 18]
+    mov         R3,             [BP - 22]
+    mov         DL,             [BP - 14]
+    mov         HL,             [BP - 26]
 
-    mov     AH,                 0x01
-    int     0x13
+    mov         AH,             0x01
+    int         0x13
 
-    sez     R16
-    jnc     [_ACLAsmRSDone]
-    mov     R16,                0x01
+    sez         R16
+    jnc         [_ACLAsmRSDone]
+    mov         R16,            0x01
 _ACLAsmRSDone:
 
     mov         A,              CR0
-    and         A,              0x0080                      ; 0x0080 
+    or          A,              0x0080                      ; 0x0080 
     mov         CR0,            A                           ; enabling protected mode
 
-_RSJmpP:
-    mov     AX,                 FAR @__DATASTART
-    mov     EDS,                AX
-    mov     ESS,                FAR @__STACKSTART
+    mov         AX,             FAR @__START_DATA__
+    mov         EDS,            AX
+    mov         ESS,            FAR @__START_STACK__
 
     popr
-    mov     AX,                 R16
+    mov         AX,             R16
     leave
-    ret     20                                              ; - 20 in arguments
+    ret         20                                          ; - 20 in arguments
     
+;
+; char c                            [BP - 14]
+; uint8 color                       [BP - 10]
+;
+; func ACLAsmWriteChar(char c, uint8 color)
+;
+.global _ACLAsmWriteChar
+_ACLAsmWriteChar:
+    enter
+    pushr
+
+    mov         A,              CR0
+    and         A,              0xFF7F                      ; 0x0080 with a not
+    mov         CR0,            A                           ; exit protected mode
+
+    mov         SS,             @__START_STACK__
+
+    mov         AL,             [BP - 10]
+    mov         BL,             [BP - 14]
+
+    mov         AH,             0x00
+    int         0x10
+
+_ACLAsmWCDone:
+
+    mov         A,              CR0
+    or          A,              0x0080                      ; 0x0080 
+    mov         CR0,            A                           ; enabling protected mode
+
+    mov         ESS,            FAR @__START_STACK__
+
+    popr
+    leave
+    ret         8                                           ; - 8 in arguments

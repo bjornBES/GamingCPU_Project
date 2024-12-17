@@ -36,18 +36,21 @@ $CommandWrite       = 0x02
 InitializeDrive:
     enter
 
-    mov     B,                          2                   ; B = 0002
-    mov     [Format.Head],              BL                  ; TotalHeads = 2
-    mov     B,                          160                 ; B = 160
-    mov     [Format.TotalTracks],       B                   ; TotalTracks = 160
-
+    mov     B,                              2                   ; B = 0002
+    mov     [DataFormat.Head],              BL                  ; TotalHeads = 2
+    mov     [DataFormat.SectorsPerPage],    B                   ; SectorsPerPage = 2
     ; TracksPerHead = TotalHeads / TotalTracks = 80
-    mov     A,                          2880                ; A = TotalSectors
-    mov     [Format.TotalSector],       A                   ; TotalSector = 2880
-    div     A,                          B                   ; SectorsPerTrack = TotalSectors / TotalTracks
-    mov     [Format.SectorsPerTrack],   A                   ; SectorsPerTrack = 36
-    mov     A,                          0x200               ; A = 0x200
-    mov     [Format.BytesPerSector],    A                   ; BytesPerSector = 0x200
+    mov     A,                              160                 ; A = 160
+    div     A,                              B
+    mov     [DataFormat.TracksPerHead],     A                   ; TracksPerHead = 80
+
+    mov     A,                              2880                ; A = TotalSectors
+    mov     [DataFormat.TotalSector],       A                   ; TotalSector = 2880
+    mov     B,                              160                 ; B = 160
+    div     A,                              B                   ; SectorsPerTrack = TotalSectors / TotalTracks
+    mov     [DataFormat.SectorsPerTrack],   A                   ; SectorsPerTrack = 36
+    mov     A,                              0x200               ; A = 0x200
+    mov     [DataFormat.BytesPerSector],    A                   ; BytesPerSector = 0x200
 
     leave
     retz
@@ -170,25 +173,23 @@ WaitForMSR:
 .struct FilesystemFormat
 
 Head: .resb
-TotalTracks: .resw
-TotalSector: resw
+TracksPerHead: .resw
+TotalSector: .resw
 SectorsPerTrack: .resb
+SectorsPerPage: .resw
 BytesPerSector: .resw
 
 .endstruct
 
+.section RODATA
+
 Buffer:
 .db         "BFS01 "                                ; header
-.db         0                                       ; disk letter
-.struct FilesystemFormat Format:
-; .db         2                                       ; Total head
-; .dw         160                                     ; Total tracks
-; .dw         2880                                    ; Total sectors
-; .db         18                                      ; Sectors per track
-; .dw         0x200                                   ; bytes per sector
+.struct FilesystemFormat DataFormat:
 
-.dw         0x400                                   ; root address
-.dw         0x10                                    ; max number of entries in root directory
+.dw         0x3                                     ; root sector
+.dw         0x4                                     ; FAT sector
+.dw         0x200 / 0x20                            ; max number of entries in root directory
 .db         1                                       ; fat allocated
-.db         "FSBGC01\0\0\0\0\0\0\0\0\0"             ; volume label with padding
+.db         0x10                                    ; File name size
 Metadata:

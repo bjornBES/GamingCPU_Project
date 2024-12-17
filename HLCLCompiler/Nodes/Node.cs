@@ -12,6 +12,18 @@ namespace HLCLCompiler
     {
         public TokenInt value { get; set; }
     }
+    public class NodeTermIdent
+    {
+        public TokenIdentifier value { get; set; }
+    }
+    public class NodeTermReference
+    {
+        public TokenIdentifier value { get; set; }
+    }
+    public class NodeTermCall
+    {
+        public NodeStmtCall stmtCall{ get; set; }
+    }
     public class NodeExpr
     {
         public object expr { get; set; }
@@ -44,6 +56,17 @@ namespace HLCLCompiler
     public interface IStmt
     {
 
+    }
+    public class NodeStmtCall : IStmt
+    {
+        public string name { get; set; }
+        public List<NodeExpr> args { get; set; }
+    }
+    public class NodeStmtAssignVariabel : IStmt
+    {
+        public string name { get; set; }
+        public NodeExpr expr{ get; set; }
+        public OperatorVal OperatorVal{ get; set; }
     }
     public class NodeStmtDeclareVariabel : IStmt
     {

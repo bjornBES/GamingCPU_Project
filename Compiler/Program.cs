@@ -9,10 +9,6 @@ public class Program : ArgumentFunctions
 
         {"-o", GetOutputFile },
 
-        {"-e", DoNotEntry },
-
-        {"-s", SetStartOffset },
-
         {"-cpu", SetCPUType },
     };
 
@@ -23,11 +19,13 @@ public class Program : ArgumentFunctions
     }
     Program(string[] args)
     {
+        Console.WriteLine("Compiled CPU Language Compiler verison 1.0 16 bit Compiler");
+
         decodeArguments(args);
 
         if (m_InputFile == "\0" || !File.Exists(m_InputFile))
         {
-            Console.WriteLine("ERORR: invalid input file");
+            Console.WriteLine($"ERORR: invalid input file");
             Environment.Exit(1);
         }
 
@@ -48,7 +46,12 @@ public class Program : ArgumentFunctions
         FullSrc = FullSrc.Replace("\r\n", "\n");
 
         CompilerCCL compiler = new CompilerCCL(FullSrc);
-        File.WriteAllLines(m_OutputFile, compiler.m_Output);
+        if (m_DoWriteOut == true)
+        {
+            File.WriteAllLines(m_OutputFile, compiler.m_Output);
+        }
+        CompilerMessages.DisplayMessages();
+        Console.WriteLine("");
     }
     string includeFiles(FileInfo file)
     {

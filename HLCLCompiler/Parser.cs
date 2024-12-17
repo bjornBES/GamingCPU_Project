@@ -90,19 +90,27 @@ namespace HLCLCompiler
                     break;
             }
 
-            if (tryConsume(TokenKind.OPERATOR, out TokenOperator tokenOperator) && tokenOperator != null && tokenOperator.m_Val == OperatorVal.LBRACKET)
+            if (tryConsume(TokenKind.OPERATOR, out TokenOperator tokenOperator))
             {
-                ExprType temp = result;
-
-                tryConsumeError(TokenKind.INT, out TokenInt tokenInt);
-                tryConsumeError(TokenKind.OPERATOR, out tokenOperator);
-                if (tokenOperator.m_Val != OperatorVal.RBRACKET)
+                if (tokenOperator != null && tokenOperator.m_Val == OperatorVal.LBRACKET)
                 {
-                    CompilerErrors.Error_expected(peek(-2), "rigth bracket ]");
-                }
+                    ExprType temp = result;
 
-                result = new ArrayType(temp, tokenInt.Val);
+                    tryConsumeError(TokenKind.INT, out TokenInt tokenInt);
+                    tryConsumeError(TokenKind.OPERATOR, out tokenOperator);
+                    if (tokenOperator.m_Val != OperatorVal.RBRACKET)
+                    {
+                        CompilerErrors.Error_expected(peek(-2), "rigth bracket ]");
+                    }
+
+                    result = new ArrayType(temp, tokenInt.Val);
+                }
+                else
+                {
+                    m_index--;
+                }
             }
+
 
             if (result == null)
             {
@@ -127,6 +135,20 @@ namespace HLCLCompiler
             {
                 term.term = new NodeTermIntLit() { value = tokenInt };
             }
+            else if (tryConsume(TokenKind.IDENTIFIER, out TokenIdentifier tokenString))
+            {
+                term.term = new NodeTermIdent() { value = tokenString };
+            }
+            else if (tryConsume(TokenKind.OPERATOR, out TokenOperator tokenOperator))
+            {
+                if (tokenOperator.m_Val == OperatorVal.BITAND)
+                {
+                    if (tryConsume(TokenKind.IDENTIFIER, out tokenString))
+                    {
+                        term.term = new NodeTermIdent() { value = tokenString };
+                    }
+                }
+            }
 
             return term;
         }
@@ -134,22 +156,90 @@ namespace HLCLCompiler
         {
             NodeExpr expr = new NodeExpr();
 
-            expr.expr = parseTerm();
+            if (tryConsume(TokenKind.KEYWORD, out TokenKeyword tokenKeyword))
+            {
+                if (tokenKeyword.Val == KeywordVal.SIZEOF)
+                {
+                    tryConsumeError(TokenKind.OPERATOR, out TokenOperator token);
+                    if (token.m_Val != OperatorVal.LPAREN)
+                    {
+                        CompilerErrors.Error_expected(peek(-2), "left paren");
+                    }
+                    int size = 0;
+
+                    if (IsType())
+                    {
+                        ExprType type = parseType();
+                        switch (type.SizeOf)
+                        {
+                            case TypeSize.CHAR:
+                                size = 1;
+                                break;
+                            case TypeSize.SHORT_POINTER:
+                            case TypeSize.SHORT:
+                                size = 2;
+                                break;
+                            case TypeSize.FAR_POINTER:
+                            case TypeSize.FLOAT:
+                            case TypeSize.INT:
+                                size = 4;
+                                break;
+                        }
+                    }
+                    else
+                    {
+
+                    }
+
+                    expr.expr = new NodeTerm() { term = new NodeTermIntLit() { value = new TokenInt(size, TokenInt.IntSuffix.U, "") } };
+
+                    tryConsumeError(TokenKind.OPERATOR, out token);
+                    if (token.m_Val != OperatorVal.RPAREN)
+                    {
+                        CompilerErrors.Error_expected(peek(-2), "left paren");
+                    }
+                }
+                else if (tokenKeyword.Val == KeywordVal.CALL)
+                {
+                    expr.expr = new NodeTerm() { term = new NodeTermCall() { stmtCall = parseCall() } };
+                    m_index--;
+                }
+            }
+            else
+            {
+                expr.expr = parseTerm();
+            }
+
 
             return expr;
         }
         string parseIdentifier()
         {
+            string result = "";
+            if (tryConsume(TokenKind.OPERATOR, out TokenOperator token) && token.m_Val == OperatorVal.MULT)
+            {
+                result = "*";
+            }
             tryConsumeError(TokenKind.IDENTIFIER, out TokenIdentifier identifier);
-            return identifier.Val;
+            result += identifier.Val;
+            if (peek<TokenOperator>().m_Val == OperatorVal.LBRACKET)
+            {
+                consume();
+                tryConsumeError(TokenKind.INT, out TokenInt intVal);
+                result += "[" + intVal.Val + "]";
+                if (tryConsumeError(TokenKind.OPERATOR, out token) != null && token.m_Val == OperatorVal.RBRACKET)
+                {
+                }
+            }
+            return result;
         }
 
         NodeStmtDeclareFunction parseDeclareFunction()
         {
             NodeStmtDeclareFunction declareFunction = new NodeStmtDeclareFunction();
-            
+
             string name = parseIdentifier();
-            
+
             List<Argument> arguments = new List<Argument>();
 
             tryConsumeError(TokenKind.OPERATOR, out TokenOperator token);
@@ -160,10 +250,29 @@ namespace HLCLCompiler
 
             while (true)
             {
+                tryConsume(TokenKind.OPERATOR, out token);
+                if (token == null)
+                {
+
+                }
+                else if (token.m_Val == OperatorVal.RPAREN)
+                {
+                    break;
+                }
+                else
+                {
+                    m_index--;
+                }
                 if (peek() == null)
                 {
                     Console.WriteLine("WIP Error");
                 }
+
+                Argument temp = new Argument();
+                temp.ArgumentIndex = arguments.Count;
+                temp.Type = parseType();
+                temp.Name = parseIdentifier();
+                arguments.Add(temp);
 
                 tryConsumeError(TokenKind.OPERATOR, out token);
                 if (token.m_Val != OperatorVal.RPAREN)
@@ -189,7 +298,7 @@ namespace HLCLCompiler
             {
                 CompilerErrors.Error_expected(peek(-2), "right paren");
             }
-            
+
             while (true)
             {
                 nodeStmts.Add(ParseStmt());
@@ -246,7 +355,95 @@ namespace HLCLCompiler
             {
                 CompilerErrors.Error_expected(peek(-1), "Semicolon");
             }
-            
+
+            return result;
+        }
+        NodeStmtAssignVariabel parseAssignVariabel()
+        {
+            NodeStmtAssignVariabel result = new NodeStmtAssignVariabel();
+
+            result.name = parseIdentifier();
+            tryConsumeError(TokenKind.OPERATOR, out TokenOperator token);
+            if (token == null)
+            {
+
+            }
+            else if (token.m_Val == OperatorVal.ASSIGN)
+            {
+                result.OperatorVal = token.m_Val;
+                NodeExpr expr = parseExpr();
+                result.expr = expr;
+            }
+            else
+            {
+                m_index--;
+            }
+
+            tryConsumeError(TokenKind.OPERATOR, out token);
+            if (token.m_Val != OperatorVal.SEMICOLON)
+            {
+                CompilerErrors.Error_expected(peek(-1), "Semicolon");
+            }
+
+            return result;
+        }
+
+        NodeStmtCall parseCall()
+        {
+            NodeStmtCall result = new NodeStmtCall();
+
+            result.name = parseIdentifier();
+            tryConsumeError(TokenKind.OPERATOR, out TokenOperator token);
+            if (token == null)
+            {
+
+            }
+
+            List<NodeExpr> nodeStmts = new List<NodeExpr>();
+
+            if (token.m_Val == OperatorVal.LPAREN)
+            {
+                while (true)
+                {
+                    tryConsume(TokenKind.OPERATOR, out token);
+                    if (token == null)
+                    {
+
+                    }
+                    else if (token.m_Val == OperatorVal.RPAREN)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        m_index--;
+                    }
+                    if (peek() == null)
+                    {
+                        Console.WriteLine("WIP Error");
+                    }
+
+                    nodeStmts.Add(parseExpr());
+
+                    tryConsumeError(TokenKind.OPERATOR, out token);
+                    if (token.m_Val != OperatorVal.RPAREN)
+                    {
+                        CompilerErrors.Error_expected(peek(-2), "right paren");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                result.args = nodeStmts;
+            }
+
+            tryConsumeError(TokenKind.OPERATOR, out token);
+            if (token.m_Val != OperatorVal.SEMICOLON)
+            {
+                CompilerErrors.Error_expected(peek(-1), "Semicolon");
+            }
+
             return result;
         }
 
@@ -269,12 +466,28 @@ namespace HLCLCompiler
                         consume();
                         result.stmt = parseDeclareFunction();
                         break;
+                    case KeywordVal.CALL:
+                        consume();
+                        result.stmt = parseCall();
+                        break;
                     default:
                         if (IsType())
                         {
                             result.stmt = parseDeclareVariabel();
                         }
                         break;
+                }
+            }
+            else if (curToken.GetType() == typeof(TokenIdentifier))
+            {
+                result.stmt = parseAssignVariabel();
+            }
+            else if (curToken.GetType() == typeof(TokenOperator))
+            {
+                TokenOperator tokenOperator = (TokenOperator)curToken;
+                if (tokenOperator.m_Val == OperatorVal.MULT)
+                {
+                    result.stmt = parseAssignVariabel();
                 }
             }
 

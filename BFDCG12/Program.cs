@@ -17,8 +17,8 @@ namespace _BFDCG12
             Disk disk1 = new Disk();
             disk1.m_DiskLetter = 'A';
             disk1.m_DiskPath = "D:/disk1.bin";
-            disk1.m_DiskSize = DiskSize._F3MB;
-            disk1.m_WriteEnable = 1;
+            disk1.m_DiskSize = FileSystemBase._144MB;
+            disk1.m_WriteEnable = true;
             IPort port = new BFDCG12();
             port.Reset();
             ((BFDCG12)port).AddDisk(disk1, 1);

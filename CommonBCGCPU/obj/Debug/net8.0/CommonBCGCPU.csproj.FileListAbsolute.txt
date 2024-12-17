@@ -1,0 +1,12 @@
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/bin/Debug/net8.0/CommonBCGCPU.deps.json
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/bin/Debug/net8.0/CommonBCGCPU.dll
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/bin/Debug/net8.0/CommonBCGCPU.pdb
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/CommonBCGCPU.GeneratedMSBuildEditorConfig.editorconfig
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/CommonBCGCPU.AssemblyInfoInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/CommonBCGCPU.AssemblyInfo.cs
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/CommonBCGCPU.csproj.CoreCompileInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/CommonBCGCPU.sourcelink.json
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/CommonBCGCPU.dll
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/refint/CommonBCGCPU.dll
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/CommonBCGCPU.pdb
+/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/Debug/net8.0/ref/CommonBCGCPU.dll

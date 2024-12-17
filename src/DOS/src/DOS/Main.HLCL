@@ -1,4 +1,0 @@
-function main
-    ; comment lines here
-    print OUT, "Hello world"
-endfunc main

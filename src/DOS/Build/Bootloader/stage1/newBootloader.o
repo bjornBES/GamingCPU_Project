@@ -2,34 +2,35 @@ INCLUDE HEADER
 
 
 SECTION HEADER
-_Bootloader C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_Stage2 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_Bootloader /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_Boot /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_Stage2 /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL Entry,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL PrintLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL ExitPrintLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL FindStage2File,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL ExitFindStage2,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL LoadStage2,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL LoadStage2Loop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL Load,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL ReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL ExitReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL OFS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL OFSLOOP,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL ExitOFS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL ErrorMessageReading,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL Error,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL Message,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
-_REF_ LABEL Stage2_Name,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Entry,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL PrintLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ExitPrintLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL FindStage2File,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ExitFindStage2,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL LoadStage2,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL LoadStage2Loop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL Load,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ReadSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ExitReadSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL OFS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL OFSLOOP,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ExitOFS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ErrorMessageReading,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL Error,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL Message,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL Stage2_Name,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 
 
 TEXT HEADER
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl"
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
@@ -38,7 +39,7 @@ _NEWLINE_
 _NEWLINE_
 _OFF_ 7C00
 _NEWLINE_
-_REF_ LABEL Entry C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Entry /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ mov AL, CR0
 01
@@ -87,7 +88,7 @@ _DEL_ mov
 00
 00
 _NEWLINE_
-_REF_ LABEL PrintLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL PrintLoop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ mov AL, [HL]
 00
@@ -117,7 +118,7 @@ f0
 _NEWARG_ HL
 c7
 _NEWLINE_
-_REF_ LABEL ExitPrintLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ExitPrintLoop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov SS, 0x00FA
@@ -253,7 +254,7 @@ _NEWARG_ 16
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL FindStage2File C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL FindStage2File /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ CMPL
 40
@@ -284,7 +285,7 @@ _DEL_ jmp rel [FindStage2File]
 _NEWARG_ rel [FindStage2File]
 REL__SL_FindStage2File
 _NEWLINE_
-_REF_ LABEL ExitFindStage2 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ExitFindStage2 /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ add AX, 16
 20
@@ -317,7 +318,7 @@ _DEL_ call [OFS]
 _NEWARG_ [OFS]
 _SL_OFS
 _NEWLINE_
-_REF_ LABEL LoadStage2 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL LoadStage2 /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ add AX, 0x2
 20
@@ -382,7 +383,7 @@ _DEL_ call rel [ReadSector]
 _NEWARG_ rel [ReadSector]
 REL__SL_ReadSector
 _NEWLINE_
-_REF_ LABEL LoadStage2Loop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL LoadStage2Loop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ add AX, 0x200
 20
@@ -408,7 +409,7 @@ _DEL_ call rel [OFS]
 _NEWARG_ rel [OFS]
 REL__SL_OFS
 _NEWLINE_
-_REF_ LABEL Load C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Load /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ call rel [ReadSector]
 07
@@ -469,7 +470,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ReadSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ReadSector /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ pushr
 f0
@@ -547,7 +548,7 @@ _NEWARG_ rel [Error]
 REL__SL_Error
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ExitReadSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ExitReadSector /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -565,7 +566,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL OFS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL OFS /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ push A
 05
@@ -580,7 +581,7 @@ _DEL_ mov A, B
 _NEWARG_ A
 _NEWARG_ B
 _NEWLINE_
-_REF_ LABEL OFSLOOP C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL OFSLOOP /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ cmp A, 19
 04
@@ -620,7 +621,7 @@ _DEL_ jmp rel [OFSLOOP]
 _NEWARG_ rel [OFSLOOP]
 REL__SL_OFSLOOP
 _NEWLINE_
-_REF_ LABEL ExitOFS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ExitOFS /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ mov B, A
 01
@@ -640,7 +641,7 @@ _DEL_ retz
 00
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ErrorMessageReading C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL ErrorMessageReading /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 45
 72
@@ -670,7 +671,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Error C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Error /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ mov AH, 0x02
 01
@@ -699,7 +700,7 @@ _NEWARG_ $
 _SCA_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Message C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Message /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 48
 65
@@ -716,7 +717,7 @@ _NEWLINE_
 01
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Stage2_Name C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage1\newBootloader.acl
+_REF_ LABEL Stage2_Name /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 53
 54
@@ -737,10 +738,11 @@ _NEWLINE_
 00
 _NEWLINE_
 _NEWLINE_
-_OFF_ 7DFE
+_SECTION_ Boot
 _NEWLINE_
 55
 AA
 _NEWLINE_
 _NEWLINE_
 _SECTION_ Stage2
+_NEWLINE_

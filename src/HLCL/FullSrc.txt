@@ -1,10 +1,43 @@
 
+function add(byte a)
+{
+    byte test eq a;
+    RetResult eq &test;
+}
+
 function main()
 {
+
+    __far__ byte ptrByte eq 1000;
+    
+    *ptrByte eq 0x10;
+    
+
     // comment lines here
-    // print "Hello world" to OUT;
-    byte _byte = 10;
-    __far__ int ptrByte = 1000;
-    byte[10] array;
+    
+    // call print "Hello world" to OUT;
+    // call print("Hello world")
+    // stream "Hello world" to OUT
+
+    // call print(expr)                     // do the same as stream expr to OUT
+    // call printerr(expr)                  // do the same as stream expr to ERR
+
+    // variabel = call getc()               // do the same as stream from IN to variabel
+
+    // stream expr to OUT                   // print the expr to the std output
+    // stream expr to IN                    // error
+    // stream expr to ERR                   // print the expr to the std output but in red
+    
+    // stream from OUT to variabel          // error
+    // stream from IN to variabel           // get some keyboard input from the keyboard
+    // stream from ERR to variabel          // error
+
+    byte _byte eq 10;
+
+    call add(0x10);
+    byte returnResult eq call add(0x10);
+
+    // byte[10] array;
 }
+
 

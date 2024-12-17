@@ -1,0 +1,15 @@
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/bin/Debug/net8.0/HLCLCompiler
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/bin/Debug/net8.0/HLCLCompiler.deps.json
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/bin/Debug/net8.0/HLCLCompiler.runtimeconfig.json
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/bin/Debug/net8.0/HLCLCompiler.dll
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/bin/Debug/net8.0/HLCLCompiler.pdb
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.GeneratedMSBuildEditorConfig.editorconfig
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.AssemblyInfoInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.AssemblyInfo.cs
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.csproj.CoreCompileInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.sourcelink.json
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.dll
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/refint/HLCLCompiler.dll
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.pdb
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/HLCLCompiler.genruntimeconfig.cache
+/home/bjornbes/projects/GamingCPU_Project/HLCLCompiler/obj/Debug/net8.0/ref/HLCLCompiler.dll

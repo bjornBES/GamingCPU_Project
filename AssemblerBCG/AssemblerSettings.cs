@@ -26,6 +26,7 @@ public enum CPUType
 }
 public class AssemblerSettings
 {
+    public static string version = "0.01";
     public static string m_InputFile = "\0";
     public static string m_OutputFile = "a.o";
 

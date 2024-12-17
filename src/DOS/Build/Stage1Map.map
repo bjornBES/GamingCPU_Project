@@ -1,26 +1,35 @@
 Sections:
 Start	Size		Name                     File
 
-7c00	0200		Bootloader               
+7c00	01fe		Bootloader               
+7dfe	0002		Boot                     
 30000	10000		Stage2                   
 
 Name                                         Address	Section             File
 
+__START_BOOTLOADER__                         00007c00	Bootloader          %O
+__END_BOOTLOADER__                           0000f9fe	Bootloader          %O
+__SIZE_Bootloader__                          00007dfe	Bootloader          %O
+__START_BOOT__                               00007dfe	Boot                %O
+__END_BOOT__                                 0000fbfe	Boot                %O
+__SIZE_Boot__                                00007e00	Boot                %O
 _STAGE2                                      00030000	Stage2              
-Entry                                        00007c00	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-PrintLoop                                    00007c1b	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-ExitPrintLoop                                00007c2b	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-FindStage2File                               00007c78	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-ExitFindStage2                               00007c89	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-LoadStage2                                   00007c9b	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-LoadStage2Loop                               00007cbe	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-Load                                         00007ccc	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-ReadSector                                   00007ceb	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-ExitReadSector                               00007d16	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-OFS                                          00007d1a	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-OFSLOOP                                      00007d20	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-ExitOFS                                      00007d35	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-ErrorMessageReading                          00007d3d	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-Error                                        00007d52	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-Message                                      00007d62	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
-Stage2_Name                                  00007d6f	Bootloader          \src\DOS\src\Bootloader\stage1\newBootloader.acl
+__END_STAGE2__                               00070000	Stage2              
+__SIZE_Stage2__                              00040000	Stage2              
+Entry                                        00007c00	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+PrintLoop                                    00007c1b	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+ExitPrintLoop                                00007c2b	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+FindStage2File                               00007c78	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+ExitFindStage2                               00007c89	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+LoadStage2                                   00007c9b	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+LoadStage2Loop                               00007cbe	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+Load                                         00007ccc	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+ReadSector                                   00007ceb	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+ExitReadSector                               00007d16	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+OFS                                          00007d1a	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+OFSLOOP                                      00007d20	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+ExitOFS                                      00007d35	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+ErrorMessageReading                          00007d3d	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+Error                                        00007d52	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+Message                                      00007d62	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl
+Stage2_Name                                  00007d6f	Bootloader          /src/DOS/src/Bootloader/stage1/newBootloader.acl

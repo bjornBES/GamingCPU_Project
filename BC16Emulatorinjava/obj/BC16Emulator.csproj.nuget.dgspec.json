@@ -1,0 +1,356 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj": {}
+  },
+  "projects": {
+    "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
+        "projectName": "BC16Emulator",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/BC16Emulator.csproj",
+        "packagesPath": "/home/bjornbes/.nuget/packages/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BC16Emulator/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/bjornbes/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj"
+              },
+              "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj"
+              },
+              "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj"
+              },
+              "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "OpenTK": {
+              "target": "Package",
+              "version": "[4.8.2, )"
+            },
+            "OpenTK.Audio.OpenAL": {
+              "target": "Package",
+              "version": "[4.8.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj",
+        "projectName": "BFDCG12",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/BFDCG12.csproj",
+        "packagesPath": "/home/bjornbes/.nuget/packages/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/BFDCG12/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/bjornbes/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj"
+              },
+              "/home/bjornbes/projects/GamingCPU_Project/filesystem/filesystem.csproj": {
+                "projectPath": "/home/bjornbes/projects/GamingCPU_Project/filesystem/filesystem.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj",
+        "projectName": "CommonBCGCPU",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/CommonBCGCPU.csproj",
+        "packagesPath": "/home/bjornbes/.nuget/packages/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/CommonBCGCPU/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/bjornbes/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj",
+        "projectName": "ConsoleGameEngine",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/ConsoleGameEngine.csproj",
+        "packagesPath": "/home/bjornbes/.nuget/packages/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/ConsoleGameEngine/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/bjornbes/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
+        "projectName": "HexLibrary",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/HexLibrary.csproj",
+        "packagesPath": "/home/bjornbes/.nuget/packages/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/bjornbes/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/bjornbes/projects/GamingCPU_Project/filesystem/filesystem.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/bjornbes/projects/GamingCPU_Project/filesystem/filesystem.csproj",
+        "projectName": "filesystem",
+        "projectPath": "/home/bjornbes/projects/GamingCPU_Project/filesystem/filesystem.csproj",
+        "packagesPath": "/home/bjornbes/.nuget/packages/",
+        "outputPath": "/home/bjornbes/projects/GamingCPU_Project/filesystem/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/bjornbes/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

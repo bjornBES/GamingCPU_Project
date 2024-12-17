@@ -1,0 +1,13 @@
+
+.global Run
+
+;
+; for the command "RUN"
+;
+; void RUN()
+;
+Run:
+    call        [Parse]
+    call        [Generate]
+    
+

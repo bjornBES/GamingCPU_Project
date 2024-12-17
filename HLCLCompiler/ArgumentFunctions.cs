@@ -17,6 +17,10 @@
     {
         m_DoEntry = false;
     }
+    public static void Debug(string[] args)
+    {
+        m_Debug = true;
+    }
     public static void SetCPUType(string[] args)
     {
         i++;

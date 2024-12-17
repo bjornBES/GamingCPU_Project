@@ -11,5 +11,5 @@ SECTION:TEXT
 0000001:uint    pVram.                                                  \\
 0000002:byte    bvar.                                                   \\
 0000010:func    main(byte bootD).                                       \\ test
-0000011:name[101] = 0x55.                                               \\
+@0000011:name[101] = 0x55.                                               \\
 0000070:endfunc.                                                        \\

@@ -137,7 +137,7 @@ public class Program : ArgumentFunctions
                         operands.Add(new OperandArgument()
                         {
                             ArgumentMode = ArgumentMode.Sregister,
-                            data = Convert.ToString((byte)Enum.Parse<SRegisterWord>(srgmentstr, true),16 ).PadLeft(3, '0'),
+                            data = Convert.ToString((byte)Enum.Parse<SRegisterWord>(srgmentstr, true), 16).PadLeft(3, '0'),
                             IsRawData = true,
                             Size = sizeAlignment
                         });
@@ -259,6 +259,8 @@ public class Program : ArgumentFunctions
             Environment.Exit(1);
         }
 
+        Console.WriteLine($"BCGAssembler version {version}");
+
         m_InputFile = Path.GetFullPath(m_InputFile);
         m_OutputFile = Path.GetFullPath(m_OutputFile);
 
@@ -275,35 +277,24 @@ public class Program : ArgumentFunctions
             File.Create(m_OutputFile).Close();
         }
 
-        includeFiles();
+        FileInfo startFile = new FileInfo(m_InputFile);
+        string FullSrc = includeFiles(startFile, out FileInfo[] fileInfo);
+        m_Files.AddRange(fileInfo);
 
         new OldInstructions();
 
         Assembler assembler = new Assembler();
-        string FullSrc = "";
         List<List<string>> AssemblerOutput = new List<List<string>>();
         for (int i = 0; i < m_Files.Count; i++)
         {
+            if (fileInfo.Contains(m_Files[i]))
+            {
+                continue;
+            }
             string filename = Path.GetFullPath(m_Files[i].FullName);
 
-            string src = $"{Environment.NewLine}.newfile {filename}{Environment.NewLine}{File.ReadAllText(m_Files[i].FullName)}";
-            src = src.Replace(".String", ".Str");
-            if (m_Files[i].Extension == ".bin")
-            {
-                string TempSrc = ".byte ";
-                byte[] bytes = File.ReadAllBytes(m_Files[i].FullName);
-                for (int a = 0; a < bytes.Length; a++)
-                {
-                    TempSrc += "0x" + Convert.ToString(bytes[a], 16).PadLeft(2, '0') + ", ";
-                }
-                TempSrc = TempSrc.TrimEnd(' ').TrimEnd(',');
-                src = $"{Environment.NewLine}.newfile {filename}{Environment.NewLine}{TempSrc}";
-                src = src.Replace(".String", ".Str");
-            }
-            FullSrc += src;
 
-
-            assembler.Start(src, filename, i == m_Files.Count - 1);
+            assembler.Start(FullSrc, filename, i == m_Files.Count - 1);
             if (AssemblerVariabels.m_WriteOut)
             {
                 AssemblerOutput.Add(assembler.m_Output);
@@ -314,6 +305,10 @@ public class Program : ArgumentFunctions
         {
             for (int i = 0; i < m_Files.Count; i++)
             {
+                if (fileInfo.Contains(m_Files[i]))
+                {
+                    continue;
+                }
                 string filename = Path.GetFullPath(m_Files[i].FullName);
 
                 if (filename == m_InputFile)
@@ -329,6 +324,7 @@ public class Program : ArgumentFunctions
         }
 
         File.WriteAllText("./PreAssemblerSrc.txt", FullSrc);
+        Console.WriteLine("");
     }
 
     void PrintInstr(InstructionArgumentInfo instructionInfo, string hexinstr)
@@ -352,33 +348,56 @@ public class Program : ArgumentFunctions
         }
     }
 
-    void includeFiles()
+    string includeFiles(FileInfo file, out FileInfo[] fileInfos)
     {
-        for (int f = 0; f < m_Files.Count; f++)
+        List<FileInfo> files = new List<FileInfo>();
+        string result = $"{Environment.NewLine}.newfile {file.FullName}{Environment.NewLine}";
+        string FileContents = File.ReadAllText(file.FullName);
+
+        string[] src = FileContents.Split(Environment.NewLine);
+
+        if (file.Extension == ".bin")
         {
-            string FileContents = File.ReadAllText(m_Files[f].FullName);
-
-            string[] src = FileContents.Split(Environment.NewLine);
-
-            for (int i = 0; i < src.Length; i++)
+            string TempSrc = ".byte ";
+            byte[] bytes = File.ReadAllBytes(file.FullName);
+            for (int a = 0; a < bytes.Length; a++)
             {
-                if (src[i].StartsWith("; "))
-                {
-                    continue;
-                }
+                TempSrc += "0x" + Convert.ToString(bytes[a], 16).PadLeft(2, '0') + ", ";
+            }
+            TempSrc = TempSrc.TrimEnd(' ').TrimEnd(',');
+            result += $"{TempSrc}";
+            fileInfos = Array.Empty<FileInfo>();
+            return result;
+        }
 
-                if (src[i].StartsWith(".includeil"))
-                {
-                    string BasePath = src[i].Split(".includeil ").Last().Trim('\"');
-                    m_Files.Add(new FileInfo(findPath(BasePath, f)));
-                }
-                else if (src[i].StartsWith(".include") && !src[i].StartsWith(".includeil"))
-                {
-                    string BasePath = src[i].Split(".include ").Last().Trim('\"');
-                    m_Files.Add(new FileInfo(findPath(BasePath, f)));
-                }
+        for (int i = 0; i < src.Length; i++)
+        {
+            result += src[i] + Environment.NewLine;
+            if (src[i].StartsWith("; "))
+            {
+                continue;
+            }
+
+            if (src[i].StartsWith(".includeil"))
+            {
+                string BasePath = src[i].Split(".includeil ").Last().Trim('\"');
+                Console.WriteLine($"including inlined {BasePath}");
+                string path = findPath(BasePath);
+                includeFiles(new FileInfo(path), out FileInfo[] newFiles);
+                files.Add(new FileInfo(path));
+                files.AddRange(newFiles);
+                result += Environment.NewLine + File.ReadAllText(path) + Environment.NewLine;
+            }
+            else if (src[i].StartsWith(".include") && !src[i].StartsWith(".includeil"))
+            {
+                string BasePath = src[i].Split(".include ").Last().Trim('\"');
+                Console.WriteLine($"including {BasePath}");
+                m_Files.Add(new FileInfo(findPath(BasePath)));
             }
         }
+
+        fileInfos = files.ToArray();
+        return result;
     }
     string getPath(string path)
     {
@@ -386,35 +405,30 @@ public class Program : ArgumentFunctions
         int index = C_path.IndexOf(C_path.Split(Path.DirectorySeparatorChar).Last()) - 1;
         return C_path.Substring(0, index);
     }
-    string findPath(string BasePath, int f)
+    string findPath(string BasePath)
     {
         string NewBasePath = "";
 
         for (int c = 0; c < BasePath.Length; c++)
         {
-            char currChar = BasePath[c];
-
-            if (currChar == '.')
+            if (BasePath[c] == '.')
             {
                 c++;
-                currChar = BasePath[c];
-                if (currChar == '/')
+                if (BasePath[c] == Path.DirectorySeparatorChar)
                 {
-                    string FileName = m_Files[f].FullName;
-                    int index = FileName.IndexOf(FileName.Split(Path.DirectorySeparatorChar).Last()) - 1;
-                    FileName = FileName.Substring(0, index);
-
-                    NewBasePath += FileName + Path.DirectorySeparatorChar;
+                    string projcetPath = getPath(m_InputFile);
+                    NewBasePath += projcetPath;
+                    NewBasePath += Path.DirectorySeparatorChar;
                 }
-                else if (char.IsLetter(currChar))
+                else
                 {
+                    c--;
                     NewBasePath += '.';
-                    NewBasePath += currChar;
                 }
             }
             else
             {
-                NewBasePath += currChar;
+                NewBasePath += BasePath[c];
             }
         }
 

@@ -23,12 +23,26 @@ namespace HLCLCompiler.CodeGeneration
             {
                 if (Address.IsStack)
                 {
-                    return $"[{Address.StackRegister} - {generator.StackSize - Address.StackPlacement}]";
+                    if (Address.StackRegister == "SP")
+                    {
+                        return $"[{Address.StackRegister} + {generator.StackSize - Address.StackPlacement}]";
+                    }
+                    else
+                    {
+                        return $"[{Address.StackRegister} - {generator.StackSize - Address.StackPlacement}]";
+                    }
                 }
             }
             else
             {
-
+                if (Address.StackRegister == "SP")
+                {
+                    return $"[{Address.StackRegister} + {generator.StackSize - Address.StackPlacement}]";
+                }
+                else
+                {
+                    return $"[{Address.StackRegister} - {Address.StackPlacement}]";
+                }
             }
 
             return "";

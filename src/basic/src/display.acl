@@ -1,0 +1,61 @@
+
+$VideoCard = 0x02
+
+.local GetResolution
+GetResolution:
+
+    mov             AH,                 byte 0x10
+    int             0x10
+
+    mov             B,                  LOW @ScreenHeight
+    mov             [DS:B],             R1              ;
+    add             B,                  0x2 
+    mov             [DS:B],             R2              ;
+    retz
+
+; 
+; char c                [BP - 7]
+; byte charAttributes   [BP - 9]
+;
+; void PrintC(byte charAttributes, char c)
+;
+PrintC:
+    enter
+    pushr
+
+    sez             A
+    mov             C,                 [BP - 9]
+    mov             B,                 [BP - 7]
+    int             0x10
+
+    popr
+    leave
+    ret             4
+
+; 
+; far char* c           [BP - 7] 4 bytes
+; byte charAttributes   [BP - 11] 2 bytes
+;
+; void PrintStr(byte charAttributes, far char* c)
+;
+PrintStr:
+    enter
+    pushr
+
+    movd            HL,                 [BP - 7]
+    sez             A
+    mov             C,                  [BP - 11]
+.local PrintStrLoop
+PrintStrLoop:
+
+    mov             BL,                [HL]
+    jz              [PrintStrExit]
+    int             0x10
+    inc             HL
+    jmp             [PrintStrLoop]
+
+.local PrintStrExit
+PrintStrExit:
+    popr
+    leave
+    ret             6

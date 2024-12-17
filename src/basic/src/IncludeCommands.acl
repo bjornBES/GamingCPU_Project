@@ -1,0 +1,4 @@
+
+.includeil "./Commands/Vars.acl"
+.includeil "./Commands/help.acl"
+.includeil "./Commands/Run.acl"

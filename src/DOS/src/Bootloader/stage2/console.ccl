@@ -1,14 +1,19 @@
 
+#define DefCo = 0x55
+
+SECTION:DATA
+       :extern func ACLAsmWriteChar(char c,byte color)
+
 SECTION:TEXT
 @       Displays a string on to the screen
 0000010:func diplay(far char str).                                      \\
 @0000011:byte i=0.byte c=1.                        \\
 @0000015:while c != 0.then.                                              \\
 @0000016:c=str[i].call cOut(c).next.endwhile.endfunc.                    \\
-0000049:endfunc.                                                        \\
+0000048:endfunc.                                                        \\
 
 @       Displays a char on to the screen
-@0000050:func cOut(byte c).@AL=c.byte e=invoke(0x10,0x00).if e==1.then.  \\
-@0000051:Exit(1).endfunc.eif.endfunc.                                    \\
-
-SECTION:DATA
+0000049:func ColorOut(byte c, byte co).call ACLAsmWriteChar(c, co).     \\
+0000050:endfunc.                                                        \\
+0000051:func Cout(byte c).byte co =DefCo.call ACLAsmWriteChar(c, co).   \\
+0000052:endfunc.                                                        \\

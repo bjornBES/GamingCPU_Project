@@ -4,6 +4,7 @@
     public int m_Line;
     public string m_Value;
     public string m_File;
+    public string m_SrcLineNumbers;
     public override string ToString()
     {
         switch (m_Type)

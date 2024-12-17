@@ -33,13 +33,13 @@ public class CompilerSettings
 {
     public static string m_InputFile = "\0";
     public static string m_OutputFile = "./CCLOutput.txt";
+    public static string m_ErrorFile = "";
 
-    public static bool m_DoEntry = true;
-
-    public static int m_StartOffset = 0x10000;
-
+    public static bool m_IsDebug = false;
+    public static bool m_DoWriteOut = true;
+    public static string m_ErrorFileContents = "";
     public static List<FileInfo> m_Files = new List<FileInfo>();
-
+    public static bool m_DoPrintToSTDOut = true;
     public static CPUType m_CPUType;
 
     public const int BYTESIZE = 1;
@@ -56,9 +56,4 @@ public class CompilerSettings
 
     public static bool m_DoRaw = false;
 
-    public enum AssignmentOperators
-    {
-        none,
-        basic_assignment,
-    }
 }

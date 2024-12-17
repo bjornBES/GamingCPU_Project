@@ -7,31 +7,31 @@ namespace CommonBCGCPU.Types
     [ComVisible(true)]
     public struct Address
     {
-        uint m_Value;
-        public const uint MaxValue = 0x01FFFFFF;
+        ulong m_Value;
+        public const uint MaxValue = 0xFFFFFFFF;
         public const uint MinValue = 0x00000000;
 
-        public Address(uint value)
+        public Address(ulong value)
         {
             if (value > MaxValue) value = MaxValue;
             m_Value = value;
         }
 
-        public static Address operator +(Address a, uint b)
+        public static Address operator +(Address a, ulong b)
         {
-            return a.m_Value + b;
+            return (Address)(a.m_Value + b);
         }
-        public static Address operator -(Address a, uint b)
+        public static Address operator -(Address a, ulong b)
         {
-            return a.m_Value - b;
+            return (Address)(a.m_Value - b);
         }
-        public static Address operator |(Address a, uint b)
+        public static Address operator |(Address a, ulong b)
         {
-            return a.m_Value | b;
+            return (Address)(a.m_Value | b);
         }
-        public static Address operator &(Address a, uint b)
+        public static Address operator &(Address a, ulong b)
         {
-            return a.m_Value & b;
+            return (Address)(a.m_Value & b);
         }
 
         public static Address operator ++ (Address a)
@@ -73,12 +73,7 @@ namespace CommonBCGCPU.Types
         {
             return (ushort)register.m_Value;
         }
-        public static implicit operator uint(Address register)
-        {
-            return register.m_Value;
-        }
-
-        public static implicit operator _24Bit_Register(Address register)
+        public static implicit operator ulong(Address register)
         {
             return register.m_Value;
         }

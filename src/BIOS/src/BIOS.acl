@@ -7,7 +7,7 @@ $BootableDriveNumber = 0xAA55
 
 _BIOSStart:
     sez     SS                                  ; SS = 0
-    mov     SP,             @__STACK            ; SP = @Stack
+    mov     SP,             @__START_STACK__    ; SP = @Stack
 
     sez     A
     mov     AL,             CR0
@@ -131,14 +131,16 @@ BreakpointLoop:
     call    [COut]
     reti                                                            ; return
 
+.section BSS
+
+__START_STACK__:
+.res 0x200
 
 .includeil "./BIOS_errors.acl"
 .includeil "./IOFunctions.acl"
 .includeil "./Keyboard.acl"
 
 .includeil "./BIOS_Interrupt_Pointer.acl"
-
-.section Stack
 
 .section Bootloader
 

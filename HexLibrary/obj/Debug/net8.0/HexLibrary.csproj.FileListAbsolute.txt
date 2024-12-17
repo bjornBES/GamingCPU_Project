@@ -1,0 +1,12 @@
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/bin/Debug/net8.0/HexLibrary.deps.json
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/bin/Debug/net8.0/HexLibrary.dll
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/bin/Debug/net8.0/HexLibrary.pdb
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/HexLibrary.GeneratedMSBuildEditorConfig.editorconfig
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/HexLibrary.AssemblyInfoInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/HexLibrary.AssemblyInfo.cs
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/HexLibrary.csproj.CoreCompileInputs.cache
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/HexLibrary.sourcelink.json
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/HexLibrary.dll
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/refint/HexLibrary.dll
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/HexLibrary.pdb
+/home/bjornbes/projects/GamingCPU_Project/HexLibrary/obj/Debug/net8.0/ref/HexLibrary.dll

@@ -30,8 +30,6 @@
 
         public bool Running { get; set; }
 
-        private double[] framerateSamples;
-
         public bool IsRendering = false;
 
         /// <summary> Initializes the ConsoleGame. Creates the instance of a ConsoleEngine and starts the game loop. </summary>
@@ -52,14 +50,6 @@
             {
             }
         }
-
-        /// <summary> Gets the current framerate the application is running at. </summary>
-        /// <returns> Application Framerate. </returns>
-        public double GetFramerate()
-        {
-            return 1 / (framerateSamples.Sum() / (TargetFramerate));
-        }
-
 
         public void SetTitle(string title)
         {

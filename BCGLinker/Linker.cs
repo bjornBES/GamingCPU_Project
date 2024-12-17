@@ -114,7 +114,7 @@ namespace BCGLinker
 
                 if (!line.Contains(":\t"))
                 {
-                     continue;
+                    continue;
                 }
                 string Full_address = m_pre_Output[i].Split(":\t")[0];
                 string address = Full_address;
@@ -218,7 +218,7 @@ namespace BCGLinker
                             case "_NEWLINE_":
                                 break;
                             default:
-                            m_Output.Add($"{getPCHex(m_Sections[m_currentSectionIndex])}_DEL_:\t{line}");
+                                m_Output.Add($"{getPCHex(m_Sections[m_currentSectionIndex])}_DEL_:\t{line}");
                                 break;
                         }
                     }
@@ -853,7 +853,7 @@ namespace BCGLinker
                                             m_Name = name,
                                             m_IsGlobal = IsGolbal,
                                             m_IsLocal = IsLocal,
-                                            m_File = file
+                                            m_File = file,
                                         });
                                     break;
                                 default:
@@ -884,7 +884,7 @@ namespace BCGLinker
                 string start = ToHexString(section.m_Start).PadLeft(4, '0');
                 string size = ToHexString(section.m_Size).PadLeft(4, '0');
 
-                m_mapFile.Add($"{start}\t{size}\t\t"+ $"{section.m_Name}".PadRight(25, ' '));
+                m_mapFile.Add($"{start}\t{size}\t\t" + $"{section.m_Name}".PadRight(25, ' '));
             }
 
             m_mapFile.Add("");
@@ -897,7 +897,19 @@ namespace BCGLinker
 
                 string file = m_Labels[i].m_File.Replace(Environment.CurrentDirectory, "");
 
-                m_mapFile.Add($"{m_Labels[i].m_Name}".PadRight(45, ' ') + $"{address}\t" + $"{m_Labels[i].m_Section.m_Name}".PadRight(20, ' ') + $"{file}");
+                if (m_Labels[i] == null)
+                {
+
+                }
+
+                if (m_Labels[i].m_Section == null)
+                {
+                    m_mapFile.Add($"{m_Labels[i].m_Name}".PadRight(45, ' ') + $"{address}\t" + $"NULL".PadRight(20, ' ') + $"{file}");
+                }
+                else
+                {
+                    m_mapFile.Add($"{m_Labels[i].m_Name}".PadRight(45, ' ') + $"{address}\t" + $"{m_Labels[i].m_Section.m_Name}".PadRight(20, ' ') + $"{file}");
+                }
             }
 
             return m_mapFile.ToArray();

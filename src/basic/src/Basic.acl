@@ -1,0 +1,41 @@
+.setcpu "BC16C"
+
+.section BASICSRC
+.section TEXT
+
+Entry:
+    mov             DS,                 HIGH @__BSSSTART
+
+    sez             B
+    mov             HL,                 far @Message
+    push            HL
+    push            B
+
+    call            [PrintStr]    
+
+    jmp             $
+
+.includeil "./includes.acl"
+
+Message:
+.db "Hello world",0
+
+
+.section BSS
+
+ParsedBuffer:
+.res @__SIZE_BASICSRC__
+; buffer for the parsed code
+
+CursorX:
+.resw
+CursorY:
+.resw
+ScreenHeight:
+.resw
+ScreenWidth:
+.resw
+
+ParserIndex:
+.resw
+

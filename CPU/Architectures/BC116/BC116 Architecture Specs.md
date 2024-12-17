@@ -5,7 +5,6 @@
   - [CPUs](#cpus)
     - [BC16](#bc16)
     - [BC16C](#bc16c)
-    - [BC16CE](#bc16ce)
     - [BC1602C](#bc1602c)
     - [Note](#note)
   - [INSTRUCTIONS](#instructions)
@@ -47,12 +46,6 @@
 - Starts in [virtual mode](#virtual-mode)
 
 ### BC16C
-
-- The base BC16 CPU
-- Starts in [virtual mode](#virtual-mode)
-- Can enable [extended mode](#extended-mode) in CR0
-
-### BC16CE
 
 - The base BC16 CPU
 - Starts in [virtual mode](#virtual-mode)

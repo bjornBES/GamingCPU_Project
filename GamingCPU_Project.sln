@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "filesystem", "fileSystem\filesystem.csproj", "{14B7ECDE-955F-49B7-95AF-9CAE6112C407}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "filesystem", "filesystem\filesystem.csproj", "{14B7ECDE-955F-49B7-95AF-9CAE6112C407}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compiler", "Compiler\Compiler.csproj", "{BD92B8ED-61B2-4460-A543-0739547334DD}"
 EndProject
@@ -22,8 +22,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisAssemblerBCG16", "DesassemblerBCG16\DisAssemblerBCG16.csproj", "{BB1BCD6A-C555-4E8F-A780-AA8482B93EB9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblerBCG", "AssemblerBCG\AssemblerBCG.csproj", "{C1EA7317-0D2B-4B1F-88AF-ADDE0D606874}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BC16EmulatorC", "BC16EmulatorC\BC16EmulatorC.vcxproj", "{F226A774-4887-4506-BD46-910B9BFC5EA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HLCLCompiler", "HLCLCompiler\HLCLCompiler.csproj", "{37B65322-5B31-493D-ACB2-68651707F9F8}"
 EndProject

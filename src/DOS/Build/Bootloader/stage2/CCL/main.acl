@@ -1,43 +1,55 @@
 .setcpu "BC16CE"
 .section TEXT
-L0000000:
-_OUT:
-	enter
-	pushr
-	mov   R2,                      [BP - 10]
-	mov   R3,                      [BP - 14]
-	outb  R2,                      R3
-L0000001:
-	mov   R16,                     0
-Exit_OUT:
-	popr
-	leave
-	mov   AX,                      R16
-	ret   8
-L0000002:
-_IN:
-	enter
-	pushr
-	mov   R2,                      [BP - 10]
-	inb   R2,                      AX
-	mov   R16,                     AX
-	jmp   [Exit_IN]
-Exit_IN:
-	popr
-	leave
-	mov   AX,                      R16
-	ret   4
+.extern _ACLAsmWriteChar
 L0000010:
 _diplay:
 	enter
 	pushr
-L0000049:
+L0000048:
 	mov   R16,                     0
 Exit_diplay:
 	popr
 	leave
 	mov   AX,                      R16
 	ret   16
+L0000049:
+_ColorOut:
+	enter
+	pushr
+	; arguemnt 1
+	mov   AX,                      [BP - 14]
+	push  AX
+	; arguemnt 0
+	mov   AX,                      [BP - 10]
+	push  AX
+	call  far [_ACLAsmWriteChar]
+L0000050:
+	mov   R16,                     0
+Exit_ColorOut:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+L0000051:
+_Cout:
+	enter
+	pushr
+	mov   AX,                      0x55
+	push  AX
+	; arguemnt 1
+	mov   AX,                      [BP - 14]
+	push  AX
+	; arguemnt 0
+	mov   AX,                      [BP - 10]
+	push  AX
+	call  far [_ACLAsmWriteChar]
+L0000052:
+	mov   R16,                     0
+Exit_Cout:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   4
 .extern _ACLAsmReadSector
 L2000000:
 _ReadRoot:
@@ -91,13 +103,13 @@ Exit_ErrorRS:
 	retz
 L9000000:
 	jmp   [L9000000]
-.extern _DOSSTART
+.extern _StartDos
 L1000000:
 _cstart:
 	enter
 	pushr
 L1001000:
-	mov   HL,                      far @_DOSSTART
+	mov   HL,                      far @_StartDos
 	push  HL
 	sez   SP
 	jmp   [HL]

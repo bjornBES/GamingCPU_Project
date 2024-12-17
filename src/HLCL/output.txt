@@ -1,12 +1,47 @@
+_add:
+.global _add
+	enter
+	add       SP,                           0x0004
+	; return value is at [BP]
+	pushr
+	mov       AX,                           [BP - 10]
+	push      AX
+	mov       AX,                           [SP + 4]
+	push      AX
+	pop       AX
+	mov       [BP - 0],                     AX
+_addReturn:
+	sub       SP,                           0x0004
+	popr
+	pop       AX
+	leave
+	ret       0x04
 _main:
 .global _main
 	enter
 	add       SP,                           0x0004
 	; return value is at [BP]
 	pushr
+	mov       AX,                           0x03e8
+	push      AX
+	mov       AX,                           0x0010
+	push      AX
+	pop       AX
+	lda       HL,                           [SP + 4]
+	mov       [HL],                         AX
+	mov       AX,                           0x000a
+	push      AX
+	mov       AX,                           0x0010
+	push      AX
+	call      [_add]
+	
+	mov       AX,                           0x0010
+	push      AX
+	call      [_add]
+	push      AX
 _mainReturn:
+	sub       SP,                           0x000c
 	popr
-	mov       AX,                           [BP]
-	sub       SP,                           0x0004
+	pop       AX
 	leave
 	retz

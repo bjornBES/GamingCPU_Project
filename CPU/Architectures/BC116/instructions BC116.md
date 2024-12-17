@@ -61,6 +61,8 @@
 - `0x0B0B`: TEST: CX                        `Compares the CX register with itself and sets the flag`
 - `0x0B0C`: TEST: DX                        `Compares the DX register with itself and sets the flag`
 - `0x0C00`: SWAP register register          `swaps the contents of register1 with register2`
+- `0x0D00`: LDA register source             `loading the address from source into the register`
+- `0x0D01`: LDA HL source                   `loading the address from source into the HL register`
 
 # IO instructions
 

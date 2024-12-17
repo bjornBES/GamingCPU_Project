@@ -1,0 +1,27 @@
+
+.section TEXT
+
+Generate:
+    pushr
+    mov             DS,                 HIGH @AddressTable
+    mov             HL,                 @ParsedBuffer
+    
+
+GenCommandAddress:
+    sez             B
+    sez             R1
+GenCommandLoop:
+    mov             A,                  [DS:B]
+    mov             C,                  [HL]
+    cmp             A,                  C
+    je              [GenCommandExit]
+    add             B,                  %AddressTableLength
+    jmp             [GenCommandLoop]
+GenCommandExit:
+    add             B,                  2
+    push            HL
+    movd            HL,                 [DS:B]
+    
+    jmp             [HL]
+
+

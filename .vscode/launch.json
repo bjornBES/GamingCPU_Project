@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: Assembler Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet build",
+            "projectPath": "${workspaceFolder}/AssemblerBCG/AssemblerBCG.csproj"
+        },
+        {
+            "name": "Filesystem test",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet build",
+            "projectPath": "${workspaceFolder}/filesystem/filesystem.csproj"
+        },
+        {
+            "name": "Compiler test",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet build",
+            "projectPath": "${workspaceFolder}/Compiler/Compiler.csproj"
+        },
+        {
+            "name": "HLCL Compiler test",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet build",
+            "projectPath": "${workspaceFolder}/HLCLCompiler/HLCLCompiler.csproj"
+        },
+        {
+            "name": "Emutator test",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet build",
+            "projectPath": "${workspaceFolder}/BC16Emulator/BC16Emulator.csproj"
+        }
+    ]
+}

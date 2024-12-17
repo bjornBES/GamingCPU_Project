@@ -2,7 +2,7 @@
   "profiles": {
     "HLCLCompiler": {
       "commandName": "Project",
-      "commandLineArgs": "-i ./src/HLCL/testprogram.hlcl -o ./src/HLCL/output.txt",
+      "commandLineArgs": "-i ./src/HLCL/testprogram.HLCL -o ./src/HLCL/output.txt",
       "workingDirectory": "./.."
     }
   }

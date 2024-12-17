@@ -1,123 +1,144 @@
 INCLUDE HEADER
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 
 
 SECTION HEADER
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_Stack C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_Bootloader C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_BSS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_DATA C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_RODATA C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_BSS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_BSS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_BSS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RODATA /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RODATA /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_BSS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_BSS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_Bootloader /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_BSS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_DATA /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_RODATA /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL _BIOSStart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL OtherBIOS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL FindBootDiskLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL SetArguments,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL Exit_FindDiskLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL EndOfBIOS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL ShowBIOS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL BreakPoint,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL BreakpointLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL JMPErrorLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL Error_Invalid_BootDisk,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL Error_Invalid_Instruction,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL PrintError,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL ErrorMSG,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL ErrorMSGend,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL ErrorMSGLength,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL Error_Invalid_InstructionMSG,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL Error_Invalid_InstructionEnd,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL Error_Invalid_InstructionLength,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL CharBuffer,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
-_REF_ LABEL PrintStr,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL PrintStrLoop,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL ExitPrintStr,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL ReadCharKey,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL Read_Sector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL ExitReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL LBAtoCHS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL LBAtoCHS32,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
-_REF_ LABEL COut,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-_REF_ LABEL EndOfLoad,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-_REF_ LABEL NewLine,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-_REF_ LABEL ExitCout,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-_REF_ LABEL GetCursorAddress,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
-_REF_ LABEL Metadata,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Buffer,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL InitializeDrive,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Read_Data,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Write_Data,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Format,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL WaitForMSR,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Format_Head,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Format_TotalTracks,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Format_TotalSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Format_SectorsPerTrack,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL Format_BytesPerSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_REF_ LABEL InitBuffer,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL WriteBuffer,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL ReadBuffer,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL BufferSize,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL EnableCLS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL CharIn,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL nopeKey,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL ReadPtrVar,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL WritePtrVar,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL KeyboardBuffer,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
-_REF_ LABEL BIOS_IRQ_Interrupt,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL KeyBoardIRQ,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL NotInBoot,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL BIOS_Interrupt13h,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL BIOS_Interrupt10h,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL readkey,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL printchar,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL IntLBAToCHS,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL EEMLBAToCHS32,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL readsector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
-_REF_ LABEL DriveNumber,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL ReceivedIRQ,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL IsF12,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL Cursorx,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL Cursory,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL EReg,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL ScreenHeight,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL ScreenWidth,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL KeyBoardChar,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL BreakPointMSG,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL BreakPointMSGEnd,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL BreakPointMSGLength,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL StartMSG,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL StartMSGEnd,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL StartMSGLength,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL Error_Invalid_BootDisk_Str,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL Error_Invalid_BootDisk_Strend,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL Error_Invalid_BootDisk_StrLength,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL INFOMSG_FoundBootableDisk,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL INFOMSG_FoundBootableDiskEnd,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
-_REF_ LABEL INFOMSG_FoundBootableDiskLength,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL _BIOSStart,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL OtherBIOS,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL FindBootDiskLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL SetArguments,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL Exit_FindDiskLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL EndOfBIOS,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL ShowBIOS,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL BreakPoint,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL BreakpointLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL __START_STACK__,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL JMPErrorLoop,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL Error_Invalid_BootDisk,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL Error_Invalid_Instruction,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL PrintError,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL ErrorMSG,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL ErrorMSGend,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL ErrorMSGLength,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL Error_Invalid_InstructionMSG,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL Error_Invalid_InstructionEnd,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL Error_Invalid_InstructionLength,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL CharBuffer,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
+_REF_ LABEL PrintStr,True.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL PrintStrLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL ExitPrintStr,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL ReadCharKey,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL Read_Sector,True.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL ExitReadSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL LBAtoCHS,True.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL LBAtoCHS32,True.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
+_REF_ LABEL COut,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_REF_ LABEL EndOfLoad,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_REF_ LABEL NewLine,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_REF_ LABEL ExitCout,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_REF_ LABEL GetCursorAddress,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_REF_ LABEL Metadata,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL Buffer,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL InitializeDrive,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL Read_Data,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL Write_Data,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL Format,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL WaitForMSR,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_Head,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_TracksPerHead,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_TotalSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_SectorsPerTrack,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_SectorsPerPage,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_BytesPerSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_Head,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_TracksPerHead,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_TotalSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_SectorsPerTrack,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_SectorsPerPage,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL DataFormat_BytesPerSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_REF_ LABEL InitBuffer,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL WriteBuffer,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL ReadBuffer,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL BufferSize,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL EnableCLS,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL CharIn,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL nopeKey,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL ReadPtrVar,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL WritePtrVar,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL KeyboardBuffer,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
+_REF_ LABEL BIOS_IRQ_Interrupt,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL KeyBoardIRQ,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL NotInBoot,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL BIOS_Interrupt13h,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL BIOS_Interrupt10h,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL readkey,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL printchar,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL IntLBAToCHS,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL EEMLBAToCHS32,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL readsector,False.True /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
+_REF_ LABEL DriveNumber,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL ReceivedIRQ,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL IsF12,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL Cursorx,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL Cursory,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL EReg,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL ScreenHeight,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL ScreenWidth,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL KeyBoardChar,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL BreakPointMSG,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL BreakPointMSGEnd,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL BreakPointMSGLength,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL StartMSG,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL StartMSGEnd,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL StartMSGLength,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL Error_Invalid_BootDisk_Str,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL Error_Invalid_BootDisk_Strend,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL Error_Invalid_BootDisk_StrLength,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL INFOMSG_FoundBootableDisk,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL INFOMSG_FoundBootableDiskEnd,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_REF_ LABEL INFOMSG_FoundBootableDiskLength,False.False /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 
 
 TEXT HEADER
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl"
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
@@ -127,7 +148,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL _BIOSStart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL _BIOSStart /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _DEL_ sez SS
 0a
@@ -136,15 +157,15 @@ _DEL_ sez SS
 _NEWARG_ SS
 c6
 _NEWLINE_
-_DEL_ mov SP, @__STACK
+_DEL_ mov SP, @__START_STACK__
 02
 08
 10
 01
 _NEWARG_ SP
 09
-_NEWARG_ @__STACK
-_SL___STACK
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
 _NEWLINE_
 _NEWLINE_
 _DEL_ sez A
@@ -206,7 +227,7 @@ _NEWARG_ [PrintStr]
 _SL_PrintStr
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL OtherBIOS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL OtherBIOS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _DEL_ outw %VideoCard, 0x8001
 10
@@ -351,7 +372,7 @@ _DEL_ sez D
 _NEWARG_ D
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL FindBootDiskLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL FindBootDiskLoop /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _DEL_ call [InitializeDrive]
 07
@@ -379,7 +400,7 @@ _NEWARG_ [ShowBIOS]
 _SL_ShowBIOS
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL SetArguments C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL SetArguments /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _DEL_ mov A, 1
 01
@@ -546,7 +567,7 @@ _DEL_ jmp [Error_Invalid_BootDisk]
 _NEWARG_ [Error_Invalid_BootDisk]
 _SL_Error_Invalid_BootDisk
 _NEWLINE_
-_REF_ LABEL Exit_FindDiskLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL Exit_FindDiskLoop /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _DEL_ mov [DriveNumber], DL
 00
@@ -566,7 +587,7 @@ _NEWARG_ 0x02
 02
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL EndOfBIOS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL EndOfBIOS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov HL, far @INFOMSG_FoundBootableDisk
@@ -689,10 +710,10 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ShowBIOS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL ShowBIOS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL BreakPoint C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL BreakPoint /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _DEL_ sez B
 0a
@@ -756,7 +777,7 @@ f0
 10
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL BreakpointLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL BreakpointLoop /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _DEL_ call [BufferSize]
 07
@@ -836,8 +857,15 @@ f0
 00
 _NEWLINE_
 _NEWLINE_
+_SECTION_ BSS
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl"
+_NEWLINE_
+_REF_ LABEL __START_STACK__ /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_RES_ 0200
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl"
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
@@ -845,7 +873,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Error_Invalid_BootDisk C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL Error_Invalid_BootDisk /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 _DEL_ sez B
 0a
@@ -867,7 +895,7 @@ _NEWARG_ [JMPErrorLoop]
 _SL_JMPErrorLoop
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Error_Invalid_Instruction C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL Error_Invalid_Instruction /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 _DEL_ push HL
 05
@@ -944,7 +972,7 @@ _NEWARG_ [PrintStr]
 _SL_PrintStr
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL JMPErrorLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL JMPErrorLoop /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 _DEL_ cli
 20
@@ -960,7 +988,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL PrintError C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL PrintError /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 _DEL_ sez B
 0a
@@ -997,7 +1025,7 @@ _DEL_ retz
 00
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ErrorMSG C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL ErrorMSG /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 45
 72
@@ -1006,14 +1034,14 @@ _NEWLINE_
 72
 3a
 _NEWLINE_
-_REF_ LABEL ErrorMSGend C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL ErrorMSGend /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
-_REF_ LABEL ErrorMSGLength C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL ErrorMSGLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 BINEXPR _SL_ErrorMSGend _SL_ErrorMSG -
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Error_Invalid_InstructionMSG C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL Error_Invalid_InstructionMSG /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 49
 6e
@@ -1039,20 +1067,234 @@ _NEWLINE_
 74
 20
 _NEWLINE_
-_REF_ LABEL Error_Invalid_InstructionEnd C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL Error_Invalid_InstructionEnd /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
-_REF_ LABEL Error_Invalid_InstructionLength C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL Error_Invalid_InstructionLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 BINEXPR _SL_Error_Invalid_InstructionEnd _SL_Error_Invalid_InstructionMSG -
 _NEWLINE_
 _NEWLINE_
 _SECTION_ BSS
 _NEWLINE_
-_REF_ LABEL CharBuffer C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_errors.acl
+_REF_ LABEL CharBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_errors.acl
 _NEWLINE_
 _RES_ 0008
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl"
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Error_Invalid_BootDisk /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ sez B
+0a
+06
+_NEWARG_ B
+_NEWLINE_
+_DEL_ call [PrintStr]
+07
+00
+32
+_NEWARG_ [PrintStr]
+_SL_PrintStr
+_NEWLINE_
+_DEL_ jmp [JMPErrorLoop]
+30
+00
+32
+_NEWARG_ [JMPErrorLoop]
+_SL_JMPErrorLoop
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Error_Invalid_Instruction /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ push HL
+05
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ call [PrintError]
+07
+00
+32
+_NEWARG_ [PrintError]
+_SL_PrintError
+_NEWLINE_
+_DEL_ mov HL, @Error_Invalid_InstructionMSG
+00
+00
+10
+01
+_NEWARG_ HL
+c7
+_NEWARG_ @Error_Invalid_InstructionMSG
+_SL_Error_Invalid_InstructionMSG
+_NEWLINE_
+_DEL_ mov C, @Error_Invalid_InstructionLength
+01
+03
+01
+_NEWARG_ C
+_NEWARG_ @Error_Invalid_InstructionLength
+_SL_Error_Invalid_InstructionLength
+_NEWLINE_
+_DEL_ call [PrintStr]
+07
+00
+32
+_NEWARG_ [PrintStr]
+_SL_PrintStr
+_NEWLINE_
+_NEWLINE_
+_DEL_ pop HL
+06
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ CBTA HL, [CharBuffer]
+40
+00
+10
+32
+_NEWARG_ HL
+c7
+_NEWARG_ [CharBuffer]
+_SL_CharBuffer
+_NEWLINE_
+_DEL_ mov HL, @CharBuffer
+00
+00
+10
+01
+_NEWARG_ HL
+c7
+_NEWARG_ @CharBuffer
+_SL_CharBuffer
+_NEWLINE_
+_DEL_ call [PrintStr]
+07
+00
+32
+_NEWARG_ [PrintStr]
+_SL_PrintStr
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL JMPErrorLoop /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ cli
+20
+15
+_NEWLINE_
+_DEL_ jmp [JMPErrorLoop]
+30
+00
+32
+_NEWARG_ [JMPErrorLoop]
+_SL_JMPErrorLoop
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL PrintError /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ sez B
+0a
+06
+_NEWARG_ B
+_NEWLINE_
+_DEL_ mov HL, @ErrorMSG
+00
+00
+10
+01
+_NEWARG_ HL
+c7
+_NEWARG_ @ErrorMSG
+_SL_ErrorMSG
+_NEWLINE_
+_DEL_ mov C, @ErrorMSGLength
+01
+03
+01
+_NEWARG_ C
+_NEWARG_ @ErrorMSGLength
+_SL_ErrorMSGLength
+_NEWLINE_
+_DEL_ call [PrintStr]
+07
+00
+32
+_NEWARG_ [PrintStr]
+_SL_PrintStr
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ErrorMSG /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+45
+72
+72
+6f
+72
+3a
+_NEWLINE_
+_REF_ LABEL ErrorMSGend /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_REF_ LABEL ErrorMSGLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+BINEXPR _SL_ErrorMSGend _SL_ErrorMSG -
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Error_Invalid_InstructionMSG /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+49
+6e
+76
+61
+6c
+69
+64
+20
+69
+6e
+73
+74
+72
+75
+63
+74
+69
+6f
+6e
+20
+61
+74
+20
+_NEWLINE_
+_REF_ LABEL Error_Invalid_InstructionEnd /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_REF_ LABEL Error_Invalid_InstructionLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+BINEXPR _SL_Error_Invalid_InstructionEnd _SL_Error_Invalid_InstructionMSG -
+_NEWLINE_
+_NEWLINE_
+_SECTION_ BSS
+_NEWLINE_
+_REF_ LABEL CharBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_RES_ 0008
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl"
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
@@ -1070,7 +1312,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL PrintStr C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL PrintStr /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -1081,7 +1323,7 @@ f0
 20
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL PrintStrLoop C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL PrintStrLoop /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ mov AL, [HL]
 00
@@ -1152,7 +1394,7 @@ _DEL_ jmp [PrintStrLoop]
 _NEWARG_ [PrintStrLoop]
 _SL_PrintStrLoop
 _NEWLINE_
-_REF_ LABEL ExitPrintStr C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL ExitPrintStr /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -1173,7 +1415,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ReadCharKey C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL ReadCharKey /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ call [ReadBuffer]
 07
@@ -1199,7 +1441,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Read_Sector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL Read_Sector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -1370,7 +1612,7 @@ f0
 _NEWARG_ R1
 10
 _NEWLINE_
-_REF_ LABEL ExitReadSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL ExitReadSector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -1399,7 +1641,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL LBAtoCHS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL LBAtoCHS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -1608,7 +1850,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL LBAtoCHS32 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\IOFunctions.acl
+_REF_ LABEL LBAtoCHS32 /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/IOFunctions.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -1696,7 +1938,7 @@ _NEWARG_ 12
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl"
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
@@ -1706,7 +1948,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL COut C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
+_REF_ LABEL COut /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -1794,7 +2036,7 @@ _DEL_ mov [HL], A
 _NEWARG_ [HL]
 _NEWARG_ A
 _NEWLINE_
-_REF_ LABEL EndOfLoad C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
+_REF_ LABEL EndOfLoad /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
 _NEWLINE_
 _DEL_ mov word A, [Cursorx]
 01
@@ -1842,7 +2084,7 @@ _NEWARG_ [ExitCout]
 _SL_ExitCout
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL NewLine C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
+_REF_ LABEL NewLine /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
 _NEWLINE_
 _DEL_ sez A
 0a
@@ -1882,7 +2124,7 @@ _SL_Cursory
 _NEWARG_ A
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ExitCout C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
+_REF_ LABEL ExitCout /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
 _NEWLINE_
 _DEL_ pop HL
 06
@@ -1916,7 +2158,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL GetCursorAddress C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_VideoDriver.acl
+_REF_ LABEL GetCursorAddress /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
 _NEWLINE_
 _DEL_ push C
 05
@@ -2005,7 +2247,7 @@ _DEL_ retz
 09
 00
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl"
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
@@ -2043,7 +2285,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL InitializeDrive C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
+_REF_ LABEL InitializeDrive /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -2059,33 +2301,49 @@ _NEWARG_ 2
 00
 02
 _NEWLINE_
-_DEL_ mov [Format.Head], BL
+_DEL_ mov [DataFormat.Head], BL
 00
 00
 32
 12
-_NEWARG_ [Format.Head]
-_SL_Format_Head
+_NEWARG_ [DataFormat.Head]
+_SL_DataFormat_Head
 _NEWARG_ BL
 _NEWLINE_
-_DEL_ mov B, 160
-01
-02
-01
-_NEWARG_ B
-_NEWARG_ 160
-01
-60
-_NEWLINE_
-_DEL_ mov [Format.TotalTracks], B
+_DEL_ mov [DataFormat.SectorsPerPage], B
 01
 00
 32
 18
-_NEWARG_ [Format.TotalTracks]
-_SL_Format_TotalTracks
+_NEWARG_ [DataFormat.SectorsPerPage]
+_SL_DataFormat_SectorsPerPage
 _NEWARG_ B
 _NEWLINE_
+_NEWLINE_
+_DEL_ mov A, 160
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 160
+01
+60
+_NEWLINE_
+_DEL_ div A, B
+20
+51
+18
+_NEWARG_ A
+_NEWARG_ B
+_NEWLINE_
+_DEL_ mov [DataFormat.TracksPerHead], A
+01
+00
+32
+17
+_NEWARG_ [DataFormat.TracksPerHead]
+_SL_DataFormat_TracksPerHead
+_NEWARG_ A
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, 2880
@@ -2097,14 +2355,23 @@ _NEWARG_ 2880
 28
 80
 _NEWLINE_
-_DEL_ mov [Format.TotalSector], A
+_DEL_ mov [DataFormat.TotalSector], A
 01
 00
 32
 17
-_NEWARG_ [Format.TotalSector]
-_SL_Format_TotalSector
+_NEWARG_ [DataFormat.TotalSector]
+_SL_DataFormat_TotalSector
 _NEWARG_ A
+_NEWLINE_
+_DEL_ mov B, 160
+01
+02
+01
+_NEWARG_ B
+_NEWARG_ 160
+01
+60
 _NEWLINE_
 _DEL_ div A, B
 20
@@ -2113,13 +2380,13 @@ _DEL_ div A, B
 _NEWARG_ A
 _NEWARG_ B
 _NEWLINE_
-_DEL_ mov [Format.SectorsPerTrack], A
+_DEL_ mov [DataFormat.SectorsPerTrack], A
 01
 00
 32
 17
-_NEWARG_ [Format.SectorsPerTrack]
-_SL_Format_SectorsPerTrack
+_NEWARG_ [DataFormat.SectorsPerTrack]
+_SL_DataFormat_SectorsPerTrack
 _NEWARG_ A
 _NEWLINE_
 _DEL_ mov A, 0x200
@@ -2131,13 +2398,13 @@ _NEWARG_ 0x200
 02
 00
 _NEWLINE_
-_DEL_ mov [Format.BytesPerSector], A
+_DEL_ mov [DataFormat.BytesPerSector], A
 01
 00
 32
 17
-_NEWARG_ [Format.BytesPerSector]
-_SL_Format_BytesPerSector
+_NEWARG_ [DataFormat.BytesPerSector]
+_SL_DataFormat_BytesPerSector
 _NEWARG_ A
 _NEWLINE_
 _NEWLINE_
@@ -2161,7 +2428,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Read_Data C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
+_REF_ LABEL Read_Data /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -2331,7 +2598,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Write_Data C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
+_REF_ LABEL Write_Data /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -2485,7 +2752,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Format C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
+_REF_ LABEL Format /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -2599,7 +2866,7 @@ _NEWARG_ 2
 02
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL WaitForMSR C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
+_REF_ LABEL WaitForMSR /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
 _NEWLINE_
 _DEL_ push B
 05
@@ -2644,7 +2911,10 @@ _DEL_ retz
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Buffer C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
+_SECTION_ RODATA
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Buffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
 _NEWLINE_
 42
 46
@@ -2653,62 +2923,1702 @@ _NEWLINE_
 31
 20
 _NEWLINE_
+_REF_ LABEL DataFormat_Head /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 1
+_REF_ LABEL DataFormat_TracksPerHead /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_REF_ LABEL DataFormat_TotalSector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_REF_ LABEL DataFormat_SectorsPerTrack /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 1
+_REF_ LABEL DataFormat_SectorsPerPage /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_REF_ LABEL DataFormat_BytesPerSector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_NEWLINE_
+_NEWLINE_
 00
+03
 _NEWLINE_
-_REF_ LABEL Format_Head C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_RES_ 1
-_REF_ LABEL Format_TotalTracks C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_RES_ 2
-_REF_ LABEL Format_TotalSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_RES_ 0
-_REF_ LABEL Format_SectorsPerTrack C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_RES_ 1
-_REF_ LABEL Format_BytesPerSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
-_RES_ 2
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
+00
 04
-00
 _NEWLINE_
-00
-10
+20
 _NEWLINE_
 01
 _NEWLINE_
-46
-53
-42
-47
-43
-30
-31
-00
-00
-00
-00
-00
-00
-00
-00
-00
+10
 _NEWLINE_
-_REF_ LABEL Metadata C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\FDDController.acl
+_REF_ LABEL Metadata /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl"
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL InitBuffer C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL PrintStr /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL PrintStrLoop /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ mov AL, [HL]
+00
+01
+21
+_NEWARG_ AL
+_NEWARG_ [HL]
+_NEWLINE_
+_DEL_ cmp AL, 0
+04
+00
+11
+00
+_NEWARG_ AL
+_NEWARG_ 0
+00
+_NEWLINE_
+_DEL_ je [ExitPrintStr]
+30
+30
+32
+_NEWARG_ [ExitPrintStr]
+_SL_ExitPrintStr
+_NEWLINE_
+_DEL_ push BL
+05
+00
+12
+_NEWARG_ BL
+_NEWLINE_
+_DEL_ push AL
+05
+00
+11
+_NEWARG_ AL
+_NEWLINE_
+_DEL_ call [COut]
+07
+00
+32
+_NEWARG_ [COut]
+_SL_COut
+_NEWLINE_
+_DEL_ inc HL
+20
+f0
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ dec C
+21
+00
+19
+_NEWARG_ C
+_NEWLINE_
+_DEL_ jz [ExitPrintStr]
+30
+10
+32
+_NEWARG_ [ExitPrintStr]
+_SL_ExitPrintStr
+_NEWLINE_
+_DEL_ jmp [PrintStrLoop]
+30
+00
+32
+_NEWARG_ [PrintStrLoop]
+_SL_PrintStrLoop
+_NEWLINE_
+_REF_ LABEL ExitPrintStr /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ReadCharKey /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ call [ReadBuffer]
+07
+00
+32
+_NEWARG_ [ReadBuffer]
+_SL_ReadBuffer
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Read_Sector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 12]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 12]
+ee
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 14]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 16]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 16]
+ea
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 18]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 18]
+e8
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, 0x02
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 0x02
+00
+02
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ call [Read_Data]
+07
+00
+32
+_NEWARG_ [Read_Data]
+_SL_Read_Data
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw L, [BP - 10]
+01
+00
+16
+41
+_NEWARG_ L
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ movw H, [BP - 8]
+01
+00
+15
+41
+_NEWARG_ H
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_NEWLINE_
+_DEL_ outw %DATA, H
+10
+04
+01
+15
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ H
+_NEWLINE_
+_DEL_ outw %DATA, L
+10
+04
+01
+16
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ L
+_NEWLINE_
+_NEWLINE_
+_DEL_ inb %DATA, A
+10
+10
+01
+17
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ A
+_NEWLINE_
+_DEL_ sez R1
+0a
+00
+10
+_NEWARG_ R1
+10
+_NEWLINE_
+_DEL_ test A
+0b
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ jz [ExitReadSector]
+30
+10
+32
+_NEWARG_ [ExitReadSector]
+_SL_ExitReadSector
+_NEWLINE_
+_DEL_ inc R1
+20
+f0
+10
+_NEWARG_ R1
+10
+_NEWLINE_
+_REF_ LABEL ExitReadSector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 12
+08
+00
+00
+_NEWARG_ 12
+12
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL LBAtoCHS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_DEL_ movd HL, [BP - 14]
+03
+00
+10
+41
+_NEWARG_ HL
+c7
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ movw A, [BP - 10]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ mov R4, A
+01
+00
+10
+17
+_NEWARG_ R4
+d0
+_NEWARG_ A
+_NEWLINE_
+_DEL_ movw B, [BP - 8]
+01
+02
+41
+_NEWARG_ B
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_DEL_ mov R5, B
+01
+00
+10
+18
+_NEWARG_ R5
+11
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ mul A, B
+20
+41
+18
+_NEWARG_ A
+_NEWARG_ B
+_NEWLINE_
+_DEL_ mov R6, A
+01
+00
+10
+17
+_NEWARG_ R6
+51
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov R2, L
+01
+00
+10
+16
+_NEWARG_ R2
+50
+_NEWARG_ L
+_NEWLINE_
+_DEL_ div R2, A
+20
+50
+10
+17
+_NEWARG_ R2
+50
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, R6
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ R6
+51
+_NEWLINE_
+_DEL_ mov R7, L
+01
+00
+10
+16
+_NEWARG_ R7
+91
+_NEWARG_ L
+_NEWLINE_
+_DEL_ mod R7, A
+21
+80
+10
+17
+_NEWARG_ R7
+91
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov R1, R7
+02
+08
+10
+10
+_NEWARG_ R1
+10
+_NEWARG_ R7
+91
+_NEWLINE_
+_DEL_ swap A, B
+0c
+00
+17
+18
+_NEWARG_ A
+_NEWARG_ B
+_NEWLINE_
+_DEL_ div A, R1
+20
+51
+10
+_NEWARG_ A
+_NEWARG_ R1
+10
+_NEWLINE_
+_DEL_ swap A, R1
+0c
+00
+17
+10
+_NEWARG_ A
+_NEWARG_ R1
+10
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov R3, R7
+02
+08
+10
+10
+_NEWARG_ R3
+90
+_NEWARG_ R7
+91
+_NEWLINE_
+_DEL_ mov A, R5
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ R5
+11
+_NEWLINE_
+_DEL_ mod R3, A
+21
+80
+10
+17
+_NEWARG_ R3
+90
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ inc R3
+20
+f0
+10
+_NEWARG_ R3
+90
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL LBAtoCHS32 /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ push HL
+05
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ movd HL, [BP - 16]
+03
+00
+10
+41
+_NEWARG_ HL
+c7
+_NEWARG_ [BP - 16]
+ea
+_NEWLINE_
+_DEL_ push L
+05
+00
+16
+_NEWARG_ L
+_NEWLINE_
+_DEL_ movd HL, [BP - 14]
+03
+00
+10
+41
+_NEWARG_ HL
+c7
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ push L
+05
+00
+16
+_NEWARG_ L
+_NEWLINE_
+_DEL_ movd HL, [BP - 8]
+03
+00
+10
+41
+_NEWARG_ HL
+c7
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_DEL_ push L
+05
+00
+16
+_NEWARG_ L
+_NEWLINE_
+_DEL_ call [LBAtoCHS]
+07
+00
+32
+_NEWARG_ [LBAtoCHS]
+_SL_LBAtoCHS
+_NEWLINE_
+_DEL_ pop HL
+06
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 12
+08
+00
+00
+_NEWARG_ 12
+12
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl"
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL COut /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ push HL
+05
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, [BP - 9]
+01
+00
+10
+41
+_NEWARG_ AH
+40
+_NEWARG_ [BP - 9]
+f7
+_NEWLINE_
+_DEL_ mov AL, [BP - 8]
+00
+01
+41
+_NEWARG_ AL
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_DEL_ cmp AL, 0xA
+04
+00
+11
+00
+_NEWARG_ AL
+_NEWARG_ 0xA
+0A
+_NEWLINE_
+_DEL_ je [NewLine]
+30
+30
+32
+_NEWARG_ [NewLine]
+_SL_NewLine
+_NEWLINE_
+_DEL_ cmp AL, 0x0
+04
+00
+11
+00
+_NEWARG_ AL
+_NEWARG_ 0x0
+00
+_NEWLINE_
+_DEL_ je [EndOfLoad]
+30
+30
+32
+_NEWARG_ [EndOfLoad]
+_SL_EndOfLoad
+_NEWLINE_
+_NEWLINE_
+_DEL_ call [GetCursorAddress]
+07
+00
+32
+_NEWARG_ [GetCursorAddress]
+_SL_GetCursorAddress
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov [HL], A
+01
+00
+21
+17
+_NEWARG_ [HL]
+_NEWARG_ A
+_NEWLINE_
+_REF_ LABEL EndOfLoad /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_NEWLINE_
+_DEL_ mov word A, [Cursorx]
+01
+01
+32
+_NEWARG_ A
+_NEWARG_ [Cursorx]
+_SL_Cursorx
+_NEWLINE_
+_DEL_ inc A
+20
+f0
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [Cursorx], A
+01
+00
+32
+17
+_NEWARG_ [Cursorx]
+_SL_Cursorx
+_NEWARG_ A
+_NEWLINE_
+_DEL_ cmp A, [ScreenHeight]
+04
+02
+32
+_NEWARG_ A
+_NEWARG_ [ScreenHeight]
+_SL_ScreenHeight
+_NEWLINE_
+_DEL_ jge [NewLine]
+30
+93
+32
+_NEWARG_ [NewLine]
+_SL_NewLine
+_NEWLINE_
+_DEL_ jmp [ExitCout]
+30
+00
+32
+_NEWARG_ [ExitCout]
+_SL_ExitCout
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL NewLine /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [Cursorx], A
+01
+00
+32
+17
+_NEWARG_ [Cursorx]
+_SL_Cursorx
+_NEWARG_ A
+_NEWLINE_
+_DEL_ movw A, [Cursory]
+01
+01
+32
+_NEWARG_ A
+_NEWARG_ [Cursory]
+_SL_Cursory
+_NEWLINE_
+_DEL_ inc A
+20
+f0
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [Cursory], A
+01
+00
+32
+17
+_NEWARG_ [Cursory]
+_SL_Cursory
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ExitCout /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_NEWLINE_
+_DEL_ pop HL
+06
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ pop A
+06
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 2
+08
+00
+00
+_NEWARG_ 2
+02
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GetCursorAddress /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_VideoDriver.acl
+_NEWLINE_
+_DEL_ push C
+05
+00
+19
+_NEWARG_ C
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez L
+0a
+00
+16
+_NEWARG_ L
+_NEWLINE_
+_DEL_ movd H, 0x0001
+01
+00
+15
+01
+_NEWARG_ H
+_NEWARG_ 0x0001
+00
+01
+_NEWLINE_
+_DEL_ movw C, [Cursorx]
+01
+03
+32
+_NEWARG_ C
+_NEWARG_ [Cursorx]
+_SL_Cursorx
+_NEWLINE_
+_DEL_ mul C, 0x2
+20
+40
+19
+01
+_NEWARG_ C
+_NEWARG_ 0x2
+00
+02
+_NEWLINE_
+_DEL_ add HL, C
+20
+20
+10
+19
+_NEWARG_ HL
+c7
+_NEWARG_ C
+_NEWLINE_
+_DEL_ movw C, [Cursory]
+01
+03
+32
+_NEWARG_ C
+_NEWARG_ [Cursory]
+_SL_Cursory
+_NEWLINE_
+_DEL_ mul C, [ScreenWidth]
+20
+40
+19
+32
+_NEWARG_ C
+_NEWARG_ [ScreenWidth]
+_SL_ScreenWidth
+_NEWLINE_
+_DEL_ add HL, C
+20
+20
+10
+19
+_NEWARG_ HL
+c7
+_NEWARG_ C
+_NEWLINE_
+_NEWLINE_
+_DEL_ pop C
+06
+00
+19
+_NEWARG_ C
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl"
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL InitializeDrive /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov B, 2
+01
+02
+01
+_NEWARG_ B
+_NEWARG_ 2
+00
+02
+_NEWLINE_
+_DEL_ mov [DataFormat.Head], BL
+00
+00
+32
+12
+_NEWARG_ [DataFormat.Head]
+_SL_DataFormat_Head
+_NEWARG_ BL
+_NEWLINE_
+_DEL_ mov [DataFormat.SectorsPerPage], B
+01
+00
+32
+18
+_NEWARG_ [DataFormat.SectorsPerPage]
+_SL_DataFormat_SectorsPerPage
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, 160
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 160
+01
+60
+_NEWLINE_
+_DEL_ div A, B
+20
+51
+18
+_NEWARG_ A
+_NEWARG_ B
+_NEWLINE_
+_DEL_ mov [DataFormat.TracksPerHead], A
+01
+00
+32
+17
+_NEWARG_ [DataFormat.TracksPerHead]
+_SL_DataFormat_TracksPerHead
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, 2880
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 2880
+28
+80
+_NEWLINE_
+_DEL_ mov [DataFormat.TotalSector], A
+01
+00
+32
+17
+_NEWARG_ [DataFormat.TotalSector]
+_SL_DataFormat_TotalSector
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov B, 160
+01
+02
+01
+_NEWARG_ B
+_NEWARG_ 160
+01
+60
+_NEWLINE_
+_DEL_ div A, B
+20
+51
+18
+_NEWARG_ A
+_NEWARG_ B
+_NEWLINE_
+_DEL_ mov [DataFormat.SectorsPerTrack], A
+01
+00
+32
+17
+_NEWARG_ [DataFormat.SectorsPerTrack]
+_SL_DataFormat_SectorsPerTrack
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov A, 0x200
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 0x200
+02
+00
+_NEWLINE_
+_DEL_ mov [DataFormat.BytesPerSector], A
+01
+00
+32
+17
+_NEWARG_ [DataFormat.BytesPerSector]
+_SL_DataFormat_BytesPerSector
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Read_Data /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, %CommandRead
+00
+01
+01
+_NEWARG_ AL
+_NEWARG_ %CommandRead
+00
+01
+_NEWLINE_
+_DEL_ outw %DATA, AL
+10
+04
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 16]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 16]
+ea
+_NEWLINE_
+_DEL_ outw %DATA, AL
+10
+04
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_DEL_ movw A, [BP - 14]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ outw %DATA, AL
+10
+04
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 12]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 12]
+ee
+_NEWLINE_
+_DEL_ outw %DATA, A
+10
+04
+01
+17
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 10]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ outw %DATA, AL
+10
+04
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_NEWLINE_
+_DEL_ movw A, [BP - 8]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_DEL_ outw %DATA, AL
+10
+04
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, 0x0004
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 0x0004
+00
+04
+_NEWLINE_
+_DEL_ call [WaitForMSR]
+07
+00
+32
+_NEWARG_ [WaitForMSR]
+_SL_WaitForMSR
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 10
+08
+00
+00
+_NEWARG_ 10
+10
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Write_Data /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, %CommandWrite
+00
+01
+01
+_NEWARG_ AL
+_NEWARG_ %CommandWrite
+00
+02
+_NEWLINE_
+_DEL_ outb %DATA, AL
+10
+00
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, [BP - 16]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 16]
+ea
+_NEWLINE_
+_DEL_ mov AH, [BP - 14]
+01
+00
+10
+41
+_NEWARG_ AH
+40
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ outb %DATA, A
+10
+00
+01
+17
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, [BP - 12]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 12]
+ee
+_NEWLINE_
+_DEL_ outb %DATA, A
+10
+00
+01
+17
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, [BP - 10]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ outb %DATA, AL
+10
+00
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, [BP - 8]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_DEL_ outb %DATA, AL
+10
+00
+01
+11
+_NEWARG_ %DATA
+01
+04
+_NEWARG_ AL
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, 0x0004
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 0x0004
+00
+04
+_NEWLINE_
+_DEL_ call [WaitForMSR]
+07
+00
+32
+_NEWARG_ [WaitForMSR]
+_SL_WaitForMSR
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 14
+08
+00
+00
+_NEWARG_ 14
+14
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Format /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov HL, far @Buffer
+00
+00
+10
+03
+_NEWARG_ HL
+c7
+_NEWARG_ far @Buffer
+_FL_Buffer
+_NEWLINE_
+_DEL_ push HL
+05
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov AL, %SectorSize0x400
+00
+01
+01
+_NEWARG_ AL
+_NEWARG_ %SectorSize0x400
+00
+03
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, 2
+00
+01
+00
+_NEWARG_ AL
+_NEWARG_ 2
+02
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, [BP - 8]
+01
+01
+41
+_NEWARG_ A
+_NEWARG_ [BP - 8]
+f8
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ call [Write_Data]
+07
+00
+32
+_NEWARG_ [Write_Data]
+_SL_Write_Data
+_NEWLINE_
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 2
+08
+00
+00
+_NEWARG_ 2
+02
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL WaitForMSR /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_NEWLINE_
+_DEL_ push B
+05
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_DEL_ inb %MSR, B
+10
+10
+01
+18
+_NEWARG_ %MSR
+01
+02
+_NEWARG_ B
+_NEWLINE_
+_DEL_ and B, A
+20
+60
+18
+17
+_NEWARG_ B
+_NEWARG_ A
+_NEWLINE_
+_DEL_ jz [WaitForMSR]
+30
+10
+32
+_NEWARG_ [WaitForMSR]
+_SL_WaitForMSR
+_NEWLINE_
+_DEL_ pop B
+06
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ RODATA
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Buffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_NEWLINE_
+42
+46
+53
+30
+31
+20
+_NEWLINE_
+_REF_ LABEL DataFormat_Head /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 1
+_REF_ LABEL DataFormat_TracksPerHead /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_REF_ LABEL DataFormat_TotalSector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_REF_ LABEL DataFormat_SectorsPerTrack /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 1
+_REF_ LABEL DataFormat_SectorsPerPage /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_REF_ LABEL DataFormat_BytesPerSector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_RES_ 2
+_NEWLINE_
+_NEWLINE_
+00
+03
+_NEWLINE_
+00
+04
+_NEWLINE_
+20
+_NEWLINE_
+01
+_NEWLINE_
+10
+_NEWLINE_
+_REF_ LABEL Metadata /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/FDDController.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl"
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL InitBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _DEL_ push A
 05
@@ -2751,7 +4661,7 @@ _DEL_ retz
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL WriteBuffer C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL WriteBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _DEL_ pushr
 f0
@@ -2823,7 +4733,7 @@ _DEL_ retz
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ReadBuffer C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL ReadBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _DEL_ push H
 05
@@ -2922,7 +4832,7 @@ _DEL_ retz
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL BufferSize C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL BufferSize /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _DEL_ push B
 05
@@ -2967,7 +4877,7 @@ _DEL_ retz
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL EnableCLS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL EnableCLS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _DEL_ outb 0x00, 0x01
 10
@@ -2985,7 +4895,7 @@ _DEL_ retz
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL CharIn C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL CharIn /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _DEL_ call [BufferSize]
 07
@@ -3028,7 +4938,7 @@ _DEL_ retz
 09
 00
 _NEWLINE_
-_REF_ LABEL nopeKey C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL nopeKey /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _DEL_ sez AH
 0a
@@ -3044,15 +4954,15 @@ _NEWLINE_
 _NEWLINE_
 _SECTION_ BSS
 _NEWLINE_
-_REF_ LABEL ReadPtrVar C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL ReadPtrVar /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _RES_ 0002
 _NEWLINE_
-_REF_ LABEL WritePtrVar C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL WritePtrVar /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _RES_ 0002
 _NEWLINE_
-_REF_ LABEL KeyboardBuffer C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\Keyboard.acl
+_REF_ LABEL KeyboardBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/Keyboard.acl
 _NEWLINE_
 _RES_ 0100
 _NEWLINE_
@@ -3060,14 +4970,371 @@ _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl"
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL InitBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [ReadPtrVar], A
+01
+00
+32
+17
+_NEWARG_ [ReadPtrVar]
+_SL_ReadPtrVar
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [WritePtrVar], A
+01
+00
+32
+17
+_NEWARG_ [WritePtrVar]
+_SL_WritePtrVar
+_NEWARG_ A
+_NEWLINE_
+_DEL_ pop A
+06
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL WriteBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez H
+0a
+00
+15
+_NEWARG_ H
+_NEWLINE_
+_DEL_ mov L, @KeyboardBuffer
+01
+00
+16
+01
+_NEWARG_ L
+_NEWARG_ @KeyboardBuffer
+_SL_KeyboardBuffer
+_NEWLINE_
+_DEL_ mov A, [WritePtrVar]
+01
+01
+32
+_NEWARG_ A
+_NEWARG_ [WritePtrVar]
+_SL_WritePtrVar
+_NEWLINE_
+_DEL_ add L, A
+20
+20
+16
+17
+_NEWARG_ L
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [HL], CL
+00
+00
+21
+13
+_NEWARG_ [HL]
+_NEWARG_ CL
+_NEWLINE_
+_DEL_ inc A
+20
+f0
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov [WritePtrVar], A
+01
+00
+32
+17
+_NEWARG_ [WritePtrVar]
+_SL_WritePtrVar
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ReadBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ push H
+05
+00
+15
+_NEWARG_ H
+_NEWLINE_
+_DEL_ push L
+05
+00
+16
+_NEWARG_ L
+_NEWLINE_
+_DEL_ push B
+05
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez H
+0a
+00
+15
+_NEWARG_ H
+_NEWLINE_
+_DEL_ mov L, @KeyboardBuffer
+01
+00
+16
+01
+_NEWARG_ L
+_NEWARG_ @KeyboardBuffer
+_SL_KeyboardBuffer
+_NEWLINE_
+_DEL_ mov B, [ReadPtrVar]
+01
+02
+32
+_NEWARG_ B
+_NEWARG_ [ReadPtrVar]
+_SL_ReadPtrVar
+_NEWLINE_
+_DEL_ add L, B
+20
+20
+16
+18
+_NEWARG_ L
+_NEWARG_ B
+_NEWLINE_
+_DEL_ inc B
+20
+f0
+18
+_NEWARG_ B
+_NEWLINE_
+_DEL_ mov [ReadPtrVar], B
+01
+00
+32
+18
+_NEWARG_ [ReadPtrVar]
+_SL_ReadPtrVar
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, [HL]
+00
+01
+21
+_NEWARG_ AL
+_NEWARG_ [HL]
+_NEWLINE_
+_DEL_ pop B
+06
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_DEL_ pop L
+06
+00
+16
+_NEWARG_ L
+_NEWLINE_
+_DEL_ pop H
+06
+00
+15
+_NEWARG_ H
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL BufferSize /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ push B
+05
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov B, [ReadPtrVar]
+01
+02
+32
+_NEWARG_ B
+_NEWARG_ [ReadPtrVar]
+_SL_ReadPtrVar
+_NEWLINE_
+_DEL_ mov A, [WritePtrVar]
+01
+01
+32
+_NEWARG_ A
+_NEWARG_ [WritePtrVar]
+_SL_WritePtrVar
+_NEWLINE_
+_DEL_ sub A, B
+20
+31
+18
+_NEWARG_ A
+_NEWARG_ B
+_NEWLINE_
+_NEWLINE_
+_DEL_ pop B
+06
+00
+18
+_NEWARG_ B
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL EnableCLS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ outb 0x00, 0x01
+10
+00
+00
+00
+_NEWARG_ 0x00
+00
+_NEWARG_ 0x01
+01
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL CharIn /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ call [BufferSize]
+07
+00
+32
+_NEWARG_ [BufferSize]
+_SL_BufferSize
+_NEWLINE_
+_DEL_ test A
+0b
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ jz [nopeKey]
+30
+10
+32
+_NEWARG_ [nopeKey]
+_SL_nopeKey
+_NEWLINE_
+_DEL_ call [ReadBuffer]
+07
+00
+32
+_NEWARG_ [ReadBuffer]
+_SL_ReadBuffer
+_NEWLINE_
+_DEL_ mov AH, 0x01
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x01
+00
+01
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_REF_ LABEL nopeKey /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ sez AH
+0a
+00
+10
+_NEWARG_ AH
+40
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_SECTION_ BSS
+_NEWLINE_
+_REF_ LABEL ReadPtrVar /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_RES_ 0002
+_NEWLINE_
+_REF_ LABEL WritePtrVar /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_RES_ 0002
+_NEWLINE_
+_REF_ LABEL KeyboardBuffer /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_RES_ 0100
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl"
 _NEWLINE_
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL BIOS_IRQ_Interrupt C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL BIOS_IRQ_Interrupt /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _NEWLINE_
 _DEL_ reti
@@ -3075,7 +5342,7 @@ f0
 00
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL KeyBoardIRQ C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL KeyBoardIRQ /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ push C
 05
@@ -3172,7 +5439,7 @@ _DEL_ call [ReadBuffer]
 _NEWARG_ [ReadBuffer]
 _SL_ReadBuffer
 _NEWLINE_
-_REF_ LABEL NotInBoot C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL NotInBoot /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ pop A
 06
@@ -3200,7 +5467,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL BIOS_Interrupt13h C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL BIOS_Interrupt13h /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ cmp AH, 0x01
 04
@@ -3248,7 +5515,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL BIOS_Interrupt10h C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL BIOS_Interrupt10h /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ cmp AH, 0x00
 04
@@ -3292,7 +5559,7 @@ f0
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL readkey C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL readkey /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ call [ReadCharKey]
 07
@@ -3307,7 +5574,7 @@ f0
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL printchar C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL printchar /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ call [COut]
 07
@@ -3330,7 +5597,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL IntLBAToCHS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL IntLBAToCHS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ push A
 05
@@ -3391,7 +5658,7 @@ _DEL_ call [LBAtoCHS]
 _NEWARG_ [LBAtoCHS]
 _SL_LBAtoCHS
 _NEWLINE_
-_REF_ LABEL EEMLBAToCHS32 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL EEMLBAToCHS32 /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ call [LBAtoCHS32]
 07
@@ -3417,7 +5684,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL readsector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS_Interrupt_Pointer.acl
+_REF_ LABEL readsector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS_Interrupt_Pointer.acl
 _NEWLINE_
 _DEL_ pushr
 f0
@@ -3473,7 +5740,415 @@ f0
 00
 _NEWLINE_
 _NEWLINE_
-_SECTION_ Stack
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL BIOS_IRQ_Interrupt /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ reti
+f0
+00
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL KeyBoardIRQ /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ push C
+05
+00
+19
+_NEWARG_ C
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ inb 0x0, CL
+10
+10
+00
+13
+_NEWARG_ 0x0
+00
+_NEWARG_ CL
+_NEWLINE_
+_DEL_ call [WriteBuffer]
+07
+00
+32
+_NEWARG_ [WriteBuffer]
+_SL_WriteBuffer
+_NEWLINE_
+_DEL_ mov AL, CR0
+01
+00
+11
+10
+_NEWARG_ AL
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ cmp A, 0x01
+04
+02
+01
+_NEWARG_ A
+_NEWARG_ 0x01
+00
+01
+_NEWLINE_
+_DEL_ jne [NotInBoot]
+30
+31
+32
+_NEWARG_ [NotInBoot]
+_SL_NotInBoot
+_NEWLINE_
+_DEL_ cmp C, 0x7b
+04
+00
+19
+01
+_NEWARG_ C
+_NEWARG_ 0x7b
+00
+7b
+_NEWLINE_
+_DEL_ jne rel [NotInBoot]
+30
+31
+30
+_NEWARG_ rel [NotInBoot]
+REL__SL_NotInBoot
+_NEWLINE_
+_DEL_ mov A, 0x1
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 0x1
+00
+01
+_NEWLINE_
+_DEL_ mov [IsF12], AL
+00
+00
+32
+11
+_NEWARG_ [IsF12]
+_SL_IsF12
+_NEWARG_ AL
+_NEWLINE_
+_DEL_ call [ReadBuffer]
+07
+00
+32
+_NEWARG_ [ReadBuffer]
+_SL_ReadBuffer
+_NEWLINE_
+_REF_ LABEL NotInBoot /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ pop A
+06
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ pop C
+06
+00
+19
+_NEWARG_ C
+_NEWLINE_
+_DEL_ sei
+20
+05
+_NEWLINE_
+_DEL_ reti
+f0
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL BIOS_Interrupt13h /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ cmp AH, 0x01
+04
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x01
+00
+01
+_NEWLINE_
+_DEL_ je [readsector]
+30
+30
+32
+_NEWARG_ [readsector]
+_SL_readsector
+_NEWLINE_
+_DEL_ cmp AH, 0x11
+04
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x11
+00
+11
+_NEWLINE_
+_DEL_ je [IntLBAToCHS]
+30
+30
+32
+_NEWARG_ [IntLBAToCHS]
+_SL_IntLBAToCHS
+_NEWLINE_
+_DEL_ reti
+f0
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL BIOS_Interrupt10h /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ cmp AH, 0x00
+04
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x00
+00
+00
+_NEWLINE_
+_DEL_ je rel [printchar]
+30
+30
+30
+_NEWARG_ rel [printchar]
+REL__SL_printchar
+_NEWLINE_
+_DEL_ cmp AH, 0x01
+04
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x01
+00
+01
+_NEWLINE_
+_DEL_ je rel [readkey]
+30
+30
+30
+_NEWARG_ rel [readkey]
+REL__SL_readkey
+_NEWLINE_
+_DEL_ reti
+f0
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL readkey /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ call [ReadCharKey]
+07
+00
+32
+_NEWARG_ [ReadCharKey]
+_SL_ReadCharKey
+_NEWLINE_
+_DEL_ reti
+f0
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL printchar /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ call [COut]
+07
+00
+32
+_NEWARG_ [COut]
+_SL_COut
+_NEWLINE_
+_DEL_ reti
+f0
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL IntLBAToCHS /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ push A
+05
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ push HL
+05
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ push R4
+05
+00
+10
+_NEWARG_ R4
+d0
+_NEWLINE_
+_DEL_ push R5
+05
+00
+10
+_NEWARG_ R5
+11
+_NEWLINE_
+_DEL_ mov AL, CR0
+01
+00
+11
+10
+_NEWARG_ AL
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ cmp A, 0x10
+04
+02
+01
+_NEWARG_ A
+_NEWARG_ 0x10
+00
+10
+_NEWLINE_
+_DEL_ je [EEMLBAToCHS32]
+30
+30
+32
+_NEWARG_ [EEMLBAToCHS32]
+_SL_EEMLBAToCHS32
+_NEWLINE_
+_DEL_ call [LBAtoCHS]
+07
+00
+32
+_NEWARG_ [LBAtoCHS]
+_SL_LBAtoCHS
+_NEWLINE_
+_REF_ LABEL EEMLBAToCHS32 /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ call [LBAtoCHS32]
+07
+00
+32
+_NEWARG_ [LBAtoCHS32]
+_SL_LBAtoCHS32
+_NEWLINE_
+_DEL_ pop A
+06
+00
+17
+_NEWARG_ A
+_NEWLINE_
+_DEL_ reti
+f0
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL readsector /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_DEL_ push R3
+05
+00
+10
+_NEWARG_ R3
+90
+_NEWLINE_
+_DEL_ push R2
+05
+00
+10
+_NEWARG_ R2
+50
+_NEWLINE_
+_DEL_ push R1
+05
+00
+10
+_NEWARG_ R1
+10
+_NEWLINE_
+_DEL_ push D
+05
+00
+1a
+_NEWARG_ D
+_NEWLINE_
+_DEL_ push HL
+05
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ call [Read_Sector]
+07
+00
+32
+_NEWARG_ [Read_Sector]
+_SL_Read_Sector
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ reti
+f0
+00
 _NEWLINE_
 _NEWLINE_
 _SECTION_ Bootloader
@@ -3482,39 +6157,39 @@ _NEWLINE_
 _SECTION_ BSS
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL DriveNumber C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL DriveNumber /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 1
 _NEWLINE_
-_REF_ LABEL ReceivedIRQ C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL ReceivedIRQ /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 1
 _NEWLINE_
-_REF_ LABEL IsF12 C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL IsF12 /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 1
 _NEWLINE_
-_REF_ LABEL Cursorx C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL Cursorx /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 2
 _NEWLINE_
-_REF_ LABEL Cursory C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL Cursory /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 2
 _NEWLINE_
-_REF_ LABEL EReg C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL EReg /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 4
 _NEWLINE_
-_REF_ LABEL ScreenHeight C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL ScreenHeight /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 2
 _NEWLINE_
-_REF_ LABEL ScreenWidth C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL ScreenWidth /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 2
 _NEWLINE_
-_REF_ LABEL KeyBoardChar C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL KeyBoardChar /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 _RES_ 1
 _NEWLINE_
@@ -3524,7 +6199,7 @@ _NEWLINE_
 _NEWLINE_
 _SECTION_ RODATA
 _NEWLINE_
-_REF_ LABEL BreakPointMSG C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL BreakPointMSG /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 42
 72
@@ -3547,28 +6222,28 @@ _NEWLINE_
 43
 00
 _NEWLINE_
-_REF_ LABEL BreakPointMSGEnd C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL BreakPointMSGEnd /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
-_REF_ LABEL BreakPointMSGLength C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL BreakPointMSGLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 BINEXPR _SL_BreakPointMSGEnd _SL_BreakPointMSG -
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL StartMSG C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL StartMSG /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 42
 49
 4f
 53
 _NEWLINE_
-_REF_ LABEL StartMSGEnd C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL StartMSGEnd /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
-_REF_ LABEL StartMSGLength C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL StartMSGLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 BINEXPR _SL_StartMSGEnd _SL_StartMSG - i_0001 -
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Error_Invalid_BootDisk_Str C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL Error_Invalid_BootDisk_Str /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 43
 61
@@ -3598,14 +6273,14 @@ _NEWLINE_
 6b
 00
 _NEWLINE_
-_REF_ LABEL Error_Invalid_BootDisk_Strend C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL Error_Invalid_BootDisk_Strend /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
-_REF_ LABEL Error_Invalid_BootDisk_StrLength C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL Error_Invalid_BootDisk_StrLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 BINEXPR _SL_Error_Invalid_BootDisk_Strend _SL_Error_Invalid_BootDisk_Str -
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL INFOMSG_FoundBootableDisk C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL INFOMSG_FoundBootableDisk /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 0A
 46
@@ -3622,9 +6297,10 @@ _NEWLINE_
 3a
 20
 _NEWLINE_
-_REF_ LABEL INFOMSG_FoundBootableDiskEnd C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL INFOMSG_FoundBootableDiskEnd /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
-_REF_ LABEL INFOMSG_FoundBootableDiskLength C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\BIOS\src\BIOS.acl
+_REF_ LABEL INFOMSG_FoundBootableDiskLength /home/bjornbes/projects/GamingCPU_Project/src/BIOS/src/BIOS.acl
 _NEWLINE_
 BINEXPR _SL_INFOMSG_FoundBootableDiskEnd _SL_INFOMSG_FoundBootableDisk -
+_NEWLINE_
 _NEWLINE_

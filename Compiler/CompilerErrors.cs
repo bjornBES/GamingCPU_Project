@@ -8,29 +8,39 @@ public static class CompilerErrors
 {
     public static void SystaxError(Token line)
     {
-        Console.WriteLine($"Systax error on line {line.m_Line}");
+        CompilerMessages.AddMessage($"Systax error", MessageType.Error, line);
         exitOut();
     }
     
-    public static void Error_expected(Token line, string[] lineNumbers, string msg)
+    public static void Error_expected(Token line, string LastLineNumber, string msg)
     {
-        Console.WriteLine($"Expected {msg} on line {lineNumbers.Last()}");
+        line.m_SrcLineNumbers = LastLineNumber;
+        CompilerMessages.AddMessage($"Expected {msg}", MessageType.Error, line);
         exitOut();
     }
-    public static void Error_expected(Token line, string[] lineNumbers, TokenType msg)
+    public static void Error_expected(Token line, string LastLineNumber, TokenType msg)
     {
-        Console.WriteLine($"Expected {msg} on line {lineNumbers.Last()}");
+        line.m_SrcLineNumbers = LastLineNumber;
+        CompilerMessages.AddMessage($"Expected {msg}", MessageType.Error, line);
         exitOut();
     }
 
-    public static void Error_VariableIsConst(Token line, Var var)
+    public static void Error_VariableIsConst(Token line, string LastLineNumber, Var var)
     {
-        Console.WriteLine($"{var.m_Name} is const and can't be reassigned on line {line.m_Line}");
+        line.m_SrcLineNumbers = LastLineNumber;
+        Console.WriteLine($"{var.m_Name} is const and can't be reassigned on line {line.m_Line} in {line.m_File}");
+        exitOut();
+    }
+
+    public static void Error_StmtNotFound(Token line, string LastLineNumber)
+    {
+        line.m_SrcLineNumbers = LastLineNumber;
+        CompilerMessages.AddMessage($"on stmt found", MessageType.Error, line);
         exitOut();
     }
 
     static void exitOut()
     {
-        Environment.Exit(1);
+        CompilerSettings.m_DoWriteOut = false;
     }
 }

@@ -160,7 +160,7 @@ The second word is the Address offset for the routine
 |invalid opcode             |6              |Abort exception  |false          |Any undefined opcode
 |Keyboard IRQ               |16             |interrupt        |false          |Keyboard IRQ0
 |User defined IRQ interrupt |17-31          |interrupt        |true           |The IRQ pin
-|reserved                   |32             |interrupt        |false          |Unused
+|MMU Interrupt              |32             |interrupt        |false          |INT 0x03 or the MMU Interrupt function calls
 |User defined interrupts    |33             |interrupt        |true           |INT 0x04
 |User defined interrupts    |34             |interrupt        |true           |INT 0x05
 |User defined interrupts    |35             |interrupt        |true           |INT 0x06
@@ -451,9 +451,6 @@ in long long mode the CPU will get
 |&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
 |R1-16    |GP       |16           | an 16 bit general purpose registers
 |&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
-|X        |index    |16           | an 16 bit index registers
-|Y        |index    |16           | an 16 bit index registers
-|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
 |CR0      |control  |8            | an 8 bit control register [flags here](#extended-mode-cr0-flags)
 |&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
 |F        |flags    |16           | an 16 bit flags register [flags here](#extended-mode-flags)
@@ -511,9 +508,6 @@ in long long mode the CPU will get
 |DF       |GB float |32           | a 32 bit single precision float register
 |&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
 |R1-16    |GP       |32           | an 32 bit general purpose registers
-|&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
-|X        |index    |32           | an 32 bit index registers
-|Y        |index    |32           | an 32 bit index registers
 |&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
 |CR0      |control  |16           | an 16 bit control register [flags here](#protected-mode-cr0-flags)
 |&nbsp;   |&nbsp;   |&nbsp;       |&nbsp;
@@ -701,7 +695,7 @@ in long long mode the CPU will get
 |0x0200 |under flow       | this flag is set if a arithmetic instruction underflows
 |0x0400 |shift flag       | this flag is used with the ROR ROL instructions
 |0x0800 |greater then     | this flag is set if the operand1 is greater then operand2 in a CMP instruction
-|0x1000 |reserved         | reserved
+|0x1000 |float overflow   | this flag is set if a float arithmetic instruction overflows
 |0x2000 |reserved         | reserved
 |0x4000 |reserved         | reserved
 |0x8000 |reserved         | reserved

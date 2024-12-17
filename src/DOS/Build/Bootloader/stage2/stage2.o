@@ -1,35 +1,37 @@
 INCLUDE HEADER
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-INCINIL C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
 
 
 SECTION HEADER
-_TEXTE C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-_TEXT C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
-_DOS C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+_TEXTE /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_DOS /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL _cstart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
-_REF_ LABEL Start,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
-_REF_ LABEL Jmp,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
-_REF_ LABEL _ACLAsmReadSector,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-_REF_ LABEL _RSJmpE,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-_REF_ LABEL _ACLAsmRSDone,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-_REF_ LABEL _RSJmpP,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-_REF_ LABEL GDTStart,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
-_REF_ LABEL GDT16BitEPCode,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
-_REF_ LABEL GDT16BitECode,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
-_REF_ LABEL GDT16BitData,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
-_REF_ LABEL GDT16BitStack,False.False C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
+_REF_ LABEL _cstart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_REF_ LABEL Start,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_REF_ LABEL Jmp,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_REF_ LABEL _ACLAsmReadSector,True.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL _ACLAsmRSDone,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL _ACLAsmWriteChar,True.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL _ACLAsmWCDone,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL GDTStart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitEPCode,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitECode,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitData,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitStack,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
 
 
 TEXT HEADER
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl"
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
@@ -38,7 +40,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Start C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+_REF_ LABEL Start /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
 _NEWLINE_
 _DEL_ lgdt @GDTStart
 f0
@@ -107,15 +109,15 @@ _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL Jmp C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\stage2.acl
+_REF_ LABEL Jmp /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
 _NEWLINE_
-_DEL_ mov AX, FAR @__DATASTART
+_DEL_ mov AX, FAR @__START_DATA__
 03
 01
 03
 _NEWARG_ AX
-_NEWARG_ FAR @__DATASTART
-_FL___DATASTART
+_NEWARG_ FAR @__START_DATA__
+_FL___START_DATA__
 _NEWLINE_
 _DEL_ mov EDS, AX
 03
@@ -162,15 +164,15 @@ _NEWARG_ EHS
 2a
 _NEWARG_ AX
 _NEWLINE_
-_DEL_ mov ESS, FAR @__STACKSTART
+_DEL_ mov ESS, FAR @__START_STACK__
 00
 00
 10
 03
 _NEWARG_ ESS
 ea
-_NEWARG_ FAR @__STACKSTART
-_FL___STACKSTART
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
 _NEWLINE_
 _NEWLINE_
 _DEL_ push DX
@@ -188,7 +190,7 @@ _NEWARG_ [_cstart]
 _SL__cstart
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl"
 _NEWLINE_
 _NEWLINE_
 _SECTION_ TEXT
@@ -206,7 +208,7 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL _ACLAsmReadSector C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
+_REF_ LABEL _ACLAsmReadSector /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -245,15 +247,13 @@ _NEWARG_ CR0
 _NEWARG_ A
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL _RSJmpE C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-_NEWLINE_
-_DEL_ mov A, @__DATASTART
+_DEL_ mov A, @__START_DATA__
 01
 01
 01
 _NEWARG_ A
-_NEWARG_ @__DATASTART
-_SL___DATASTART
+_NEWARG_ @__START_DATA__
+_SL___START_DATA__
 _NEWLINE_
 _DEL_ mov DS, A
 01
@@ -264,15 +264,15 @@ _NEWARG_ DS
 05
 _NEWARG_ A
 _NEWLINE_
-_DEL_ mov SS, @__STACKSTART
+_DEL_ mov SS, @__START_STACK__
 02
 08
 10
 01
 _NEWARG_ SS
 c6
-_NEWARG_ @__STACKSTART
-_SL___STACKSTART
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
 _NEWLINE_
 _NEWLINE_
 _DEL_ push R1
@@ -376,7 +376,7 @@ _NEWARG_ 0x01
 00
 01
 _NEWLINE_
-_REF_ LABEL _ACLAsmRSDone C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
+_REF_ LABEL _ACLAsmRSDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
@@ -388,9 +388,9 @@ _NEWARG_ A
 _NEWARG_ CR0
 24
 _NEWLINE_
-_DEL_ and A, 0x0080
+_DEL_ or A, 0x0080
 20
-61
+71
 01
 _NEWARG_ A
 _NEWARG_ 0x0080
@@ -407,15 +407,13 @@ _NEWARG_ CR0
 _NEWARG_ A
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL _RSJmpP C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\AsmIO.acl
-_NEWLINE_
-_DEL_ mov AX, FAR @__DATASTART
+_DEL_ mov AX, FAR @__START_DATA__
 03
 01
 03
 _NEWARG_ AX
-_NEWARG_ FAR @__DATASTART
-_FL___DATASTART
+_NEWARG_ FAR @__START_DATA__
+_FL___START_DATA__
 _NEWLINE_
 _DEL_ mov EDS, AX
 03
@@ -426,15 +424,15 @@ _NEWARG_ EDS
 29
 _NEWARG_ AX
 _NEWLINE_
-_DEL_ mov ESS, FAR @__STACKSTART
+_DEL_ mov ESS, FAR @__START_STACK__
 00
 00
 10
 03
 _NEWARG_ ESS
 ea
-_NEWARG_ FAR @__STACKSTART
-_FL___STACKSTART
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
 _NEWLINE_
 _NEWLINE_
 _DEL_ popr
@@ -463,16 +461,585 @@ _NEWARG_ 20
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_FILE_ "C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmWriteChar /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ and A, 0xFF7F
+20
+61
+01
+_NEWARG_ A
+_NEWARG_ 0xFF7F
+FF
+7F
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov SS, @__START_STACK__
+02
+08
+10
+01
+_NEWARG_ SS
+c6
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, [BP - 10]
+00
+01
+41
+_NEWARG_ AL
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ mov BL, [BP - 14]
+00
+02
+41
+_NEWARG_ BL
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, 0x00
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x00
+00
+00
+_NEWLINE_
+_DEL_ int 0x10
+f0
+40
+00
+_NEWARG_ 0x10
+10
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmWCDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ or A, 0x0080
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x0080
+00
+80
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+_NEWARG_ 8
+08
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _SECTION_ TEXT
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL GDTStart C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
 _NEWLINE_
-_REF_ LABEL GDT16BitEPCode C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmReadSector /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ and A, 0xFF7F
+20
+61
+01
+_NEWARG_ A
+_NEWARG_ 0xFF7F
+FF
+7F
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, @__START_DATA__
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ @__START_DATA__
+_SL___START_DATA__
+_NEWLINE_
+_DEL_ mov DS, A
+01
+00
+10
+17
+_NEWARG_ DS
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov SS, @__START_STACK__
+02
+08
+10
+01
+_NEWARG_ SS
+c6
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ push R1
+05
+00
+10
+_NEWARG_ R1
+10
+_NEWLINE_
+_DEL_ mov R1L, [BP - 14]
+01
+00
+10
+41
+_NEWARG_ R1L
+14
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ mov R2, [BP - 18]
+02
+08
+10
+41
+_NEWARG_ R2
+50
+_NEWARG_ [BP - 18]
+e8
+_NEWLINE_
+_DEL_ mov R3, [BP - 22]
+02
+08
+10
+41
+_NEWARG_ R3
+90
+_NEWARG_ [BP - 22]
+de
+_NEWLINE_
+_DEL_ mov DL, [BP - 14]
+00
+04
+41
+_NEWARG_ DL
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ mov HL, [BP - 26]
+00
+00
+10
+41
+_NEWARG_ HL
+c7
+_NEWARG_ [BP - 26]
+da
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, 0x01
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x01
+00
+01
+_NEWLINE_
+_DEL_ int 0x13
+f0
+40
+00
+_NEWARG_ 0x13
+13
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez R16
+0a
+00
+10
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ jnc [_ACLAsmRSDone]
+30
+41
+32
+_NEWARG_ [_ACLAsmRSDone]
+_SL__ACLAsmRSDone
+_NEWLINE_
+_DEL_ mov R16, 0x01
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0x01
+00
+00
+01
+_NEWLINE_
+_REF_ LABEL _ACLAsmRSDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ or A, 0x0080
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x0080
+00
+80
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, FAR @__START_DATA__
+03
+01
+03
+_NEWARG_ AX
+_NEWARG_ FAR @__START_DATA__
+_FL___START_DATA__
+_NEWLINE_
+_DEL_ mov EDS, AX
+03
+00
+10
+1b
+_NEWARG_ EDS
+29
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ mov AX, R16
+00
+00
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 20
+08
+00
+00
+_NEWARG_ 20
+20
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmWriteChar /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ and A, 0xFF7F
+20
+61
+01
+_NEWARG_ A
+_NEWARG_ 0xFF7F
+FF
+7F
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov SS, @__START_STACK__
+02
+08
+10
+01
+_NEWARG_ SS
+c6
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, [BP - 10]
+00
+01
+41
+_NEWARG_ AL
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ mov BL, [BP - 14]
+00
+02
+41
+_NEWARG_ BL
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, 0x00
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x00
+00
+00
+_NEWLINE_
+_DEL_ int 0x10
+f0
+40
+00
+_NEWARG_ 0x10
+10
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmWCDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+02
+08
+17
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ or A, 0x0080
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x0080
+00
+80
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+_NEWARG_ 8
+08
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDTStart /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_NEWLINE_
+_REF_ LABEL GDT16BitEPCode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
 _NEWLINE_
 _NEWLINE_
 00
@@ -491,7 +1058,7 @@ _NEWLINE_
 80
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL GDT16BitECode C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
+_REF_ LABEL GDT16BitECode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
 _NEWLINE_
 _NEWLINE_
 00
@@ -510,7 +1077,7 @@ _NEWLINE_
 C0
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL GDT16BitData C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
+_REF_ LABEL GDT16BitData /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
 _NEWLINE_
 _NEWLINE_
 00
@@ -529,7 +1096,91 @@ _NEWLINE_
 80
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL GDT16BitStack C:\Users\bjorn\Desktop\VideoProjects\GamingCPU_Project\src\DOS\src\Bootloader\stage2\GDT.acl
+_REF_ LABEL GDT16BitStack /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_NEWLINE_
+_NEWLINE_
+00
+01
+_NEWLINE_
+_NEWLINE_
+00
+F5
+00
+00
+_NEWLINE_
+_NEWLINE_
+10
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDTStart /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_REF_ LABEL GDT16BitEPCode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+00
+05
+_NEWLINE_
+_NEWLINE_
+00
+05
+00
+00
+_NEWLINE_
+_NEWLINE_
+02
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitECode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+00
+02
+_NEWLINE_
+_NEWLINE_
+00
+03
+00
+00
+_NEWLINE_
+_NEWLINE_
+02
+_NEWLINE_
+_NEWLINE_
+C0
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitData /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+00
+05
+_NEWLINE_
+_NEWLINE_
+00
+F6
+00
+00
+_NEWLINE_
+_NEWLINE_
+10
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitStack /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
 _NEWLINE_
 _NEWLINE_
 00
@@ -550,5 +1201,6 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _SECTION_ DOS
+_NEWLINE_
 _NEWLINE_
 _NEWLINE_
