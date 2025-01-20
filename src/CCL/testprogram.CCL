@@ -1,15 +1,13 @@
-#define TEST = 0x55
-
-SECTION:DATA
-        :name RES 0x400
-
-SECTION:STRING
-       :MessERS "Hello world"
-
-SECTION:TEXT
-
-0000001:uint    pVram.                                                  \\
-0000002:byte    bvar.                                                   \\
-0000010:func    main(byte bootD).                                       \\ test
-@0000011:name[101] = 0x55.                                               \\
-0000070:endfunc.                                                        \\
+#       :define value
+ 0000000:func main
+ 0000001:counter : byte eq 5
+ 0000010:while counter > 1 then
+#       :if debug == 1
+ 0000012:asm("test      A")
+ 0000013:asm("mov A, {0}", debug)
+#       :endif
+ 0000020:endwhile
+ 0000021:pVoid as pointer void eq &counter
+ 0000100:endfunc
+*#       :inc "./testSH.ccl"
+ 0000200:

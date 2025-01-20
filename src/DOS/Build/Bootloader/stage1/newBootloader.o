@@ -8,23 +8,26 @@ _Stage2 /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/
 
 
 SYMBOLS HEADER
+_REF_ LABEL __START_STACK__,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL Entry,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_REF_ LABEL PrintLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_REF_ LABEL ExitPrintLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL FindStage2File,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL FindStage2FileNext,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL ExitFindStage2,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_REF_ LABEL LoadStage2,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL LoadStage2Loop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_REF_ LABEL Load,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL ReadSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL ExitReadSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL OFS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_REF_ LABEL OFSLOOP,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL ExitOFS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_REF_ LABEL ErrorMessageReading,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL Print,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL PrintLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ExitPrintLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL Error,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ErrorMessage,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ErrorMessageReading,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ErrorFindingStage2,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL Message,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _REF_ LABEL Stage2_Name,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_REF_ LABEL ENDOFCODE,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 
 
 TEXT HEADER
@@ -34,12 +37,21 @@ _FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
+_OFF_ 7E00
+_NEWLINE_
+_REF_ LABEL __START_STACK__ /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+_NEWLINE_
 _SECTION_ Bootloader
 _NEWLINE_
 _NEWLINE_
 _OFF_ 7C00
 _NEWLINE_
 _REF_ LABEL Entry /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+_DEL_ cli
+20
+15
 _NEWLINE_
 _DEL_ mov AL, CR0
 01
@@ -64,119 +76,52 @@ _DEL_ mov CR0, AL
 06
 _NEWLINE_
 _NEWLINE_
-_DEL_ mov
-00
-00
-_NEWLINE_
-_NEWLINE_
-_DEL_ sez A
-0a
-05
-_NEWARG_ A
-_NEWLINE_
-_DEL_ mov HL, far @Message
+_DEL_ mov HL, LONG @Message
 00
 00
 10
-03
+02
 _NEWARG_ HL
 c7
-_NEWARG_ far @Message
-_FL_Message
+_NEWARG_ LONG @Message
+_LL_Message
 _NEWLINE_
-_DEL_ mov
+_DEL_ call short [Print]
+07
 00
-00
-_NEWLINE_
-_REF_ LABEL PrintLoop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_NEWLINE_
-_DEL_ mov AL, [HL]
-00
-01
-21
-_NEWARG_ AL
-_NEWARG_ [HL]
-_NEWLINE_
-_DEL_ jz [ExitPrintLoop]
-30
-10
 32
-_NEWARG_ [ExitPrintLoop]
-_SL_ExitPrintLoop
-_NEWLINE_
-_DEL_ int 0x10
-f0
-40
-00
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_DEL_ inc HL
-20
-f0
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_REF_ LABEL ExitPrintLoop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWARG_ short [Print]
+_SL_Print
 _NEWLINE_
 _NEWLINE_
-_DEL_ mov SS, 0x00FA
+_DEL_ mov SP, LOW @__START_STACK__
 02
 08
 10
-02
-_NEWARG_ SS
-c6
-_NEWARG_ 0x00FA
-00
-00
-FA
+01
+_NEWARG_ SP
+09
+_NEWARG_ LOW @__START_STACK__
+_SL___START_STACK__,ML
 _NEWLINE_
-_DEL_ mov DS, HIGH @Entry
+_DEL_ mov DS, HIGH @Stage2_Name
 02
 08
 10
 01
 _NEWARG_ DS
 05
-_NEWARG_ HIGH @Entry
-_SL_Entry,MH
+_NEWARG_ HIGH @Stage2_Name
+_SL_Stage2_Name,MH
 _NEWLINE_
-_DEL_ sez SP
-0a
-00
-10
-_NEWARG_ SP
-09
-_NEWLINE_
-_NEWLINE_
-_DEL_ outw 0x02, 0x0011
-10
-04
+_DEL_ mov B, LOW @Stage2_Name
 01
+02
 01
-_NEWARG_ 0x02
-00
-02
-_NEWARG_ 0x0011
-00
-11
+_NEWARG_ B
+_NEWARG_ LOW @Stage2_Name
+_SL_Stage2_Name,ML
 _NEWLINE_
-_DEL_ outb 0x02, 0x02
-10
-00
-00
-00
-_NEWARG_ 0x02
-02
-_NEWARG_ 0x02
-02
-_NEWLINE_
-_NEWLINE_
-_DEL_ nop
-f0
-10
 _NEWLINE_
 _DEL_ int 0x02
 f0
@@ -186,62 +131,58 @@ _NEWARG_ 0x02
 02
 _NEWLINE_
 _NEWLINE_
-_DEL_ mov R1, D
+_DEL_ mov R8, D
 01
 00
 10
 1a
-_NEWARG_ R1
-10
+_NEWARG_ R8
+d1
 _NEWARG_ D
 _NEWLINE_
+_DEL_ sez R1
+0a
+00
+10
+_NEWARG_ R1
+10
 _NEWLINE_
-_DEL_ mov B, 0x03
-01
+_DEL_ sez R2
+0a
+00
+10
+_NEWARG_ R2
+50
+_NEWLINE_
+_DEL_ mov R3, 0x03
 02
-01
-_NEWARG_ B
+08
+10
+02
+_NEWARG_ R3
+90
 _NEWARG_ 0x03
 00
+00
 03
 _NEWLINE_
-_DEL_ sez DH
-0a
-00
-10
-_NEWARG_ DH
-43
-_NEWLINE_
-_DEL_ sez C
-0a
-07
-_NEWARG_ C
-_NEWLINE_
-_DEL_ mov AX, @_STAGE2
-03
-01
-01
-_NEWARG_ AX
-_NEWARG_ @_STAGE2
-_SL__STAGE2
-_NEWLINE_
-_DEL_ call [ReadSector]
-07
-00
-32
-_NEWARG_ [ReadSector]
-_SL_ReadSector
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov HL, @Stage2_Name
+_DEL_ mov HL, long @_STAGE2
 00
 00
 10
-01
+02
 _NEWARG_ HL
 c7
-_NEWARG_ @Stage2_Name
-_SL_Stage2_Name
+_NEWARG_ long @_STAGE2
+_LL__STAGE2
+_NEWLINE_
+_DEL_ call rel [ReadSector]
+07
+00
+30
+_NEWARG_ rel [ReadSector]
+REL__SL_ReadSector
+_NEWLINE_
 _NEWLINE_
 _DEL_ mov C, 16
 01
@@ -252,9 +193,48 @@ _NEWARG_ 16
 00
 16
 _NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWARG_ A
 _NEWLINE_
 _NEWLINE_
 _REF_ LABEL FindStage2File /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+_DEL_ cmp A, 0x8
+04
+02
+01
+_NEWARG_ A
+_NEWARG_ 0x8
+00
+08
+_NEWLINE_
+_DEL_ jne rel [FindStage2FileNext]
+30
+31
+30
+_NEWARG_ rel [FindStage2FileNext]
+REL__SL_FindStage2FileNext
+_NEWLINE_
+_DEL_ mov HL, LONG @ErrorFindingStage2
+00
+00
+10
+02
+_NEWARG_ HL
+c7
+_NEWARG_ LONG @ErrorFindingStage2
+_LL_ErrorFindingStage2
+_NEWLINE_
+_DEL_ call rel [Error]
+07
+00
+30
+_NEWARG_ rel [Error]
+REL__SL_Error
+_NEWLINE_
+_REF_ LABEL FindStage2FileNext /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ CMPL
 40
@@ -267,16 +247,21 @@ _DEL_ je rel [ExitFindStage2]
 _NEWARG_ rel [ExitFindStage2]
 REL__SL_ExitFindStage2
 _NEWLINE_
-_DEL_ add AX, 0x20
+_DEL_ add L, 0x20
 20
-22
-03
-_NEWARG_ AX
+20
+16
+01
+_NEWARG_ L
 _NEWARG_ 0x20
 00
-00
-00
 20
+_NEWLINE_
+_DEL_ inc A
+20
+f0
+17
+_NEWARG_ A
 _NEWLINE_
 _DEL_ jmp rel [FindStage2File]
 30
@@ -285,31 +270,27 @@ _DEL_ jmp rel [FindStage2File]
 _NEWARG_ rel [FindStage2File]
 REL__SL_FindStage2File
 _NEWLINE_
+_NEWLINE_
 _REF_ LABEL ExitFindStage2 /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
-_DEL_ add AX, 16
+_DEL_ add L, 16
 20
-22
-03
-_NEWARG_ AX
+20
+16
+01
+_NEWARG_ L
 _NEWARG_ 16
-00
-00
 00
 16
 _NEWLINE_
-_DEL_ sez C
-0a
-07
-_NEWARG_ C
-_NEWLINE_
-_DEL_ mov B, [AX]
-01
+_DEL_ mov R3, [HL]
 02
-20
-_NEWARG_ B
-_NEWARG_ [AX]
-c0
+08
+10
+21
+_NEWARG_ R3
+90
+_NEWARG_ [HL]
 _NEWLINE_
 _DEL_ call [OFS]
 07
@@ -318,63 +299,31 @@ _DEL_ call [OFS]
 _NEWARG_ [OFS]
 _SL_OFS
 _NEWLINE_
-_REF_ LABEL LoadStage2 /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_NEWLINE_
-_DEL_ add AX, 0x2
+_DEL_ add L, 0x2
 20
-22
-03
-_NEWARG_ AX
+20
+16
+01
+_NEWARG_ L
 _NEWARG_ 0x2
 00
-00
-00
 02
 _NEWLINE_
-_DEL_ sez D
+_DEL_ mov A, [HL]
+01
+01
+21
+_NEWARG_ A
+_NEWARG_ [HL]
+_NEWLINE_
+_DEL_ sez L
 0a
-08
-_NEWARG_ D
-_NEWLINE_
-_DEL_ mov DH, [AX]
-01
-00
-10
-20
-_NEWARG_ DH
-43
-_NEWARG_ [AX]
-c0
-_NEWLINE_
-_DEL_ mov L, D
-01
 00
 16
-1a
 _NEWARG_ L
-_NEWARG_ D
 _NEWLINE_
-_DEL_ mov D, R1
-02
-08
-1a
-10
-_NEWARG_ D
-_NEWARG_ R1
-10
 _NEWLINE_
-_DEL_ mov AX, @_STAGE2
-03
-01
-01
-_NEWARG_ AX
-_NEWARG_ @_STAGE2
-_SL__STAGE2
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
+_REF_ LABEL LoadStage2Loop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _DEL_ call rel [ReadSector]
 07
@@ -383,24 +332,29 @@ _DEL_ call rel [ReadSector]
 _NEWARG_ rel [ReadSector]
 REL__SL_ReadSector
 _NEWLINE_
-_REF_ LABEL LoadStage2Loop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_NEWLINE_
-_DEL_ add AX, 0x200
+_DEL_ add HL, 0x200
 20
-22
-03
-_NEWARG_ AX
+20
+10
+04
+_NEWARG_ HL
+c7
 _NEWARG_ 0x200
+00
+00
+00
+00
 00
 00
 02
 00
 _NEWLINE_
-_DEL_ inc B
+_DEL_ inc R3
 20
 f0
-18
-_NEWARG_ B
+10
+_NEWARG_ R3
+90
 _NEWLINE_
 _DEL_ call rel [OFS]
 07
@@ -409,20 +363,11 @@ _DEL_ call rel [OFS]
 _NEWARG_ rel [OFS]
 REL__SL_OFS
 _NEWLINE_
-_REF_ LABEL Load /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_NEWLINE_
-_DEL_ call rel [ReadSector]
-07
-00
-30
-_NEWARG_ rel [ReadSector]
-REL__SL_ReadSector
-_NEWLINE_
-_DEL_ dec L
+_DEL_ dec A
 21
 00
-16
-_NEWARG_ L
+17
+_NEWARG_ A
 _NEWLINE_
 _DEL_ jnz rel [LoadStage2Loop]
 30
@@ -431,35 +376,22 @@ _DEL_ jnz rel [LoadStage2Loop]
 _NEWARG_ rel [LoadStage2Loop]
 REL__SL_LoadStage2Loop
 _NEWLINE_
-_DEL_ mov D, R1
+_NEWLINE_
+_DEL_ mov D, R8
 02
 08
 1a
 10
 _NEWARG_ D
-_NEWARG_ R1
-10
+_NEWARG_ R8
+d1
 _NEWLINE_
-_DEL_ mov HL, far @_STAGE2
+_DEL_ jmp long [_STAGE2]
+30
 00
-00
-10
-03
-_NEWARG_ HL
-c7
-_NEWARG_ far @_STAGE2
-_FL__STAGE2
-_NEWLINE_
-_DEL_ push HL
-05
-00
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ retl
-08
-01
+33
+_NEWARG_ long [_STAGE2]
+_LL__STAGE2
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
@@ -477,34 +409,14 @@ f0
 20
 _NEWLINE_
 _NEWLINE_
-_DEL_ swap AX, HL
-0c
-00
-1b
-10
-_NEWARG_ AX
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ swap DH, AL
-0c
-00
-10
-11
-_NEWARG_ DH
-43
-_NEWARG_ AL
-_NEWLINE_
-_DEL_ mov AH, 0x01
+_DEL_ mov A, 0x0100
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ 0x0100
 01
 00
-10
-01
-_NEWARG_ AH
-40
-_NEWARG_ 0x01
-00
-01
 _NEWLINE_
 _DEL_ int 0x13
 f0
@@ -522,23 +434,15 @@ _NEWARG_ rel [ExitReadSector]
 REL__SL_ExitReadSector
 _NEWLINE_
 _NEWLINE_
-_DEL_ mov DS, high @ErrorMessageReading
-02
-08
+_DEL_ mov HL, LONG @ErrorMessageReading
+00
+00
 10
-01
-_NEWARG_ DS
-05
-_NEWARG_ high @ErrorMessageReading
-_SL_ErrorMessageReading,MH
-_NEWLINE_
-_DEL_ mov B, LOW @ErrorMessageReading
-01
 02
-01
-_NEWARG_ B
-_NEWARG_ LOW @ErrorMessageReading
-_SL_ErrorMessageReading,ML
+_NEWARG_ HL
+c7
+_NEWARG_ LONG @ErrorMessageReading
+_LL_ErrorMessageReading
 _NEWLINE_
 _DEL_ jmp rel [Error]
 30
@@ -568,27 +472,15 @@ _NEWLINE_
 _NEWLINE_
 _REF_ LABEL OFS /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
-_DEL_ push A
-05
-00
-17
-_NEWARG_ A
-_NEWLINE_
-_DEL_ mov A, B
-01
-01
-18
-_NEWARG_ A
-_NEWARG_ B
-_NEWLINE_
-_REF_ LABEL OFSLOOP /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_NEWLINE_
-_DEL_ cmp A, 19
+_DEL_ cmp R3, 19
 04
+00
+10
 02
-01
-_NEWARG_ A
+_NEWARG_ R3
+90
 _NEWARG_ 19
+00
 00
 19
 _NEWLINE_
@@ -599,90 +491,79 @@ _DEL_ jle rel [ExitOFS]
 _NEWARG_ rel [ExitOFS]
 REL__SL_ExitOFS
 _NEWLINE_
-_DEL_ sub A, 18
+_DEL_ sub R3, 18
 20
-31
-01
-_NEWARG_ A
+30
+10
+02
+_NEWARG_ R3
+90
 _NEWARG_ 18
+00
 00
 18
 _NEWLINE_
-_DEL_ inc C
+_DEL_ inc R2
 20
 f0
-19
-_NEWARG_ C
+10
+_NEWARG_ R2
+50
 _NEWLINE_
-_DEL_ jmp rel [OFSLOOP]
+_DEL_ jmp rel [OFS]
 30
 00
 30
-_NEWARG_ rel [OFSLOOP]
-REL__SL_OFSLOOP
+_NEWARG_ rel [OFS]
+REL__SL_OFS
 _NEWLINE_
 _REF_ LABEL ExitOFS /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_NEWLINE_
-_DEL_ mov B, A
-01
-02
-17
-_NEWARG_ B
-_NEWARG_ A
-_NEWLINE_
-_DEL_ pop A
-06
-00
-17
-_NEWARG_ A
 _NEWLINE_
 _DEL_ retz
 09
 00
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ErrorMessageReading /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
-45
-72
-72
-6f
-72
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Print /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+_DEL_ pushr
+f0
 20
-72
-65
-61
-64
-69
-6e
-67
-20
-73
-65
-63
-74
-6f
-72
-00
 _NEWLINE_
+_DEL_ sez C
+0a
+07
+_NEWARG_ C
 _NEWLINE_
+_DEL_ sez A
+0a
+05
+_NEWARG_ A
 _NEWLINE_
+_DEL_ sez B
+0a
+06
+_NEWARG_ B
 _NEWLINE_
+_REF_ LABEL PrintLoop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Error /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
-_NEWLINE_
-_DEL_ mov AH, 0x02
-01
-00
-10
-01
-_NEWARG_ AH
-40
-_NEWARG_ 0x02
+_DEL_ mov BL, [HL]
 00
 02
+21
+_NEWARG_ BL
+_NEWARG_ [HL]
+_NEWLINE_
+_DEL_ jz rel [ExitPrintLoop]
+30
+10
+30
+_NEWARG_ rel [ExitPrintLoop]
+REL__SL_ExitPrintLoop
 _NEWLINE_
 _DEL_ int 0x10
 f0
@@ -691,6 +572,60 @@ f0
 _NEWARG_ 0x10
 10
 _NEWLINE_
+_DEL_ inc HL
+20
+f0
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_REF_ LABEL ExitPrintLoop /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL Error /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_DEL_ mov L, @ErrorMessage
+01
+00
+16
+01
+_NEWARG_ L
+_NEWARG_ @ErrorMessage
+_SL_ErrorMessage
+_NEWLINE_
+_DEL_ call rel [Print]
+07
+00
+30
+_NEWARG_ rel [Print]
+REL__SL_Print
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ call rel [Print]
+07
+00
+30
+_NEWARG_ rel [Print]
+REL__SL_Print
 _NEWLINE_
 _DEL_ jmp $
 30
@@ -700,21 +635,39 @@ _NEWARG_ $
 _SCA_
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL ErrorMessage /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+45
+52
+52
+20
+00
+_NEWLINE_
+_REF_ LABEL ErrorMessageReading /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+43
+4e
+52
+53
+00
+_NEWLINE_
+_REF_ LABEL ErrorFindingStage2 /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
+_NEWLINE_
+43
+4e
+46
+53
+32
+46
+00
+_NEWLINE_
+_NEWLINE_
 _REF_ LABEL Message /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 48
-65
-6c
-6c
-6f
-20
-77
-6f
-72
-6c
-64
+57
 21
-01
+00
 _NEWLINE_
 _NEWLINE_
 _REF_ LABEL Stage2_Name /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
@@ -736,6 +689,9 @@ _NEWLINE_
 4e
 00
 00
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL ENDOFCODE /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage1/newBootloader.acl
 _NEWLINE_
 _NEWLINE_
 _SECTION_ Boot

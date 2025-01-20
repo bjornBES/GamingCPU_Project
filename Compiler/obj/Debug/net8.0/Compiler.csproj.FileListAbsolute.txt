@@ -17,3 +17,4 @@
 /home/bjornbes/projects/GamingCPU_Project/Compiler/obj/Debug/net8.0/Compiler.pdb
 /home/bjornbes/projects/GamingCPU_Project/Compiler/obj/Debug/net8.0/Compiler.genruntimeconfig.cache
 /home/bjornbes/projects/GamingCPU_Project/Compiler/obj/Debug/net8.0/ref/Compiler.dll
+/home/bjornbes/projects/GamingCPU_Project/Compiler/build/Crayon.dll

@@ -1,0 +1,172 @@
+{
+  "stmts": [
+    {
+      "lineNumberInSrc": 0,
+      "lineNumber": null,
+      "stmt": {
+        "name": "debug",
+        "expr": {
+          "expr": {
+            "term": {
+              "value": "1"
+            }
+          }
+        }
+      }
+    },
+    {
+      "lineNumberInSrc": 0,
+      "lineNumber": null,
+      "stmt": {
+        "name": "value",
+        "expr": null
+      }
+    },
+    {
+      "lineNumberInSrc": 4,
+      "lineNumber": "0000000",
+      "stmt": {
+        "Name": "main",
+        "Scope": {
+          "stmts": [
+            {
+              "lineNumberInSrc": 5,
+              "lineNumber": "0000001",
+              "stmt": {
+                "Name": "counter",
+                "type": {
+                  "Kind": 2,
+                  "IsArith": true,
+                  "IsIntegral": true,
+                  "IsScalar": true,
+                  "IsComplete": true,
+                  "SizeOf": 0,
+                  "Alignment": 0
+                },
+                "expr": {
+                  "expr": {
+                    "term": {
+                      "value": "5"
+                    }
+                  }
+                },
+                "assignmentOperator": 1
+              }
+            },
+            {
+              "lineNumberInSrc": 6,
+              "lineNumber": "0000016",
+              "stmt": {
+                "Expr": {
+                  "expr": {
+                    "lhs": {
+                      "expr": {
+                        "term": {
+                          "ident": "counter"
+                        }
+                      }
+                    },
+                    "rhs": {
+                      "expr": {
+                        "term": {
+                          "value": "1"
+                        }
+                      }
+                    },
+                    "compersionOperators": 6
+                  }
+                },
+                "Scope": {
+                  "stmts": [
+                    {
+                      "lineNumberInSrc": 7,
+                      "lineNumber": "0000016",
+                      "stmt": {
+                        "Define": "debug",
+                        "compersionOperators": 1,
+                        "expr": {
+                          "expr": {
+                            "term": {
+                              "value": "1"
+                            }
+                          }
+                        },
+                        "scope": {
+                          "stmts": [
+                            {
+                              "lineNumberInSrc": 8,
+                              "lineNumber": "0000018",
+                              "stmt": {
+                                "asmCode": "test      A",
+                                "arguments": []
+                              }
+                            },
+                            {
+                              "lineNumberInSrc": 9,
+                              "lineNumber": "0000019",
+                              "stmt": {
+                                "asmCode": "mov A, {0}",
+                                "arguments": [
+                                  {
+                                    "placement": 0,
+                                    "value": {
+                                      "expr": {
+                                        "term": {
+                                          "ident": "debug"
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "lineNumberInSrc": 11,
+                      "lineNumber": "0000032",
+                      "stmt": null
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "lineNumberInSrc": 12,
+              "lineNumber": "0000033",
+              "stmt": {
+                "Name": "pVoid",
+                "type": {
+                  "Kind": 0,
+                  "IsArith": false,
+                  "IsIntegral": false,
+                  "IsScalar": false,
+                  "IsComplete": true,
+                  "SizeOf": 5,
+                  "Alignment": 5
+                },
+                "expr": {
+                  "expr": {
+                    "term": {
+                      "ident": {
+                        "ident": "counter"
+                      }
+                    }
+                  }
+                },
+                "assignmentOperator": 1
+              }
+            },
+            {
+              "lineNumberInSrc": 13,
+              "lineNumber": "0000256",
+              "stmt": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

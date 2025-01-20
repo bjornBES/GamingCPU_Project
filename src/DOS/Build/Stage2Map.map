@@ -25,55 +25,55 @@ __END_DOS__                                  00170000	DOS
 __SIZE_DOS__                                 000e0000	DOS                 
 __START_STACK__                              00f50000	Stack               
 __END_STACK__                                01eb0000	Stack               
-__SIZE_Stack__                               00f60000	Stack               
+__SIZE_STACK__                               00f60000	Stack               
 __START_BSS__                                00f60000	BSS                 
 __END_BSS__                                  01f10000	BSS                 
 __SIZE_BSS__                                 00fb0000	BSS                 
 __START_DATA__                               00f60000	DATA                
 __END_DATA__                                 01f10000	DATA                
 __SIZE_DATA__                                00fb0000	DATA                
-_ACLAsmWriteChar                             000305a0	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L0000010                                     0003062d	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-_diplay                                      0003062d	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L0000048                                     00030631	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-Exit_diplay                                  00030639	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L0000049                                     00030646	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-_ColorOut                                    00030646	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L0000050                                     0003065f	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-Exit_ColorOut                                00030667	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L0000051                                     00030674	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-_Cout                                        00030674	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L0000052                                     00030697	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-Exit_Cout                                    0003069f	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-_ACLAsmReadSector                            0003050f	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L2000000                                     000306ac	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-_ReadRoot                                    000306ac	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L2000005                                     000306b0	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L2000010                                     000306e7	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L2009000                                     000306f3	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-Exit_ReadRoot                                000306fb	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L2020500                                     00030708	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-_ErrorRS                                     00030708	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L2020501                                     0003070c	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-Exit_ErrorRS                                 0003073b	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L9000000                                     00030746	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_ACLAsmWriteChar                             0003059a	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L0000010                                     00030625	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_diplay                                      00030625	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L0000048                                     00030629	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+Exit_diplay                                  00030631	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L0000049                                     0003063e	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_ColorOut                                    0003063e	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L0000050                                     00030657	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+Exit_ColorOut                                0003065f	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L0000051                                     0003066c	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_Cout                                        0003066c	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L0000052                                     0003068f	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+Exit_Cout                                    00030697	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_ACLAsmReadSector                            0003050b	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L2000000                                     000306a4	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_ReadRoot                                    000306a4	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L2000005                                     000306a8	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L2000010                                     000306df	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L2009000                                     000306eb	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+Exit_ReadRoot                                000306f3	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L2020500                                     00030700	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_ErrorRS                                     00030700	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L2020501                                     00030704	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+Exit_ErrorRS                                 00030733	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L9000000                                     0003073e	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _StartDos                                    00000000	NULL                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L1000000                                     0003074b	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-_cstart                                      0003074b	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L1001000                                     0003074f	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-L1001010                                     00030763	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-Exit_cstart                                  0003076b	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-__RODATASTRAT__                              00030778	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-MessERS                                      00030778	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
-DOSFileName                                  00030795	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L1000000                                     00030743	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_cstart                                      00030743	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L1001000                                     00030747	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+L1001010                                     0003075b	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+Exit_cstart                                  00030763	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+__RODATASTRAT__                              00030770	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+MessERS                                      00030770	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
+DOSFileName                                  0003078d	TEXT                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
 Sector                                       00f60000	BSS                 /src/DOS/Build/Bootloader/stage2/CCL/main.acl
 __DATASTRAT__                                00f60000	DATA                /src/DOS/Build/Bootloader/stage2/CCL/main.acl
 Start                                        00030000	TEXTE               /src/DOS/src/Bootloader/stage2/stage2.acl
 Jmp                                          00030400	TEXT                /src/DOS/src/Bootloader/stage2/stage2.acl
-_ACLAsmRSDone                                0003056f	TEXT                /src/DOS/src/Bootloader/stage2/AsmIO.acl
-_ACLAsmWCDone                                000305cd	TEXT                /src/DOS/src/Bootloader/stage2/AsmIO.acl
-GDTStart                                     0003060d	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
-GDT16BitEPCode                               0003060d	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
-GDT16BitECode                                00030615	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
-GDT16BitData                                 0003061d	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
-GDT16BitStack                                00030625	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
+_ACLAsmRSDone                                0003056a	TEXT                /src/DOS/src/Bootloader/stage2/AsmIO.acl
+_ACLAsmWCDone                                000305c6	TEXT                /src/DOS/src/Bootloader/stage2/AsmIO.acl
+GDTStart                                     00030605	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
+GDT16BitEPCode                               00030605	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
+GDT16BitECode                                0003060d	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
+GDT16BitData                                 00030615	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl
+GDT16BitStack                                0003061d	TEXT                /src/DOS/src/Bootloader/stage2/GDT.acl

@@ -5,23 +5,30 @@ public class Program : ArgumentFunctions
 {
     Dictionary<string, VoidFunction> m_arguments = new Dictionary<string, VoidFunction>()
     {
+        {"-h", ShowHelp },
+        
         {"-i", GetInputFile },
 
         {"-o", GetOutputFile },
 
+        {"-d", SetDebug },
+
         {"-cpu", SetCPUType },
     };
 
-    public delegate void VoidFunction(string[] args, ref int i);
+    public delegate void VoidFunction();
     public static void Main(string[] args)
     {
         new Program(args);
     }
-    Program(string[] args)
+    Program(string[] _args)
     {
-        Console.WriteLine("Compiled CPU Language Compiler verison 1.0 16 bit Compiler");
+        args = _args;
 
-        decodeArguments(args);
+        Console.WriteLine($"Compiled CPU Language BCG 16-bit Compiler");
+        Console.WriteLine($"Verison 1.0 {Environment.NewLine}");
+
+        decodeArguments(_args);
 
         if (m_InputFile == "\0" || !File.Exists(m_InputFile))
         {
@@ -30,18 +37,6 @@ public class Program : ArgumentFunctions
         }
 
         string FullSrc = includeFiles(new FileInfo(m_InputFile));
-
-        /*
-        for (int f = 0; f < m_Files.Count; f++)
-        {
-            string FileContents = File.ReadAllText(m_Files[f].FullName);
-
-            // pre compile
-
-            //FullSrc += $"\n.newfile {Files[f].Name}\n" + FileContents;
-            FullSrc += $"{Environment.NewLine}" + FileContents;
-        }
-         */
 
         FullSrc = FullSrc.Replace("\r\n", "\n");
 
@@ -55,22 +50,26 @@ public class Program : ArgumentFunctions
     }
     string includeFiles(FileInfo file)
     {
+        string text = "#       :inc";
         string[] src;
         string outputSrc = "";
 
         src = File.ReadAllText(file.FullName).Split(Environment.NewLine);
-        outputSrc += $"FILE \"{file.FullName}\"";
+        outputSrc += $"FILE \"{file.FullName}\"{Environment.NewLine}";
 
         for (int a = 0; a < src.Length; a++)
         {
-            if (src[a].StartsWith("#inc"))
+            if (src[a].StartsWith(text))
             {
+                src[a] = src[a].Replace(text + " ", "");
+                src[a] = src[a].Trim('\"');
+                src[a] = src[a].Replace("./", "");
                 string inputFile = m_InputFile.Split("/").Last();
                 string currFileDir = m_InputFile.Replace(inputFile, "");
-                src[a] = currFileDir + Regex.Replace(src[a], @" +", " ").Replace("#inc ", "").Trim('\"').Substring(2);
-                if (File.Exists(src[a]))
+                string path = Path.Combine(currFileDir, src[a]);
+                if (File.Exists(path))
                 {
-                    FileInfo fileInfo = new FileInfo(src[a]);
+                    FileInfo fileInfo = new FileInfo(path);
                     if (!m_Files.Contains(fileInfo))
                     {
                         outputSrc += includeFiles(fileInfo);
@@ -85,18 +84,17 @@ public class Program : ArgumentFunctions
         }
         return outputSrc;
     }
-    static int m_i;
     void decodeArguments(string[] args)
     {
-        for (m_i = 0; m_i < args.Length; m_i++)
+        for (i = 0; i < args.Length; i++)
         {
-            if (m_arguments.ContainsKey(args[m_i]))
+            if (m_arguments.ContainsKey(args[i]))
             {
-                m_arguments[args[m_i]](args, ref m_i);
+                m_arguments[args[i]]();
             }
             else
             {
-                m_Files.Add(new FileInfo(Path.GetFullPath(args[m_i])));
+                Console.WriteLine($"invalid argument {args[i]}");
             }
         }
     }

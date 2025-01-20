@@ -2,7 +2,7 @@
   "profiles": {
     "Test Compiler": {
       "commandName": "Project",
-      "commandLineArgs": "-i ./src/CCL/testprogram.CCL -o ./src/CCL/CCLOutput.acl -cpu BC16",
+      "commandLineArgs": "-i ./src/CCL/testprogram.CCL -o ./src/CCL/CCLOutput.acl -cpu BC16 -d",
       "workingDirectory": "./.."
     },
     "Test Bootloader": {

@@ -56,12 +56,9 @@
 
 ### INSTRUCTION LAYOUT
 
-XXXXXXXX_XXXXXXXX_AAAAAAAA_BBBBBBBB
+XXXXXXXX_XXXXXXXX
 
-- U = Unused
 - X = instruction code
-- A = argument 1 if empty then not there
-- B = argument 2 if empty then not there
 
 ### Base argument modes from the BC018 architecture
 

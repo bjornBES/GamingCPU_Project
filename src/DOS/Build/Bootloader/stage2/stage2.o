@@ -51,9 +51,8 @@ _SL_GDTStart
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -220,9 +219,8 @@ f0
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -380,9 +378,8 @@ _REF_ LABEL _ACLAsmRSDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -440,8 +437,8 @@ f0
 30
 _NEWLINE_
 _DEL_ mov AX, R16
-00
-00
+02
+08
 1b
 10
 _NEWARG_ AX
@@ -479,9 +476,8 @@ f0
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -557,9 +553,8 @@ _REF_ LABEL _ACLAsmWCDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -639,9 +634,8 @@ f0
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -799,9 +793,8 @@ _REF_ LABEL _ACLAsmRSDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -859,8 +852,8 @@ f0
 30
 _NEWLINE_
 _DEL_ mov AX, R16
-00
-00
+02
+08
 1b
 10
 _NEWARG_ AX
@@ -898,9 +891,8 @@ f0
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0
@@ -976,9 +968,8 @@ _REF_ LABEL _ACLAsmWCDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/
 _NEWLINE_
 _NEWLINE_
 _DEL_ mov A, CR0
-02
-08
-17
+01
+01
 10
 _NEWARG_ A
 _NEWARG_ CR0

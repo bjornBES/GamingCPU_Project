@@ -1,1044 +1,141 @@
 INCLUDE HEADER
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/includes.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/IncludeCommands.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Vars.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/help.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Run.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/IncludeCommands.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Vars.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/help.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Run.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-INCINIL /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+INCINIL /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
 
 
 SECTION HEADER
-_BASICSRC /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_TEXT /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_DATA /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_TEXT /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_BSS /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_TEXT /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_TEXT /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_DATA /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_TEXT /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_BSS /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_TEXT /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_TEXT /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_BSS /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
+_TEXTE /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_TEXT /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_DOS /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
 
 
 SYMBOLS HEADER
-_REF_ LABEL Entry,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_REF_ LABEL GetResolution,False.True /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_REF_ LABEL PrintC,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_REF_ LABEL PrintStr,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_REF_ LABEL PrintStrLoop,False.True /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_REF_ LABEL PrintStrExit,False.True /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_REF_ LABEL Let,True.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Vars.acl
-_REF_ LABEL Help,True.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/help.acl
-_REF_ LABEL Run,True.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Run.acl
-_REF_ LABEL TranslationTable,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_REF_ LABEL AddressTable,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_REF_ LABEL Parse,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL ParseLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL ParseLoopExit,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL GetCommand,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL GetCommandLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL GetCommandExitB,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL GetCommandExit,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL TranslateCommand,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL TranslateCommandLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL TranslateCommandExit,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL IsCommand,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL ExitFunction,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL BasicSrcIndex,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL Buffer,False.True /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_REF_ LABEL Generate,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_REF_ LABEL GenCommandAddress,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_REF_ LABEL GenCommandLoop,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_REF_ LABEL GenCommandExit,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_REF_ LABEL Message,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_REF_ LABEL ParsedBuffer,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_REF_ LABEL CursorX,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_REF_ LABEL CursorY,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_REF_ LABEL ScreenHeight,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_REF_ LABEL ScreenWidth,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_REF_ LABEL ParserIndex,False.False /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
+_REF_ LABEL _ACLAsmWriteChar,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000010,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _diplay,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000048,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_diplay,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000049,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ColorOut,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000050,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_ColorOut,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000051,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _Cout,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L0000052,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_Cout,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ACLAsmReadSector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2000000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ReadRoot,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2000005,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2000010,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2009000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_ReadRoot,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2020500,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _ErrorRS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L2020501,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_ErrorRS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L9000000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _StartDos,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L1000000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL _cstart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L1001000,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL L1001010,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Exit_cstart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL __RODATASTRAT__,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL MessERS,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL DOSFileName,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL Sector,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_REF_ LABEL __DATASTRAT__,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+
+
+
+_REF_ LABEL _cstart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_REF_ LABEL Start,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_REF_ LABEL Jmp,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_REF_ LABEL _ACLAsmReadSector,True.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL _ACLAsmRSDone,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL _ACLAsmWriteChar,True.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL _ACLAsmWCDone,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_REF_ LABEL GDTStart,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitEPCode,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitECode,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitData,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_REF_ LABEL GDT16BitStack,False.False /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
 
 
 TEXT HEADER
 _NEWLINE_
 _NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl"
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl"
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_SECTION_ BASICSRC
-_NEWLINE_
-_SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Entry /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-_DEL_ mov DS, HIGH @__BSSSTART
-02
-08
-10
-01
-_NEWARG_ DS
-05
-_NEWARG_ HIGH @__BSSSTART
-_SL___BSSSTART,MH
-_NEWLINE_
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov HL, far @Message
-00
-00
-10
-03
-_NEWARG_ HL
-c7
-_NEWARG_ far @Message
-_FL_Message
-_NEWLINE_
-_DEL_ push HL
-05
-00
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ push B
-05
-00
-18
-_NEWARG_ B
-_NEWLINE_
-_NEWLINE_
-_DEL_ call [PrintStr]
-07
-00
-32
-_NEWARG_ [PrintStr]
-_SL_PrintStr
-_NEWLINE_
-_NEWLINE_
-_DEL_ jmp $
-30
-00
-01
-_NEWARG_ $
-_SCA_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/includes.acl"
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl"
+_SECTION_ TEXTE
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL Start /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
 _NEWLINE_
-_REF_ LABEL GetResolution /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov AH, byte 0x10
-00
-00
-10
-00
-_NEWARG_ AH
-40
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_DEL_ int 0x10
+_DEL_ lgdt @GDTStart
 f0
-40
-00
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov B, LOW @ScreenHeight
+90
 01
-02
+_NEWARG_ @GDTStart
+_SL_GDTStart
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
 01
-_NEWARG_ B
-_NEWARG_ LOW @ScreenHeight
-_SL_ScreenHeight,ML
-_NEWLINE_
-_DEL_ mov [DS:B], R1
-02
-08
-3c
-10
-_NEWARG_ [DS:B]
-_NEWARG_ R1
-10
-_NEWLINE_
-_DEL_ add B, 0x2
-20
-20
-18
 01
-_NEWARG_ B
-_NEWARG_ 0x2
-00
-02
-_NEWLINE_
-_DEL_ mov [DS:B], R2
-02
-08
-3c
 10
-_NEWARG_ [DS:B]
-_NEWARG_ R2
-50
-_NEWLINE_
-_DEL_ retz
-09
-00
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL PrintC /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_NEWLINE_
-_DEL_ enter
-f0
-60
-_NEWLINE_
-_DEL_ pushr
-f0
-20
-_NEWLINE_
-_NEWLINE_
-_DEL_ sez A
-0a
-05
 _NEWARG_ A
+_NEWARG_ CR0
+24
 _NEWLINE_
-_DEL_ mov C, [BP - 9]
-01
-03
-41
-_NEWARG_ C
-_NEWARG_ [BP - 9]
-f7
-_NEWLINE_
-_DEL_ mov B, [BP - 7]
-01
-02
-41
-_NEWARG_ B
-_NEWARG_ [BP - 7]
-f9
-_NEWLINE_
-_DEL_ int 0x10
-f0
-40
-00
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_NEWLINE_
-_DEL_ popr
-f0
-30
-_NEWLINE_
-_DEL_ leave
-f0
-70
-_NEWLINE_
-_DEL_ ret 4
-08
-00
-00
-_NEWARG_ 4
-04
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL PrintStr /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_NEWLINE_
-_DEL_ enter
-f0
-60
-_NEWLINE_
-_DEL_ pushr
-f0
+_DEL_ or A, 0x0080
 20
-_NEWLINE_
-_NEWLINE_
-_DEL_ movd HL, [BP - 7]
-03
-00
-10
-41
-_NEWARG_ HL
-c7
-_NEWARG_ [BP - 7]
-f9
-_NEWLINE_
-_DEL_ sez A
-0a
-05
-_NEWARG_ A
-_NEWLINE_
-_DEL_ mov C, [BP - 11]
-01
-03
-41
-_NEWARG_ C
-_NEWARG_ [BP - 11]
-ef
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL PrintStrLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov BL, [HL]
-00
-02
-21
-_NEWARG_ BL
-_NEWARG_ [HL]
-_NEWLINE_
-_DEL_ jz [PrintStrExit]
-30
-10
-32
-_NEWARG_ [PrintStrExit]
-_SL_PrintStrExit
-_NEWLINE_
-_DEL_ int 0x10
-f0
-40
-00
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_DEL_ inc HL
-20
-f0
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ jmp [PrintStrLoop]
-30
-00
-32
-_NEWARG_ [PrintStrLoop]
-_SL_PrintStrLoop
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL PrintStrExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_NEWLINE_
-_DEL_ popr
-f0
-30
-_NEWLINE_
-_DEL_ leave
-f0
-70
-_NEWLINE_
-_DEL_ ret 6
-08
-00
-00
-_NEWARG_ 6
-06
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/IncludeCommands.acl"
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Vars.acl"
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Let /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Vars.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/help.acl"
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Help /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/help.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Run.acl"
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Run /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Run.acl
-_NEWLINE_
-_DEL_ call [Parse]
-07
-00
-32
-_NEWARG_ [Parse]
-_SL_Parse
-_NEWLINE_
-_DEL_ call [Generate]
-07
-00
-32
-_NEWARG_ [Generate]
-_SL_Generate
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl"
-_NEWLINE_
-_SECTION_ DATA
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL TranslationTable /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_NEWLINE_
-48
-45
-4c
-50
-00
-_NEWLINE_
-20
-_NEWLINE_
-00
-00
-_NEWLINE_
-_NEWLINE_
-4c
-45
-54
-00
-_NEWLINE_
-20
-_NEWLINE_
-00
-01
-_NEWLINE_
-_NEWLINE_
-52
-55
-4e
-00
-_NEWLINE_
-20
-_NEWLINE_
-FF
-FE
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL AddressTable /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_NEWLINE_
-00
-00
-_NEWLINE_
-_FL_Help
-_NEWLINE_
-_NEWLINE_
-00
-01
-_NEWLINE_
-_FL_Let
-_NEWLINE_
-_NEWLINE_
-FF
-FE
-_NEWLINE_
-_FL_Run
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl"
-_NEWLINE_
-_NEWLINE_
-_SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Parse /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ pushr
-f0
-20
-_NEWLINE_
-_DEL_ mov ES, HIGH @__START_BASICSRC__
-02
-08
-10
-01
-_NEWARG_ ES
-45
-_NEWARG_ HIGH @__START_BASICSRC__
-_SL___START_BASICSRC__,MH
-_NEWLINE_
-_DEL_ mov DS, HIGH @Buffer
-02
-08
-10
-01
-_NEWARG_ DS
-05
-_NEWARG_ HIGH @Buffer
-_SL_Buffer,MH
-_NEWLINE_
-_DEL_ mov FS, HIGH @ParsedBuffer
-02
-08
-10
-01
-_NEWARG_ FS
-85
-_NEWARG_ HIGH @ParsedBuffer
-_SL_ParsedBuffer,MH
-_NEWLINE_
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov [ParserIndex], B
-01
-00
-32
-18
-_NEWARG_ [ParserIndex]
-_SL_ParserIndex
-_NEWARG_ B
-_NEWLINE_
-_DEL_ sez HL
-0a
-00
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ mov [BasicSrcIndex], HL
-00
-00
-32
-10
-_NEWARG_ [BasicSrcIndex]
-_SL_BasicSrcIndex
-_NEWARG_ HL
-c7
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL ParseLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL ParseLoopExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_DEL_ retz
-09
-00
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL GetCommand /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ mov C, LOW @Buffer
-01
-03
-01
-_NEWARG_ C
-_NEWARG_ LOW @Buffer
-_SL_Buffer,ML
-_NEWLINE_
-_DEL_ mov B, far [BasicSrcIndex]
-01
-02
-34
-_NEWARG_ B
-_NEWARG_ far [BasicSrcIndex]
-_FL_BasicSrcIndex
-_NEWLINE_
-_REF_ LABEL GetCommandLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ cmp C, %TokenCommandLength
-04
-00
-19
-01
-_NEWARG_ C
-_NEWARG_ %TokenCommandLength
-00
-0A
-_NEWLINE_
-_DEL_ je [GetCommandExit]
-30
-30
-32
-_NEWARG_ [GetCommandExit]
-_SL_GetCommandExit
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov AL, [ES:B]
-00
-01
-3e
-_NEWARG_ AL
-_NEWARG_ [ES:B]
-_NEWLINE_
-_DEL_ jz [GetCommandExitB]
-30
-10
-32
-_NEWARG_ [GetCommandExitB]
-_SL_GetCommandExitB
-_NEWLINE_
-_DEL_ inc B
-20
-f0
-18
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov [DS:C], AL
-00
-00
-3b
-11
-_NEWARG_ [DS:C]
-82
-_NEWARG_ AL
-_NEWLINE_
-_DEL_ inc C
-20
-f0
-19
-_NEWARG_ C
-_NEWLINE_
-_DEL_ jmp [GetCommandLoop]
-30
-00
-32
-_NEWARG_ [GetCommandLoop]
-_SL_GetCommandLoop
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL GetCommandExitB /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ inc C
-20
-f0
-19
-_NEWARG_ C
-_NEWLINE_
-_DEL_ mov [DS:C], 0
-00
-00
-3b
-00
-_NEWARG_ [DS:C]
-82
-_NEWARG_ 0
-00
-_NEWLINE_
-_REF_ LABEL GetCommandExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ mov far [BasicSrcIndex],B
-01
-00
-34
-18
-_NEWARG_ far [BasicSrcIndex]
-_FL_BasicSrcIndex
-_NEWARG_ B
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL TranslateCommand /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ push B
-05
-00
-18
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov HL, far @TranslationTable
-00
-00
-10
-03
-_NEWARG_ HL
-c7
-_NEWARG_ far @TranslationTable
-_FL_TranslationTable
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
-_NEWLINE_
-_REF_ LABEL TranslateCommandLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ cmpl
-40
-10
-_NEWLINE_
-_NEWLINE_
-_DEL_ je [TranslateCommandExit]
-30
-30
-32
-_NEWARG_ [TranslateCommandExit]
-_SL_TranslateCommandExit
-_NEWLINE_
-_DEL_ add HL, %EntrySize
-20
-20
-10
-01
-_NEWARG_ HL
-c7
-_NEWARG_ %EntrySize
-00
-02
-_NEWLINE_
-_DEL_ jmp [TranslateCommandLoop]
-30
-00
-32
-_NEWARG_ [TranslateCommandLoop]
-_SL_TranslateCommandLoop
-_NEWLINE_
-_REF_ LABEL TranslateCommandExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ add HL, %TokenCommandLength
-20
-20
-10
-01
-_NEWARG_ HL
-c7
-_NEWARG_ %TokenCommandLength
-00
-0A
-_NEWLINE_
-_DEL_ mov A, word [HL]
-01
-01
-21
-_NEWARG_ A
-_NEWARG_ [HL]
-_NEWLINE_
-_DEL_ mov R2, far [ParserIndex]
-02
-08
-10
-34
-_NEWARG_ R2
-50
-_NEWARG_ far [ParserIndex]
-_FL_ParserIndex
-_NEWLINE_
-_DEL_ cmp A, 0xFFFF
-04
-02
+71
 01
 _NEWARG_ A
-_NEWARG_ 0xFFFF
-FF
-FF
+_NEWARG_ 0x0080
+00
+80
 _NEWLINE_
-_DEL_ jne [IsCommand]
-30
-31
-32
-_NEWARG_ [IsCommand]
-_SL_IsCommand
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov B, C
+_DEL_ mov CR0, A
 01
-02
-19
-_NEWARG_ B
-_NEWARG_ C
-_NEWLINE_
-_DEL_ dec C
-21
 00
-19
-_NEWARG_ C
-_NEWLINE_
-_DEL_ swap H, FS
-0c
-00
-15
 10
-_NEWARG_ H
-_NEWARG_ FS
-85
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
 _NEWLINE_
-_DEL_ swap L, R2
-0c
+_NEWLINE_
+_DEL_ mov L, LOW @Jmp
+01
 00
 16
-10
+01
 _NEWARG_ L
-_NEWARG_ R2
-50
+_NEWARG_ LOW @Jmp
+_SL_Jmp,ML
 _NEWLINE_
-_DEL_ LOOR
-40
-20
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL IsCommand /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ mov [FS:R2], A
+_DEL_ mov H, 0x0005
 01
 00
-3a
-17
-_NEWARG_ [FS:R2]
-85
-50
-_NEWARG_ A
-_NEWLINE_
-_DEL_ pop B
-06
-00
-18
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov far [BasicSrcIndex],B
+15
 01
+_NEWARG_ H
+_NEWARG_ 0x0005
 00
-34
-18
-_NEWARG_ far [BasicSrcIndex]
-_FL_BasicSrcIndex
-_NEWARG_ B
-_NEWLINE_
-_REF_ LABEL ExitFunction /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ inc R2
-20
-f0
-10
-_NEWARG_ R2
-50
-_NEWLINE_
-_DEL_ mov [ParserIndex], R2
-02
-08
-32
-10
-_NEWARG_ [ParserIndex]
-_SL_ParserIndex
-_NEWARG_ R2
-50
-_NEWLINE_
-_DEL_ retz
-09
-00
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_SECTION_ BSS
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL BasicSrcIndex /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_RES_ 2
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Buffer /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_RES_ 000A
-_NEWLINE_
-_SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl"
-_NEWLINE_
-_NEWLINE_
-_SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Generate /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ pushr
-f0
-20
-_NEWLINE_
-_DEL_ mov DS, HIGH @AddressTable
-02
-08
-10
-01
-_NEWARG_ DS
 05
-_NEWARG_ HIGH @AddressTable
-_SL_AddressTable,MH
-_NEWLINE_
-_DEL_ mov HL, @ParsedBuffer
-00
-00
-10
-01
-_NEWARG_ HL
-c7
-_NEWARG_ @ParsedBuffer
-_SL_ParsedBuffer
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL GenCommandAddress /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
-_NEWLINE_
-_DEL_ sez R1
-0a
-00
-10
-_NEWARG_ R1
-10
-_NEWLINE_
-_REF_ LABEL GenCommandLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ mov A, [DS:B]
-01
-01
-3c
-_NEWARG_ A
-_NEWARG_ [DS:B]
-_NEWLINE_
-_DEL_ mov C, [HL]
-01
-03
-21
-_NEWARG_ C
-_NEWARG_ [HL]
-_NEWLINE_
-_DEL_ cmp A, C
-04
-02
-19
-_NEWARG_ A
-_NEWARG_ C
-_NEWLINE_
-_DEL_ je [GenCommandExit]
-30
-30
-32
-_NEWARG_ [GenCommandExit]
-_SL_GenCommandExit
-_NEWLINE_
-_DEL_ add B, %AddressTableLength
-20
-20
-18
-01
-_NEWARG_ B
-_NEWARG_ %AddressTableLength
-00
-06
-_NEWLINE_
-_DEL_ jmp [GenCommandLoop]
-30
-00
-32
-_NEWARG_ [GenCommandLoop]
-_SL_GenCommandLoop
-_NEWLINE_
-_REF_ LABEL GenCommandExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ add B, 2
-20
-20
-18
-01
-_NEWARG_ B
-_NEWARG_ 2
-00
-02
-_NEWLINE_
-_DEL_ push HL
-05
-00
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ movd HL, [DS:B]
-03
-00
-10
-3c
-_NEWARG_ HL
-c7
-_NEWARG_ [DS:B]
-_NEWLINE_
 _NEWLINE_
 _DEL_ jmp [HL]
 30
@@ -1049,75 +146,94 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
+_SECTION_ TEXT
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL Jmp /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
 _NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl"
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL GetResolution /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov AH, byte 0x10
-00
-00
-10
-00
-_NEWARG_ AH
-40
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_DEL_ int 0x10
-f0
-40
-00
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov B, LOW @ScreenHeight
+_DEL_ mov AX, FAR @__START_DATA__
+03
 01
-02
-01
-_NEWARG_ B
-_NEWARG_ LOW @ScreenHeight
-_SL_ScreenHeight,ML
+03
+_NEWARG_ AX
+_NEWARG_ FAR @__START_DATA__
+_FL___START_DATA__
 _NEWLINE_
-_DEL_ mov [DS:B], R1
-02
-08
-3c
-10
-_NEWARG_ [DS:B]
-_NEWARG_ R1
-10
-_NEWLINE_
-_DEL_ add B, 0x2
-20
-20
-18
-01
-_NEWARG_ B
-_NEWARG_ 0x2
+_DEL_ mov EDS, AX
+03
 00
-02
-_NEWLINE_
-_DEL_ mov [DS:B], R2
-02
-08
-3c
 10
-_NEWARG_ [DS:B]
-_NEWARG_ R2
-50
+1b
+_NEWARG_ EDS
+29
+_NEWARG_ AX
 _NEWLINE_
-_DEL_ retz
-09
+_DEL_ mov EES, AX
+03
 00
+10
+1b
+_NEWARG_ EES
+69
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov EFS, AX
+03
+00
+10
+1b
+_NEWARG_ EFS
+a9
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov EGS, AX
+03
+00
+10
+1b
+_NEWARG_ EGS
+e9
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov EHS, AX
+03
+00
+10
+1b
+_NEWARG_ EHS
+2a
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ push DX
+05
+00
+1e
+_NEWARG_ DX
+_NEWLINE_
+_NEWLINE_
+_DEL_ call [_cstart]
+07
+00
+32
+_NEWARG_ [_cstart]
+_SL__cstart
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl"
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
@@ -1126,7 +242,13 @@ _NEWLINE_
 _NEWLINE_
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL PrintC /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmReadSector /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -1137,26 +259,328 @@ f0
 20
 _NEWLINE_
 _NEWLINE_
-_DEL_ sez A
-0a
+_DEL_ mov A, CR0
+01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ and A, 0xFF7F
+20
+61
+01
+_NEWARG_ A
+_NEWARG_ 0xFF7F
+FF
+7F
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, @__START_DATA__
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ @__START_DATA__
+_SL___START_DATA__
+_NEWLINE_
+_DEL_ mov DS, A
+01
+00
+10
+17
+_NEWARG_ DS
 05
 _NEWARG_ A
 _NEWLINE_
-_DEL_ mov C, [BP - 9]
+_DEL_ mov SS, @__START_STACK__
+02
+08
+10
+01
+_NEWARG_ SS
+c6
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ push R1
+05
+00
+10
+_NEWARG_ R1
+10
+_NEWLINE_
+_DEL_ mov R1L, [BP - 14]
+01
+00
+10
+41
+_NEWARG_ R1L
+14
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ mov R2, [BP - 18]
+02
+08
+10
+41
+_NEWARG_ R2
+50
+_NEWARG_ [BP - 18]
+e8
+_NEWLINE_
+_DEL_ mov R3, [BP - 22]
+02
+08
+10
+41
+_NEWARG_ R3
+90
+_NEWARG_ [BP - 22]
+de
+_NEWLINE_
+_DEL_ mov DL, [BP - 14]
+00
+04
+41
+_NEWARG_ DL
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ mov HL, [BP - 26]
+00
+00
+10
+41
+_NEWARG_ HL
+c7
+_NEWARG_ [BP - 26]
+da
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, 0x01
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x01
+00
+01
+_NEWLINE_
+_DEL_ int 0x13
+f0
+40
+00
+_NEWARG_ 0x13
+13
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez R16
+0a
+00
+10
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ jnc [_ACLAsmRSDone]
+30
+41
+32
+_NEWARG_ [_ACLAsmRSDone]
+_SL__ACLAsmRSDone
+_NEWLINE_
+_DEL_ mov R16, 0x01
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0x01
+00
+00
+01
+_NEWLINE_
+_REF_ LABEL _ACLAsmRSDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ or A, 0x0080
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x0080
+00
+80
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, FAR @__START_DATA__
+03
 01
 03
-41
-_NEWARG_ C
-_NEWARG_ [BP - 9]
-f7
+_NEWARG_ AX
+_NEWARG_ FAR @__START_DATA__
+_FL___START_DATA__
 _NEWLINE_
-_DEL_ mov B, [BP - 7]
+_DEL_ mov EDS, AX
+03
+00
+10
+1b
+_NEWARG_ EDS
+29
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 20
+08
+00
+00
+_NEWARG_ 20
+20
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmWriteChar /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
 01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ and A, 0xFF7F
+20
+61
+01
+_NEWARG_ A
+_NEWARG_ 0xFF7F
+FF
+7F
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov SS, @__START_STACK__
+02
+08
+10
+01
+_NEWARG_ SS
+c6
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, [BP - 10]
+00
+01
+41
+_NEWARG_ AL
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ mov BL, [BP - 14]
+00
 02
 41
-_NEWARG_ B
-_NEWARG_ [BP - 7]
-f9
+_NEWARG_ BL
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, 0x00
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x00
+00
+00
 _NEWLINE_
 _DEL_ int 0x10
 f0
@@ -1166,6 +590,47 @@ _NEWARG_ 0x10
 10
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL _ACLAsmWCDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/AsmIO.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ or A, 0x0080
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x0080
+00
+80
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
 _DEL_ popr
 f0
 30
@@ -1173,6 +638,853 @@ _NEWLINE_
 _DEL_ leave
 f0
 70
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+_NEWARG_ 8
+08
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmReadSector /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ and A, 0xFF7F
+20
+61
+01
+_NEWARG_ A
+_NEWARG_ 0xFF7F
+FF
+7F
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, @__START_DATA__
+01
+01
+01
+_NEWARG_ A
+_NEWARG_ @__START_DATA__
+_SL___START_DATA__
+_NEWLINE_
+_DEL_ mov DS, A
+01
+00
+10
+17
+_NEWARG_ DS
+05
+_NEWARG_ A
+_NEWLINE_
+_DEL_ mov SS, @__START_STACK__
+02
+08
+10
+01
+_NEWARG_ SS
+c6
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ push R1
+05
+00
+10
+_NEWARG_ R1
+10
+_NEWLINE_
+_DEL_ mov R1L, [BP - 14]
+01
+00
+10
+41
+_NEWARG_ R1L
+14
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ mov R2, [BP - 18]
+02
+08
+10
+41
+_NEWARG_ R2
+50
+_NEWARG_ [BP - 18]
+e8
+_NEWLINE_
+_DEL_ mov R3, [BP - 22]
+02
+08
+10
+41
+_NEWARG_ R3
+90
+_NEWARG_ [BP - 22]
+de
+_NEWLINE_
+_DEL_ mov DL, [BP - 14]
+00
+04
+41
+_NEWARG_ DL
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ mov HL, [BP - 26]
+00
+00
+10
+41
+_NEWARG_ HL
+c7
+_NEWARG_ [BP - 26]
+da
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, 0x01
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x01
+00
+01
+_NEWLINE_
+_DEL_ int 0x13
+f0
+40
+00
+_NEWARG_ 0x13
+13
+_NEWLINE_
+_NEWLINE_
+_DEL_ sez R16
+0a
+00
+10
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ jnc [_ACLAsmRSDone]
+30
+41
+32
+_NEWARG_ [_ACLAsmRSDone]
+_SL__ACLAsmRSDone
+_NEWLINE_
+_DEL_ mov R16, 0x01
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0x01
+00
+00
+01
+_NEWLINE_
+_REF_ LABEL _ACLAsmRSDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ or A, 0x0080
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x0080
+00
+80
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, FAR @__START_DATA__
+03
+01
+03
+_NEWARG_ AX
+_NEWARG_ FAR @__START_DATA__
+_FL___START_DATA__
+_NEWLINE_
+_DEL_ mov EDS, AX
+03
+00
+10
+1b
+_NEWARG_ EDS
+29
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 20
+08
+00
+00
+_NEWARG_ 20
+20
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmWriteChar /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ and A, 0xFF7F
+20
+61
+01
+_NEWARG_ A
+_NEWARG_ 0xFF7F
+FF
+7F
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov SS, @__START_STACK__
+02
+08
+10
+01
+_NEWARG_ SS
+c6
+_NEWARG_ @__START_STACK__
+_SL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AL, [BP - 10]
+00
+01
+41
+_NEWARG_ AL
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ mov BL, [BP - 14]
+00
+02
+41
+_NEWARG_ BL
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AH, 0x00
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x00
+00
+00
+_NEWLINE_
+_DEL_ int 0x10
+f0
+40
+00
+_NEWARG_ 0x10
+10
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL _ACLAsmWCDone /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov A, CR0
+01
+01
+10
+_NEWARG_ A
+_NEWARG_ CR0
+24
+_NEWLINE_
+_DEL_ or A, 0x0080
+20
+71
+01
+_NEWARG_ A
+_NEWARG_ 0x0080
+00
+80
+_NEWLINE_
+_DEL_ mov CR0, A
+01
+00
+10
+17
+_NEWARG_ CR0
+24
+_NEWARG_ A
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov ESS, FAR @__START_STACK__
+00
+00
+10
+03
+_NEWARG_ ESS
+ea
+_NEWARG_ FAR @__START_STACK__
+_FL___START_STACK__
+_NEWLINE_
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+_NEWARG_ 8
+08
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl"
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDTStart /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_NEWLINE_
+_REF_ LABEL GDT16BitEPCode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_NEWLINE_
+_NEWLINE_
+00
+05
+_NEWLINE_
+_NEWLINE_
+00
+05
+00
+00
+_NEWLINE_
+_NEWLINE_
+02
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitECode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_NEWLINE_
+_NEWLINE_
+00
+02
+_NEWLINE_
+_NEWLINE_
+00
+03
+00
+00
+_NEWLINE_
+_NEWLINE_
+02
+_NEWLINE_
+_NEWLINE_
+C0
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitData /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_NEWLINE_
+_NEWLINE_
+00
+05
+_NEWLINE_
+_NEWLINE_
+00
+F6
+00
+00
+_NEWLINE_
+_NEWLINE_
+10
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitStack /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/GDT.acl
+_NEWLINE_
+_NEWLINE_
+00
+01
+_NEWLINE_
+_NEWLINE_
+00
+F5
+00
+00
+_NEWLINE_
+_NEWLINE_
+10
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDTStart /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_REF_ LABEL GDT16BitEPCode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+00
+05
+_NEWLINE_
+_NEWLINE_
+00
+05
+00
+00
+_NEWLINE_
+_NEWLINE_
+02
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitECode /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+00
+02
+_NEWLINE_
+_NEWLINE_
+00
+03
+00
+00
+_NEWLINE_
+_NEWLINE_
+02
+_NEWLINE_
+_NEWLINE_
+C0
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitData /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+00
+05
+_NEWLINE_
+_NEWLINE_
+00
+F6
+00
+00
+_NEWLINE_
+_NEWLINE_
+10
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL GDT16BitStack /home/bjornbes/projects/GamingCPU_Project/src/DOS/src/Bootloader/stage2/stage2.acl
+_NEWLINE_
+_NEWLINE_
+00
+01
+_NEWLINE_
+_NEWLINE_
+00
+F5
+00
+00
+_NEWLINE_
+_NEWLINE_
+10
+_NEWLINE_
+_NEWLINE_
+80
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+_SECTION_ DOS
+_NEWLINE_
+_NEWLINE_
+_NEWLINE_
+
+
+_NEWLINE_
+_NEWLINE_
+_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl"
+_NEWLINE_
+_NEWLINE_
+_SECTION_ TEXT
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL L0000010 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_REF_ LABEL _diplay /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_REF_ LABEL L0000048 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov R16, 0
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_diplay /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ ret 16
+08
+00
+00
+_NEWARG_ 16
+16
+_NEWLINE_
+_REF_ LABEL L0000049 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_REF_ LABEL _ColorOut /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 14]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 10]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ call far [_ACLAsmWriteChar]
+07
+00
+34
+_NEWARG_ far [_ACLAsmWriteChar]
+_FL__ACLAsmWriteChar
+_NEWLINE_
+_REF_ LABEL L0000050 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov R16, 0
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_ColorOut /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+_NEWARG_ 8
+08
+_NEWLINE_
+_REF_ LABEL L0000051 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_REF_ LABEL _Cout /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_DEL_ mov AX, 0x55
+03
+01
+03
+_NEWARG_ AX
+_NEWARG_ 0x55
+00
+00
+00
+55
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 14]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 14]
+ec
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 10]
+03
+01
+41
+_NEWARG_ AX
+_NEWARG_ [BP - 10]
+f0
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ call far [_ACLAsmWriteChar]
+07
+00
+34
+_NEWARG_ far [_ACLAsmWriteChar]
+_FL__ACLAsmWriteChar
+_NEWLINE_
+_REF_ LABEL L0000052 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov R16, 0
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_Cout /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
 _NEWLINE_
 _DEL_ ret 4
 08
@@ -1182,13 +1494,9 @@ _NEWARG_ 4
 04
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL L2000000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL PrintStr /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
+_REF_ LABEL _ReadRoot /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ enter
 f0
@@ -1198,72 +1506,137 @@ _DEL_ pushr
 f0
 20
 _NEWLINE_
+_REF_ LABEL L2000005 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_DEL_ movd HL, [BP - 7]
-03
+_NEWLINE_
+_DEL_ mov HL, Sector
+00
 00
 10
-41
+01
 _NEWARG_ HL
 c7
-_NEWARG_ [BP - 7]
-f9
+_NEWARG_ Sector
+_SL_Sector
 _NEWLINE_
-_DEL_ sez A
-0a
+_DEL_ push HL
 05
-_NEWARG_ A
+00
+10
+_NEWARG_ HL
+c7
 _NEWLINE_
-_DEL_ mov C, [BP - 11]
+_NEWLINE_
+_DEL_ mov AX, 0x3
+03
 01
 03
+_NEWARG_ AX
+_NEWARG_ 0x3
+00
+00
+00
+03
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, 0x0
+03
+01
+03
+_NEWARG_ AX
+_NEWARG_ 0x0
+00
+00
+00
+00
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, 0x0
+03
+01
+03
+_NEWARG_ AX
+_NEWARG_ 0x0
+00
+00
+00
+00
+_NEWLINE_
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_NEWLINE_
+_DEL_ mov AX, [BP - 10]
+03
+01
 41
-_NEWARG_ C
-_NEWARG_ [BP - 11]
-ef
+_NEWARG_ AX
+_NEWARG_ [BP - 10]
+f0
 _NEWLINE_
-_NEWLINE_
-_REF_ LABEL PrintStrLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov BL, [HL]
+_DEL_ push AX
+05
 00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ call far [_ACLAsmReadSector]
+07
+00
+34
+_NEWARG_ far [_ACLAsmReadSector]
+_FL__ACLAsmReadSector
+_NEWLINE_
+_REF_ LABEL L2000010 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ cmp AX, 1
+04
+03
+03
+_NEWARG_ AX
+_NEWARG_ 1
+00
+00
+00
+01
+_NEWLINE_
+_DEL_ je [L2020500]
+30
+30
+32
+_NEWARG_ [L2020500]
+_SL_L2020500
+_NEWLINE_
+_REF_ LABEL L2009000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov R16, 0
 02
-21
-_NEWARG_ BL
-_NEWARG_ [HL]
-_NEWLINE_
-_DEL_ jz [PrintStrExit]
-30
+08
 10
-32
-_NEWARG_ [PrintStrExit]
-_SL_PrintStrExit
-_NEWLINE_
-_DEL_ int 0x10
-f0
-40
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
 00
-_NEWARG_ 0x10
-10
-_NEWLINE_
-_DEL_ inc HL
-20
-f0
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ jmp [PrintStrLoop]
-30
 00
-32
-_NEWARG_ [PrintStrLoop]
-_SL_PrintStrLoop
+00
 _NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL PrintStrExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/display.acl
+_REF_ LABEL Exit_ReadRoot /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ popr
 f0
@@ -1273,661 +1646,35 @@ _DEL_ leave
 f0
 70
 _NEWLINE_
-_DEL_ ret 6
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ ret 8
 08
 00
 00
-_NEWARG_ 6
-06
+_NEWARG_ 8
+08
 _NEWLINE_
+_REF_ LABEL L2020500 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
+_REF_ LABEL _ErrorRS /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/IncludeCommands.acl"
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Vars.acl"
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Let /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Vars.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/help.acl"
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Help /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/help.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Run.acl"
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Run /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Commands/Run.acl
-_NEWLINE_
-_DEL_ call [Parse]
-07
-00
-32
-_NEWARG_ [Parse]
-_SL_Parse
-_NEWLINE_
-_DEL_ call [Generate]
-07
-00
-32
-_NEWARG_ [Generate]
-_SL_Generate
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl"
-_NEWLINE_
-_SECTION_ DATA
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL TranslationTable /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_NEWLINE_
-48
-45
-4c
-50
-00
-_NEWLINE_
-20
-_NEWLINE_
-00
-00
-_NEWLINE_
-_NEWLINE_
-4c
-45
-54
-00
-_NEWLINE_
-20
-_NEWLINE_
-00
-01
-_NEWLINE_
-_NEWLINE_
-52
-55
-4e
-00
-_NEWLINE_
-20
-_NEWLINE_
-FF
-FE
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL AddressTable /home/bjornbes/projects/GamingCPU_Project/src/basic/src/TokenTable.acl
-_NEWLINE_
-00
-00
-_NEWLINE_
-_FL_Help
-_NEWLINE_
-_NEWLINE_
-00
-01
-_NEWLINE_
-_FL_Let
-_NEWLINE_
-_NEWLINE_
-FF
-FE
-_NEWLINE_
-_FL_Run
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl"
-_NEWLINE_
-_NEWLINE_
-_SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Parse /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
+_DEL_ enter
+f0
+60
 _NEWLINE_
 _DEL_ pushr
 f0
 20
 _NEWLINE_
-_DEL_ mov ES, HIGH @__START_BASICSRC__
-02
-08
-10
-01
-_NEWARG_ ES
-45
-_NEWARG_ HIGH @__START_BASICSRC__
-_SL___START_BASICSRC__,MH
-_NEWLINE_
-_DEL_ mov DS, HIGH @Buffer
-02
-08
-10
-01
-_NEWARG_ DS
-05
-_NEWARG_ HIGH @Buffer
-_SL_Buffer,MH
-_NEWLINE_
-_DEL_ mov FS, HIGH @ParsedBuffer
-02
-08
-10
-01
-_NEWARG_ FS
-85
-_NEWARG_ HIGH @ParsedBuffer
-_SL_ParsedBuffer,MH
-_NEWLINE_
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov [ParserIndex], B
-01
-00
-32
-18
-_NEWARG_ [ParserIndex]
-_SL_ParserIndex
-_NEWARG_ B
-_NEWLINE_
-_DEL_ sez HL
-0a
-00
-10
-_NEWARG_ HL
-c7
-_NEWLINE_
-_DEL_ mov [BasicSrcIndex], HL
-00
-00
-32
-10
-_NEWARG_ [BasicSrcIndex]
-_SL_BasicSrcIndex
-_NEWARG_ HL
-c7
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL ParseLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL ParseLoopExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_DEL_ retz
-09
-00
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL GetCommand /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ mov C, LOW @Buffer
-01
-03
-01
-_NEWARG_ C
-_NEWARG_ LOW @Buffer
-_SL_Buffer,ML
-_NEWLINE_
-_DEL_ mov B, far [BasicSrcIndex]
-01
-02
-34
-_NEWARG_ B
-_NEWARG_ far [BasicSrcIndex]
-_FL_BasicSrcIndex
-_NEWLINE_
-_REF_ LABEL GetCommandLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ cmp C, %TokenCommandLength
-04
-00
-19
-01
-_NEWARG_ C
-_NEWARG_ %TokenCommandLength
-00
-0A
-_NEWLINE_
-_DEL_ je [GetCommandExit]
-30
-30
-32
-_NEWARG_ [GetCommandExit]
-_SL_GetCommandExit
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov AL, [ES:B]
-00
-01
-3e
-_NEWARG_ AL
-_NEWARG_ [ES:B]
-_NEWLINE_
-_DEL_ jz [GetCommandExitB]
-30
-10
-32
-_NEWARG_ [GetCommandExitB]
-_SL_GetCommandExitB
-_NEWLINE_
-_DEL_ inc B
-20
-f0
-18
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov [DS:C], AL
-00
-00
-3b
-11
-_NEWARG_ [DS:C]
-82
-_NEWARG_ AL
-_NEWLINE_
-_DEL_ inc C
-20
-f0
-19
-_NEWARG_ C
-_NEWLINE_
-_DEL_ jmp [GetCommandLoop]
-30
-00
-32
-_NEWARG_ [GetCommandLoop]
-_SL_GetCommandLoop
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL GetCommandExitB /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ inc C
-20
-f0
-19
-_NEWARG_ C
-_NEWLINE_
-_DEL_ mov [DS:C], 0
-00
-00
-3b
-00
-_NEWARG_ [DS:C]
-82
-_NEWARG_ 0
-00
-_NEWLINE_
-_REF_ LABEL GetCommandExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ mov far [BasicSrcIndex],B
-01
-00
-34
-18
-_NEWARG_ far [BasicSrcIndex]
-_FL_BasicSrcIndex
-_NEWARG_ B
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL TranslateCommand /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ push B
-05
-00
-18
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov HL, far @TranslationTable
-00
-00
-10
-03
-_NEWARG_ HL
-c7
-_NEWARG_ far @TranslationTable
-_FL_TranslationTable
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
-_NEWLINE_
-_REF_ LABEL TranslateCommandLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ cmpl
-40
-10
-_NEWLINE_
-_NEWLINE_
-_DEL_ je [TranslateCommandExit]
-30
-30
-32
-_NEWARG_ [TranslateCommandExit]
-_SL_TranslateCommandExit
-_NEWLINE_
-_DEL_ add HL, %EntrySize
-20
-20
-10
-01
-_NEWARG_ HL
-c7
-_NEWARG_ %EntrySize
-00
-02
-_NEWLINE_
-_DEL_ jmp [TranslateCommandLoop]
-30
-00
-32
-_NEWARG_ [TranslateCommandLoop]
-_SL_TranslateCommandLoop
-_NEWLINE_
-_REF_ LABEL TranslateCommandExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ add HL, %TokenCommandLength
-20
-20
-10
-01
-_NEWARG_ HL
-c7
-_NEWARG_ %TokenCommandLength
-00
-0A
-_NEWLINE_
-_DEL_ mov A, word [HL]
-01
-01
-21
-_NEWARG_ A
-_NEWARG_ [HL]
-_NEWLINE_
-_DEL_ mov R2, far [ParserIndex]
-02
-08
-10
-34
-_NEWARG_ R2
-50
-_NEWARG_ far [ParserIndex]
-_FL_ParserIndex
-_NEWLINE_
-_DEL_ cmp A, 0xFFFF
-04
-02
-01
-_NEWARG_ A
-_NEWARG_ 0xFFFF
-FF
-FF
-_NEWLINE_
-_DEL_ jne [IsCommand]
-30
-31
-32
-_NEWARG_ [IsCommand]
-_SL_IsCommand
-_NEWLINE_
-_NEWLINE_
-_DEL_ mov B, C
-01
-02
-19
-_NEWARG_ B
-_NEWARG_ C
-_NEWLINE_
-_DEL_ dec C
-21
-00
-19
-_NEWARG_ C
-_NEWLINE_
-_DEL_ swap H, FS
-0c
-00
-15
-10
-_NEWARG_ H
-_NEWARG_ FS
-85
-_NEWLINE_
-_DEL_ swap L, R2
-0c
-00
-16
-10
-_NEWARG_ L
-_NEWARG_ R2
-50
-_NEWLINE_
-_DEL_ LOOR
-40
-20
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL IsCommand /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ mov [FS:R2], A
-01
-00
-3a
-17
-_NEWARG_ [FS:R2]
-85
-50
-_NEWARG_ A
-_NEWLINE_
-_DEL_ pop B
-06
-00
-18
-_NEWARG_ B
-_NEWLINE_
-_DEL_ mov far [BasicSrcIndex],B
-01
-00
-34
-18
-_NEWARG_ far [BasicSrcIndex]
-_FL_BasicSrcIndex
-_NEWARG_ B
-_NEWLINE_
-_REF_ LABEL ExitFunction /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_DEL_ inc R2
-20
-f0
-10
-_NEWARG_ R2
-50
-_NEWLINE_
-_DEL_ mov [ParserIndex], R2
-02
-08
-32
-10
-_NEWARG_ [ParserIndex]
-_SL_ParserIndex
-_NEWARG_ R2
-50
-_NEWLINE_
-_DEL_ retz
-09
-00
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_SECTION_ BSS
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL BasicSrcIndex /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_RES_ 2
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Buffer /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Parser.acl
-_NEWLINE_
-_RES_ 000A
-_NEWLINE_
-_SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_FILE_ "/home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl"
-_NEWLINE_
-_NEWLINE_
-_SECTION_ TEXT
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL Generate /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ pushr
-f0
-20
-_NEWLINE_
-_DEL_ mov DS, HIGH @AddressTable
-02
-08
-10
-01
-_NEWARG_ DS
-05
-_NEWARG_ HIGH @AddressTable
-_SL_AddressTable,MH
-_NEWLINE_
-_DEL_ mov HL, @ParsedBuffer
-00
-00
-10
-01
-_NEWARG_ HL
-c7
-_NEWARG_ @ParsedBuffer
-_SL_ParsedBuffer
-_NEWLINE_
-_NEWLINE_
-_NEWLINE_
-_REF_ LABEL GenCommandAddress /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ sez B
-0a
-06
-_NEWARG_ B
-_NEWLINE_
-_DEL_ sez R1
-0a
-00
-10
-_NEWARG_ R1
-10
-_NEWLINE_
-_REF_ LABEL GenCommandLoop /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ mov A, [DS:B]
-01
-01
-3c
-_NEWARG_ A
-_NEWARG_ [DS:B]
-_NEWLINE_
-_DEL_ mov C, [HL]
-01
-03
-21
-_NEWARG_ C
-_NEWARG_ [HL]
-_NEWLINE_
-_DEL_ cmp A, C
-04
-02
-19
-_NEWARG_ A
-_NEWARG_ C
-_NEWLINE_
-_DEL_ je [GenCommandExit]
-30
-30
-32
-_NEWARG_ [GenCommandExit]
-_SL_GenCommandExit
-_NEWLINE_
-_DEL_ add B, %AddressTableLength
-20
-20
-18
-01
-_NEWARG_ B
-_NEWARG_ %AddressTableLength
-00
-06
-_NEWLINE_
-_DEL_ jmp [GenCommandLoop]
-30
-00
-32
-_NEWARG_ [GenCommandLoop]
-_SL_GenCommandLoop
-_NEWLINE_
-_REF_ LABEL GenCommandExit /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Generator.acl
-_NEWLINE_
-_DEL_ add B, 2
-20
-20
-18
-01
-_NEWARG_ B
-_NEWARG_ 2
-00
-02
+_REF_ LABEL L2020501 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _DEL_ push HL
 05
@@ -1936,15 +1683,142 @@ _DEL_ push HL
 _NEWARG_ HL
 c7
 _NEWLINE_
-_DEL_ movd HL, [DS:B]
-03
+_DEL_ push AX
+05
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ mov HL, far @MessERS
+00
 00
 10
-3c
+03
 _NEWARG_ HL
 c7
-_NEWARG_ [DS:B]
+_NEWARG_ far @MessERS
+_FL_MessERS
 _NEWLINE_
+_DEL_ mov AH, 0x02
+01
+00
+10
+01
+_NEWARG_ AH
+40
+_NEWARG_ 0x02
+00
+02
+_NEWLINE_
+_DEL_ int 0x10
+f0
+40
+00
+_NEWARG_ 0x10
+10
+_NEWLINE_
+_DEL_ pop AX
+06
+00
+1b
+_NEWARG_ AX
+_NEWLINE_
+_DEL_ pop HL
+06
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ jmp [L9000000]
+30
+00
+32
+_NEWARG_ [L9000000]
+_SL_L9000000
+_NEWLINE_
+_DEL_ mov R16, 0
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_ErrorRS /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ retz
+09
+00
+_NEWLINE_
+_REF_ LABEL L9000000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ jmp [L9000000]
+30
+00
+32
+_NEWARG_ [L9000000]
+_SL_L9000000
+_NEWLINE_
+_NEWLINE_
+_REF_ LABEL L1000000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_REF_ LABEL _cstart /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ enter
+f0
+60
+_NEWLINE_
+_DEL_ pushr
+f0
+20
+_NEWLINE_
+_REF_ LABEL L1001000 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov HL, far @_StartDos
+00
+00
+10
+03
+_NEWARG_ HL
+c7
+_NEWARG_ far @_StartDos
+_FL__StartDos
+_NEWLINE_
+_DEL_ push HL
+05
+00
+10
+_NEWARG_ HL
+c7
+_NEWLINE_
+_DEL_ sez SP
+0a
+00
+10
+_NEWARG_ SP
+09
 _NEWLINE_
 _DEL_ jmp [HL]
 30
@@ -1952,57 +1826,104 @@ _DEL_ jmp [HL]
 21
 _NEWARG_ [HL]
 _NEWLINE_
+_REF_ LABEL L1001010 /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ mov R16, 0
+02
+08
+10
+02
+_NEWARG_ R16
+d3
+_NEWARG_ 0
+00
+00
+00
+_NEWLINE_
+_REF_ LABEL Exit_cstart /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+_DEL_ popr
+f0
+30
+_NEWLINE_
+_DEL_ leave
+f0
+70
+_NEWLINE_
+_DEL_ mov AX, R16
+02
+08
+1b
+10
+_NEWARG_ AX
+_NEWARG_ R16
+d3
+_NEWLINE_
+_DEL_ ret 8
+08
+00
+00
+_NEWARG_ 8
+08
 _NEWLINE_
 _NEWLINE_
+_REF_ LABEL __RODATASTRAT__ /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
+_REF_ LABEL MessERS /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_NEWLINE_
-_REF_ LABEL Message /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-48
-65
-6c
-6c
-6f
-20
-77
+45
+72
+72
 6f
 72
-6c
+20
+77
+68
+69
+74
+65
+20
+72
+65
+61
 64
+69
+6e
+67
+20
+61
+20
+73
+65
+63
+74
+6f
+72
 00
 _NEWLINE_
+_REF_ LABEL DOSFileName /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+_NEWLINE_
+44
+4f
+53
+20
+42
+49
+4e
+20
+00
 _NEWLINE_
 _NEWLINE_
 _SECTION_ BSS
 _NEWLINE_
+_REF_ LABEL Sector /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
-_REF_ LABEL ParsedBuffer /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-_RES_ _SL___SIZE_BASICSRC__
-_NEWLINE_
+_RES_ 1024
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL CursorX /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-_RES_ 2
-_NEWLINE_
-_REF_ LABEL CursorY /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-_RES_ 2
-_NEWLINE_
-_REF_ LABEL ScreenHeight /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-_RES_ 2
-_NEWLINE_
-_REF_ LABEL ScreenWidth /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-_RES_ 2
+_SECTION_ DATA
 _NEWLINE_
 _NEWLINE_
-_REF_ LABEL ParserIndex /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-_NEWLINE_
-_RES_ 2
-_NEWLINE_
+_REF_ LABEL __DATASTRAT__ /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
 _NEWLINE_
 _NEWLINE_

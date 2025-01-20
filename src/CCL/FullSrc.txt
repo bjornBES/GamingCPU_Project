@@ -1,0 +1,14 @@
+#       :define debug = 1
+#       :FILE "/home/bjornbes/projects/GamingCPU_Project/src/CCL/testprogram.CCL"
+#       :define value
+ 0000000:func main
+ 0000001:counter as byte eq 5
+ 0000010:while counter > 1 then
+#       :if debug == 1
+ 0000012:asm("test      A")
+ 0000013:asm("mov A, {0}", debug)
+#       :endif
+ 0000020:endwhile
+ 0000021:pVoid as pointer void eq &counter
+ 0000100:endfunc
+

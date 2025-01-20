@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "gJp/F44M8ZiLUjCMb1taio1IZJNJ/qoaaTAcNOyo1G3DPLTMvqy+JJ/MO5RZHV3JHXUNiEqiPe7llvDZoIVaFg==",
+  "dgSpecHash": "VJFpE+CEM4TH4ZMdsI+TtxvmZnQah5SM+qxFdofIaa/sNemfamB7yhS+VpsIAAmlCeSxM3s1QL95iOHse22wlA==",
   "success": true,
   "projectFilePath": "/home/bjornbes/projects/GamingCPU_Project/Compiler/Compiler.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/bjornbes/.nuget/packages/crayon/2.0.69/crayon.2.0.69.nupkg.sha512"
+  ],
   "logs": []
 }

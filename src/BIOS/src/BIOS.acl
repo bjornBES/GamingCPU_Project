@@ -11,7 +11,7 @@ _BIOSStart:
 
     sez     A
     mov     AL,             CR0
-    or      A,              0x01
+    or      A,              0x11
     mov     CR0,            AL
 
     mov     HL,             @StartMSG
@@ -94,7 +94,7 @@ EndOfBIOS:
 
     sez     A
     mov     AL,             CR0
-    xor     A,              0x01
+    xor     A,              0x11
     mov     CR0,            AL
 
     mov     DL,             [DriveNumber]

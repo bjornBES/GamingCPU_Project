@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BCGLinker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2246ed57c55969643e1d21f497a6e7e2bbf816de")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec0b31699025fca36170b5d6dde8ed80c71d955d")]
 [assembly: System.Reflection.AssemblyProductAttribute("BCGLinker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BCGLinker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

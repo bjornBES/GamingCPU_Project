@@ -1,99 +1,84 @@
 .setcpu "BC16CE"
 
+.org 0x7E00
+__START_STACK__:
+
 .section Bootloader
 
 .org 0x7C00
 Entry:
+    cli
     mov     AL,             CR0
     or      A,              0x30
-    mov     CR0,            AL                  ; enabling extended mode and the A24 line
+    mov     CR0,            AL                  ; enabling the A24 line and extended mode
 
-    mov
+    mov     HL,             LONG @Message
+    call    short [Print]
 
-    sez     A
-    mov     HL,             far @Message
-    mov     
-PrintLoop:
-    mov     AL,             [HL]
-    jz      [ExitPrintLoop]
-    int     0x10
-    inc     HL
-ExitPrintLoop:
+    mov     SP,             LOW @__START_STACK__
+    mov     DS,             HIGH @Stage2_Name   ; data is the segment where Stage2_Name is in
+    mov     B,              LOW @Stage2_Name
 
-    mov     SS,             0x00FA              ; stack is at 0x00FA:XXXXX
-    mov     DS,             HIGH @Entry         ; data is in this segment
-    sez     SP
-
-    outw    0x02,           0x0011              ; video card switch mode
-    outb    0x02,           0x02                ; set to mode 2
-
-    nop
     int     0x02
 
-    mov     R1,             D                   ; saving the boot drive in R1 (not in use)
+    mov     R8,             D                   ; saving the boot drive in a variabel
+    sez     R1                                  ; heads = 0
+    sez     R2                                  ; track = 0
+    mov     R3,             0x03                ; sectors = 3
+    mov     HL,             long @_STAGE2       ; destination = Bootloader
+    call    rel [ReadSector]                    ; reading the root directory
 
-    mov     B,              0x03                ; sectors = 3
-    sez     DH                                  ; heads = 0
-    sez     C                                   ; track = 0
-    mov     AX,             @_STAGE2            ; destination = Bootloader
-    call    [ReadSector]                        ; reading the root directory
-
-    mov     HL,             @Stage2_Name        ; HL = Stage2 Name
     mov     C,              16                  ; times for the CMPL instruction
-
+    sez     A                                   ; making a counter
 ; find the stage2 file
 FindStage2File:
-    CMPL                                        ; Compare the AX and HL values in memory for C times
+    cmp     A,              0x8                 ; if the count is over 0x8 there is a error 
+    jne     rel [FindStage2FileNext]            ; jmp if there is no error
+    mov     HL,             LONG @ErrorFindingStage2
+    call    rel [Error]
+FindStage2FileNext:
+    CMPL                                        ; Compare the DS:B and HL values in memory for C times
     je      rel [ExitFindStage2]                ; yes
-    add     AX,             0x20                ; next file in root
+    add     L,              0x20                ; next file in root
+    inc     A                                   ; inc the counter
     jmp     rel [FindStage2File]                ; loop next
+
 ExitFindStage2:                                 ; now we have found the stage 2 Bootloader file
-    add     AX,             16                  ; pointing to the starting sector 
-    sez     C                                   ; track = 0
-    mov     B,              [AX]                ; B = starting sector
+    add     L,              16                  ; pointing to the starting sector 0x10
+    mov     R3,             [HL]                ; R3 = starting sector
     call    [OFS]                               ; overflowing sector into tracks/heads
-LoadStage2:                                     ; loading the first sector of the stage 2 Bootloader
-    add     AX,             0x2                 ; AX offset is 0x11
-    sez     D                                   ; D = 0
-    mov     DH,             [AX]                ; DH = file size in sectors 
-    mov     L,              D                   ; L = file size in sectors from D
-    mov     D,              R1                  ; D = drive number
-    mov     AX,             @_STAGE2            ; AX = Bootloader address
-    sez     B                                   ; head = 0
-    call    rel [ReadSector]
-LoadStage2Loop:
-    add     AX,             0x200               ; next sector in memory
-    inc     B                                   ; next sector on disk
-    call    rel [OFS]                           ; overflowing
-Load:
+    add     L,              0x2                 ; HL offset is 0x12
+    mov     A,              [HL]                ; A = file size in sectors 
+    sez     L                                   ; now HL is pointing to Stage2
+
+LoadStage2Loop:                                 ; loading the first sector of the stage 2 Bootloader
     call    rel [ReadSector]                    ; reading the sector
-    dec     L                                   ; L--
+    add     HL,             0x200               ; next sector in memory
+    inc     R3                                  ; next sector on disk
+    call    rel [OFS]                           ; overflowing
+    dec     A                                   ; remamin sectors dec
     jnz     rel [LoadStage2Loop]                ; looping til done
-    mov     D,              R1                  ; D = drive number
-    mov     HL,             far @_STAGE2
-    push    HL
-    retl
+
+    mov     D,              R8                  ; D = drive number
+    jmp     long [_STAGE2]
 
 ;
 ; parameters
-;   AX:         destination
-;   B:          sectors
-;   C:          track
-;   DL:         drivea
-;   DH:         head
+;   R1:         head
+;   R2:         track
+;   R3:         sectors
+;   DL:         drive
+;   HL:         destination
 ;
 ReadSector:
-    pushr                                       ; pushing AX, BX, CX, DX, H, L
+    pushr                                       ; pushing A, B, C, D, H, L
 
-    swap    AX,             HL                  ; AX = HL & HL = AX swaping the destination address
-    swap    DH,             AL                  ; DH = AL & AL = DH swaping the heads
-    mov     AH,             0x01                ; instruction read sector
+    mov     A,              0x0100              ; instruction read sector
     int     0x13                                ; calling the disk interrupt services
 
     jnc     rel [ExitReadSector]                ; Good
 
-    mov     DS,             high @ErrorMessageReading
-    mov     B,              LOW @ErrorMessageReading
+    mov     HL,             LONG @ErrorMessageReading
     jmp     rel [Error]
 
 ExitReadSector:
@@ -102,45 +87,65 @@ ExitReadSector:
 
 ;
 ; return and parameters
-;   B   sectors
-;   CL  track
+;   R3  sectors
+;   R2  track
 ;
 ; overflow sectors
 ;
 OFS:
-    push    A
-    mov     A,          B
-OFSLOOP:
-    cmp     A,          19              ; A <= 19
+    cmp     R3,         19              ; R3 <= 19
     jle     rel [ExitOFS]               ; yes
-    sub     A,          18              ; no A -= 18
-    inc     C                           ; C(tracks)++
-    jmp     rel [OFSLOOP]               ; loop :D
+    sub     R3,         18              ; no R3 -= 18
+    inc     R2                          ; R2(tracks)++
+    jmp     rel [OFS]                   ; loop :D
 ExitOFS:
-    mov     B,          A
-    pop     A
     retz                                ; done
 
-ErrorMessageReading:
-.db "Error reading sector",0
+
+;
+;   HL  char* message
+;
+Print:
+    pushr
+    sez     C
+    sez     A
+    sez     B
+PrintLoop:
+    mov     BL,         [HL]
+    jz      rel [ExitPrintLoop]
+    int     0x10
+    inc     HL
+ExitPrintLoop:
+    popr
+    retz
 
 ;
 ; parameters
-;   DS:         segment address to the message
-;   B:          offset address to the message
+;   HL:         address to the message
 ;
 Error:
-    mov         AH,         0x02
-    int         0x10
-
+    pushr
+    mov         L,      @ErrorMessage
+    call        rel [Print]
+    popr
+    call        rel [Print]
     jmp         $
 
+ErrorMessage:
+.db "ERR ",0
+ErrorMessageReading:
+.db "CNRS",0
+ErrorFindingStage2:
+.db "CNFS2F",0
+
 Message:
-.db "Hello world!",1
+.db "HW!",0
 
 Stage2_Name:
 .db "STAGE2",0,0,0,0,0
 .db "BIN",0,0
+
+ENDOFCODE:
 
 .section Boot
 .dw 0x55AA

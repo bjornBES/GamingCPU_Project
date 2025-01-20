@@ -1,0 +1,5 @@
+assembler="./AssemblerBCG/build/AssemblerBCG"
+linker="./BCGLinker/build/BCGLinker"
+compiler="./Compiler/build/Compiler"
+filesystem="./filesystem/build/filesystem"
+HLCLCompiler="./HLCLCompiler/bin/Debug/net8.0/HLCLCompiler"

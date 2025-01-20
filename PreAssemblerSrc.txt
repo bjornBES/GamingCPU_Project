@@ -1,56 +1,139 @@
 
-.newfile /home/bjornbes/projects/GamingCPU_Project/src/basic/src/Basic.acl
-.setcpu "BC16C"
-
-.section BASICSRC
+.newfile /home/bjornbes/projects/GamingCPU_Project/src/DOS/Build/Bootloader/stage2/CCL/main.acl
+.setcpu "BC16CE"
 .section TEXT
-
-Entry:
-    mov             DS,                 HIGH @__BSSSTART
-
-    sez             B
-    mov             HL,                 far @Message
-    push            HL
-    push            B
-
-    call            [PrintStr]    
-
-    jmp             $
-
-.includeil "./includes.acl"
-
-
-.includeil "./display.acl"
-
-.includeil "./IncludeCommands.acl"
-
-.includeil "./TokenTable.acl"
-
-.includeil "./Parser.acl"
-
-.includeil "./Generator.acl"
-
-
-Message:
-.db "Hello world",0
-
+.extern _ACLAsmWriteChar
+L0000010:
+_diplay:
+	enter
+	pushr
+L0000048:
+	mov   R16,                     0
+Exit_diplay:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   16
+L0000049:
+_ColorOut:
+	enter
+	pushr
+	; arguemnt 1
+	mov   AX,                      [BP - 14]
+	push  AX
+	; arguemnt 0
+	mov   AX,                      [BP - 10]
+	push  AX
+	call  far [_ACLAsmWriteChar]
+L0000050:
+	mov   R16,                     0
+Exit_ColorOut:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+L0000051:
+_Cout:
+	enter
+	pushr
+	mov   AX,                      0x55
+	push  AX
+	; arguemnt 1
+	mov   AX,                      [BP - 14]
+	push  AX
+	; arguemnt 0
+	mov   AX,                      [BP - 10]
+	push  AX
+	call  far [_ACLAsmWriteChar]
+L0000052:
+	mov   R16,                     0
+Exit_Cout:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   4
+.extern _ACLAsmReadSector
+L2000000:
+_ReadRoot:
+	enter
+	pushr
+L2000005:
+	; arguemnt 4
+	mov   HL,                      Sector
+	push  HL
+	; arguemnt 3
+	mov   AX,                      0x3
+	push  AX
+	; arguemnt 2
+	mov   AX,                      0x0
+	push  AX
+	; arguemnt 1
+	mov   AX,                      0x0
+	push  AX
+	; arguemnt 0
+	mov   AX,                      [BP - 10]
+	push  AX
+	call  far [_ACLAsmReadSector]
+L2000010:
+	cmp   AX,                      1
+	je    [L2020500]
+L2009000:
+	mov   R16,                     0
+Exit_ReadRoot:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+L2020500:
+_ErrorRS:
+	enter
+	pushr
+L2020501:
+	push  HL
+	push  AX
+	mov   HL,                      far @MessERS
+	mov   AH,                      0x02
+	int   0x10
+	pop   AX
+	pop   HL
+	jmp   [L9000000]
+	mov   R16,                     0
+Exit_ErrorRS:
+	popr
+	leave
+	mov   AX,                      R16
+	retz
+L9000000:
+	jmp   [L9000000]
+.extern _StartDos
+L1000000:
+_cstart:
+	enter
+	pushr
+L1001000:
+	mov   HL,                      far @_StartDos
+	push  HL
+	sez   SP
+	jmp   [HL]
+L1001010:
+	mov   R16,                     0
+Exit_cstart:
+	popr
+	leave
+	mov   AX,                      R16
+	ret   8
+.local __RODATASTRAT__
+__RODATASTRAT__:
+MessERS:
+.db   "Error white reading a sector", 0
+DOSFileName:
+.db   "DOS        BIN  ", 0
 
 .section BSS
+Sector:
+.res  1024
 
-ParsedBuffer:
-.res @__SIZE_BASICSRC__
-; buffer for the parsed code
-
-CursorX:
-.resw
-CursorY:
-.resw
-ScreenHeight:
-.resw
-ScreenWidth:
-.resw
-
-ParserIndex:
-.resw
-
+.section DATA
+.local __DATASTRAT__
+__DATASTRAT__:
 

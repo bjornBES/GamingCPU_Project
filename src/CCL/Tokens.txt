@@ -1,0 +1,64 @@
+defineD             define              1
+ident               debug               1
+assign                                  1
+int_lit             1                   1
+defineD             define              3
+ident               value               3
+line_number         0000000             4
+colon                                   4
+function            func                4
+ident               main                4
+line_number         0000001             5
+colon                                   5
+ident               counter             5
+colon               as                  5
+uint8               byte                5
+assign              eq                  5
+int_lit             5                   5
+line_number         0000016             6
+colon                                   6
+_while              while               6
+ident               counter             6
+rightanglebracket                       6
+int_lit             1                   6
+_then               then                6
+DIf                 if                  7
+ident               debug               7
+eq                                      7
+int_lit             1                   7
+line_number         0000018             8
+colon                                   8
+_asm                asm                 8
+open_paren                              8
+quotation_mark                          8
+ident               test      A         8
+quotation_mark                          8
+close_paren                             8
+line_number         0000019             9
+colon                                   9
+_asm                asm                 9
+open_paren                              9
+quotation_mark                          9
+ident               mov A, {0}          9
+quotation_mark                          9
+comma                                   9
+ident               debug               9
+close_paren                             9
+DEndIf              endif               10
+line_number         0000032             11
+colon                                   11
+end                 endwhile            11
+_while              endwhile            11
+line_number         0000033             12
+colon                                   12
+ident               pVoid               12
+colon               as                  12
+pointer             pointer             12
+_void               void                12
+assign              eq                  12
+bitand                                  12
+ident               counter             12
+line_number         0000256             13
+colon                                   13
+end                 endfunc             13
+function            endfunc             13

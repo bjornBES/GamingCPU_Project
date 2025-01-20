@@ -1,8 +1,79 @@
 ﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 public class Tokenizer
 {
+    public Dictionary<string, TokenType> symbols = new Dictionary<string, TokenType>()
+    {
+        { "func", TokenType.function },
+        { "if", TokenType._if },
+        { "then", TokenType._then },
+        { "else", TokenType._else },
+        { "struct", TokenType._struct },
+        { "while", TokenType._while },
+        { "end", TokenType.end },
+
+        { "ret", TokenType._return }, { "return", TokenType._return },
+        { "extern", TokenType._extern },
+        { "public", TokenType._public },
+        { "const", TokenType._const },
+        { "call", TokenType.call },
+        { "sizeof", TokenType._sizeof },
+        { "void", TokenType._void },
+        { "byte", TokenType.uint8 }, { "uint8", TokenType.uint8 }, { "char", TokenType.uint8 },
+        { "sbyte", TokenType.int8 }, { "int8", TokenType.int8 },
+        { "ushort", TokenType.uint16 }, { "uint16", TokenType.uint16 },
+        { "short", TokenType.int16 }, { "int16", TokenType.int16 },
+        { "uint", TokenType.uint32 }, { "uint32", TokenType.uint32 },
+        { "int", TokenType.int32 }, { "int32", TokenType.int32 },
+        { "near", TokenType._nearPointer },
+        { "long", TokenType._longPointer },
+        { "far", TokenType._farPointer },
+        { "pointer", TokenType.pointer },
+        { "break", TokenType._break},
+        { "continue", TokenType._continue},
+
+        { "as", TokenType.colon },
+        { "eq", TokenType.assign },
+    };
+
+    public Dictionary<string, TokenType> operators = new Dictionary<string, TokenType>()
+    {
+        { "=", TokenType.assign},
+        { "!", TokenType.not },
+        { "==", TokenType.eq },
+        { "!=", TokenType.neq },
+        { "<", TokenType.lt },
+        { ">", TokenType.gt },
+        { "<=", TokenType.leq },
+        { ">=", TokenType.geq },
+        { "-", TokenType.sub },
+        { "-=", TokenType.subassign },
+        { "+", TokenType.add },
+        { "+=", TokenType.addassign },
+        { "&", TokenType.bitand },
+        { "&&", TokenType.and },
+        { "&=", TokenType.andassign },
+        { "*", TokenType.mult },
+        { "*=", TokenType.multassign },
+        { "<<", TokenType.lshift },
+        { "<<=", TokenType.lshiftassign },
+        { ">>", TokenType.rshift },
+        { ">>=", TokenType.rshiftassign },
+        { "|", TokenType.bitor },
+        { "||", TokenType.or },
+        { "|=", TokenType.orassign },
+        { "/", TokenType.div },
+        { "/=", TokenType.divassign },
+        { "%", TokenType.mod },
+        { "%=", TokenType.modassign },
+        { "^", TokenType.xor },
+        { "^=", TokenType.xorassign },
+        // { "++", TokenType.inc },
+        // { "--", TokenType.dec },
+    };
+
     string m_src;
     int m_index;
     string m_buf = "";
@@ -25,6 +96,7 @@ public class Tokenizer
         {
             m_tokens.AddRange(TokenizeToken());
         }
+
         return m_tokens.ToArray();
     }
 
@@ -42,6 +114,17 @@ public class Tokenizer
             }
             result.Add(addToken(TokenType.int_lit));
             consume();
+        }
+        else if (char.IsAsciiHexDigit(peek().Value) && m_colNumber == 2)
+        {
+            m_buf += consume();
+            while (peek().HasValue && char.IsAsciiHexDigit(peek().Value))
+            {
+                m_buf += consume();
+            }
+            m_buf = Convert.ToUInt32(m_buf, 16).ToString().PadLeft(7, '0');
+
+            result.Add(addToken(TokenType.line_number));
         }
         else if (peek().Value == '0' && peek(1).HasValue && peek(1).Value == 'x')
         {
@@ -70,182 +153,54 @@ public class Tokenizer
                 m_buf += consume();
             }
 
-            switch (m_buf.ToLower())
+            if (symbols.ContainsKey(m_buf))
             {
-                case "struct":
-                    result.Add(addToken(TokenType._struct));
-                    break;
+                result.Add(addToken(symbols[m_buf]));
+            }
+            else
+            {
+                switch (m_buf.ToLower())
+                {
+                    case "asm":
+                        // result.AddRange(aSMTokenize());
+                        result.Add(addToken(TokenType._asm));
+                        break;
+                    case "file":
+                        NewFile();
+                        break;
 
-                case "end":
-                    result.Add(addToken(TokenType.end));
-                    break;
-                case "asm":
-                    result.AddRange(aSMTokenize());
-                    break;
-                case "sizeof":
-                    result.Add(addToken(TokenType._sizeof));
-                    break;
-                case "call":
-                    result.Add(addToken(TokenType.call));
-                    break;
+                    case "invoke":
+                        result.Add(addToken(TokenType.invoke));
+                        break;
 
-                case "retf":
-                case "ret":
-                case "retu":
-                case "return":
-                    result.Add(addToken(TokenType._return));
-                    break;
+                    case "define":
+                        result.Add(addToken(TokenType.define));
+                        break;
 
-                case "file":
-                    NewFile();
-                    break;
+                    case "endfunc":
+                    case "endfunction":
+                        result.Add(addToken(TokenType.end));
+                        result.Add(addToken(TokenType.function));
+                        break;
+                    case "endif":
+                        result.Add(addToken(TokenType.end));
+                        result.Add(addToken(TokenType._if));
+                        break;
+                    case "endwhile":
+                        result.Add(addToken(TokenType.end));
+                        result.Add(addToken(TokenType._while));
+                        break;
 
-                case "exit":
-                    result.Add(addToken(TokenType._exit));
-                    break;
+                    case "elseif":
+                    case "elif":
+                        result.Add(addToken(TokenType._else));
+                        result.Add(addToken(TokenType._if));
+                        break;
 
-                case "extern":
-                    result.Add(addToken(TokenType._extern));
-                    break;
-
-                case "if":
-                    result.Add(addToken(TokenType._if));
-                    break;
-                case "then":
-                    result.Add(addToken(TokenType._then));
-                    break;
-                case "elseif":
-                case "elif":
-                    result.Add(addToken(TokenType._elif));
-                    break;
-                case "else":
-                    result.Add(addToken(TokenType._else));
-                    break;
-
-                case "display":
-                    result.Add(addToken(TokenType.display));
-                    break;
-
-                case "res":
-                    result.Add(addToken(TokenType._res));
-                    break;
-
-                case "near":
-                    result.Add(addToken(TokenType._nearPointer));
-                    break;
-                case "short":
-                    result.Add(addToken(TokenType._shortPointer));
-                    break;
-                case "long":
-                    result.Add(addToken(TokenType._longPointer));
-                    break;
-                case "far":
-                    result.Add(addToken(TokenType._farPointer));
-                    break;
-
-                case "func":
-                case "function":
-                    result.Add(addToken(TokenType.function));
-                    break;
-
-                case "section":
-                    result.Add(addToken(TokenType.Section));
-                    break;
-                case "invoke":
-                    result.Add(addToken(TokenType.invoke));
-                    break;
-
-                case "text":
-                    result.Add(addToken(TokenType.SectionText));
-                    break;
-                case "data":
-                    result.Add(addToken(TokenType.SectionData));
-                    break;
-                case "string":
-                    result.Add(addToken(TokenType.SectionString));
-                    break;
-
-                case "char":
-                    result.Add(addToken(TokenType.uint8));
-                    break;
-                case "byte":
-                    result.Add(addToken(TokenType.uint8));
-                    break;
-                case "sbyte":
-                    result.Add(addToken(TokenType.int8));
-                    break;
-
-                case "ushort":
-                    result.Add(addToken(TokenType.uint16));
-                    break;
-                case "word":
-                    result.Add(addToken(TokenType.uint16));
-                    break;
-                case "sword":
-                    result.Add(addToken(TokenType.int16));
-                    break;
-
-                case "dword":
-                    result.Add(addToken(TokenType.uint32));
-                    break;
-                case "int":
-                    result.Add(addToken(TokenType.int32));
-                    break;
-                case "uint":
-                    result.Add(addToken(TokenType.uint32));
-                    break;
-
-                case "public":
-                    result.Add(addToken(TokenType._public));
-                    break;
-                case "const":
-                    result.Add(addToken(TokenType._const));
-                    break;
-
-                case "define":
-                    result.Add(addToken(TokenType.define));
-                    break;
-
-                case "endfunc":
-                case "endfunction":
-                    result.Add(addToken(TokenType.end));
-                    result.Add(addToken(TokenType.function));
-                    break;
-                case "endif":
-                case "enif":
-                    result.Add(addToken(TokenType.end));
-                    result.Add(addToken(TokenType._if));
-                    break;
-
-                case "shortbyte":
-                    result.Add(addToken(TokenType._shortPointer));
-                    result.Add(addToken(TokenType.uint8));
-                    break;
-                case "shortshort":
-                    result.Add(addToken(TokenType._shortPointer));
-                    result.Add(addToken(TokenType.uint16));
-                    break;
-                case "shortint":
-                    result.Add(addToken(TokenType._shortPointer));
-                    result.Add(addToken(TokenType.uint32));
-                    break;
-
-                case "longbyte":
-                    result.Add(addToken(TokenType._longPointer));
-                    result.Add(addToken(TokenType.uint8));
-                    break;
-                case "longshort":
-                    result.Add(addToken(TokenType._longPointer));
-                    result.Add(addToken(TokenType.uint16));
-                    break;
-                case "longint":
-                    result.Add(addToken(TokenType._longPointer));
-                    result.Add(addToken(TokenType.uint32));
-                    break;
-
-                default:
-                    result.Add(addToken(TokenType.ident));
-                    break;
+                    default:
+                        result.Add(addToken(TokenType.ident));
+                        break;
+                }
             }
         }
         else if (new string("0123456789").Contains(peek().Value))
@@ -273,6 +228,57 @@ public class Tokenizer
                 consume();
             }
         }
+        else if (peek().Value == '#' && m_colNumber == 1)
+        {
+            consume();
+            while (peek().HasValue && char.IsSeparator(peek().Value))
+            {
+                consume();
+            }
+            consume();
+            while (peek().HasValue && char.IsLetter(peek().Value))
+            {
+                m_buf += consume();
+            }
+
+            if (m_buf.StartsWith("FILE", StringComparison.OrdinalIgnoreCase))
+            {
+                m_buf = "";
+                while (peek().HasValue && peek().Value != '\n')
+                {
+                    m_buf += consume();
+                }
+                string file = m_buf.Trim('\"');
+                m_file = file;
+            }
+            else if (m_buf.StartsWith("DEFINE", StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(addToken(TokenType.defineD));
+                /*
+                m_buf = m_buf.Replace("DEFINE ", "", StringComparison.OrdinalIgnoreCase);
+                string name = m_buf.Split(' ').First();
+                if (m_buf.Split(' ').Length > 1)
+                {
+                    result.Add(addToken(TokenType.ident, name));
+                    Tokenizer tokenizer = new Tokenizer();
+                    m_buf = m_buf.Replace(name, "");
+                    result.AddRange(tokenizer.Tokenize(m_buf));
+                }
+                else
+                {
+                    CompilerSettings.Defines.Add(new Define() { m_Name = name, m_Value = 0 });
+                }
+                */
+            }
+            else if (m_buf.StartsWith("IF", StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(addToken(TokenType.DIf));
+            }
+            else if (m_buf.StartsWith("ENDIF", StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(addToken(TokenType.DEndIf));
+            }
+        }
         else
         {
             switch (peek().Value)
@@ -282,36 +288,14 @@ public class Tokenizer
                     result.Add(addToken(TokenType.colon));
                     break;
                 case '=':
-                    consume();
-                    result.Add(addToken(TokenType.eq));
-                    break;
                 case '+':
-                    consume();
-                    if (peek().HasValue && peek().Value == '+')
-                    {
-                        consume();
-                        result.Add(addToken(TokenType.inc));
-                        break;
-                    }
-                    result.Add(addToken(TokenType.plus));
-                    break;
                 case '-':
-                    consume();
-                    if (peek().HasValue && peek().Value == '-')
-                    {
-                        consume();
-                        result.Add(addToken(TokenType.dec));
-                        break;
-                    }
-                    result.Add(addToken(TokenType.minus));
-                    break;
                 case '*':
-                    consume();
-                    result.Add(addToken(TokenType.star));
-                    break;
                 case '/':
-                    consume();
-                    result.Add(addToken(TokenType.fslash));
+                case '&':
+                case '<':
+                case '>':
+                    result.AddRange(parseOperators());
                     break;
                 case '(':
                     consume();
@@ -340,10 +324,6 @@ public class Tokenizer
                 case '@':
                     consume();
                     result.Add(addToken(TokenType.at));
-                    break;
-                case '&':
-                    consume();
-                    result.Add(addToken(TokenType.ampersand));
                     break;
                 case ',':
                     consume();
@@ -384,6 +364,7 @@ public class Tokenizer
     private void NewFile()
     {
         consume();
+        m_tokens.RemoveRange(m_tokens.Count - 2, 2);
         if (peek().HasValue && peek().Value == '\"')
         {
             consume();
@@ -396,6 +377,57 @@ public class Tokenizer
             m_colNumber = 1;
             m_lineNumber = 0;
         }
+    }
+
+    Token[] parseOperators()
+    {
+        List<Token> result = new List<Token>();
+
+        string operatorBuffer = "";
+        operatorBuffer += consume();
+
+        if (!peek().HasValue)
+        {
+            Console.WriteLine("Not working");
+            Environment.Exit(1);
+        }
+        if (peek().Value == '=')
+        {
+            operatorBuffer += consume();
+        }
+        else if (peek(1).Value == '=')
+        {
+            operatorBuffer += consume();
+            operatorBuffer += consume();
+        }
+        else
+        {
+            if (operatorBuffer == "=")
+            {
+
+            }
+            else if (operatorBuffer == "+" || operatorBuffer == "-")
+            {
+                operatorBuffer += consume();
+            }
+        }
+
+        if (operators.ContainsKey(operatorBuffer))
+        {
+            result.Add(addToken(operators[operatorBuffer]));
+        }
+        else if (operatorBuffer == "++")
+        {
+            result.Add(addToken(TokenType.addassign));
+            result.Add(addToken(TokenType.int_lit, "1"));
+        }
+        else if (operatorBuffer == "--")
+        {
+            result.Add(addToken(TokenType.subassign));
+            result.Add(addToken(TokenType.int_lit, "1"));
+        }
+
+        return result.ToArray();
     }
 
     Token[] aSMTokenize()
